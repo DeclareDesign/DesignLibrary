@@ -1,0 +1,19 @@
+Package: DDlib
+Type: Package
+Title: Reference Designs for DeclareDesign
+Version: 0.1.0
+Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut", "cre")),
+             person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut")),
+             person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
+             person("Macartan", "Humphreys", email = "macartan@gmail.com", role = c("aut")),
+             person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")))
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends: DeclareDesign
+Suggests: knitr
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
+
