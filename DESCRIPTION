@@ -1,6 +1,6 @@
-Package: DDlib
+Package: designs
 Type: Package
-Title: Reference Designs for DeclareDesign
+Title: Library of Research Designs
 Version: 0.1.0
 Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut", "cre")),
              person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut")),
@@ -16,4 +16,6 @@ Depends: DeclareDesign
 Suggests: knitr
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
+
+
 
