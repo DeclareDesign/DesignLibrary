@@ -39,12 +39,13 @@ regression_discontinuity_template <- function(
     # Answer Strategy ---------------------------------------------------------
     estimator <- declare_estimator(
       formula = Y ~ poly(X, poly_order) * Z,
-      model = lm,
+      model = lm_robust,
+      coefficients = "Z",
       estimand = estimand)
 
     # Design ------------------------------------------------------------------
     rd_design <- declare_design(
-      population, potential_outcomes, estimand, sampling, reveal_outcomes, estimator)
+      population, potential_outcomes, estimand, declare_reveal(Y), sampling, estimator)
   }}}
   rd_design
 }
