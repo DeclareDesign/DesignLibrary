@@ -49,3 +49,28 @@ test_that("Two Arm works", {
   DeclareDesign::diagnose_design(vary_N_two_arm, sims = 100, bootstrap = F)
   
 })
+
+
+test_that("Randomized Response works", {
+  
+  randomized_response <- randomized_response_template()
+  
+  DeclareDesign::diagnose_design(randomized_response, sims = 100,bootstrap = F)
+  
+  vary_N_randomized_response <-
+    fill_out(template = randomized_response_template, N = c(200, 300, 400))
+  
+  DeclareDesign::diagnose_design(vary_N_randomized_response, sims = 100, bootstrap = F)
+  
+})
+
+
+
+
+
+
+
+
+
+
+
