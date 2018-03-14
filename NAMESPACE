@@ -2,6 +2,7 @@
 
 export(diagnose_design)
 export(mediation_template)
+export(randomized_response_template)
 export(regression_discontinuity_template)
 export(template_default_args_text)
 export(template_text)
