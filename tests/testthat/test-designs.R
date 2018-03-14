@@ -51,6 +51,7 @@ test_that("Two Arm works", {
 })
 
 
+<<<<<<< HEAD
 test_that("Randomized Response works", {
   
   randomized_response <- randomized_response_template()
@@ -61,10 +62,31 @@ test_that("Randomized Response works", {
     fill_out(template = randomized_response_template, N = c(200, 300, 400))
   
   DeclareDesign::diagnose_design(vary_N_randomized_response, sims = 100, bootstrap = F)
+=======
+
+test_that("Noncompliance works", {
+  
+  noncompliance <- noncompliance_template()
+  DeclareDesign::diagnose_design(noncompliance, sims = 10, bootstrap = F)
+  
+  vary_N_noncompliance <- fill_out(template = noncompliance_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_noncompliance, sims = 10, bootstrap = F)
+  
+})
+
+test_that("List Experiment works", {
+  
+  list_experiment <- list_experiment_template()
+  diagnose_design(list_experiment, sims = 100, bootstrap = F)
+  
+  vary_N_list_experiment <- fill_out(template = list_experiment_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_list_experiment, sims = 10, bootstrap = F)
+>>>>>>> 92d2a8826426f21fa7fc36d9b1dc8e4ecc629734
   
 })
 
 
+<<<<<<< HEAD
 
 
 
@@ -74,3 +96,5 @@ test_that("Randomized Response works", {
 
 
 
+=======
+>>>>>>> 92d2a8826426f21fa7fc36d9b1dc8e4ecc629734
