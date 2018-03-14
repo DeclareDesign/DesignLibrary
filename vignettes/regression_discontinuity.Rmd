@@ -11,8 +11,8 @@ vignette: >
 ```{r, include=FALSE, eval=TRUE}
 options("keep.source"=TRUE)
 library(knitr)
-library(DDlib)
 library(ggplot2)
+library(designs)
 ```
 
 
