@@ -22,8 +22,8 @@ two_way_factorial_template <- function(N = c(30, 100, 500, 1000),
 
     # Inquiry ----------------------------------------------------------------------
     estimand <- declare_estimand(
-      interaction = mean((Y_Z_T4 - Y_Z_T3) - (Y_Z_T2 - Y_Z_T1)),
-      label = "interaction")
+      interaction = mean((Y_Z_T4 - Y_Z_T3) - (Y_Z_T2 - Y_Z_T1))
+      )
 
     # Data Strategy ----------------------------------------------------------------
     assignment <- declare_assignment(num_arms = 4)
@@ -31,7 +31,7 @@ two_way_factorial_template <- function(N = c(30, 100, 500, 1000),
     # Answer Strategy --------------------------------------------------------------
     estimator <- declare_estimator(Y ~ A + B + A:B,
                                    model = lm_robust,
-                                   coefficient_name = "A:B",
+                                   coefficients = "A:B",
                                    estimand = estimand)
 
     # Design -----------------------------------------------------------------------
@@ -42,7 +42,7 @@ two_way_factorial_template <- function(N = c(30, 100, 500, 1000),
       assignment,
       dplyr::mutate(A = as.numeric(Z %in% c("T2", "T4")),
                     B = as.numeric(Z %in% c("T3", "T4"))),
-      reveal_outcomes,
+      declare_reveal(Y),
       estimator)
   }}}
   design <- insert_step(design, after=7, declare_citation(
