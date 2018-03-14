@@ -83,5 +83,25 @@ test_that("List Experiment works", {
   
 })
 
+test_that("Matching works", {
+  
+  matching_diagnosands <-
+    declare_diagnosands(bias = mean(estimand - est),
+                        rmse = mean((estimand - est) ^ 2))
+  
+  match_out <- matching_template()
+  diagnose_design(match_out, sims = 100, bootstrap = F,
+                  diagnosands = matching_diagnosands)
+  
+  vary_N_matching <- fill_out(template = matching_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_matching, sims = 10, bootstrap = F, diagnosands = matching_diagnosands)
+  
+  
+})
+
+
+
+
+
 
 
