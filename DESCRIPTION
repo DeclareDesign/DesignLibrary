@@ -13,9 +13,7 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Depends: DeclareDesign
-Suggests: knitr
+Suggests: knitr,
+    testthat
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-
-
-
