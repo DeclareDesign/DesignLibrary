@@ -62,4 +62,14 @@ test_that("Noncompliance works", {
   
 })
 
+test_that("List Experiment works", {
+  
+  list_experiment <- list_experiment_template()
+  diagnose_design(list_experiment, sims = 100, bootstrap = F)
+  
+  vary_N_list_experiment <- fill_out(template = list_experiment_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_list_experiment, sims = 10, bootstrap = F)
+  
+})
+
 

@@ -63,3 +63,10 @@ noncompliance_template <- function(N = c(100, 30, 500, 1000),
   }
         noncompliance
 }
+
+attr(noncompliance_template,"tips") <- c(
+  N = "Size of sample",
+  pr_compliers = "Compliance Rate",
+  cace = "The true complier average causal effect"
+)
+
