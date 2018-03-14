@@ -49,3 +49,17 @@ test_that("Two Arm works", {
   DeclareDesign::diagnose_design(vary_N_two_arm, sims = 100, bootstrap = F)
   
 })
+
+
+
+test_that("Noncompliance works", {
+  
+  noncompliance <- noncompliance_template()
+  DeclareDesign::diagnose_design(noncompliance, sims = 10, bootstrap = F)
+  
+  vary_N_noncompliance <- fill_out(template = noncompliance_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_noncompliance, sims = 10, bootstrap = F)
+  
+})
+
+
