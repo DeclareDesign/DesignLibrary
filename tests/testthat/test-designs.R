@@ -119,10 +119,14 @@ test_that("Process Tracing works",{
   DeclareDesign::diagnose_design(vary_N_process_tracing, sims = 100, 
                                  bootstrap = F,
                                  diagnosands = process_tracing_diagnosands)
-  
-  
 })
 
-
-
-
+test_that("Election Forecast works", {
+  
+  election_forecast <- election_forecast_template()
+  diagnose_design(election_forecast, sims = 10, bootstrap = F)
+  
+  vary_N_election_forecast <- fill_out(template = election_forecast_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_election_forecast, sims = 10, bootstrap = F)
+  
+})
