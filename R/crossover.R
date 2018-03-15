@@ -28,8 +28,8 @@ crossover_template <- function(N = c(100, 30, 500, 1000),
       )
     potential_outcomes_B <- declare_potential_outcomes(
       YB_Z_T1 = noise,
-      YB_Z_T2 = noise + u_b + b,
-      YB_Z_T3 = noise + crossover * (u_a + a),
+      YB_Z_T2 = noise + crossover * (u_a + a),
+      YB_Z_T3 = noise + u_b + b,
       YB_Z_T4 = noise + u_b + b + crossover * (u_a + a)
       )
     estimand <- declare_estimand(a = a)
