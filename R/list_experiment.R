@@ -1,10 +1,12 @@
 #' @export
 list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
+                                     J = c(3, 4, 5),
                                      prevalence_rate = c(0.5, seq(0, 0.5)),
                                      withholding_rate = c(0.1, seq(0, 0.5)))
 {
   {
     N <- as.numeric(N[1])
+    J <- as.numeric(J[1])
     prevalence_rate <- as.numeric(prevalence_rate[1])
     withholding_rate <- as.numeric(withholding_rate[1])
   }
@@ -18,10 +20,10 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
             withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
             direct_question = sensitive_trait - withholder,
             control_items = sample(
-              0:3,
+              0:J,
               N,
               replace = TRUE,
-              prob = c(0.2, .3, .3, .2)
+              prob = sample(c(.2, .3), J, replace = TRUE)
             )
           )
         
@@ -56,6 +58,7 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
 
 attr(list_experiment_template,"tips") <- c(
   N = "Size of sample",
+  J = "Number of control items",
   prevalence_rate = "True prevalance rate",
   withholding_rate = "Probability of withholding, given the sensitive trait"
 )
