@@ -130,3 +130,14 @@ test_that("Election Forecast works", {
   DeclareDesign::diagnose_design(vary_N_election_forecast, sims = 10, bootstrap = F)
   
 })
+
+test_that("SRS works", {
+  
+  srs <- srs_template()
+  diagnose_design(srs, sims = 10, bootstrap = F)
+  
+  vary_N_srs <- fill_out(template = srs_template, n = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_srs, sims = 10, bootstrap = F)
+  
+})
+
