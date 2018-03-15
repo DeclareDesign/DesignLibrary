@@ -152,3 +152,15 @@ test_that("Audit works", {
   
 })
 
+test_that("Crossover works", {
+  
+  crossover <- crossover_template(N = 100,a = .5,b = .5,crossover = .2,rho = .6)
+  
+  DeclareDesign::diagnose_design(crossover, sims = 100, bootstrap = F)
+  
+  vary_rho_crossover <-
+    fill_out(template = crossover_template, rho = seq(.1,.9,.1))
+  DeclareDesign::diagnose_design(vary_rho_crossover, sims = 10, bootstrap = F)
+  
+})
+
