@@ -141,3 +141,14 @@ test_that("SRS works", {
   
 })
 
+test_that("Audit works", {
+  
+  audit <- audit_template()
+  diagnose_design(audit, sims = 10, bootstrap = F)
+  
+  vary_N_audit <-
+    fill_out(template = audit_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_audit, sims = 10, bootstrap = F)
+  
+})
+
