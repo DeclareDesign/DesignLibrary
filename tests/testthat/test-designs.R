@@ -100,7 +100,28 @@ test_that("Matching works", {
 })
 
 
-
+test_that("Process Tracing works",{
+  
+  process_tracing_diagnosands <- declare_diagnosands(
+    truth = mean(estimand),
+    mean_guess = mean(guess),
+    bias = mean(guess - estimand),
+    bias_given_K_seen = mean(guess[K_seen] - estimand[K_seen]),
+    bias_given_no_K_seen = mean(guess[!K_seen] - estimand[!K_seen]))
+  
+  process_tracing <- process_tracing_template()
+  
+  DeclareDesign::diagnose_design(process_tracing, sims = 100,bootstrap = F,diagnosands = process_tracing_diagnosands)
+  
+  vary_N_process_tracing <-
+    fill_out(template = process_tracing_template, N = c(200, 300, 400))
+  
+  DeclareDesign::diagnose_design(vary_N_process_tracing, sims = 100, 
+                                 bootstrap = F,
+                                 diagnosands = process_tracing_diagnosands)
+  
+  
+})
 
 
 
