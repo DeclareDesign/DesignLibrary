@@ -1,4 +1,3 @@
-#'
 #' @export
 regression_discontinuity_template <- function(
   N = c(1000, 50,100,250, 500, 2500, 5000, 10000),
