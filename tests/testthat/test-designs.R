@@ -90,7 +90,7 @@ test_that("Matching works", {
                         rmse = mean((estimand - est) ^ 2))
   
   match_out <- matching_template()
-  diagnose_design(match_out, sims = 100, bootstrap = F,
+  DeclareDesign::diagnose_design(match_out, sims = 100, bootstrap = F,
                   diagnosands = matching_diagnosands)
   
   vary_N_matching <- fill_out(template = matching_template, N = c(200, 300, 400))
@@ -124,7 +124,7 @@ test_that("Process Tracing works",{
 test_that("Election Forecast works", {
   
   election_forecast <- election_forecast_template()
-  diagnose_design(election_forecast, sims = 10, bootstrap = F)
+  DeclareDesign::diagnose_design(election_forecast, sims = 10, bootstrap = F)
   
   vary_N_election_forecast <- fill_out(template = election_forecast_template, N = c(200, 300, 400))
   DeclareDesign::diagnose_design(vary_N_election_forecast, sims = 10, bootstrap = F)
@@ -134,7 +134,7 @@ test_that("Election Forecast works", {
 test_that("SRS works", {
   
   srs <- srs_template()
-  diagnose_design(srs, sims = 10, bootstrap = F)
+  DeclareDesign::diagnose_design(srs, sims = 10, bootstrap = F)
   
   vary_N_srs <- fill_out(template = srs_template, n = c(200, 300, 400))
   DeclareDesign::diagnose_design(vary_N_srs, sims = 10, bootstrap = F)
@@ -144,7 +144,7 @@ test_that("SRS works", {
 test_that("Audit works", {
   
   audit <- audit_template()
-  diagnose_design(audit, sims = 10, bootstrap = F)
+  DeclareDesign::diagnose_design(audit, sims = 10, bootstrap = F)
   
   vary_N_audit <-
     fill_out(template = audit_template, N = c(200, 300, 400))
