@@ -164,3 +164,18 @@ test_that("Crossover works", {
   
 })
 
+test_that("Blocked and Clustered works", {
+  
+  blocked_and_clustered <- blocked_and_clustered_template()
+  
+  DeclareDesign::diagnose_design(blocked_and_clustered, sims = 100, bootstrap = F)
+  
+  vary_icc_blocked_and_clustered <-
+    fill_out(template = blocked_and_clustered_template, cluster_icc = seq(.1,.5,.1))
+  DeclareDesign::diagnose_design(vary_icc_blocked_and_clustered, sims = 10, bootstrap = F)
+  
+})
+
+
+
+
