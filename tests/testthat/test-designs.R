@@ -119,10 +119,36 @@ test_that("Process Tracing works",{
   DeclareDesign::diagnose_design(vary_N_process_tracing, sims = 100, 
                                  bootstrap = F,
                                  diagnosands = process_tracing_diagnosands)
+})
+
+test_that("Election Forecast works", {
   
+  election_forecast <- election_forecast_template()
+  diagnose_design(election_forecast, sims = 10, bootstrap = F)
+  
+  vary_N_election_forecast <- fill_out(template = election_forecast_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_election_forecast, sims = 10, bootstrap = F)
   
 })
 
+test_that("SRS works", {
+  
+  srs <- srs_template()
+  diagnose_design(srs, sims = 10, bootstrap = F)
+  
+  vary_N_srs <- fill_out(template = srs_template, n = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_srs, sims = 10, bootstrap = F)
+  
+})
 
-
+test_that("Audit works", {
+  
+  audit <- audit_template()
+  diagnose_design(audit, sims = 10, bootstrap = F)
+  
+  vary_N_audit <-
+    fill_out(template = audit_template, N = c(200, 300, 400))
+  DeclareDesign::diagnose_design(vary_N_audit, sims = 10, bootstrap = F)
+  
+})
 
