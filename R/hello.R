@@ -26,7 +26,12 @@ template_default_args_text <- function(template) {
 
 #' @export
 diagnose_design <- function(...) {
-  fname <- paste0(knitr::opts_current$get("label"), ".RDS")
+  lbl <- knitr::opts_current$get("label")
+  
+  # If not inside knitr, bail
+  if(is.null(lbl)) return(DeclareDesign::diagnose_design(...))
+  
+  fname <- paste0(lbl, ".RDS")
   if(file.exists(fname)) return(readRDS(file = fname))
   diagn <- DeclareDesign::diagnose_design(...)
   saveRDS(diagn, fname)
