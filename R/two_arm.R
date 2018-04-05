@@ -12,9 +12,7 @@ two_arm_template <- function(N = c(500, 100, 1000, 2000),
     tau_sd <- as.numeric(tau_sd[1])
     outcome_sd <- as.numeric(outcome_sd[1])
   }
-  {
-    {
-      {
+  {{{
         population <- declare_population(
           N = N,
           noise = rnorm(N, sd = outcome_sd),
@@ -29,9 +27,7 @@ two_arm_template <- function(N = c(500, 100, 1000, 2000),
                                   estimand,
                                   assignment,
                                   estimator)
-      }
-    }
-  }
+  }}}
   two_arm
 }
 
