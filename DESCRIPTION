@@ -17,3 +17,4 @@ Suggests: knitr,
     testthat
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
+Additional_Repositories: http://r.declaredesign.org
