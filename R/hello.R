@@ -1,10 +1,14 @@
 #' @export
-#' @importFrom utils getSrcref
+#' @importFrom utils getSrcref head
+#' @import stats
 template_text <- function(template) {
   txt <- as.character(getSrcref(template))
 
   open <- grep("[{]{3}", txt)
   close <- grep("[}]{3}", txt)
+
+  if(length(open) != 1) stop("could not find opening tag in ", substitute(template))
+  if(length(close) != 1) stop("could not find opening tag in ", substitute(template))
 
   txt <- txt[seq(open + 1, close - 1)]
 
@@ -27,10 +31,10 @@ template_default_args_text <- function(template) {
 #' @export
 diagnose_design <- function(...) {
   lbl <- knitr::opts_current$get("label")
-  
+
   # If not inside knitr, bail
   if(is.null(lbl)) return(DeclareDesign::diagnose_design(...))
-  
+
   fname <- paste0(lbl, ".RDS")
   if(file.exists(fname)) return(readRDS(file = fname))
   diagn <- DeclareDesign::diagnose_design(...)

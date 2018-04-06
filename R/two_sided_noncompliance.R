@@ -8,9 +8,7 @@ noncompliance_template <- function(N = c(100, 30, 500, 1000),
     pr_compliers <- as.numeric(pr_compliers[1])
     cace <- as.numeric(cace[1])
   }
-  {
-    {
-      {
+  {{{
         pop <- declare_population(
           N = N,
           type = sample(
@@ -21,12 +19,12 @@ noncompliance_template <- function(N = c(100, 30, 500, 1000),
           ),
           noise = rnorm(N)
         )
-        
+
         pos_D <-
           declare_potential_outcomes(D ~ as.numeric(type == "Always-taker" |
                                                       type == "Complier" &
                                                       Z == 1))
-        
+
         pos_Y <-
           declare_potential_outcomes(
             Y ~ cace * D +
@@ -35,7 +33,7 @@ noncompliance_template <- function(N = c(100, 30, 500, 1000),
               noise,
             assignment_variables = "D"
           )
-        
+
         assignment <- declare_assignment(prob = 0.5)
         cace_estimand = declare_estimand(CACE = mean(Y_D_1[type == "Complier"] - Y_D_0[type == "Complier"]))
         iv_estimator = declare_estimator(Y ~ D | Z,
@@ -58,9 +56,7 @@ noncompliance_template <- function(N = c(100, 30, 500, 1000),
             iv_estimator,
             as_treated_estimator
           )
-      }
-    }
-  }
+  }}}
         noncompliance
 }
 

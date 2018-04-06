@@ -10,9 +10,7 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
     prevalence_rate <- as.numeric(prevalence_rate[1])
     withholding_rate <- as.numeric(withholding_rate[1])
   }
-  {
-    {
-      {
+  {{{
         pop <-
           declare_population(
             N = N,
@@ -23,14 +21,14 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
               0:J,
               N,
               replace = TRUE,
-              prob = sample(c(.2, .3), J, replace = TRUE)
+              prob = sample(c(.2, .3), J + 1, replace = TRUE)
             )
           )
-        
+
         pos <- declare_potential_outcomes(Y ~ control_items + Z * sensitive_trait)
-        
+
         assignment <- declare_assignment(prob = 0.5)
-        
+
         true_rate <- declare_estimand(prevalence_rate = prevalence_rate)
         direct_estimator <-
           declare_estimator(
@@ -41,7 +39,7 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
           )
         list_estimator <-
           declare_estimator(Y ~ Z, estimand = true_rate, label = "List")
-        
+
         list_experiment <-
           declare_design(pop,
                          pos,
@@ -49,10 +47,8 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
                          assignment,
                          direct_estimator,
                          list_estimator)
-        
-      }
-    }
-  }
+
+  }}}
   list_experiment
 }
 

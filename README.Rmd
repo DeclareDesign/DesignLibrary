@@ -35,3 +35,10 @@ There are two main ways you can learn about the designs in the library:
 ## Contribute
 
 We encourage you to contribute your research design declaration to the library so that it can be used by other scholars. [Contact us](mailto:contribute@declaredesign.org) for instructions.
+
+
+## Build notes
+```
+R_KEEP_PKG_SOURCE=yes R CMD build .
+R CMD INSTALL designs_0.1.0.tar.gz
+```

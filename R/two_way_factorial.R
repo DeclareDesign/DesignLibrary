@@ -15,18 +15,17 @@ two_way_factorial_template <- function(N = c(30, 100, 500, 1000),
     population <- declare_population(N = N, noise = rnorm(N))
 
     potential_outcomes <- declare_potential_outcomes(
-      Y_Z_T1 = noise,
-      Y_Z_T2 = noise + beta_A,
-      Y_Z_T3 = noise + beta_B,
-      Y_Z_T4 = noise + beta_A + beta_B + beta_AB)
+      Y ~ beta_A*A + beta_B*B + beta_AB*A*B + noise,
+      conditions=list(A=0:1, B=0:1)
+    )
 
     # Inquiry ----------------------------------------------------------------------
     estimand <- declare_estimand(
-      interaction = mean((Y_Z_T4 - Y_Z_T3) - (Y_Z_T2 - Y_Z_T1))
+      interaction = mean((Y_A_1_B_1 - Y_A_1_B_0) - (Y_A_0_B_1 - Y_A_0_B_0))
       )
 
     # Data Strategy ----------------------------------------------------------------
-    assignment <- declare_assignment(num_arms = 4)
+    assignment <- declare_assignment(assignment_variable=A && B)
 
     # Answer Strategy --------------------------------------------------------------
     estimator <- declare_estimator(Y ~ A + B + A:B,
@@ -40,12 +39,10 @@ two_way_factorial_template <- function(N = c(30, 100, 500, 1000),
       potential_outcomes,
       estimand,
       assignment,
-      dplyr::mutate(A = as.numeric(Z %in% c("T2", "T4")),
-                    B = as.numeric(Z %in% c("T3", "T4"))),
-      declare_reveal(Y),
+      declare_reveal(Y, A && B),
       estimator)
   }}}
-  design <- insert_step(design, after=7, declare_citation(
+  design <- insert_step(design, after=length(design), declare_citation(
     citation = utils::bibentry(
       bibtype = "Article",
       title = "A factorial experiment in teachers’ written feedback on student homework: Changing teacher behavior a little rather than a lot.",

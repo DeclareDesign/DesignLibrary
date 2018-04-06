@@ -5,19 +5,17 @@ matching_template <- function(N = c(100, 30, 500, 1000))
   {
     N <- as.numeric(N[1])
   }
-  {
-    {
-      {
+  {{{
         population <- declare_population(
           N = N,
           X1 = rnorm(N),
           X2 = rnorm(N),
           X3 = rnorm(N)
         )
-        
+
         potential_outcomes <-
           declare_potential_outcomes(formula = Y ~ X1 + X2 + X3 + Z)
-        
+
         assignment <- declare_assignment(
           handler =  function(data) {
             prob <- with(data, pnorm(X1 + X2 + X3))
@@ -25,12 +23,12 @@ matching_template <- function(N = c(100, 30, 500, 1000))
             return(data)
           }
         )
-        
+
         att <- declare_estimand(att = mean(Y_Z_1[Z == 1] - Y_Z_0[Z == 1]))
-        
+
         estimator_d_i_m <-
           declare_estimator(Y ~ Z, estimand = estimand, label = "dim")
-        
+
         matching_helper <- function(data) {
           match_out <- with(data, Matching::Match(
             Y = Y,
@@ -48,13 +46,13 @@ matching_template <- function(N = c(100, 30, 500, 1000))
             )
           )
         }
-        
+
         estimator_m <- declare_estimator(
           handler = tidy_estimator(matching_helper),
           estimand = att,
           label = "matching"
         )
-        
+
         matching <- declare_design(
           population,
           potential_outcomes,
@@ -64,9 +62,7 @@ matching_template <- function(N = c(100, 30, 500, 1000))
           estimator_d_i_m,
           estimator_m
         )
-      }
-    }
-  }
+  }}}
   matching
 }
 attr(matching_template, "tips") <- c(N = "Size of sample")
