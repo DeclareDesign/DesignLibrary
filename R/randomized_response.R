@@ -9,35 +9,35 @@ randomized_response_template <- function(
     N <- as.numeric(N[1])
     prob_forced_yes <- as.numeric(prob_forced_yes[1])
     prevalence_rate <- as.numeric(prevalence_rate[1])
-    withholding_rate <- as.numeric(withholding_rate[1])  
+    withholding_rate <- as.numeric(withholding_rate[1])
   }
   {{{
     population <- declare_population(
       N = N,
       sensitive_trait = draw_binary(prob = prevalence_rate, N = N),
-      withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N), 
+      withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
     coin_flip <- declare_assignment(
       prob = prob_forced_yes,
-      condition_names = c("Truth","Yes")
+      conditions = c("Truth","Yes")
     )
     potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
-      Y_Z_Truth = sensitive_trait 
+      Y_Z_Truth = sensitive_trait
     )
     estimand <- declare_estimand(true_rate = prevalence_rate)
     randomized_response_estimator <- declare_estimator(
       handler = tidy_estimator(
         function(data) with(
-          data, 
+          data,
           data.frame(est = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
       estimand = estimand,
       label = "Forced Response"
     )
     direct_question_estimator <- declare_estimator(
       handler = tidy_estimator(function(data) with(
-        data, 
+        data,
         data.frame(est = mean(direct_answer)))),
       estimand = estimand,
       label = "Direct Question"

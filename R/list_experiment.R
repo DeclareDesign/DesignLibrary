@@ -21,7 +21,7 @@ list_experiment_template <- function(N = c(1000, 1500, 2000, 2500),
               0:J,
               N,
               replace = TRUE,
-              prob = sample(c(.2, .3), J, replace = TRUE)
+              prob = sample(c(.2, .3), J + 1, replace = TRUE)
             )
           )
 
