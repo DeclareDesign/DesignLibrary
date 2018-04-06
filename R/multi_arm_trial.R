@@ -1,6 +1,3 @@
-library(DeclareDesign)
-library(dplyr)
-
 
 multi_arm_trial <- function(
   N=c(1000, 100, 500, 2000),

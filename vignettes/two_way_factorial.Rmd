@@ -11,7 +11,7 @@ vignette: >
 
 
 ```{r MIDA, echo = FALSE,include = FALSE}
-library(DDlib)
+library(designs)
 ```
 
 
