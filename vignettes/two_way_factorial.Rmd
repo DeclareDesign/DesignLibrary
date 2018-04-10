@@ -106,7 +106,7 @@ if(exists("diagnosis")) {
 ```
 
 ```{r two_way_factorial_diagnoses_N}
-designs <- fill_out(two_way_factorial_template,
+designs <- expand_design(two_way_factorial_template,
                         N = seq(150,3000,150),  
                         beta_A = 0,
                         beta_B = 0,
