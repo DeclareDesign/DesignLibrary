@@ -33,7 +33,8 @@ block_cluster_two_arm_designer <- function(N_blocks = 2,
 ){
   # Below is grabbed by get_design_code
   
-design_code <- function()  {{{
+design_code <- function() { 
+  {{{
   
   # M: Model
    pop <- declare_population(
@@ -45,7 +46,7 @@ design_code <- function()  {{{
                       Z1 = Z0 +   treatment_mean)
       )
     
-    potential_outcomes <- declare_potential_outcomes(Y ~ Z0 + Z * Z1)
+   potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z)*Z0 + Z * Z1)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -60,8 +61,12 @@ design_code <- function()  {{{
                                    clusters = clusters)
     
     # Design
-    pop / potential_outcomes / estimand /assignment / declare_reveal() /estimator
-}}}    
+    block_cluster_two_arm <- pop / potential_outcomes / estimand /assignment / declare_reveal() /estimator
+    
+  }}}    
+
+  block_cluster_two_arm
+  }
 
 if(code)  out <- get_design_code(design_code)
 if(!code) out <- design_code()
