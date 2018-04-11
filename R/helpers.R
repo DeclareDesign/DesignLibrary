@@ -21,6 +21,22 @@ get_design_code <- function(designer) {
   sub(indentation, "", txt)
 }
 
+#' Run diagnosis and store RDS
+#' @param ... Design, number of simulations and bootstraps for DeclareDesign
+#' @return Diagnosis
+#' @export
+#'
+get_or_run_diagnosis <- function(design,sims,bootstrap) {
+  design_name <- substitute(design)
+  file_name <- paste0(design_name,"_diagnosis.RDS")
+  if(file.exists(file_name)){ 
+    diagnosis <- readRDS(file = file_name)
+  } else {
+    diagnosis <- DeclareDesign::diagnose_design(design,sims = sims,bootstrap = bootstrap)
+    saveRDS(diagnosis, file_name)
+  }
+  diagnosis
+}
 
 
 
