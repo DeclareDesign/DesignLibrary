@@ -1,6 +1,6 @@
 #' Create a simple two arm design
 #' @param N Number of units
-#' @param code If TRUE template  returns the code of a design 
+#' @param code If TRUE designer returns the code of a design 
 #' @return a function that returns a design
 #' @export
 #'
