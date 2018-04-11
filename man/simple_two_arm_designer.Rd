@@ -11,7 +11,7 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 \arguments{
 \item{N}{Number of units}
 
-\item{code}{If TRUE template  returns the code of a design}
+\item{code}{If TRUE designer returns the code of a design}
 }
 \value{
 a function that returns a design
