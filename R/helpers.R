@@ -38,6 +38,30 @@ get_or_run_diagnosis <- function(design,sims,bootstrap) {
   diagnosis
 }
 
+#' @export
+#'
+get_shiny_arguments <- function(designer){
+  attributes(designer)$shiny_arguments
+}
+
+#' @export
+#'
+get_constants <- function(designer){
+  shiny_arguments <- get_shiny_arguments(designer)
+  formals(designer)[!names(formals(designer)) %in% names(shiny_arguments)]
+}
+
+#' @export
+#'
+designer_default_args_text <- function(designer) {
+  shinys <- get_shiny_arguments(designer)
+  shinys <- lapply(shinys,function(x)x[1])
+  args <- c(shinys,get_constants(designer))
+  args <- args[-which(names(args) == "code")]
+  args <- lapply(args,deparse)
+  mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
+}
+
 
 
 
