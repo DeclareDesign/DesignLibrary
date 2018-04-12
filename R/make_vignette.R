@@ -97,8 +97,8 @@ make_text <- function(text, text_path){
 #' @param end_text_path   Path to .Rmd; If different from NULL, it overwrites end_text
 #' @param n_sims number of simulations for DeclareDesign
 #' @param n_bootstraps  number of bootstraps for DeclareDesign 
-#' @return A .Rmd and A RDS
-#' @export
+#' @return This function creates a .Rmd 
+#' @export 
 #'
 #' @examples
 
