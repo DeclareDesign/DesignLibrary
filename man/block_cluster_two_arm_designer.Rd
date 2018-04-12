@@ -2,43 +2,60 @@
 % Please edit documentation in R/block_cluster_two_arm_designer.R
 \name{block_cluster_two_arm_designer}
 \alias{block_cluster_two_arm_designer}
-\title{Create a simple two arm design}
+\title{Create a two arm design with blocks and clusters}
 \usage{
 block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
-  N_i_in_cluster = 1, sd_block = 0.2, sd_cluster = 0.2, sd_i = max(0, 1
-  - sd_block - sd_cluster), prob = 0.5, control_mean = 0, ate = 1,
-  treatment_mean = control_mean + ate, code = FALSE)
+  N_i_in_cluster = 1, sd_block = 0.2, sd_cluster = 0.2,
+  sd_i = sqrt(max(0, 1 - sd_block^2 - sd_cluster^2)), prob = 0.5,
+  control_mean = 0, ate = 1, treatment_mean = control_mean + ate,
+  code = FALSE)
 }
 \arguments{
-\item{N_blocks}{Number of blocks}
+\item{N_blocks}{Number of blocks.}
 
-\item{N_clusters_in_block}{Number of clusters per block}
+\item{N_clusters_in_block}{Number of clusters in each block.}
 
-\item{N_i_in_cluster}{Individuals per block}
+\item{N_i_in_cluster}{Individuals per block.}
 
-\item{sd_block}{Standard deviation of block level shocks}
+\item{sd_block}{Standard deviation of block level shocks.}
 
-\item{sd_cluster}{Standard deviation of cluster level shock}
+\item{sd_cluster}{Standard deviation of cluster level shock.}
 
-\item{sd_i}{Standard deviation of individual level shock}
+\item{sd_i}{Standard deviation of individual level shock.}
 
-\item{prob}{Assignment probability}
+\item{prob}{A treatment assignment probability.}
 
-\item{control_mean}{Average outcome in control}
+\item{control_mean}{Average outcome in control.}
 
-\item{ate}{Average treatment effect}
+\item{ate}{Average treatment effect.}
 
-\item{treatment_mean}{Average outcome in treatment}
+\item{treatment_mean}{Average outcome in treatment.}
 
-\item{code}{If TRUE template returns the code of a design}
+\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
-a function that returns a design
+A function that returns a design.
 }
 \description{
-Note: Default arguments produce a design without blocks and clusters and with N determined by `N_cluster_in_block`
+This designer builds a design with blocks and clusters. Normal shocks can be specified at the 
+individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
+level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1. 
+Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
+or by specifying an \code{ate}.
+}
+\details{
+Key limitations: The designer assumes constant treatment effects 
+and no covariance between potential outcomes.
+
+Note: Default arguments produce a design without blocks and clusters and
+with N determined by \code{N_cluster_in_block}. Units are assigned to treatment using complete block cluster random assignment. 
+Analysis uses differences in means accounting for blocks and clusters.
 }
 \examples{
+# To make a design using default arguments:
 block_cluster_two_arm_design <- block_cluster_two_arm_designer()
+
+# To export DeclareDesign code for a design:
 block_cluster_two_arm_designer(code = TRUE)
+
 }

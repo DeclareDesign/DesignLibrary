@@ -1,87 +1,126 @@
-#' Create a simple two arm design
+#' Create a two arm design with blocks and clusters
+#'
+#' This designer builds a design with blocks and clusters. Normal shocks can be specified at the 
+#' individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
+#' level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1. 
+#' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
+#' or by specifying an \code{ate}.
 #' 
-#' Note: Default arguments produce a design without blocks and clusters and with N determined by `N_cluster_in_block`
+#' Key limitations: The designer assumes constant treatment effects 
+#' and no covariance between potential outcomes.
 #' 
-#' @param code If TRUE template returns the code of a design 
-#' @param N_blocks Number of blocks
-#' @param N_clusters_in_block Number of clusters per block
-#' @param N_i_in_cluster Individuals per block
-#' @param sd_block Standard deviation of block level shocks
-#' @param sd_cluster Standard deviation of cluster level shock
-#' @param sd_i Standard deviation of individual level shock 
-#' @param prob Assignment probability
-#' @param control_mean Average outcome in control
-#' @param ate  Average treatment effect 
-#' @param treatment_mean Average outcome in treatment
-#' @return a function that returns a design
+#' Note: Default arguments produce a design without blocks and clusters and
+#' with N determined by \code{N_cluster_in_block}. Units are assigned to treatment using complete block cluster random assignment. 
+#' Analysis uses differences in means accounting for blocks and clusters. 
+#'
+#' @param code Logical. If TRUE, returns the code of a design, otherwise returns a design.
+#' @param N_blocks Number of blocks.
+#' @param N_clusters_in_block Number of clusters in each block.
+#' @param N_i_in_cluster Individuals per block.
+#' @param sd_block Standard deviation of block level shocks.
+#' @param sd_cluster Standard deviation of cluster level shock.
+#' @param sd_i Standard deviation of individual level shock.
+#' @param prob A treatment assignment probability.
+#' @param control_mean Average outcome in control.
+#' @param ate  Average treatment effect.
+#' @param treatment_mean Average outcome in treatment.
+#' @return A function that returns a design.
 #' @export
 #'
 #' @examples
+#' # To make a design using default arguments:
 #' block_cluster_two_arm_design <- block_cluster_two_arm_designer()
+#'
+#' # To export DeclareDesign code for a design:
 #' block_cluster_two_arm_designer(code = TRUE)
+#'
 
 
-block_cluster_two_arm_designer <- function(
-                                    N_blocks = 1,
-                                    N_clusters_in_block = 100,
-                                    N_i_in_cluster = 1,
-                                    sd_block = .2,
-                                    sd_cluster = .2,
-                                    sd_i = max(0, 1 - sd_block - sd_cluster),
-                                    prob = .5,
-                                    control_mean = 0,
-                                    ate = 1,
-                                    treatment_mean = control_mean + ate,
-                                    code = FALSE
-){
+block_cluster_two_arm_designer <- function(N_blocks = 1,
+                                           N_clusters_in_block = 100,
+                                           N_i_in_cluster = 1,
+                                           sd_block = .2,
+                                           sd_cluster = .2,
+                                           sd_i = sqrt(max(0, 1 - sd_block^2 - sd_cluster^2)),
+                                           prob = .5,
+                                           control_mean = 0,
+                                           ate = 1,
+                                           treatment_mean = control_mean + ate,
+                                           code = FALSE)
+{
+  if(sd_block<0) stop("sd_block must be non-negative")
+  if(sd_cluster<0) stop("sd_cluster must be non-negative")
+  if(sd_i<0) stop("sd_i must be non-negative")
+  if(prob<0 | prob>1) stop("prob must be in [0,1]")
   
-  # Below is grabbed by get_design_code
-
+  design_code <- function() {
+    # Below is grabbed by get_design_code
     
-design_code <- function() { 
-  
-  {{{
-  
-  # M: Model
-   pop <- declare_population(
-      blocks   = add_level(N = N_blocks, 
-                           u_b = rnorm(N)*sd_block),
-      clusters = add_level(N = N_clusters_in_block, 
-                           u_c = rnorm(N)*sd_cluster,
-                           cluster_size = N_i_in_cluster),
-      i        = add_level(N  = N_i_in_cluster, 
-                           u_i = rnorm(N)*sd_i,
-                           Z0 = u_i + u_b + u_c,
-                           Z1 = Z0 + treatment_mean)
+    {{{
+      # M: Model
+      pop <- declare_population(
+        blocks   = add_level(
+          N = N_blocks,
+          u_b = rnorm(N) * sd_block),
+        clusters = add_level(
+          N = N_clusters_in_block,
+          u_c = rnorm(N) * sd_cluster,
+          cluster_size = N_i_in_cluster
+        ),
+        i = add_level(
+          N   = N_i_in_cluster,
+          u_i = rnorm(N) * sd_i,
+          Z0  = control_mean + u_i + u_b + u_c,
+          Z1  = treatment_mean  + u_i + u_b + u_c
+        )
       )
+      
+      pos <- declare_potential_outcomes(Y ~ (1 - Z) * Z0 + Z * Z1)
+      
+      # I: Inquiry
+      estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+      
+      # D: Data
+      assignment <- declare_assignment(prob = prob,
+                                       blocks = blocks,
+                                       clusters = clusters)
+      
+      # A: Analysis
+      est <- declare_estimator(
+        Y ~ Z,
+        estimand = estimand,
+        model = difference_in_means,
+        blocks = blocks,
+        clusters = clusters
+      )
+      
+      # Design
+      block_cluster_two_arm_design <-  pop / pos / estimand / assignment / 
+        declare_reveal() / est
+    }}}
     
-   potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z)*Z0 + Z * Z1)
-    
-    # I: Inquiry
-    estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
-    
-    # D: Data
-    assignment <- declare_assignment(prob = prob, blocks = blocks, clusters = clusters)
-    
-    # A: Analysis
-    estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
-                                   model = difference_in_means, 
-                                   blocks = blocks, 
-                                   clusters = clusters)
-    
-    # Design
-    block_cluster_two_arm <- pop / potential_outcomes / estimand /assignment / declare_reveal() /estimator
-    
-  }}}    
-
-  block_cluster_two_arm
+    block_cluster_two_arm_design
   }
-
-if(code)  out <- get_design_code(design_code)
-if(!code) out <- design_code()
-return(out)
+  
+  if (code)
+    out <- get_design_code(design_code)
+  else
+    out <- design_code()
+  return(out)
 }
 
-attr(block_cluster_two_arm_designer, "shiny_args") <- list(N_blocks = c(10, 20, 50), N_cluster_in_block = c(2, 4),
-                                                           N_i_in_cluster = c(1, 5, 10), ate = c(0, .1, .3)) 
+attr(block_cluster_two_arm_designer, "shiny_arguments") <-
+  list(
+    N_blocks = c(10, 20, 50),
+    N_cluster_in_block = c(2, 4),
+    N_i_in_cluster = c(1, 5, 10),
+    ate = c(0, .1, .3)
+  )
 
+attr(block_cluster_two_arm_designer, "tips") <-
+  list(
+    N_blocks = "Number of blocks",
+    N_cluster_in_block = "Number of clusters in each block",
+    N_i_in_cluster = "Number of units in each cluster",
+    ate = "The average treatment effect"
+  )
