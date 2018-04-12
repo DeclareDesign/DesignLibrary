@@ -1,3 +1,2 @@
 library(testthat)
-library(designs)
 
