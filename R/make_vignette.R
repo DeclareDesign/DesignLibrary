@@ -91,10 +91,10 @@ make_text <- function(text, text_path){
 
 #' Create a simple two arm design
 #' @param design_or_designer A design or a designer
-#' @param fron_text_path Path to .Rmd
-#' @param end_text_path  Path to .Rmd
-#' @param fron_text A character string 
+#' @param front_text A character string 
 #' @param end_text A character string 
+#' @param front_text_path Path to .Rmd; If different from NULL, it overwrites front_text
+#' @param end_text_path   Path to .Rmd; If different from NULL, it overwrites end_text
 #' @param n_sims number of simulations for DeclareDesign
 #' @param n_bootstraps  number of bootstraps for DeclareDesign 
 #' @return A .Rmd and A RDS
@@ -102,7 +102,7 @@ make_text <- function(text, text_path){
 #'
 #' @examples
 
-make_vignette <- function(design_or_designer = NULL, front_text = "", end_text = "", n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE, front_text_path = NULL, end_text_path = NULL ){
+make_vignette <- function(design_or_designer = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
   
   object_name <- deparse(substitute(design_or_designer))
   
