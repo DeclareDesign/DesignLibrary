@@ -57,11 +57,103 @@ designer_default_args_text <- function(designer) {
   shinys <- get_shiny_arguments(designer)
   shinys <- lapply(shinys,function(x)x[1])
   args <- c(shinys,get_constants(designer))
+  args <- args[names(formals(designer))]
   args <- args[-which(names(args) == "code")]
   args <- lapply(args,deparse)
   mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
 }
 
+#' @export
+#'
+expand_designer_shiny_args_text <- function(designer) {
+  shinys <- get_shiny_arguments(designer)
+  all_shinys <- expand.grid(shinys)
+  shinys <- lapply(shinys,function(x)x[1])
+  lapply(1:nrow(all_shinys),function(i){
+    shiny_args <- (all_shinys[i,])
+    args <- c(shiny_args,get_constants(designer))
+    args <- args[names(formals(designer))]
+    args <- args[-which(names(args) == "code")]
+    args <- lapply(args,deparse)
+    mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
+  })
+}
+
+#' @export
+#'
+ get_shiny_diagnosis <- function(designer,sims) {
+   shiny_args <- get_shiny_arguments(designer)
+   all_designs <- fill_out(template = designer,expand = TRUE,shiny_args)
+   diagnosis <- diagnose_design(all_designs,sims = sims,bootstrap = FALSE)
+   argument_list <- expand_designer_shiny_args_text(designer = designer)
+   return(list(diagnosis = diagnosis, argument_list = argument_list))
+}
+
+ #' @export
+ #'
+ get_or_run_shiny_diagnosis <- function(designer,sims,bootstrap) {
+   designer_name <- substitute(designer)
+   design_name <- gsub(pattern = "_designer",replacement = "",x = designer_name)
+   file_name <- paste0(design_name,"_shiny_diagnosis.RDS")
+   parameters <- expand.grid(get_shiny_arguments(designer), stringsAsFactors = FALSE)
+   if(file.exists(file_name)){ 
+     diagnosis_list <- readRDS(file = file_name)
+     diagnosis <- diagnosis_list$diagnosis
+   } else {
+     diagnosis_list <- DesignLibrary::get_shiny_diagnosis(designer,sims = sims)
+     diagnosis <- diagnosis_list$diagnosis
+     diagnosis$diagnosands <- cbind(diagnosis$diagnosands,parameters)
+     diagnosis_list$diagnosis <- diagnosis
+     saveRDS(diagnosis_list, file_name)
+   }
+   diagnosis
+ }
+ 
+ #' @export
+ #'
+contribute_design <- function(design,title,description){
+  design_name <- substitute(design)
+  if(!grepl("_design",design_name)) stop("Your design must have the suffix _design.")
+  if(!grepl("designs",getwd())) stop("You should contribute designs from within the DesignLibrary working directory.")
+  
+  roxy_header <- paste0(
+    "#' ",title,"\n#' \n",
+    "#' ",description,"\n#' \n",
+    "#' @docType data \n",
+    "#' @keywords datasets \n",
+    "#' @name ", design_name, "\n",
+    "#' @usage summary(",design_name,")\n",
+    "#' @format A design\n\n", 
+    "'",design_name,"'"
+  )
+  
+  documentation_path <- paste0("R/",design_name,".R")
+  cat(roxy_header,file = documentation_path)
+  
+  data_path <- paste0("data/",design_name,".rda")
+  eval(parse(text = paste0("save(",design_name,",file = data_path)")))
+  
+  message(paste0("Documentation for ",design_name," exported to ",
+                 documentation_path,".\n Data file for ",
+                 design_name, " exported to ",data_path,"."))
+}
 
 
 
+  
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
