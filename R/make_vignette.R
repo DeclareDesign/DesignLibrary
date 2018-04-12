@@ -1,13 +1,12 @@
 make_header <- function(title = "", has_shiny, file_name = "" ){
-  x <- paste0('
----
+  x <- paste0('---
 title: " ', title, ' " 
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-%\\VignetteIndexEntry{',title,'}
-%\\VignetteEngine{knitr::rmarkdown}
-%\\VignetteEncoding{UTF-8}
+ %\\VignetteIndexEntry{',title,'}
+ %\\VignetteEngine{knitr::rmarkdown}
+ %\\VignetteEncoding{UTF-8}
 ---
               
 ```{r, include=FALSE, eval=TRUE}
@@ -15,7 +14,7 @@ options("keep.source"=TRUE,
         knitr.duplicate.label = "allow" )
 library(knitr)
 library(ggplot2)
-library(designs)
+library(DesignLibrary)
 ```
               
 <div class="btn-group">
@@ -54,7 +53,7 @@ make_designer_chunks <- function(file_name, n_sims, n_bootstrap) {
   
 
 ```{r ',file_name,'_diagnosis,echo = FALSE}
- diagnosis <- get_or_run_diagnosis(',file_name,', sims = ',n_sims,', bootstrap = ',n_bootstrap,')
+ diagnosis <- get_or_run_diagnosis(',file_name,'_design, sims = ',n_sims,', bootstrap = ',n_bootstrap,')
  knitr::kable(diagnosis$diagnosands,digits = 2)
 ```
   
