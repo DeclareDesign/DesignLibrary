@@ -100,7 +100,6 @@ make_text <- function(text, text_path){
 #' @return This function creates a .Rmd 
 #' @export 
 #'
-#' @examples
 
 make_vignette <- function(design_or_designer = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
   
