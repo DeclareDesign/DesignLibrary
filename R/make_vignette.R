@@ -1,4 +1,4 @@
-make_header <- function(title = "", has_shiny, file_name = "" ){
+make_header <- function(title = "", shiny, file_name = "" ){
   x <- paste0('---
 title: " ', title, ' " 
 output: rmarkdown::html_vignette
@@ -20,11 +20,11 @@ library(DesignLibrary)
 <div class="btn-group">
   <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'.R">
      <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
-        </a>
-    <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'_designer.RDS">
+  </a>
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'_designer.RDS">
      <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
-    </a>', has_shiny,' 
-  </div>
+  </a>', shiny,' 
+</div>
             
   
 ')}
@@ -39,9 +39,7 @@ diagnosis <- get_or_run_diagnosis(', file_name, ', sims = ', n_sims, ', bootstra
 ')
 }
 
-
 make_designer_chunks <- function(file_name, n_sims, n_bootstrap) {
-  
   chunk2 <- ""
   chunk1 <- paste0('
 ```{r, code = designer_default_args_text(', file_name, '_designer)}
@@ -90,6 +88,7 @@ make_text <- function(text, text_path){
 
 #' Create a simple two arm design
 #' @param design_or_designer A design or a designer
+#' @param vignette_title A character string 
 #' @param front_text A character string 
 #' @param end_text A character string 
 #' @param front_text_path Path to .Rmd; If different from NULL, it overwrites front_text
@@ -100,10 +99,11 @@ make_text <- function(text, text_path){
 #' @export 
 #'
 
-make_vignette <- function(design_or_designer = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
+make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
   
+  title <- vignette_title
   object_name <- deparse(substitute(design_or_designer))
-  
+  shiny = ""
   if(class(design_or_designer) == "design") 
     make_chunks <- make_design_chunks
   else {
@@ -111,9 +111,9 @@ make_vignette <- function(design_or_designer = NULL, front_text = "", end_text =
     make_chunks <- make_designer_chunks
   }
   
-  title_ <- object_name
   file_name <- tolower(object_name)
-  title <-  sub("_", replacement = " ", object_name) 
+  
+  if(is.null(title)) title <-  gsub("_", replacement = " ", object_name) 
   
   if(has_shiny) shiny <- 
     paste0('
@@ -124,16 +124,12 @@ make_vignette <- function(design_or_designer = NULL, front_text = "", end_text =
 -->'
     
   )
-  else 
-    shiny <- ""
-  
+ 
   front_text <- make_text(front_text, front_text_path)
-  
   end_text   <- make_text(end_text, end_text_path)
 
   file.create(paste0(file_name, ".Rmd"))
-  
-  cat(make_header(title = file_name, has_shiny ),
+  cat(make_header(title, shiny, file_name ),
       front_text,
       make_chunks(file_name, n_sims, n_bootstrap),
       end_text, sep ="\n", file = paste0(file_name, ".Rmd"))
