@@ -96,4 +96,4 @@ audit_experiment_designer <- function(N = 100,code = FALSE)
     return(out)
   }
 attr(audit_experiment_designer, "tips") <- c(N = "Size of sample")
-attr(audit_experiment_designer, "shiny_arguments") <- c(N = c(100, 500, 1000))
+attr(audit_experiment_designer, "shiny_arguments") <- list(N = c(100, 500, 1000))
