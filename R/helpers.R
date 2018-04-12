@@ -87,6 +87,51 @@ designer_default_args_text <- function(designer) {
    diagnosis
  }
  
+ #' @export
+ #'
+contribute_design <- function(design,title,description){
+  design_name <- substitute(design)
+  if(!grepl("_design",design_name)) stop("Your design must have the suffix _design.")
+  if(!grepl("designs",getwd())) stop("You should contribute designs from within the DesignLibrary working directory.")
+  
+  roxy_header <- paste0(
+    "#' ",title,"\n#' \n",
+    "#' ",description,"\n#' \n",
+    "#' @docType data \n",
+    "#' @keywords datasets \n",
+    "#' @name ", design_name, "\n",
+    "#' @usage summary(",design_name,")\n",
+    "#' @format A design\n\n", 
+    "'",design_name,"'"
+  )
+  
+  documentation_path <- paste0("R/",design_name,".R")
+  cat(roxy_header,file = documentation_path)
+  
+  data_path <- paste0("data/",design_name,".rda")
+  eval(parse(text = paste0("save(",design_name,",file = data_path)")))
+  
+  message(paste0("Documentation for ",design_name," exported to ",
+                 documentation_path,".\n Data file for ",
+                 design_name, " exported to ",data_path,"."))
+}
 
 
 
+  
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
