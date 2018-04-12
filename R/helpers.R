@@ -62,6 +62,31 @@ designer_default_args_text <- function(designer) {
   mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
 }
 
+#' @export
+#'
+ get_shiny_diagnosis <- function(designer,sims) {
+   shiny_args <- get_shiny_arguments(designer)
+   all_designs <- fill_out(template = designer,expand = TRUE,shiny_args)
+   diagnose_design(all_designs,sims = sims,bootstrap = FALSE)
+}
+
+ #' @export
+ #'
+ get_or_run_shiny_diagnosis <- function(designer,sims,bootstrap) {
+   designer_name <- substitute(designer)
+   design_name <- gsub(pattern = "_designer",replacement = "",x = designer_name)
+   file_name <- paste0(design_name,"_shiny_diagnosis.RDS")
+   parameters <- expand.grid(get_shiny_arguments(designer), stringsAsFactors = FALSE)
+   if(file.exists(file_name)){ 
+     diagnosis <- readRDS(file = file_name)
+   } else {
+     diagnosis <- DesignLibrary::get_shiny_diagnosis(designer,sims = sims)
+     diagnosis$diagnosands <- cbind(diagnosis$diagnosands,parameters)
+     saveRDS(diagnosis, file_name)
+   }
+   diagnosis
+ }
+ 
 
 
 
