@@ -1,12 +1,20 @@
-#' Create a simple two arm design
-#' @param N Number of units
-#' @param code If TRUE designer returns the code of a design 
-#' @return a function that returns a design
+#' Create a regression discontinuity design
+#' 
+#' @param N An integer. Size of population to sample from.
+#' @param tau A scalar number. Difference in potential outcomes functions at the threshold.
+#' @param cutoff A scalar number in (0,1). Threshold on running variable beyond which units are treated.
+#' @param bandwidth A scalar number. Bandwidth around threshold from which to include units.
+#' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
+#' @param code Logical. If TRUE designer returns the code of a design, otherwise returns design. 
+#' @return A regression discontinuity design design
 #' @export
 #'
 #' @examples
-#' simple_two_arm_design <- simple_two_arm_designer()
-#' simple_two_arm_designer(code = TRUE)
+#' # A regression discontinuity design using default arguments:
+#' regression_discontinuity_design <- regression_discontinuity_designer()
+#' 
+#' # Code for regression discontinuity design
+#' regression_discontinuity_designer(code = TRUE)
 
 #' @export
 regression_discontinuity_designer <- function(
@@ -24,12 +32,12 @@ regression_discontinuity_designer <- function(
         as.vector(poly(X, 4, raw = T) %*% c(.7, -.8, .5, 1))}
       treatment <- function(X) {
         as.vector(poly(X, 4, raw = T) %*% c(0, -1.5, .5, .8)) + tau}
-      population <- declare_population(
+      pop <- declare_population(
         N = N,
         X = runif(N,0,1) - cutoff,
         noise = rnorm(N,0,.1),
         Z = 1 * (X > 0))
-      potential_outcomes <- declare_potential_outcomes(
+      pos <- declare_potential_outcomes(
         Y_Z_0 = control(X) + noise,
         Y_Z_1 = treatment(X) + noise)
       

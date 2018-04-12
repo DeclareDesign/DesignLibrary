@@ -2,23 +2,34 @@
 % Please edit documentation in R/regression_discontinuity_designer.R
 \name{regression_discontinuity_designer}
 \alias{regression_discontinuity_designer}
-\title{Create a simple two arm design}
+\title{Create a regression discontinuity design}
 \usage{
 regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
   bandwidth = 0.5, poly_order = 4, code = FALSE)
 }
 \arguments{
-\item{N}{Number of units}
+\item{N}{An integer. Size of population to sample from.}
 
-\item{code}{If TRUE designer returns the code of a design}
+\item{tau}{A scalar number. Difference in potential outcomes functions at the threshold.}
+
+\item{cutoff}{A scalar number in (0,1). Threshold on running variable beyond which units are treated.}
+
+\item{bandwidth}{A scalar number. Bandwidth around threshold from which to include units.}
+
+\item{poly_order}{An integer. Order of the polynomial regression used to estimate the jump at the cutoff.}
+
+\item{code}{Logical. If TRUE designer returns the code of a design, otherwise returns design.}
 }
 \value{
-a function that returns a design
+A regression discontinuity design design
 }
 \description{
-Create a simple two arm design
+Create a regression discontinuity design
 }
 \examples{
-simple_two_arm_design <- simple_two_arm_designer()
-simple_two_arm_designer(code = TRUE)
+# A regression discontinuity design using default arguments:
+regression_discontinuity_design <- regression_discontinuity_designer()
+
+# Code for regression discontinuity design
+regression_discontinuity_designer(code = TRUE)
 }
