@@ -24,7 +24,12 @@ regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
 A regression discontinuity design design
 }
 \description{
-Create a regression discontinuity design
+Description: here.
+}
+\details{
+Key limitations: here.
+
+Note: here.
 }
 \examples{
 # A regression discontinuity design using default arguments:

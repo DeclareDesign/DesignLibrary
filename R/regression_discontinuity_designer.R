@@ -1,5 +1,11 @@
 #' Create a regression discontinuity design
 #' 
+#' Description: here.
+#' 
+#' Key limitations: here.
+#' 
+#' Note: here.
+#' 
 #' @param N An integer. Size of population to sample from.
 #' @param tau A scalar number. Difference in potential outcomes functions at the threshold.
 #' @param cutoff A scalar number in (0,1). Threshold on running variable beyond which units are treated.
