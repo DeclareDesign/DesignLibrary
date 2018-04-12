@@ -142,10 +142,3 @@ make_vignette <- function(design_or_designer = NULL, front_text = "", end_text =
   
 }
 
-
-
-simple_two_arm_design <- simple_two_arm_designer
-
-## examples 
-make_vignette(design_or_designer = simple_two_arm_design, front_text_path = "rmd1.Rmd", end_text_path = "rmd1.Rmd")
-
