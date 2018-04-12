@@ -3,6 +3,7 @@
 export(block_cluster_two_arm_designer)
 export(contribute_design)
 export(designer_default_args_text)
+export(expand_designer_shiny_args_text)
 export(get_constants)
 export(get_design_code)
 export(get_or_run_diagnosis)
