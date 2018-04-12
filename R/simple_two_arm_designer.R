@@ -41,9 +41,9 @@ simple_two_arm_designer <- function(N = 100,
       estimator <- declare_estimator(Y ~ Z, estimand = estimand)
       
       # Design
-      simple_two_arm <- pop / potential_outcomes / estimand /assignment / declare_reveal() /estimator
+      simple_two_arm_design <- pop / potential_outcomes / estimand /assignment / declare_reveal() /estimator
     }}}    
-    simple_two_arm
+    simple_two_arm_design
   }
   if(code)  out <- get_design_code(design_code)
   if(!code) out <- design_code()

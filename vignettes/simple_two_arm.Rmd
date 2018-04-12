@@ -60,10 +60,9 @@ How does this design work? One way to think about it is to compare the random as
 ```
 
 ```{r simple_two_arm_diagnosis,echo = FALSE}
-diagnosis <- get_or_run_diagnosis(simple_two_arm, sims = 1000, bootstrap = FALSE)
+diagnosis <- get_or_run_diagnosis(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
 knitr::kable(diagnosis$diagnosands,digits = 2)
 ```
-
 
 ```{r simple_two_arm_shiny_diagnosis,include = FALSE}
 get_or_run_shiny_diagnosis(simple_two_arm_designer, sims = 1000, bootstrap = FALSE)
@@ -71,9 +70,8 @@ get_or_run_shiny_diagnosis(simple_two_arm_designer, sims = 1000, bootstrap = FAL
 
 
 ```{r,eval = FALSE}
-diagnosis <- diagnose_design(two_arm, sims = 1000, bootstrap = FALSE)
+diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
 ```
-
 
 
 
