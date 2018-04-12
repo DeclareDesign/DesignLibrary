@@ -111,7 +111,7 @@ expand_designer_shiny_args_text <- function(designer) {
  
  #' @export
  #'
-contribute_design <- function(design,title,description){
+contribute_design <- function(design,title,description,wd_path = ""){
   design_name <- substitute(design)
   if(!grepl("_design",design_name)) stop("Your design must have the suffix _design.")
   if(!grepl("designs",getwd())) stop("You should contribute designs from within the DesignLibrary working directory.")
@@ -127,21 +127,16 @@ contribute_design <- function(design,title,description){
     "'",design_name,"'"
   )
   
-  documentation_path <- paste0("R/",design_name,".R")
+  documentation_path <- paste0(wd_path,"R/",design_name,".R")
   cat(roxy_header,file = documentation_path)
   
-  data_path <- paste0("data/",design_name,".rda")
-  eval(parse(text = paste0("save(",design_name,",file = data_path)")))
+  data_path <- paste0(wd_path,"data/",design_name,".RData")
+  eval(parse(text = paste0("save(",design_name,",file = data_path,eval.promises = TRUE)")))
   
   message(paste0("Documentation for ",design_name," exported to ",
-                 documentation_path,".\n Data file for ",
+                 documentation_path,".\nData file for ",
                  design_name, " exported to ",data_path,"."))
 }
-
-
-
-  
-
 
  
  
