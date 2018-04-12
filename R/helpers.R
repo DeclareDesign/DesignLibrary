@@ -57,6 +57,7 @@ designer_default_args_text <- function(designer) {
   shinys <- get_shiny_arguments(designer)
   shinys <- lapply(shinys,function(x)x[1])
   args <- c(shinys,get_constants(designer))
+  args <- args[names(formals(designer))]
   args <- args[-which(names(args) == "code")]
   args <- lapply(args,deparse)
   mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
@@ -64,10 +65,28 @@ designer_default_args_text <- function(designer) {
 
 #' @export
 #'
+expand_designer_shiny_args_text <- function(designer) {
+  shinys <- get_shiny_arguments(designer)
+  all_shinys <- expand.grid(shinys)
+  shinys <- lapply(shinys,function(x)x[1])
+  lapply(1:nrow(all_shinys),function(i){
+    shiny_args <- (all_shinys[i,])
+    args <- c(shiny_args,get_constants(designer))
+    args <- args[names(formals(designer))]
+    args <- args[-which(names(args) == "code")]
+    args <- lapply(args,deparse)
+    mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
+  })
+}
+
+#' @export
+#'
  get_shiny_diagnosis <- function(designer,sims) {
    shiny_args <- get_shiny_arguments(designer)
    all_designs <- fill_out(template = designer,expand = TRUE,shiny_args)
-   diagnose_design(all_designs,sims = sims,bootstrap = FALSE)
+   diagnosis <- diagnose_design(all_designs,sims = sims,bootstrap = FALSE)
+   argument_list <- expand_designer_shiny_args_text(designer = designer)
+   return(list(diagnosis = diagnosis, argument_list = argument_list))
 }
 
  #' @export
@@ -78,11 +97,14 @@ designer_default_args_text <- function(designer) {
    file_name <- paste0(design_name,"_shiny_diagnosis.RDS")
    parameters <- expand.grid(get_shiny_arguments(designer), stringsAsFactors = FALSE)
    if(file.exists(file_name)){ 
-     diagnosis <- readRDS(file = file_name)
+     diagnosis_list <- readRDS(file = file_name)
+     diagnosis <- diagnosis_list$diagnosis
    } else {
-     diagnosis <- DesignLibrary::get_shiny_diagnosis(designer,sims = sims)
+     diagnosis_list <- DesignLibrary::get_shiny_diagnosis(designer,sims = sims)
+     diagnosis <- diagnosis_list$diagnosis
      diagnosis$diagnosands <- cbind(diagnosis$diagnosands,parameters)
-     saveRDS(diagnosis, file_name)
+     diagnosis_list$diagnosis <- diagnosis
+     saveRDS(diagnosis_list, file_name)
    }
    diagnosis
  }
