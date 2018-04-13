@@ -101,6 +101,7 @@ make_text <- function(text, text_path){
 
 make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
   
+  title <- vignette_title
   object_name <- deparse(substitute(design_or_designer))
   shiny = ""
   if(class(design_or_designer) == "design") 
@@ -114,6 +115,11 @@ make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, fron
   file_name <- tolower(object_name)
   title <-  gsub("_", replacement = " ", object_name) 
   
+<<<<<<< HEAD
+=======
+  if(is.null(title)) title <-  gsub("_", replacement = " ", object_name) 
+  
+>>>>>>> parent of a705abe... Rmds create with make_vignette
   if(has_shiny) shiny <- 
     paste0('
 <!--
