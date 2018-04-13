@@ -139,12 +139,55 @@ contribute_design <- function(design,title,description,wd_path = ""){
 }
 
  
+
  
- 
- 
- 
- 
- 
+#' Clean up DeclareDesign diagnosis object for printing 
+#'
+#'
+#' @param diagnosis An object from \code{declare_design} 
+#' @param digits Number of digits.
+#' @param col.names Allows user to provide names of columns for output. If NULL uses names from diagnosis object, if "default" uses names of default diagnosands.
+#' @param n_text_fields Number of initial text fields in diagnosis that do not have associated standard errors.  
+#' @return A formatted text table with bootstrapped standard errors in parentheses.
+#' @export
+#'
+#' @examples
+#' diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3)
+#' reshape_diagnosis(diagnosis)
+#' reshape_diagnosis(diagnosis, col.names = 1:11)
+#' reshape_diagnosis(diagnosis, col.names = "default")
+
+
+reshape_diagnosis <- function(diagnosis, 
+                              digits = 2, 
+                              col.names = NULL, 
+                              default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE", "Coverage", "Power", "Mean(Estimate)", "sd(Estimate)", "Type S", "Mean Estimand"),
+                              n_text_fields = 3) { 
+  
+  # Housekeeping
+  diagnosis  <- diagnosis[[2]]
+  D          <- as.matrix(diagnosis[,(n_text_fields+1):ncol(diagnosis)])
+  rows       <- nrow(D)
+  cols       <- ncol(D)/2
+  out.width  <- cols+n_text_fields
+  
+  # Reformatting
+  out <- matrix(NA, 2*rows, out.width)
+  out[2*(1:rows)-1, 4:ncol(out)] <- round(D[,2*(1:cols)-1], digits)
+  out[2*(1:rows),   4:ncol(out)] <- paste0("(", round(D[,2*(1:cols)], digits), ")")
+  
+  out[2*(1:rows)-1, 1:3] <- as.matrix(diagnosis)[, 1:3]
+  out[2*(1:rows), 1:3] <- " "
+
+  # Column Names  
+  if(is.null(col.names))        col.names <- colnames(diagnosis[,c(1:n_text_fields, n_text_fields+2*(1:cols)-1)])
+  if(col.names[1] == "default") col.names <- default.names  
+  colnames(out) <- col.names
+  
+  return(out)
+}  
+
+
  
  
  
