@@ -37,7 +37,7 @@ crossover_designer <- function(N = 100,
         N = N, 
         noise = rnorm(N),
         u_a = rnorm(N),
-        u_b = rnorm(n = N, mean = rho * u_a, sd = 1 - rho^2)
+        u_b = rnorm(n = N, mean = rho * u_a, sd = sqrt(1 - rho^2))
       )
       potential_outcomes_A <- declare_potential_outcomes(
         YA_Z_T1 = noise,
