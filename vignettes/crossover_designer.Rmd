@@ -1,0 +1,38 @@
+---
+title: " crossover designer " 
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+ %\VignetteIndexEntry{crossover designer}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+              
+```{r, include=FALSE, eval=TRUE}
+options("keep.source"=TRUE,
+        knitr.duplicate.label = "allow" )
+library(knitr)
+library(ggplot2)
+library(DesignLibrary)
+```
+              
+<div class="btn-group">
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/crossover_designer.R">
+     <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
+  </a>
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/crossover_designer_designer.RDS">
+     <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
+  </a> 
+</div>
+            
+  
+
+
+ 
+              
+```{r, crossover_designer_diagnosis}
+diagnosis <- get_or_run_diagnosis(crossover_designer, sims = 1000, bootstrap = FALSE)
+```
+         
+
+

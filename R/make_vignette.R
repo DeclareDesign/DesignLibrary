@@ -29,17 +29,17 @@ library(DesignLibrary)
   
 ')}
 
-make_design_chunks <- function(file_name, n_sims, n_bootstrap) {
+make_design_chunks <- function(file_name, sims, bootstrap) {
   paste0(' 
               
 ```{r, ', file_name, '_diagnosis}
-diagnosis <- get_or_run_diagnosis(', file_name, ', sims = ', n_sims, ', bootstrap = ', n_bootstrap, ')
+diagnosis <- get_or_run_diagnosis(', file_name, '_design, sims = ', sims, ', bootstrap = ', bootstrap, ')
 ```
          
 ')
 }
 
-make_designer_chunks <- function(file_name, n_sims, n_bootstrap) {
+make_designer_chunks <- function(file_name, sims, bootstrap, has_shiny) {
   chunk2 <- ""
   chunk1 <- paste0('
 ```{r, code = designer_default_args_text(', file_name, '_designer)}
@@ -51,16 +51,17 @@ make_designer_chunks <- function(file_name, n_sims, n_bootstrap) {
   
 
 ```{r ',file_name,'_diagnosis,echo = FALSE}
- diagnosis <- get_or_run_diagnosis(',file_name,'_design, sims = ',n_sims,', bootstrap = ',n_bootstrap,')
- knitr::kable(diagnosis$diagnosands,digits = 2)
+ diagnosis <- get_or_run_diagnosis(',file_name,'_design, sims = ',sims,', bootstrap = ',bootstrap,')
+ knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
 ```
   
   
 ')
-  if(is.null(get_shiny_arguments(paste0(file_name,'_designer')))){
+  ## has_shiny
+  if(has_shiny){
    chunk2 <- paste0('
 ```{r ',file_name,'_shiny_diagnosis,include = FALSE}
- get_or_run_shiny_diagnosis(',file_name,'_designer, ',n_sims,', bootstrap = ',n_bootstrap,')
+ get_or_run_shiny_diagnosis(',file_name,'_designer, ',sims,', bootstrap = ',bootstrap,')
 ```
                      
 ')  
@@ -68,7 +69,7 @@ make_designer_chunks <- function(file_name, n_sims, n_bootstrap) {
   
   chunk3 <- paste0('
 ```{r,eval = FALSE}
-diagnosis <- diagnose_design(',file_name,', sims = ',n_sims,', bootstrap = ',n_bootstrap,')
+diagnosis <- diagnose_design(',file_name,'_design, sims = ',sims,', bootstrap = ',bootstrap,')
 ```
 ')
   
@@ -93,33 +94,45 @@ make_text <- function(text, text_path){
 #' @param end_text A character string 
 #' @param front_text_path Path to .Rmd; If different from NULL, it overwrites front_text
 #' @param end_text_path   Path to .Rmd; If different from NULL, it overwrites end_text
-#' @param n_sims number of simulations for DeclareDesign
-#' @param n_bootstraps  number of bootstraps for DeclareDesign 
+#' @param sims number of simulations for DeclareDesign
+#' @param bootstraps  number of bootstraps for DeclareDesign 
 #' @return This function creates a .Rmd 
 #' @export 
 #'
 
-make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
-  
-  title <- vignette_title
+make_vignette <- function(design_or_designer = NULL, title = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , sims = 1000, bootstrap = FALSE){
+  options(error = NULL)
   object_name <- deparse(substitute(design_or_designer))
   shiny = ""
-  if(class(design_or_designer) == "design") 
+  class_a <- class(design_or_designer)
+  has_shiny <- FALSE
+  
+  if(any(class_a  == "design") ) {
+  if(!endsWith(object_name, "_design"))
+    stop("Design's name must end with suffix '_design'")
     make_chunks <- make_design_chunks
-  else {
-    object_name <- sub("_designer", replacement = "", object_name) 
-    make_chunks <- make_designer_chunks
   }
+  else if(is.function(design_or_designer)) 
+  {
+    class_a <- class(design_or_designer()) 
+    if(!any(class_a  == "design" ))
+      stop("Argument 'design_or_designer' must either be an object of class 'design' or a designer that returns an object of class 'design'")
+    else if(!endsWith(object_name, "_designer")) 
+      stop("Designer's name must end with suffix '_designer'")
+    else 
+    {
+      has_shiny <- !is.null(get_shiny_arguments(design_or_designer))
+      object_name <- sub("_designer", replacement = "", object_name) 
+      make_chunks <- make_designer_chunks
+    }
+  }
+  else  
+    stop("Argument 'design_or_designer' must either be an object of class 'design' or a designer that returns an object of class 'design'")
   
-  title_ <- object_name
+  #title_ <- object_name
   file_name <- tolower(object_name)
-  title <-  gsub("_", replacement = " ", object_name) 
-  
-<<<<<<< HEAD
-=======
   if(is.null(title)) title <-  gsub("_", replacement = " ", object_name) 
   
->>>>>>> parent of a705abe... Rmds create with make_vignette
   if(has_shiny) shiny <- 
     paste0('
 <!--
@@ -132,11 +145,13 @@ make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, fron
  
   front_text <- make_text(front_text, front_text_path)
   end_text   <- make_text(end_text, end_text_path)
-
+  
+  if(file.exists(paste0(file_name, ".Rmd")))
+    stop("Vignette already exists")
   file.create(paste0(file_name, ".Rmd"))
   cat(make_header(title, shiny, file_name ),
       front_text,
-      make_chunks(file_name, n_sims, n_bootstrap),
+      make_chunks(file_name, sims, bootstrap, has_shiny),
       end_text, sep ="\n", file = paste0(file_name, ".Rmd"))
   
 }
