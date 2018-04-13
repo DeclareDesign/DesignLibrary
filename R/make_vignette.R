@@ -99,42 +99,36 @@ make_text <- function(text, text_path){
 #' @export 
 #'
 
-make_vignette <- function(design_or_designer, vignette_title = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
+make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, front_text = "", end_text = "", front_text_path = NULL, end_text_path = NULL , n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE){
   
+  title <- vignette_title
   object_name <- deparse(substitute(design_or_designer))
-
-  
+  shiny = ""
   if(class(design_or_designer) == "design") 
     make_chunks <- make_design_chunks
-  else if(is.function(design_or_designer)) 
-    {
-      if(class(design_or_designer())== "design"){
-        if(endsWith(object_name, "_designer")) {
-          object_name <- sub("_designer", replacement = "", object_name) 
-          make_chunks <- make_designer_chunks
-        }
-        else 
-          stop("Designer's name must end with suffix '_designer'")
-      } 
-    else
-        stop("Argument 'design_or_designer' must either be an object of class 'design' or a designer that returns an object of class 'design'")
-  } 
-  else
-    stop("Argument 'design_or_designer' must either be an object of class 'design' or a designer that returns an object of class 'design'")
+  else {
+    object_name <- sub("_designer", replacement = "", object_name) 
+    make_chunks <- make_designer_chunks
+  }
   
-  
+  title_ <- object_name
   file_name <- tolower(object_name)
+  title <-  gsub("_", replacement = " ", object_name) 
   
-  if(is.null(vignette_title = NULL))
-    title <-  gsub("_", replacement = " ", object_name) 
-
-  if(has_shiny) 
-    shiny <- paste0('
+<<<<<<< HEAD
+=======
+  if(is.null(title)) title <-  gsub("_", replacement = " ", object_name) 
+  
+>>>>>>> parent of a705abe... Rmds create with make_vignette
+  if(has_shiny) shiny <- 
+    paste0('
 <!--
   <a class="btn btn-primary" href="http://shiny.declaredesign.org/inspector/?topic=',file_name,'">
      <i class="fa fa-area-chart" title = "Go to the design inspector" fa-2x></i> Inspect design
    </a>
--->')
+-->'
+    
+  )
  
   front_text <- make_text(front_text, front_text_path)
   end_text   <- make_text(end_text, end_text_path)
