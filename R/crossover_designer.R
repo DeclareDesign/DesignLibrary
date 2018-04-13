@@ -106,11 +106,11 @@ crossover_designer <- function(N = 100,
   return(out)
 }
 attr(crossover_designer, "shiny_arguments") <- list(
-  N = c(100, 30, 500, 1000),
-  a = seq(from = .5, to = -.5, by = -.1),
-  b = seq(from = .5, to = -.5, by = -.1),
-  crossover = seq(from = .1, to = -.5, by = -.1),
-  rho = c(.2, seq(from = -1, to = 1, by = .1)))
+  N = c(100, 50, 1000),
+  a = seq(from = .5, to = -.5, by = -.5),
+  b = seq(from = .5, to = -.5, by = -.5),
+  crossover = c(0,.1,.25),
+  rho = c(0,.5,.8))
 attr(crossover_designer,"tips") <- c(
   N = "Size of sample",
   a = "Treatment effect of interest",

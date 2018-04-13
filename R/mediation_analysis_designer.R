@@ -87,11 +87,11 @@ mediation_analysis_designer <- function(N = 100,
 }
 
 attr(mediation_analysis_designer,"shiny_arguments") <- list(
-  N = c(100, 30, 500, 1000),
-  a = seq(from = .5, to = -.5, by = -.1),
-  b = seq(from = .5, to = -.5, by = -.1),
-  d = seq(from = .5, to = -.5, by = -.1),
-  rho = c(.2, seq(from = -1, to = 1, by = .1))
+  N = c(100, 50, 1000),
+  a = seq(from = .5, to = -.5, by = -.5),
+  b = seq(from = .5, to = -.5, by = -.5),
+  d = seq(from = .5, to = -.5, by = -.5),
+  rho = c(.2, seq(from = -1, to = 1, by = .5))
 )
 attr(mediation_analysis_designer,"tips") <- c(
   N = "Size of sample",

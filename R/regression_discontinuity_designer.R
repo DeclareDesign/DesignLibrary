@@ -74,11 +74,11 @@ regression_discontinuity_designer <- function(
 
 attr(regression_discontinuity_designer,"shiny_arguments") <-
   list(
-    N = c(1000, 50,100,250, 500, 2500, 5000, 10000),
-    tau = c(.15, 0, -1, -.5, -.15,  .5, 1),
-    cutoff = c(.5, .01, .1, .25, .75, .9, .99),
-    bandwidth = c(.5, .01, .1, .25, .75, .9, .99),
-    poly_order = c(4, 3, 2, 1, 8)
+    N = c(1000, 50,100, 10000),
+    tau = c(.15, 0, .5, 1),
+    cutoff = c(.5,  .25),
+    bandwidth = c(.5,  .25),
+    poly_order = c(4, 3, 2, 1)
   )
 
 attr(regression_discontinuity_designer,"tips") <-

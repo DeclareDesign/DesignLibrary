@@ -89,10 +89,10 @@ pretest_posttest_designer <- function(N = 100,
   return(out)
 }
 attr(pretest_posttest_designer, "shiny_arguments") <- list(
-  N = c(100, 30, 500, 1000),
-  ate = c(.25,seq(.1,.9,.1)),
-  rho = c(.5,seq(0,.2,1)),
-  attrition_rate = c(0,.1,.2,.3)
+  N = c(100, 50, 1000),
+  ate = c(.25,0,.5),
+  rho = c(.25,0,.5),
+  attrition_rate = c(0,.1,.2)
 )
 attr(pretest_posttest_designer, "tips") <- c(
   N = "Size of sample",
