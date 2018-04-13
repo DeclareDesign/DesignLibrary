@@ -112,7 +112,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-
   list(
     N_blocks = c(10, 20, 50),
-    N_cluster_in_block = c(2, 4),
+    N_clusters_in_block = c(2, 4),
     N_i_in_cluster = c(1, 5, 10),
     ate = c(0, .1, .3)
   )
@@ -120,7 +120,7 @@ attr(block_cluster_two_arm_designer, "shiny_arguments") <-
 attr(block_cluster_two_arm_designer, "tips") <-
   list(
     N_blocks = "Number of blocks",
-    N_cluster_in_block = "Number of clusters in each block",
+    N_clusters_in_block = "Number of clusters in each block",
     N_i_in_cluster = "Number of units in each cluster",
     ate = "The average treatment effect"
   )
