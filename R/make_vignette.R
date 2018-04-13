@@ -115,11 +115,8 @@ make_vignette <- function(design_or_designer = NULL, vignette_title = NULL, fron
   file_name <- tolower(object_name)
   title <-  gsub("_", replacement = " ", object_name) 
   
-<<<<<<< HEAD
-=======
   if(is.null(title)) title <-  gsub("_", replacement = " ", object_name) 
   
->>>>>>> parent of a705abe... Rmds create with make_vignette
   if(has_shiny) shiny <- 
     paste0('
 <!--
