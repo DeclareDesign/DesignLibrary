@@ -143,6 +143,8 @@ contribute_design <- function(design,title,description,wd_path = ""){
  
 #' Clean up DeclareDesign diagnosis object for printing 
 #'
+#' If diagnosands are bootstrapped, se's are put in parenthese on a second line and rounded to \code{digits}. 
+#' Function uses presence of "se(" to identify bootrapped diagnoses; avoid errors by not using "se(" in naming of diagnosands. 
 #'
 #' @param diagnosis An object from \code{declare_design} 
 #' @param digits Number of digits.
@@ -156,31 +158,43 @@ contribute_design <- function(design,title,description,wd_path = ""){
 #' reshape_diagnosis(diagnosis)
 #' reshape_diagnosis(diagnosis, col.names = 1:11)
 #' reshape_diagnosis(diagnosis, col.names = "default")
+#' diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3, bootstrap = 0)
+#' reshape_diagnosis(diagnosis, col.names = "default")
 
 
 reshape_diagnosis <- function(diagnosis, 
                               digits = 2, 
                               col.names = NULL, 
-                              default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE", "Coverage", "Power", "Mean(Estimate)", "sd(Estimate)", "Type S", "Mean Estimand"),
-                              n_text_fields = 3) { 
+                              default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE", "Coverage", "Power", "Mean(Estimate)", "sd(Estimate)", "Type S", "Mean Estimand")
+                              ) { 
   
   # Housekeeping
-  diagnosis  <- diagnosis[[2]]
-  D          <- as.matrix(diagnosis[,(n_text_fields+1):ncol(diagnosis)])
-  rows       <- nrow(D)
-  cols       <- ncol(D)/2
-  out.width  <- cols+n_text_fields
+  diagnosis     <- diagnosis[[2]]
   
-  # Reformatting
-  out <- matrix(NA, 2*rows, out.width)
-  out[2*(1:rows)-1, 4:ncol(out)] <- round(D[,2*(1:cols)-1], digits)
-  out[2*(1:rows),   4:ncol(out)] <- paste0("(", round(D[,2*(1:cols)], digits), ")")
+  if(sum(grepl("se\\(", names(diagnosis))) == 0) { 
+    out <- diagnosis
+    if(is.null(col.names)) col.names <- colnames(out)
+    
+  } else {
+    n_text_fields <- min(which(grepl("se\\(", names(diagnosis)))) - 2
+    D             <- as.matrix(diagnosis[,(n_text_fields+1):ncol(diagnosis)])
+    rows          <- nrow(D)
+    
+    cols       <- ncol(D)/2
+    out.width  <- cols+n_text_fields
+    
+    # Reformatting
+    out <- matrix(NA, 2*rows, out.width)
+    out[2*(1:rows)-1, 4:ncol(out)] <- round(D[,2*(1:cols)-1], digits)
+    out[2*(1:rows),   4:ncol(out)] <- paste0("(", round(D[,2*(1:cols)], digits), ")")
+    
+    out[2*(1:rows)-1, 1:3] <- as.matrix(diagnosis)[, 1:3]
+    out[2*(1:rows), 1:3] <- " "
+    if(is.null(col.names))        col.names <- colnames(diagnosis[,c(1:n_text_fields, n_text_fields+2*(1:cols)-1)])
+    
+    }
   
-  out[2*(1:rows)-1, 1:3] <- as.matrix(diagnosis)[, 1:3]
-  out[2*(1:rows), 1:3] <- " "
-
   # Column Names  
-  if(is.null(col.names))        col.names <- colnames(diagnosis[,c(1:n_text_fields, n_text_fields+2*(1:cols)-1)])
   if(col.names[1] == "default") col.names <- default.names  
   colnames(out) <- col.names
   
