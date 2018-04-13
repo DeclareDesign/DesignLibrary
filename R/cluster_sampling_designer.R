@@ -75,15 +75,15 @@ cluster_sampling_designer <- function(n_clusters = 100,
     out <- design_code()
   return(out)
 }
-attr(cluster_sampling_designer, "tips") <- c(
+attr(cluster_sampling_designer, "tips") <- list(
   n_clusters = "Number of clusters to sample",
   n_subjects_per_cluster = "Number of subjects per cluster to sample",
   icc = "Intra-cluster Correlation"
 )
-attr(cluster_sampling_designer, "shiny_arguments") <- c(
-  n_clusters = c(100, seq(10, 100, 10)),
+attr(cluster_sampling_designer, "shiny_arguments") <- list(
+  n_clusters = c(100, seq(10, 30, 10)),
   n_subjects_per_cluster = seq(10, 40, 10),
-  icc = c(0.2, seq(0, 1, by = 0.1))
+  icc = c(0.2, seq(0.002, .999, by = 0.2))
 )
 
 
