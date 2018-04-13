@@ -83,7 +83,7 @@ expand_designer_shiny_args_text <- function(designer) {
 #'
  get_shiny_diagnosis <- function(designer,sims) {
    shiny_args <- get_shiny_arguments(designer)
-   all_designs <- fill_out(template = designer,expand = TRUE,shiny_args)
+   all_designs <- expand_design(template = designer,expand = TRUE,shiny_args)
    diagnosis <- diagnose_design(all_designs,sims = sims,bootstrap = FALSE)
    argument_list <- expand_designer_shiny_args_text(designer = designer)
    return(list(diagnosis = diagnosis, argument_list = argument_list))
