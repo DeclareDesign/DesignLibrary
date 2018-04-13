@@ -100,6 +100,7 @@ make_text <- function(text, text_path){
 #' @param end_text_path   Path to .Rmd; If different from NULL, it overwrites end_text.
 #' @param sims Number of simulations for DeclareDesign.
 #' @param bootstraps  Number of bootstraps for DeclareDesign 
+#' @param overwrite If TRUE overwrites .Rmd
 #' @return This function creates a .Rmd 
 #' @export 
 #'
@@ -111,7 +112,8 @@ make_vignette <- function(design_or_designer = NULL,
                           front_text_path = NULL,
                           end_text_path = NULL ,
                           sims = 1000,
-                          bootstrap = FALSE) {
+                          bootstrap = FALSE, 
+                          overwrite = FALSE) {
   
   options(error = NULL)
   object_name <- deparse(substitute(design_or_designer))
@@ -163,7 +165,7 @@ make_vignette <- function(design_or_designer = NULL,
   front_text <- make_text(front_text, front_text_path)
   end_text   <- make_text(end_text, end_text_path)
   
-  if (file.exists(paste0(file_name, ".Rmd")))
+  if (file.exists(paste0(file_name, ".Rmd")) & !overwrite)
     stop("Vignette already exists")
   
   file.create(paste0(file_name, ".Rmd"))

@@ -1,9 +1,9 @@
 ---
-title: " cluster sampling " 
+title: " Cluster Sampling " 
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
- %\VignetteIndexEntry{cluster sampling}
+ %\VignetteIndexEntry{Cluster Sampling}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
@@ -23,6 +23,11 @@ library(DesignLibrary)
   <a class="btn btn-primary" href="http://declaredesign.org/articles/cluster_sampling_designer.RDS">
      <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
   </a> 
+<!--
+   <a class="btn btn-primary" href="http://shiny.declaredesign.org/inspector/?topic=cluster_sampling">
+    <i class="fa fa-area-chart" title = "Go to the design inspector" fa-2x></i> Inspect design
+  </a>
+--> 
 </div>
             
   
@@ -39,7 +44,7 @@ library(DesignLibrary)
 
 ```{r cluster_sampling_diagnosis,echo = FALSE}
  diagnosis <- get_or_run_diagnosis(cluster_sampling_design, sims = 1000, bootstrap = FALSE)
- knitr::kable(diagnosis$diagnosands,digits = 2)
+ knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
 ```
   
   
@@ -50,7 +55,7 @@ library(DesignLibrary)
                      
 
 ```{r,eval = FALSE}
-diagnosis <- diagnose_design(cluster_sampling, sims = 1000, bootstrap = FALSE)
+diagnosis <- diagnose_design(cluster_sampling_design, sims = 1000, bootstrap = FALSE)
 ```
 
 
