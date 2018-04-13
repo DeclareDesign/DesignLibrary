@@ -17,10 +17,10 @@ library(DesignLibrary)
 ```
               
 <div class="btn-group">
-  <a class="btn btn-primary" href="http://declaredesign.org/articles/simple_two_arm.R">
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/block_cluster_two_arm.R">
      <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
   </a>
-  <a class="btn btn-primary" href="http://declaredesign.org/articles/simple_two_arm_designer.RDS">
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/block_cluster_two_arm_designer.RDS">
      <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
   </a> 
 </div>
@@ -29,28 +29,28 @@ library(DesignLibrary)
 
 
 
-```{r, code = designer_default_args_text(simple_two_arm_designer)}
+```{r, code = designer_default_args_text(block_cluster_two_arm_designer)}
 ```
 
   
-```{r, code = simple_two_arm_designer(code = TRUE)}
+```{r, code = block_cluster_two_arm_designer(code = TRUE)}
 ```
   
 
-```{r simple_two_arm_diagnosis,echo = FALSE}
- diagnosis <- get_or_run_diagnosis(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
+```{r block_cluster_two_arm_diagnosis,echo = FALSE}
+ diagnosis <- get_or_run_diagnosis(block_cluster_two_arm_design, sims = 1000, bootstrap = FALSE)
  knitr::kable(diagnosis$diagnosands,digits = 2)
 ```
   
   
 
-```{r simple_two_arm_shiny_diagnosis,include = FALSE}
- get_or_run_shiny_diagnosis(simple_two_arm_designer, 1000, bootstrap = FALSE)
+```{r block_cluster_two_arm_shiny_diagnosis,include = FALSE}
+ get_or_run_shiny_diagnosis(block_cluster_two_arm_designer, 1000, bootstrap = FALSE)
 ```
                      
 
 ```{r,eval = FALSE}
-diagnosis <- diagnose_design(simple_two_arm, sims = 1000, bootstrap = FALSE)
+diagnosis <- diagnose_design(block_cluster_two_arm, sims = 1000, bootstrap = FALSE)
 ```
 
 
