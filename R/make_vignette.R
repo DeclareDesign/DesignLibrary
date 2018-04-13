@@ -131,6 +131,7 @@ make_vignette <- function(design_or_designer = NULL, title = NULL, front_text = 
   
   #title_ <- object_name
   file_name <- tolower(object_name)
+
   if(is.null(title)) title <-  gsub("_", replacement = " ", object_name) 
   
   if(has_shiny) shiny <- 

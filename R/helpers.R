@@ -185,11 +185,11 @@ reshape_diagnosis <- function(diagnosis,
     
     # Reformatting
     out <- matrix(NA, 2*rows, out.width)
-    out[2*(1:rows)-1, 4:ncol(out)] <- round(D[,2*(1:cols)-1], digits)
-    out[2*(1:rows),   4:ncol(out)] <- paste0("(", round(D[,2*(1:cols)], digits), ")")
+    out[2*(1:rows)-1, (n_text_fields + 1):ncol(out)] <- round(D[,2*(1:cols)-1], digits)
+    out[2*(1:rows),   (n_text_fields + 1):ncol(out)] <- paste0("(", round(D[,2*(1:cols)], digits), ")")
     
-    out[2*(1:rows)-1, 1:3] <- as.matrix(diagnosis)[, 1:3]
-    out[2*(1:rows), 1:3] <- " "
+    out[2*(1:rows)-1, 1:n_text_fields] <- as.matrix(diagnosis)[, 1:n_text_fields]
+    out[2*(1:rows), 1:n_text_fields] <- " "
     if(is.null(col.names))        col.names <- colnames(diagnosis[,c(1:n_text_fields, n_text_fields+2*(1:cols)-1)])
     
     }

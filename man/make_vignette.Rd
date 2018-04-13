@@ -4,9 +4,10 @@
 \alias{make_vignette}
 \title{Create a simple two arm design}
 \usage{
-make_vignette(design_or_designer, vignette_title = NULL, front_text = "",
-  end_text = "", front_text_path = NULL, end_text_path = NULL,
-  n_sims = 1000, n_bootstrap = FALSE, has_shiny = FALSE)
+make_vignette(design_or_designer = NULL, vignette_title = NULL,
+  front_text = "", end_text = "", front_text_path = NULL,
+  end_text_path = NULL, n_sims = 1000, n_bootstrap = FALSE,
+  has_shiny = FALSE)
 }
 \arguments{
 \item{design_or_designer}{A design or a designer}
