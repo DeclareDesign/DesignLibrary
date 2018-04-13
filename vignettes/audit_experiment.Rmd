@@ -1,9 +1,9 @@
 ---
-title: " audit experiment " 
+title: " design or designer " 
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
- %\VignetteIndexEntry{audit experiment}
+ %\VignetteIndexEntry{design or designer}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
