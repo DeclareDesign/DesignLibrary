@@ -68,9 +68,9 @@ designer_default_args_text <- function(designer) {
 expand_designer_shiny_args_text <- function(designer) {
   shinys <- get_shiny_arguments(designer)
   all_shinys <- expand.grid(shinys)
-  shinys <- lapply(shinys,function(x)x[1])
   lapply(1:nrow(all_shinys),function(i){
     shiny_args <- (all_shinys[i,])
+    names(shiny_args) <- names(all_shinys)
     args <- c(shiny_args,get_constants(designer))
     args <- args[names(formals(designer))]
     args <- args[-which(names(args) == "code")]
