@@ -4,27 +4,28 @@
 \alias{make_vignette}
 \title{Create a simple two arm design}
 \usage{
-make_vignette(design_or_designer = NULL, vignette_title = NULL,
-  front_text = "", end_text = "", front_text_path = NULL,
-  end_text_path = NULL, n_sims = 1000, n_bootstrap = FALSE,
-  has_shiny = FALSE)
+make_vignette(design_or_designer = NULL, title = NULL, front_text = "",
+  end_text = "", front_text_path = NULL, end_text_path = NULL,
+  sims = 1000, bootstrap = FALSE, overwrite = FALSE)
 }
 \arguments{
 \item{design_or_designer}{A design or a designer}
 
-\item{vignette_title}{A character string}
+\item{title}{A character string for the vignette title.  If NULL then a default based on the name of design_or_designer.}
 
-\item{front_text}{A character string}
+\item{front_text}{A character string.}
 
-\item{end_text}{A character string}
+\item{end_text}{A character string.}
 
-\item{front_text_path}{Path to .Rmd; If different from NULL, it overwrites front_text}
+\item{front_text_path}{Path to .Rmd; If different from NULL, it overwrites front_text.}
 
-\item{end_text_path}{Path to .Rmd; If different from NULL, it overwrites end_text}
+\item{end_text_path}{Path to .Rmd; If different from NULL, it overwrites end_text.}
 
-\item{n_sims}{number of simulations for DeclareDesign}
+\item{sims}{Number of simulations for DeclareDesign.}
 
-\item{n_bootstraps}{number of bootstraps for DeclareDesign}
+\item{overwrite}{If TRUE overwrites .Rmd}
+
+\item{bootstraps}{Number of bootstraps for DeclareDesign}
 }
 \value{
 This function creates a .Rmd
