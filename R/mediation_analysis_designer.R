@@ -69,10 +69,12 @@ mediation_analysis_designer <- function(N = 100,
           pop,
           pos_M,
           assignment,
+          declare_reveal(M, Z),
           pos_Y,
           mand_a,
           mand_b,
           mand_d,
+          declare_reveal(Y, Z),
           mediator_regression,
           outcome_regression
         )
