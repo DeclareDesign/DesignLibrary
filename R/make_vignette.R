@@ -91,7 +91,7 @@ make_text <- function(text, text_path){
   text
 }
 
-#' Create a simple two arm design
+#' Create a vignetten based on a design or a designer
 #' @param design_or_designer A design or a designer
 #' @param title A character string for the vignette title.  If NULL then a default based on the name of design_or_designer.
 #' @param front_text A character string.
@@ -105,15 +105,15 @@ make_text <- function(text, text_path){
 #' @export 
 #'
 
-make_vignette <- function(design_or_designer = NULL,
+make_vignette <- function(design_or_designer,
                           title = NULL,
                           front_text = "",
                           end_text = "",
                           front_text_path = NULL,
-                          end_text_path = NULL ,
+                          end_text_path = NULL,
+                          overwrite = FALSE, 
                           sims = 1000,
-                          bootstrap = FALSE, 
-                          overwrite = FALSE) {
+                          bootstrap = FALSE ) {
   
   options(error = NULL)
   object_name <- deparse(substitute(design_or_designer))
@@ -176,4 +176,31 @@ make_vignette <- function(design_or_designer = NULL,
       sep = "\n",
       file = paste0(file_name, ".Rmd"))
 }
+
+#' Function Based on getDocData from package cardoonTools
+#' @param create_html logical. Create html 
+#' @return create_overview does not return an object.
+#' @export
+#'
+create_overview <-  function(create_html = FALSE){
+  our_package <- "DesignLibrary"
+  rdb_path <- file.path(system.file("help", package= our_package),our_package)
+  designer_list <-  ls(paste0("package:",our_package)) 
+  is_designer <- endsWith(designer_list, "_designer")
+  designer_list <- designer_list[is_designer]
+  
+ overview <- sapply(designer_list, function(designer){
+    help_text <- tools:::fetchRdDB(rdb_path, designer)
+    classes <- sapply( help_text, function(x) attr(x, "Rd_tag"))
+    title <- help_text[[which(grepl("\\\\title", classes))]]
+    desc <- help_text[[which(grepl("\\\\description", classes))]]
+    desc  <- do.call(paste, desc)
+    desc  <- gsub("\n", "", x)
+    c("#",designer,"\n", title,".", desc ,"\n \n")
+    })
+  overview <- do.call(paste, overview)
+  
+}
+
+
 
