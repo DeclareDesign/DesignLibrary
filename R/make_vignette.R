@@ -61,7 +61,7 @@ make_designer_chunks <- function(file_name, sims, bootstrap, has_shiny) {
   if(has_shiny){
    chunk2 <- paste0('
 ```{r ',file_name,'_shiny_diagnosis,include = FALSE}
- get_or_run_shiny_diagnosis(',file_name,'_designer, ',sims,', bootstrap = ',bootstrap,')
+ get_or_run_shiny_diagnosis(',file_name,'_designer(), ',sims,', bootstrap = ',bootstrap,')
 ```
                      
 ')  
