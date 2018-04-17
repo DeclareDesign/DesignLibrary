@@ -21,6 +21,7 @@ library(DesignLibrary)
   <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'.R">
      <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
   </a>
+  </a>
   <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'_designer.RDS">
      <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
   </a>', shiny,' 
