@@ -71,7 +71,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <div class="btn-group">
-<p><a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm.R"> <i class="fa fa-code" title="Download code for design" fa-2x></i> Download code </a> <a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm_template.RDS"> <i class="fa fa-clipboard" title="Download template for design" fa-2x></i> Download template </a> <!--
+<p><a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm.R"> <i class="fa fa-code" title="Download code for design" fa-2x></i> Download code </a>   <a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm_template.RDS"> <i class="fa fa-clipboard" title="Download template for design" fa-2x></i> Download template </a> <!--
   <a class="btn btn-primary" href="http://shiny.declaredesign.org/inspector/?topic=two_arm">
     <i class="fa fa-area-chart" title = "Go to the design inspector" fa-2x></i> Inspect design
   </a>
@@ -119,41 +119,87 @@ estimator &lt;-<span class="st"> </span><span class="kw">declare_estimator</span
 
 <span class="co"># Design</span>
 simple_two_arm_design &lt;-<span class="st"> </span>pop <span class="op">/</span><span class="st"> </span>potential_outcomes <span class="op">/</span><span class="st"> </span>estimand <span class="op">/</span>assignment <span class="op">/</span><span class="st"> </span><span class="kw">declare_reveal</span>() <span class="op">/</span>estimator</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diagnosis &lt;-<span class="st"> </span><span class="kw">diagnose_design</span>(simple_two_arm_design, <span class="dt">sims =</span> <span class="dv">1000</span>, <span class="dt">bootstrap =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
-<th></th>
-<th align="left">estimand_label</th>
-<th align="left">estimator_label</th>
-<th align="left">coefficient</th>
-<th align="right">bias</th>
-<th align="right">rmse</th>
-<th align="right">power</th>
-<th align="right">coverage</th>
-<th align="right">mean_estimate</th>
-<th align="right">sd_estimate</th>
-<th align="right">type_s_rate</th>
-<th align="right">mean_estimand</th>
+<th align="center"> </th>
+<th align="center">estimand_label</th>
+<th align="center">estimator_label</th>
+<th align="center">coefficient</th>
+<th align="center">bias</th>
+<th align="center">rmse</th>
+<th align="center">power</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>ATE.my_estimator.Z</td>
-<td align="left">ATE</td>
-<td align="left">my_estimator</td>
-<td align="left">Z</td>
-<td align="right">0.01</td>
-<td align="right">0.58</td>
-<td align="right">0.07</td>
-<td align="right">0.94</td>
-<td align="right">-0.01</td>
-<td align="right">0.64</td>
-<td align="right">0.19</td>
-<td align="right">-0.01</td>
+<td align="center"><strong>a.Saturated estimator.A</strong></td>
+<td align="center">a</td>
+<td align="center">Saturated estimator</td>
+<td align="center">A</td>
+<td align="center">0.0016</td>
+<td align="center">0.25</td>
+<td align="center">0.52</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>a.Direct estimator.A</strong></td>
+<td align="center">a</td>
+<td align="center">Direct estimator</td>
+<td align="center">A</td>
+<td align="center">0.0016</td>
+<td align="center">0.25</td>
+<td align="center">0.52</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>a.SUR.A</strong></td>
+<td align="center">a</td>
+<td align="center">SUR</td>
+<td align="center">A</td>
+<td align="center">-0.0055</td>
+<td align="center">0.18</td>
+<td align="center">0.76</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diagnosis &lt;-<span class="st"> </span><span class="kw">diagnose_design</span>(simple_two_arm_design, <span class="dt">sims =</span> <span class="dv">1000</span>, <span class="dt">bootstrap =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">coverage</th>
+<th align="center">mean_estimate</th>
+<th align="center">sd_estimate</th>
+<th align="center">type_s_rate</th>
+<th align="center">mean_estimand</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>a.Saturated estimator.A</strong></td>
+<td align="center">0.94</td>
+<td align="center">0.5</td>
+<td align="center">0.25</td>
+<td align="center">0</td>
+<td align="center">0.5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>a.Direct estimator.A</strong></td>
+<td align="center">0.94</td>
+<td align="center">0.5</td>
+<td align="center">0.25</td>
+<td align="center">0</td>
+<td align="center">0.5</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>a.SUR.A</strong></td>
+<td align="center">0.94</td>
+<td align="center">0.49</td>
+<td align="center">0.18</td>
+<td align="center">0</td>
+<td align="center">0.5</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 

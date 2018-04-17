@@ -14,13 +14,16 @@ options("keep.source"=TRUE,
 library(knitr)
 library(ggplot2)
 library(DesignLibrary)
+library(kableExtra)
+library(magrittr)
+library(pander)
 ```
               
 <div class="btn-group">
   <a class="btn btn-primary" href="http://declaredesign.org/articles/crossover.R">
      <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
   </a>
-  </a>
+  &nbsp;
   <a class="btn btn-primary" href="http://declaredesign.org/articles/crossover_designer.RDS">
      <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
   </a> 
@@ -33,7 +36,7 @@ library(DesignLibrary)
             
   
 
-
+ Description here
 
 ```{r, code = designer_default_args_text(crossover_designer)}
 ```
@@ -42,10 +45,16 @@ library(DesignLibrary)
 ```{r, code = crossover_designer(code = TRUE)}
 ```
   
+```{r,eval = FALSE}
+diagnosis <- diagnose_design(crossover_design, sims = 1000, bootstrap = FALSE)
+```
 
-```{r crossover_diagnosis,echo = FALSE}
+
+```{r crossover_diagnosis, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
  diagnosis <- get_or_run_diagnosis(crossover_design, sims = 1000, bootstrap = FALSE)
- knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
+ panderOptions('table.continues', "")
+ pandoc.table(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
+
 ```
   
   
@@ -54,9 +63,5 @@ library(DesignLibrary)
  get_or_run_shiny_diagnosis(crossover_designer(), 1000, bootstrap = FALSE)
 ```
                      
-
-```{r,eval = FALSE}
-diagnosis <- diagnose_design(crossover_design, sims = 1000, bootstrap = FALSE)
-```
 
 

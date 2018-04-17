@@ -11,12 +11,14 @@ vignette: >
 
 ```{r MIDA, echo = FALSE,include = FALSE}
 library(DesignLibrary)
+library(pander)
 ```
 
 <div class="btn-group">
   <a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm.R">
     <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
   </a>
+   &nbsp;
   <a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm_template.RDS">
     <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
   </a>
@@ -59,18 +61,18 @@ How does this design work? One way to think about it is to compare the random as
 ```{r, code = simple_two_arm_designer(code = TRUE)}
 ```
 
-```{r simple_two_arm_diagnosis,echo = FALSE}
-diagnosis <- get_or_run_diagnosis(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
-knitr::kable(diagnosis$diagnosands,digits = 2)
+```{r,eval = FALSE}
+diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
+```
+
+```{r crossover_diagnosis, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+ diagnosis <- get_or_run_diagnosis(crossover_design, sims = 1000, bootstrap = FALSE)
+ panderOptions('table.continues', "")
+ pandoc.table(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
 ```
 
 ```{r simple_two_arm_shiny_diagnosis,include = FALSE}
 get_or_run_shiny_diagnosis(simple_two_arm_designer, sims = 1000, bootstrap = FALSE)
-```
-
-
-```{r,eval = FALSE}
-diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
 ```
 
 

@@ -1,5 +1,6 @@
 ## ----MIDA, echo = FALSE,include = FALSE----------------------------------
 library(DesignLibrary)
+library(pander)
 
 ## ---- code = designer_default_args_text(simple_two_arm_designer)---------
 N <- 10
@@ -32,13 +33,14 @@ estimator <- declare_estimator(Y ~ Z, estimand = estimand)
 # Design
 simple_two_arm_design <- pop / potential_outcomes / estimand /assignment / declare_reveal() /estimator
 
-## ----simple_two_arm_diagnosis,echo = FALSE-------------------------------
-diagnosis <- get_or_run_diagnosis(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
-knitr::kable(diagnosis$diagnosands,digits = 2)
+## ----eval = FALSE--------------------------------------------------------
+#  diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
+
+## ----crossover_diagnosis, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'----
+ diagnosis <- get_or_run_diagnosis(crossover_design, sims = 1000, bootstrap = FALSE)
+ panderOptions('table.continues', "")
+ pandoc.table(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
 
 ## ----simple_two_arm_shiny_diagnosis,include = FALSE----------------------
 get_or_run_shiny_diagnosis(simple_two_arm_designer, sims = 1000, bootstrap = FALSE)
-
-## ----eval = FALSE--------------------------------------------------------
-#  diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
 
