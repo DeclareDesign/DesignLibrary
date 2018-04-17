@@ -20,3 +20,5 @@ export(regression_discontinuity_designer)
 export(reshape_diagnosis)
 export(simple_spillover_designer)
 export(simple_two_arm_designer)
+export(create_overview)
+

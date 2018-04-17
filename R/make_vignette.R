@@ -91,29 +91,31 @@ make_text <- function(text, text_path){
   text
 }
 
-#' Create a vignetten based on a design or a designer
-#' @param design_or_designer A design or a designer
+#' Create a vignetten based on a design or a designer.
+#' @param design_or_designer A design or a designer.
 #' @param title A character string for the vignette title.  If NULL then a default based on the name of design_or_designer.
 #' @param front_text A character string.
 #' @param end_text A character string.
 #' @param front_text_path Path to .Rmd; If different from NULL, it overwrites front_text.
 #' @param end_text_path   Path to .Rmd; If different from NULL, it overwrites end_text.
-#' @param sims Number of simulations for DeclareDesign.
-#' @param bootstraps  Number of bootstraps for DeclareDesign 
 #' @param overwrite If TRUE overwrites .Rmd
+#' @param sims Number of simulations for DeclareDesign.
+#' @param bootstraps  Number of bootstraps for DeclareDesign. 
+#' @param output_folder If NULL, vignette is saved in working directory.
 #' @return This function creates a .Rmd 
 #' @export 
 #'
 
 make_vignette <- function(design_or_designer,
                           title = NULL,
-                          front_text = "",
-                          end_text = "",
+                          front_text = NULL,
+                          end_text = NULL,
                           front_text_path = NULL,
                           end_text_path = NULL,
                           overwrite = FALSE, 
                           sims = 1000,
-                          bootstrap = FALSE ) {
+                          bootstrap = FALSE,
+                          output_folder = NULL) {
   
   options(error = NULL)
   object_name <- deparse(substitute(design_or_designer))
@@ -122,7 +124,12 @@ make_vignette <- function(design_or_designer,
   shiny = ""
   class_a <- class(design_or_designer)
   has_shiny <- FALSE
-  
+  if(is.null(front_text)) 
+    front_text <- ""
+  if(is.null(end_text)) 
+    end_text <- ""
+  if(is.null(output_folder)) 
+    output_folder <- ""
   if (any(class_a  == "design")) {
     if (!endsWith(object_name, "_design"))
       stop("Design's name must end with suffix '_design'")
@@ -154,6 +161,7 @@ make_vignette <- function(design_or_designer,
   
   file_name <- tolower(object_name)
   
+  
   if (has_shiny)
     shiny <- paste0(' 
 <!--
@@ -168,7 +176,7 @@ make_vignette <- function(design_or_designer,
   if (file.exists(paste0(file_name, ".Rmd")) & !overwrite)
     stop("Vignette already exists")
   
-  file.create(paste0(file_name, ".Rmd"))
+  file.create(paste0(output_folder, file_name, ".Rmd"))
   cat(make_header(title, shiny, file_name),
       front_text,
       make_chunks(file_name, sims, bootstrap, has_shiny),
@@ -176,3 +184,49 @@ make_vignette <- function(design_or_designer,
       sep = "\n",
       file = paste0(file_name, ".Rmd"))
 }
+
+#' Function Based on getDocData from package cardoonTools
+#' @param create_html logical. Create html 
+#' @return create_overview does not return an object.
+#' @export
+#'
+#'
+create_overview <- function(create_html = FALSE){
+  our_package = "DesignLibrary"
+  rdb_path <- file.path(system.file("help", package= our_package),our_package)
+  designer_list <-  ls(paste0("package:",our_package)) 
+  is_designer <- endsWith(designer_list, "_designer")
+  designer_list <- designer_list[is_designer]
+  
+  overview <- sapply(designer_list, function(designer){
+    help_text <- tools:::fetchRdDB(rdb_path, designer)
+    classes <- sapply( help_text, function(x) attr(x, "Rd_tag"))
+    title <- help_text[[which(grepl("\\\\title", classes))]]
+    desc <- help_text[[which(grepl("\\\\description", classes))]]
+    desc  <- do.call(paste, desc)
+    desc  <- gsub("\n", "", desc)
+    c("`",designer,"` \n \n", title,".", desc ,"\n \n")
+  })
+  overview <- do.call(paste, overview)
+  
+  if(create_html){
+    yaml <- paste0('---
+output: rmarkdown::html_vignette
+vignette: >
+ %\\VignetteIndexEntry{Design Index}
+ %\\VignetteEngine{knitr::rmarkdown}
+ %\\VignetteEncoding{UTF-8}
+---
+')
+    file.create("Design_and_Designer_Index.Rmd")
+    cat(yaml,
+        "## Designers",
+        overview,
+        sep = "\n",
+        file = "Design_and_Designer_Index.Rmd")
+  }
+  knitr::knit("Design_and_Designer_Index.Rmd")
+  
+  cat(overview,  sep = "\n")
+}
+
