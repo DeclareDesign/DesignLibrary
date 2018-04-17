@@ -91,29 +91,31 @@ make_text <- function(text, text_path){
   text
 }
 
-#' Create a vignetten based on a design or a designer
-#' @param design_or_designer A design or a designer
+#' Create a vignetten based on a design or a designer.
+#' @param design_or_designer A design or a designer.
 #' @param title A character string for the vignette title.  If NULL then a default based on the name of design_or_designer.
 #' @param front_text A character string.
 #' @param end_text A character string.
 #' @param front_text_path Path to .Rmd; If different from NULL, it overwrites front_text.
 #' @param end_text_path   Path to .Rmd; If different from NULL, it overwrites end_text.
-#' @param sims Number of simulations for DeclareDesign.
-#' @param bootstraps  Number of bootstraps for DeclareDesign 
 #' @param overwrite If TRUE overwrites .Rmd
+#' @param sims Number of simulations for DeclareDesign.
+#' @param bootstraps  Number of bootstraps for DeclareDesign. 
+#' @param output_folder If NULL, vignette is saved in working directory.
 #' @return This function creates a .Rmd 
 #' @export 
 #'
 
 make_vignette <- function(design_or_designer,
                           title = NULL,
-                          front_text = "",
-                          end_text = "",
+                          front_text = NULL,
+                          end_text = NULL,
                           front_text_path = NULL,
                           end_text_path = NULL,
                           overwrite = FALSE, 
                           sims = 1000,
-                          bootstrap = FALSE ) {
+                          bootstrap = FALSE,
+                          output_folder = NULL) {
   
   options(error = NULL)
   object_name <- deparse(substitute(design_or_designer))
@@ -122,7 +124,12 @@ make_vignette <- function(design_or_designer,
   shiny = ""
   class_a <- class(design_or_designer)
   has_shiny <- FALSE
-  
+  if(is.null(front_text)) 
+    front_text <- ""
+  if(is.null(end_text)) 
+    end_text <- ""
+  if(is.null(output_folder)) 
+    output_folder <- ""
   if (any(class_a  == "design")) {
     if (!endsWith(object_name, "_design"))
       stop("Design's name must end with suffix '_design'")
@@ -154,6 +161,7 @@ make_vignette <- function(design_or_designer,
   
   file_name <- tolower(object_name)
   
+  
   if (has_shiny)
     shiny <- paste0(' 
 <!--
@@ -168,7 +176,7 @@ make_vignette <- function(design_or_designer,
   if (file.exists(paste0(file_name, ".Rmd")) & !overwrite)
     stop("Vignette already exists")
   
-  file.create(paste0(file_name, ".Rmd"))
+  file.create(paste0(output_folder, file_name, ".Rmd"))
   cat(make_header(title, shiny, file_name),
       front_text,
       make_chunks(file_name, sims, bootstrap, has_shiny),
