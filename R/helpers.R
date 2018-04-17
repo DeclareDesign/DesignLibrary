@@ -201,30 +201,8 @@ reshape_diagnosis <- function(diagnosis,
   return(out)
 }  
 
-#' Function Based on getDocData from package cardoonTools
-#' @param create_html logical. Create html 
-#' @return create_overview does not return an object.
-#' @export
-#'
-create_overview <-  function(create_html = FALSE){
-  our_package <- "DesignLibrary"
-  rdb_path <- file.path(system.file("help", package= our_package),our_package)
-  designer_list <-  ls(paste0("package:",our_package)) 
-  is_designer <- endsWith(designer_list, "_designer")
-  designer_list <- designer_list[is_designer]
-  
-  overview <- sapply(designer_list, function(designer){
-    help_text <- tools:::fetchRdDB(rdb_path, designer)
-    classes <- sapply( help_text, function(x) attr(x, "Rd_tag"))
-    title <- help_text[[which(grepl("\\\\title", classes))]]
-    desc <- help_text[[which(grepl("\\\\description", classes))]]
-    desc  <- do.call(paste, desc)
-    desc  <- gsub("\n", "", x)
-    c("#",designer,"\n", title,".", desc ,"\n \n")
-  })
-  overview <- do.call(paste, overview)
-  
-}
+
+
 
 
 
