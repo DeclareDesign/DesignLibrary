@@ -21,6 +21,7 @@ library(DesignLibrary)
   <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'.R">
      <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
   </a>
+  &nbsp;
   <a class="btn btn-primary" href="http://declaredesign.org/articles/',file_name,'_designer.RDS">
      <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
   </a>', shiny,' 
@@ -124,8 +125,6 @@ make_vignette <- function(design_or_designer,
   shiny = ""
   class_a <- class(design_or_designer)
   has_shiny <- FALSE
-  if(is.null(front_text)) 
-    front_text <- ""
   if(is.null(end_text)) 
     end_text <- ""
   if(is.null(output_folder)) 
@@ -135,6 +134,8 @@ make_vignette <- function(design_or_designer,
       stop("Design's name must end with suffix '_design'")
     make_chunks <- make_design_chunks
     object_name <- sub("_design", replacement = "", object_name)
+    if(is.null(front_text)) 
+      front_text <- ""
   }
   else if (is.function(design_or_designer))
   {
@@ -148,6 +149,16 @@ make_vignette <- function(design_or_designer,
       stop("Designer's name must end with suffix '_designer'")
     else
     {
+      if(is.null(front_text)){
+        our_package = "DesignLibrary"
+        rdb_path <- file.path(system.file("help", package= our_package),our_package)
+        help_text <- tools:::fetchRdDB(rdb_path, object_name)
+        classes <- sapply( help_text, function(x) attr(x, "Rd_tag"))
+        desc <- help_text[[which(grepl("\\\\description", classes))]]
+        desc  <- do.call(paste, desc)
+        desc  <- gsub("\n", "", desc)
+        front_text <- desc
+      }
       has_shiny <- !is.null(get_shiny_arguments(design_or_designer))
       object_name <- sub("_designer", replacement = "", object_name)
       make_chunks <- make_designer_chunks
@@ -173,7 +184,7 @@ make_vignette <- function(design_or_designer,
   front_text <- make_text(front_text, front_text_path)
   end_text   <- make_text(end_text, end_text_path)
   
-  if (file.exists(paste0(file_name, ".Rmd")) & !overwrite)
+  if (file.exists(paste0(output_folder, file_name, ".Rmd")) & !overwrite)
     stop("Vignette already exists")
   
   file.create(paste0(output_folder, file_name, ".Rmd"))

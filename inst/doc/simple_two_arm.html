@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Two-Arm Experiment</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Two-Arm Experiment</h1>
+
+
+
+<div class="btn-group">
+<p><a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm.R"> <i class="fa fa-code" title="Download code for design" fa-2x></i> Download code </a>   <a class="btn btn-primary" href="http://declaredesign.org/articles/two_arm_template.RDS"> <i class="fa fa-clipboard" title="Download template for design" fa-2x></i> Download template </a> <!--
+  <a class="btn btn-primary" href="http://shiny.declaredesign.org/inspector/?topic=two_arm">
+    <i class="fa fa-area-chart" title = "Go to the design inspector" fa-2x></i> Inspect design
+  </a>
+--></p>
+</div>
+<p>Often we want to learn about the causal effect of one thing on something else – say, the effect of taking a pill on a person becoming healthy. We can define the effect of a cause on an outcome as the difference of the how the outcomes potentially would have looked under two states of the world: the potential outcome in a world where the cause is present and the potential outcome in a world where it is absent. Were we able to observe that a person was sick in a world where they took the pill <em>and</em> sick in a world where they didn’t, for example, we would infer that the pill did not have any causal effect on their health.</p>
+<p>The problem is we can never observe our world in two counterfactual states at once, and so we can never estimate the effect of a cause on any particular individual person or thing. We can, however, estimate an <em>average</em> of individual causal effects, which we refer to as the average treatment effect (ATE). The simplest design for inferring an ATE is the two-arm experiment: some people are assigned at random to a treatment (the first arm), and the rest are assigned to the control (the second arm). The difference in the averages of the two groups gives us an unbiased estimate of the true ATE.</p>
+<p>How does this design work? One way to think about it is to compare the random assignment of the treatment to a random sampling procedure: in this design it is as though we take a representative sample from the two counterfactual states of the world. Seen in this way, the treatment and control groups are ‘random samples’ from the potential outcomes in a world where the cause is present and one in which it is absent. By taking the mean of the group that represents the treated potential outcomes and comparing it to the mean of the group that represents the untreated potential outcomes, we can construct a representative guess of the true average difference in the two states of the world. Just like in random sampling, as the size of our experiment grows our guess of the ATE will converge to the true ATE, implying that our design is unbiased. As we shall see, however, characterizing our uncertainty about our guesses can be complicated, even in such a simple design.</p>
+<div id="design-declaration" class="section level2">
+<h2>Design Declaration</h2>
+<ul>
+<li><p><strong>M</strong>odel:</p>
+<p>Our model of the world specifies a population of <span class="math inline">\(N\)</span> units that have a control potential outcome, <span class="math inline">\(Y_i(Z = 0)\)</span>, that is distributed standard normally. A unit’s individual treatment effect is a random draw from a distribution with mean <span class="math inline">\(\tau\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>, that is added to its control potential outcome: <span class="math inline">\(Y_i(Z = 1) = Y_i(Z = 0) + t_i\)</span>. This implies that the variance of the sample’s treated potential outcomes is higher than the variance of their control potential outcomes, although they are correlated because the treated potential outcome is created by simply adding the treatment effect to the control potential outcome.</p></li>
+<li><p><strong>I</strong>nquiry:</p>
+<p>We want to know the average of all units’ differences in treated and untreated potential outcomes – the average treatment effect: <span class="math inline">\(E[Y_i(Z = 1) - Y_i(Z = 0)] = E[t_i] = \tau\)</span>.</p></li>
+<li><p><strong>D</strong>ata strategy:</p>
+<p>We randomly sample <span class="math inline">\(n\)</span> units from the population of <span class="math inline">\(N\)</span>. We randomly assign a fixed number, <span class="math inline">\(m\)</span>, to treatment, and the rest of the <span class="math inline">\(n-m\)</span> units to control.</p></li>
+<li><p><strong>A</strong>nswer strategy:</p>
+<p>We subtract the mean of the control group from the mean of the treatment group in order to estimate the average treatment effect.</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N &lt;-<span class="st"> </span><span class="dv">10</span>
+prob &lt;-<span class="st"> </span><span class="fl">0.5</span>
+control_mean &lt;-<span class="st"> </span><span class="dv">0</span>
+control_sd &lt;-<span class="st"> </span><span class="dv">1</span>
+ate &lt;-<span class="st"> </span><span class="dv">0</span>
+treatment_mean &lt;-<span class="st"> </span>control_mean <span class="op">+</span><span class="st"> </span>ate
+treatment_sd &lt;-<span class="st"> </span>control_sd
+rho &lt;-<span class="st"> </span><span class="dv">1</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># M: Model</span>
+pop &lt;-<span class="st"> </span><span class="kw">declare_population</span>(
+  <span class="dt">N =</span> N,
+  <span class="dt">Z0 =</span> <span class="kw">rnorm</span>(N, <span class="dt">mean =</span> control_mean, <span class="dt">sd =</span> control_sd),
+  <span class="dt">Z1 =</span> <span class="kw">correlate</span>(<span class="dt">given =</span> Z0, <span class="dt">rho =</span> rho, rnorm, <span class="dt">mean =</span> treatment_mean, <span class="dt">sd =</span> treatment_sd)
+)
+potential_outcomes &lt;-<span class="st"> </span><span class="kw">declare_potential_outcomes</span>(Y <span class="op">~</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>Z) <span class="op">*</span><span class="st"> </span>Z0 <span class="op">+</span><span class="st"> </span>Z <span class="op">*</span><span class="st"> </span>Z1)
+
+<span class="co"># I: Inquiry</span>
+estimand &lt;-<span class="st"> </span><span class="kw">declare_estimand</span>(<span class="dt">ATE =</span> <span class="kw">mean</span>(Y_Z_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>Y_Z_<span class="dv">0</span>))
+
+<span class="co"># D: Data</span>
+assignment &lt;-<span class="st"> </span><span class="kw">declare_assignment</span>(<span class="dt">prob =</span> prob)</code></pre></div>
+<pre><code>## Assignment declaration factored out from execution path.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># A: Analysis</span>
+estimator &lt;-<span class="st"> </span><span class="kw">declare_estimator</span>(Y <span class="op">~</span><span class="st"> </span>Z, <span class="dt">estimand =</span> estimand)
+
+<span class="co"># Design</span>
+simple_two_arm_design &lt;-<span class="st"> </span>pop <span class="op">/</span><span class="st"> </span>potential_outcomes <span class="op">/</span><span class="st"> </span>estimand <span class="op">/</span>assignment <span class="op">/</span><span class="st"> </span><span class="kw">declare_reveal</span>() <span class="op">/</span>estimator</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diagnosis &lt;-<span class="st"> </span><span class="kw">diagnose_design</span>(simple_two_arm_design, <span class="dt">sims =</span> <span class="dv">1000</span>, <span class="dt">bootstrap =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">estimand_label</th>
+<th align="center">estimator_label</th>
+<th align="center">coefficient</th>
+<th align="center">bias</th>
+<th align="center">rmse</th>
+<th align="center">power</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>a.Saturated estimator.A</strong></td>
+<td align="center">a</td>
+<td align="center">Saturated estimator</td>
+<td align="center">A</td>
+<td align="center">0.0016</td>
+<td align="center">0.25</td>
+<td align="center">0.52</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>a.Direct estimator.A</strong></td>
+<td align="center">a</td>
+<td align="center">Direct estimator</td>
+<td align="center">A</td>
+<td align="center">0.0016</td>
+<td align="center">0.25</td>
+<td align="center">0.52</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>a.SUR.A</strong></td>
+<td align="center">a</td>
+<td align="center">SUR</td>
+<td align="center">A</td>
+<td align="center">-0.0055</td>
+<td align="center">0.18</td>
+<td align="center">0.76</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">coverage</th>
+<th align="center">mean_estimate</th>
+<th align="center">sd_estimate</th>
+<th align="center">type_s_rate</th>
+<th align="center">mean_estimand</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>a.Saturated estimator.A</strong></td>
+<td align="center">0.94</td>
+<td align="center">0.5</td>
+<td align="center">0.25</td>
+<td align="center">0</td>
+<td align="center">0.5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>a.Direct estimator.A</strong></td>
+<td align="center">0.94</td>
+<td align="center">0.5</td>
+<td align="center">0.25</td>
+<td align="center">0</td>
+<td align="center">0.5</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>a.SUR.A</strong></td>
+<td align="center">0.94</td>
+<td align="center">0.49</td>
+<td align="center">0.18</td>
+<td align="center">0</td>
+<td align="center">0.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

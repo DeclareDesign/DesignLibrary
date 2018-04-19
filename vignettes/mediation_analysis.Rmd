@@ -1,0 +1,62 @@
+---
+title: " mediation analysis designer " 
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+ %\VignetteIndexEntry{mediation analysis designer}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+              
+```{r, include=FALSE, eval=TRUE}
+options("keep.source"=TRUE,
+        knitr.duplicate.label = "allow" )
+library(knitr)
+library(ggplot2)
+library(DesignLibrary)
+```
+              
+<div class="btn-group">
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/mediation_analysis.R">
+     <i class="fa fa-code" title = "Download code for design" fa-2x></i> Download code
+  </a>
+  &nbsp;
+  <a class="btn btn-primary" href="http://declaredesign.org/articles/mediation_analysis_designer.RDS">
+     <i class="fa fa-clipboard" title = "Download template for design" fa-2x></i> Download template
+  </a> 
+<!--
+   <a class="btn btn-primary" href="http://shiny.declaredesign.org/inspector/?topic=mediation_analysis">
+    <i class="fa fa-area-chart" title = "Go to the design inspector" fa-2x></i> Inspect design
+  </a>
+--> 
+</div>
+            
+  
+
+ Description here
+
+```{r, code = designer_default_args_text(mediation_analysis_designer)}
+```
+
+  
+```{r, code = mediation_analysis_designer(code = TRUE)}
+```
+  
+
+```{r mediation_analysis_diagnosis,echo = FALSE}
+ diagnosis <- get_or_run_diagnosis(mediation_analysis_design, sims = 1000, bootstrap = FALSE)
+ knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
+```
+  
+  
+
+```{r mediation_analysis_shiny_diagnosis,include = FALSE}
+ get_or_run_shiny_diagnosis(mediation_analysis_designer(), 1000, bootstrap = FALSE)
+```
+                     
+
+```{r,eval = FALSE}
+diagnosis <- diagnose_design(mediation_analysis_design, sims = 1000, bootstrap = FALSE)
+```
+
+
