@@ -2,14 +2,15 @@
 % Please edit documentation in R/make_vignette.R
 \name{make_vignette}
 \alias{make_vignette}
-\title{Create a simple two arm design}
+\title{Create a vignetten based on a design or a designer.}
 \usage{
-make_vignette(design_or_designer = NULL, title = NULL, front_text = "",
-  end_text = "", front_text_path = NULL, end_text_path = NULL,
-  sims = 1000, bootstrap = FALSE, overwrite = FALSE)
+make_vignette(design_or_designer, title = NULL, front_text = NULL,
+  end_text = NULL, front_text_path = NULL, end_text_path = NULL,
+  overwrite = FALSE, sims = 1000, bootstrap = FALSE,
+  output_folder = NULL)
 }
 \arguments{
-\item{design_or_designer}{A design or a designer}
+\item{design_or_designer}{A design or a designer.}
 
 \item{title}{A character string for the vignette title.  If NULL then a default based on the name of design_or_designer.}
 
@@ -21,15 +22,17 @@ make_vignette(design_or_designer = NULL, title = NULL, front_text = "",
 
 \item{end_text_path}{Path to .Rmd; If different from NULL, it overwrites end_text.}
 
-\item{sims}{Number of simulations for DeclareDesign.}
-
 \item{overwrite}{If TRUE overwrites .Rmd}
 
-\item{bootstraps}{Number of bootstraps for DeclareDesign}
+\item{sims}{Number of simulations for DeclareDesign.}
+
+\item{output_folder}{If NULL, vignette is saved in working directory.}
+
+\item{bootstraps}{Number of bootstraps for DeclareDesign.}
 }
 \value{
 This function creates a .Rmd
 }
 \description{
-Create a simple two arm design
+Create a vignetten based on a design or a designer.
 }

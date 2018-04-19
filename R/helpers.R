@@ -165,7 +165,7 @@ contribute_design <- function(design,title,description,wd_path = ""){
 reshape_diagnosis <- function(diagnosis, 
                               digits = 2, 
                               col.names = NULL, 
-                              default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE", "Coverage", "Power", "Mean(Estimate)", "sd(Estimate)", "Type S", "Mean Estimand")
+                              default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE",  "Power", "Coverage", "Mean(Estimate)", "sd(Estimate)", "Mean(se)", "Type S", "Mean(Estimand)")
                               ) { 
   
   # Housekeeping

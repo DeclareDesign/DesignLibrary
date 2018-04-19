@@ -6,8 +6,8 @@
 \usage{
 reshape_diagnosis(diagnosis, digits = 2, col.names = NULL,
   default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE",
-  "Coverage", "Power", "Mean(Estimate)", "sd(Estimate)", "Type S",
-  "Mean Estimand"))
+  "Power", "Coverage", "Mean(Estimate)", "sd(Estimate)", "Mean(se)", "Type S",
+  "Mean(Estimand)"))
 }
 \arguments{
 \item{diagnosis}{An object from \code{declare_design}}

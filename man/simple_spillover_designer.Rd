@@ -2,13 +2,15 @@
 % Please edit documentation in R/simple_spillover_designer.R
 \name{simple_spillover_designer}
 \alias{simple_spillover_designer}
-\title{Create a simlpe design with spillovers}
+\title{Create a simple design with spillovers}
 \usage{
 simple_spillover_designer(n_groups = 40, group_size = 3, sd = 1,
   code = FALSE)
 }
 \arguments{
 \item{group_size}{Number of units in each group}
+
+\item{sd}{Standard deviation of individual level shock}
 
 \item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 
@@ -19,11 +21,11 @@ A function that returns a design.
 }
 \description{
 This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
-An individual is affected if anyone in her group is treated. The default estimand is the average difference 
+Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
+the effect is equally spread among members of the group. 
+Intuitively, for ever $1 given to a member of a group, each member receives $1\code{group_size}
+The default estimand is the average difference 
 across subjects between no one treated and only that subject treated.
-}
-\details{
-#'
 }
 \examples{
 # To make a design using default arguments:

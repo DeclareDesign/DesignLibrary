@@ -27,7 +27,7 @@ library(DesignLibrary)
             
   
 
-
+Great stuff
 
 ```{r, code = designer_default_args_text(simple_spillover_designer)}
 ```
@@ -48,4 +48,4 @@ library(DesignLibrary)
 diagnosis <- diagnose_design(simple_spillover_design, sims = 1000, bootstrap = FALSE)
 ```
 
-
+More
