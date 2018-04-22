@@ -4,13 +4,15 @@
 \alias{simple_spillover_designer}
 \title{Create a simple design with spillovers}
 \usage{
-simple_spillover_designer(n_groups = 40, group_size = 3, sd = 1,
-  code = FALSE)
+simple_spillover_designer(n_groups = 50, group_size = 3, sd = 1,
+  gamma = 2, code = FALSE)
 }
 \arguments{
-\item{group_size}{Number of units in each group}
+\item{group_size}{Number of units in each group. May be scalar, or vector of length(n_groups)}
 
 \item{sd}{Standard deviation of individual level shock}
+
+\item{gamma}{Parameter that controls whether spillovers within groups substitue for each other or complement each other}
 
 \item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 
@@ -22,8 +24,10 @@ A function that returns a design.
 \description{
 This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
 Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
-the effect is equally spread among members of the group. 
-Intuitively, for ever $1 given to a member of a group, each member receives $1\code{group_size}
+the effect is spread equally among members of the group. 
+Parameter \code{gamma} controls interactions between spillover effects. 
+For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{group_size} no matter how many others are already treated.
+For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
 The default estimand is the average difference 
 across subjects between no one treated and only that subject treated.
 }

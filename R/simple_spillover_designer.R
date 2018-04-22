@@ -2,16 +2,19 @@
 #'
 #' This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
 #' Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
-#' the effect is equally spread among members of the group. 
-#' Intuitively, for ever $1 given to a member of a group, each member receives $1\code{group_size}
+#' the effect is spread equally among members of the group. 
+#' Parameter \code{gamma} controls interactions between spillover effects. 
+#' For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{group_size} no matter how many others are already treated.
+#' For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
 #' The default estimand is the average difference 
 #' across subjects between no one treated and only that subject treated.  
 #' 
 #' 
 #' @param code Logical. If TRUE, returns the code of a design, otherwise returns a design.
 #' @param N_groups Number of groups.
-#' @param group_size Number of units in each group
+#' @param group_size Number of units in each group. May be scalar, or vector of length(n_groups) 
 #' @param sd Standard deviation of individual level shock
+#' @param gamma Parameter that controls whether spillovers within groups substitue for each other or complement each other
 #' @return A function that returns a design.
 #' @export
 #'
@@ -21,7 +24,7 @@
 #'
 
 
-simple_spillover_designer <- function(n_groups = 40, group_size = 3, sd =1, code = FALSE)
+simple_spillover_designer <- function(n_groups = 80, group_size = 3, sd = .2, gamma = 2, code = FALSE)
 {
 
   design_code <- function() {
@@ -29,29 +32,31 @@ simple_spillover_designer <- function(n_groups = 40, group_size = 3, sd =1, code
     
     {{{
 
-      # Model ----------------------------------------------------------------------
-      pop <- declare_population(N = n_groups*group_size, 
-                                G = rep(1:n_groups, each = group_size))
-      dgp <- function(i, Z, G) sum(Z[G == G[i]])/group_size + rnorm(1)*sd
+# Model ----------------------------------------------------------------------
+
+pop <- declare_population(G = add_level(N = n_groups, n = group_size), 
+                          i = add_level(N = n, zeros = 0, ones =1))
       
-      # Inquiry --------------------------------------------------------------------
-      estimand <- declare_estimand(ATE = mean(
+dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd
+      
+# Inquiry --------------------------------------------------------------------
+estimand <- declare_estimand(Treat_1 = mean(
         sapply(1:length(G), function(i) {
-          Z0 = rep(0, length(G))
-          Z1 = (1:length(G))==i
-          dgp(i,Z1,G) - dgp(i, Z0, G)})
-      ))
+          Z_i <- (1:length(G))==i
+          dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
+      ), label = "estimand")
       # Data
       assignt <- declare_assignment()
       
-      reveal <- declare_reveal(handler=fabricate,
-                               Y = sapply(1:N, function(i) dgp(i, Z, G)))
+reveal <- declare_reveal(handler=fabricate,
+                         Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
       
-      # Answer Strategy -------------------------------------------------------------
-      estimator <- declare_estimator(Y ~ Z, estimand = estimand, model = lm_robust)
-      
-      # Design ----------------------------------------------------------------------
-      simple_spillover_design <- pop / estimand / assignt / reveal/  estimator
+# Answer Strategy -------------------------------------------------------------
+estimator <- declare_estimator(Y ~ Z, estimand = "Treat_1", 
+                               model = lm_robust, label = naive)
+
+# Design ----------------------------------------------------------------------
+simple_spillover_design <- pop / estimand / assignt / reveal /  estimator
       
     }}}
     simple_spillover_design
