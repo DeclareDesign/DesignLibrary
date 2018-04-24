@@ -52,8 +52,8 @@ reveal <- declare_reveal(handler=fabricate,
                          Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
       
 # Answer Strategy -------------------------------------------------------------
-estimator <- declare_estimator(Y ~ Z, estimand = "Treat_1", 
-                               model = lm_robust, label = naive)
+estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
+                               model = lm_robust, label = "naive")
 
 # Design ----------------------------------------------------------------------
 simple_spillover_design <- pop / estimand / assignt / reveal /  estimator
