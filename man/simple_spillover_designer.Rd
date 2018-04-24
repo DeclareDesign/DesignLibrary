@@ -4,7 +4,7 @@
 \alias{simple_spillover_designer}
 \title{Create a simple design with spillovers}
 \usage{
-simple_spillover_designer(n_groups = 50, group_size = 3, sd = 1,
+simple_spillover_designer(n_groups = 80, group_size = 3, sd = 0.2,
   gamma = 2, code = FALSE)
 }
 \arguments{
