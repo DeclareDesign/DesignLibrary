@@ -1,12 +1,13 @@
 make_header <- function(title = "", shiny, file_name = "" ){
   x <- paste0('---
 title: " ', title, ' " 
-output: rmarkdown::html_vignette
-bibliography: bib.bib
-vignette: >
- %\\VignetteIndexEntry{',title,'}
- %\\VignetteEngine{knitr::rmarkdown}
- %\\VignetteEncoding{UTF-8}
+output:
+  rmarkdown::html_vignette:
+              bibliography: bib.bib
+vignette: |
+  %\\VignetteIndexEntry{',title,'}
+  %\\VignetteEngine{knitr::rmarkdown} 
+  %\\VignetteEncoding{UTF-8}
 ---
               
 ```{r, include=FALSE, eval=TRUE}
@@ -49,14 +50,13 @@ make_designer_chunks <- function(file_name, sims, bootstrap, has_shiny) {
   
 ```{r, code = ',file_name,'_designer(code = TRUE)}
 ```
-  
-
+```{r,eval = FALSE}
+diagnosis <- diagnose_design(',file_name,'_design, sims = ',sims,', bootstrap = ',bootstrap,')
+```
 ```{r ',file_name,'_diagnosis,echo = FALSE}
  diagnosis <- get_or_run_diagnosis(',file_name,'_design, sims = ',sims,', bootstrap = ',bootstrap,')
- knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
+ knitr::kable(reshape_diagnosis(diagnosis, digits = 2), digits = 2)
 ```
-  
-  
 ')
   ## has_shiny
   if(has_shiny){
@@ -68,13 +68,34 @@ make_designer_chunks <- function(file_name, sims, bootstrap, has_shiny) {
 ')  
   }
   
-  chunk3 <- paste0('
-```{r,eval = FALSE}
-diagnosis <- diagnose_design(',file_name,'_design, sims = ',sims,', bootstrap = ',bootstrap,')
-```
-')
+css <- ' 
+ <!-- CUSTOM CSS; PLEASE DO NOT DELETE -->.
+ ```{css, echo = FALSE}
+ table{
+   border: 1px solid black;
+   table-layout: fixed;
+   max-width: 800px;
+   width: 100%;
+   style="word-break:break-all;"
+ }                
+ 
+ th, td {
+   border: 1px solid black;
+   max-width: 80px;
+   width: 100%;
+   font-size: 12px;
+   
+   /* CSS 3 */
+     white-space: -o-pre-wrap;
+   word-wrap: break-word;
+   white-space: pre-wrap;
+   white-space: -moz-pre-wrap;
+   white-space: -pre-wrap;
+ }
+ 
+ ```'
   
-  paste0(chunk1, chunk2, chunk3)
+  paste0(chunk1, chunk2, css)
 }
 
 make_text <- function(text, text_path){
@@ -104,8 +125,7 @@ make_text <- function(text, text_path){
 #' @param bootstraps  Number of bootstraps for DeclareDesign. 
 #' @param output_folder If NULL, vignette is saved in working directory.
 #' @return This function creates a .Rmd 
-#' @export 
-#'
+#' @importFrom devtools is.package as.package
 
 make_vignette <- function(design_or_designer,
                           title = NULL,
@@ -119,17 +139,29 @@ make_vignette <- function(design_or_designer,
                           output_folder = NULL) {
   
   options(error = NULL)
+  our_package = "DesignLibrary"
   object_name <- deparse(substitute(design_or_designer))
+  shiny = ""
+  class_object <- class(design_or_designer)
+  has_shiny <- FALSE
+  
+  if(is.null(output_folder)) {
+    output_folder <- ""
+    pkg <- "."
+    if(is.package(as.package(pkg))) {
+      pkg <- as.package(pkg)
+      if(pkg$package ==  our_package)
+        output_folder <- paste0(as.package(pkg)$path, "\\vignettes\\")
+    } 
+  }  
+  
   if (is.null(title))
     title <-  gsub("_", replacement = " ", object_name)
-  shiny = ""
-  class_a <- class(design_or_designer)
-  has_shiny <- FALSE
+
   if(is.null(end_text)) 
     end_text <- ""
-  if(is.null(output_folder)) 
-    output_folder <- ""
-  if (any(class_a  == "design")) {
+  
+  if (any(class_object  == "design")) {
     if (!endsWith(object_name, "_design"))
       stop("Design's name must end with suffix '_design'")
     make_chunks <- make_design_chunks
@@ -139,8 +171,8 @@ make_vignette <- function(design_or_designer,
   }
   else if (is.function(design_or_designer))
   {
-    class_a <- class(design_or_designer())
-    if (!any(class_a  == "design"))
+    class_object <- class(design_or_designer())
+    if (!any(class_object  == "design"))
       stop(
         "Argument 'design_or_designer' must either be an object of class 'design' 
          or a designer that returns an object of class 'design'"
@@ -169,10 +201,11 @@ make_vignette <- function(design_or_designer,
       "Argument 'design_or_designer' must either be an object of class 'design'
       or a designer that returns an object of class 'design'"
     )
-  
-  file_name <- tolower(object_name)
-  
-  
+
+  file_name  <- tolower(object_name)
+  front_text <- make_text(front_text, front_text_path)
+  end_text   <- make_text(end_text, end_text_path)
+
   if (has_shiny)
     shiny <- paste0(' 
 <!--
@@ -181,10 +214,7 @@ make_vignette <- function(design_or_designer,
   </a>
 -->')
   
-  front_text <- make_text(front_text, front_text_path)
-  end_text   <- make_text(end_text, end_text_path)
-  
-  if (file.exists(paste0(output_folder, file_name, ".Rmd")) & !overwrite)
+  if (file.exists(paste0(output_folder ,file_name, ".Rmd")) & !overwrite)
     stop("Vignette already exists")
   
   file.create(paste0(output_folder, file_name, ".Rmd"))
@@ -193,7 +223,7 @@ make_vignette <- function(design_or_designer,
       make_chunks(file_name, sims, bootstrap, has_shiny),
       end_text,
       sep = "\n",
-      file = paste0(file_name, ".Rmd"))
+      file = paste0(output_folder, file_name, ".Rmd"))
 }
 
 #' Function Based on getDocData from package cardoonTools

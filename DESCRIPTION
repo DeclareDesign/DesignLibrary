@@ -13,8 +13,10 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Depends: DeclareDesign
+Imports:
+    devtools
 Suggests: knitr,
-    testthat
+    testthat, 
 Enhances:
   systemfit,
   Matching

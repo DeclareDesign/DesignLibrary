@@ -1,19 +1,26 @@
 ---
-title: " simple spillover designer " 
-output: rmarkdown::html_vignette
+title: 'simple spillover designer '
+output:
+  rmarkdown::html_vignette:
+    css: Tables.css
 bibliography: bib.bib
-vignette: >
- %\VignetteIndexEntry{simple spillover designer}
- %\VignetteEngine{knitr::rmarkdown}
- %\VignetteEncoding{UTF-8}
+vignette: |
+  %\VignetteIndexEntry{simple spillover designer} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  %\VignetteEncoding{UTF-8}
 ---
+
+
               
 ```{r, include=FALSE, eval=TRUE}
 options("keep.source"=TRUE,
         knitr.duplicate.label = "allow" )
+
 library(knitr)
 library(ggplot2)
 library(DesignLibrary)
+library(xtable)
+library(qwraps2)
 ```
               
 <div class="btn-group">
@@ -37,9 +44,10 @@ Great stuff
 ```
   
 
-```{r simple_spillover_diagnosis,echo = FALSE}
+```{r simple_spillover_diagnosis,echo = FALSE, out.width = "20%"}
  diagnosis <- get_or_run_diagnosis(simple_spillover_design, sims = 1000, bootstrap = FALSE)
- knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
+kable(reshape_diagnosis(diagnosis), digits = 2 )
+ 
 ```
   
   
@@ -49,3 +57,5 @@ diagnosis <- diagnose_design(simple_spillover_design, sims = 1000, bootstrap = F
 ```
 
 More
+
+
