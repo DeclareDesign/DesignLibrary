@@ -2,6 +2,7 @@
 title: " Audit Experiment " 
 output:
   rmarkdown::html_vignette:
+              css: !expr system.file("css", "vignette.css", package = "DesignLibrary")
               bibliography: bib.bib
 vignette: |
   %\VignetteIndexEntry{Audit Experiment}
@@ -54,30 +55,5 @@ diagnosis <- diagnose_design(audit_experiment_design, sims = 1000, bootstrap = F
  get_or_run_shiny_diagnosis(audit_experiment_designer(), 1000, bootstrap = FALSE)
 ```
                      
- 
- <!-- CUSTOM CSS; PLEASE DO NOT DELETE -->.
- ```{css, echo = FALSE}
- table{
-   border: 1px solid black;
-   table-layout: fixed;
-   max-width: 800px;
-   width: 100%;
-   style="word-break:break-all;"
- }                
- 
- th, td {
-   border: 1px solid black;
-   max-width: 80px;
-   width: 100%;
-   font-size: 12px;
-   
-   /* CSS 3 */
-     white-space: -o-pre-wrap;
-   word-wrap: break-word;
-   white-space: pre-wrap;
-   white-space: -moz-pre-wrap;
-   white-space: -pre-wrap;
- }
- 
- ```
+
 

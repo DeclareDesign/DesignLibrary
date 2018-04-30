@@ -3,6 +3,7 @@ make_header <- function(title = "", shiny, file_name = "" ){
 title: " ', title, ' " 
 output:
   rmarkdown::html_vignette:
+              css: !expr system.file("css", "vignette.css", package = "DesignLibrary")
               bibliography: bib.bib
 vignette: |
   %\\VignetteIndexEntry{',title,'}
@@ -67,35 +68,8 @@ diagnosis <- diagnose_design(',file_name,'_design, sims = ',sims,', bootstrap = 
                      
 ')  
   }
-  
-css <- ' 
- <!-- CUSTOM CSS; PLEASE DO NOT DELETE -->.
- ```{css, echo = FALSE}
- table{
-   border: 1px solid black;
-   table-layout: fixed;
-   max-width: 800px;
-   width: 100%;
-   style="word-break:break-all;"
- }                
- 
- th, td {
-   border: 1px solid black;
-   max-width: 80px;
-   width: 100%;
-   font-size: 12px;
-   
-   /* CSS 3 */
-     white-space: -o-pre-wrap;
-   word-wrap: break-word;
-   white-space: pre-wrap;
-   white-space: -moz-pre-wrap;
-   white-space: -pre-wrap;
- }
- 
- ```'
-  
-  paste0(chunk1, chunk2, css)
+
+  paste0(chunk1, chunk2)
 }
 
 make_text <- function(text, text_path){
@@ -144,7 +118,6 @@ make_vignette <- function(design_or_designer,
   shiny = ""
   class_object <- class(design_or_designer)
   has_shiny <- FALSE
-  
   if(is.null(output_folder)) {
     output_folder <- ""
     pkg <- "."
@@ -182,7 +155,6 @@ make_vignette <- function(design_or_designer,
     else
     {
       if(is.null(front_text)){
-        our_package = "DesignLibrary"
         rdb_path <- file.path(system.file("help", package= our_package),our_package)
         help_text <- tools:::fetchRdDB(rdb_path, object_name)
         classes <- sapply( help_text, function(x) attr(x, "Rd_tag"))
