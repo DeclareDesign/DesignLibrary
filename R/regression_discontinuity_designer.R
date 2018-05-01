@@ -65,6 +65,16 @@ regression_discontinuity_designer <- function(
       regression_discontinuity_design <- 
         pop / pos / estimand / declare_reveal(Y) / sampling / estimator
     }}}
+    regression_discontinuity_design <- insert_step(regression_discontinuity_design, after=length(regression_discontinuity_design), declare_citation(
+      citation = utils::bibentry(
+        bibtype = "Article",
+        title = "Regression-discontinuity analysis: An alternative to the ex post facto experiment.",
+        author= "Thistlethwaite, Donald L and Campbell, Donald T",
+        journal= "Journal of Educational Psychology",
+        volume = "51",
+        number = "6",
+        year = "1960",
+        page = 309)))
     regression_discontinuity_design
   }
   if(code)  out <- get_design_code(design_code)
