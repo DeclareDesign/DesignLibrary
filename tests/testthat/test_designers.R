@@ -26,7 +26,8 @@ for(designer in designers){
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
     code = {
-      expect_true("design" %in% class(the_designer()))
+      test_design <- the_designer()
+      diagnose_design(test_design,sims = 5,bootstrap = F)
     })
   
   testthat::test_that(
@@ -35,7 +36,7 @@ for(designer in designers){
       expect_true(class(the_designer(code = TRUE)) == "character")
     })
 
-    testthat::test_that(
+  testthat::test_that(
     desc = paste0(designer, " uses declare_design declaration somewhere"),
     code = {
       expect_true(any(grepl("declare_design|/",the_designer(code = TRUE))))
@@ -52,7 +53,7 @@ for(designer in designers){
   testthat::test_that(
     desc = paste0(designer," is able to make vignettes."),
     code = {
-      make_vignette(design_or_designer = the_designer,title = "Test Vignette",overwrite = TRUE)
+      make_vignette(design_or_designer = the_designer,title = "Test Vignette",overwrite = TRUE,front_text = "Blah",end_text = "Blah")
     })
   
   # testthat::test_that(
