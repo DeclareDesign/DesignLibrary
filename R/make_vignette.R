@@ -100,7 +100,7 @@ make_text <- function(text, text_path){
 #' @param output_folder If NULL, vignette is saved in working directory.
 #' @return This function creates a .Rmd 
 #' @importFrom devtools is.package as.package
-
+#' @export
 make_vignette <- function(design_or_designer,
                           title = NULL,
                           front_text = NULL,
