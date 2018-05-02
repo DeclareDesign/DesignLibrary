@@ -14,9 +14,6 @@ options("keep.source"=TRUE,
 library(knitr)
 library(ggplot2)
 library(DesignLibrary)
-library(kableExtra)
-library(magrittr)
-library(pander)
 ```
               
 <div class="btn-group">
@@ -52,8 +49,8 @@ diagnosis <- diagnose_design(crossover_design, sims = 1000, bootstrap = FALSE)
 
 ```{r crossover_diagnosis, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
  diagnosis <- get_or_run_diagnosis(crossover_design, sims = 1000, bootstrap = FALSE)
- panderOptions('table.continues', "")
- pandoc.table(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
+
+knitr::kable(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
 
 ```
   

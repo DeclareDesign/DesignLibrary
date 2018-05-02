@@ -19,8 +19,7 @@ options("keep.source"=TRUE,
 library(knitr)
 library(ggplot2)
 library(DesignLibrary)
-library(xtable)
-library(qwraps2)
+
 ```
               
 <div class="btn-group">
@@ -46,7 +45,7 @@ Great stuff
 
 ```{r simple_spillover_diagnosis,echo = FALSE, out.width = "20%"}
  diagnosis <- get_or_run_diagnosis(simple_spillover_design, sims = 1000, bootstrap = FALSE)
-kable(reshape_diagnosis(diagnosis), digits = 2 )
+ knitr::kable(reshape_diagnosis(diagnosis), digits = 2 )
  
 ```
   

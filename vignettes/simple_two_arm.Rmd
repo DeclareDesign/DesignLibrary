@@ -11,7 +11,7 @@ vignette: >
 
 ```{r MIDA, echo = FALSE,include = FALSE}
 library(DesignLibrary)
-library(pander)
+
 ```
 
 <div class="btn-group">
@@ -67,8 +67,7 @@ diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FAL
 
 ```{r crossover_diagnosis, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
  diagnosis <- get_or_run_diagnosis(crossover_design, sims = 1000, bootstrap = FALSE)
- panderOptions('table.continues', "")
- pandoc.table(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
+knitr::kable(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
 ```
 
 ```{r simple_two_arm_shiny_diagnosis,include = FALSE}

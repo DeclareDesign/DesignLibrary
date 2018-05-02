@@ -46,6 +46,7 @@ library(DesignLibrary)
 ```{r,eval = FALSE}
 diagnosis <- diagnose_design(audit_experiment_design, sims = 1000, bootstrap = FALSE)
 ```
+
 ```{r audit_experiment_diagnosis,echo = FALSE}
  diagnosis <- get_or_run_diagnosis(audit_experiment_design, sims = 1000, bootstrap = FALSE)
  knitr::kable(reshape_diagnosis(diagnosis, digits = 2), digits = 2)
