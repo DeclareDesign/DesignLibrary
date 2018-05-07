@@ -5,7 +5,7 @@
 \title{Create a regression discontinuity design}
 \usage{
 regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
-  bandwidth = 0.5, poly_order = 4, code = FALSE)
+  bandwidth = 0.5, poly_order = 4)
 }
 \arguments{
 \item{N}{An integer. Size of population to sample from.}
@@ -17,8 +17,6 @@ regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
 \item{bandwidth}{A scalar number. Bandwidth around threshold from which to include units.}
 
 \item{poly_order}{An integer. Order of the polynomial regression used to estimate the jump at the cutoff.}
-
-\item{code}{Logical. If TRUE designer returns the code of a design, otherwise returns design.}
 }
 \value{
 A regression discontinuity design design
@@ -35,6 +33,4 @@ Note: here.
 # A regression discontinuity design using default arguments:
 regression_discontinuity_design <- regression_discontinuity_designer()
 
-# Code for regression discontinuity design
-regression_discontinuity_designer(code = TRUE)
 }
