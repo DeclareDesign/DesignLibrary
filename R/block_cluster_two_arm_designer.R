@@ -13,7 +13,6 @@
 #' with N determined by \code{N_cluster_in_block}. Units are assigned to treatment using complete block cluster random assignment. 
 #' Analysis uses differences in means accounting for blocks and clusters. 
 #'
-#' @param code Logical. If TRUE, returns the code of a design, otherwise returns a design.
 #' @param N_blocks Number of blocks.
 #' @param N_clusters_in_block Number of clusters in each block.
 #' @param N_i_in_cluster Individuals per block.
@@ -31,8 +30,6 @@
 #' # To make a design using default arguments:
 #' block_cluster_two_arm_design <- block_cluster_two_arm_designer()
 #'
-#' # To export DeclareDesign code for a design:
-#' block_cluster_two_arm_designer(code = TRUE)
 #'
 
 
