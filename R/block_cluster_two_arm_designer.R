@@ -45,68 +45,60 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
                                            prob = .5,
                                            control_mean = 0,
                                            ate = 1,
-                                           treatment_mean = control_mean + ate,
-                                           code = FALSE)
-{
+                                           treatment_mean = control_mean + ate){  
+  
   if(sd_block<0) stop("sd_block must be non-negative")
   if(sd_cluster<0) stop("sd_cluster must be non-negative")
   if(sd_i<0) stop("sd_i must be non-negative")
   if(prob<0 | prob>1) stop("prob must be in [0,1]")
-  
-  design_code <- function() {
-    # Below is grabbed by get_design_code
-    
-    {{{
-      # M: Model
-      pop <- declare_population(
-        blocks   = add_level(
-          N = N_blocks,
-          u_b = rnorm(N) * sd_block),
-        clusters = add_level(
-          N = N_clusters_in_block,
-          u_c = rnorm(N) * sd_cluster,
-          cluster_size = N_i_in_cluster
-        ),
-        i = add_level(
-          N   = N_i_in_cluster,
-          u_i = rnorm(N) * sd_i,
-          Z0  = control_mean + u_i + u_b + u_c,
-          Z1  = treatment_mean  + u_i + u_b + u_c
-        )
+  {{{
+    # M: Model
+    pop <- declare_population(
+      blocks   = add_level(
+        N = N_blocks,
+        u_b = rnorm(N) * sd_block),
+      clusters = add_level(
+        N = N_clusters_in_block,
+        u_c = rnorm(N) * sd_cluster,
+        cluster_size = N_i_in_cluster
+      ),
+      i = add_level(
+        N   = N_i_in_cluster,
+        u_i = rnorm(N) * sd_i,
+        Z0  = control_mean + u_i + u_b + u_c,
+        Z1  = treatment_mean  + u_i + u_b + u_c
       )
-      
-      pos <- declare_potential_outcomes(Y ~ (1 - Z) * Z0 + Z * Z1)
-      
-      # I: Inquiry
-      estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
-      
-      # D: Data
-      assignment <- declare_assignment(prob = prob,
-                                       blocks = blocks,
-                                       clusters = clusters)
-      
-      # A: Analysis
-      est <- declare_estimator(
-        Y ~ Z,
-        estimand = estimand,
-        model = difference_in_means,
-        blocks = blocks,
-        clusters = clusters
-      )
-      
-      # Design
-      block_cluster_two_arm_design <-  pop / pos / estimand / assignment / 
-        declare_reveal() / est
-    }}}
+    )
     
-    block_cluster_two_arm_design
-  }
+    pos <- declare_potential_outcomes(Y ~ (1 - Z) * Z0 + Z * Z1)
+    
+    # I: Inquiry
+    estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+    
+    # D: Data
+    assignment <- declare_assignment(prob = prob,
+                                     blocks = blocks,
+                                     clusters = clusters)
+    
+    # A: Analysis
+    est <- declare_estimator(
+      Y ~ Z,
+      estimand = estimand,
+      model = difference_in_means,
+      blocks = blocks,
+      clusters = clusters
+    )
+    
+    # Design
+    block_cluster_two_arm_design <-  pop / pos / estimand / assignment / 
+      declare_reveal() / est
+  }}}
   
-  if (code)
-    out <- get_design_code(design_code)
-  else
-    out <- design_code()
-  return(out)
+  attr(block_cluster_two_arm_design, "code") <- 
+    construct_design_code(block_cluster_two_arm_designer, match.call.defaults())
+  
+  block_cluster_two_arm_design
+  
 }
 
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-
@@ -124,3 +116,9 @@ attr(block_cluster_two_arm_designer, "tips") <-
     N_i_in_cluster = "Number of units in each cluster",
     ate = "The average treatment effect"
   )
+attr(block_cluster_two_arm_designer, "description") <- "
+<p> A two blocked and clustered experiment <code>N_blocks</code> blocks, 
+each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn contains 
+<code>N_i_in_cluster</code> individual units. 
+<p> Estimand is the <code>ate</code> average interaction effect.
+"
