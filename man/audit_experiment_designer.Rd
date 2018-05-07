@@ -23,7 +23,4 @@ Note: Note here.
 \examples{
 # To make a design using default arguments:
 audit_experiment_design <- audit_experiment_designer()
-
-# To export DeclareDesign code for a design:
-audit_experiment_designer(code = TRUE)
 }
