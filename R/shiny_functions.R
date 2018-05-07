@@ -37,7 +37,6 @@ designer_default_args_text <- function(designer) {
   shinys <- lapply(shinys,function(x)x[1])
   args <- c(shinys,get_constants(designer))
   args <- args[names(formals(designer))]
-  args <- args[-which(names(args) == "code")]
   args <- lapply(args,deparse)
   mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
 }
@@ -52,7 +51,6 @@ expand_designer_shiny_args_text <- function(designer) {
     names(shiny_args) <- names(all_shinys)
     args <- c(shiny_args,get_constants(designer))
     args <- args[names(formals(designer))]
-    args <- args[-which(names(args) == "code")]
     args <- lapply(args,deparse)
     mapply(paste, names(args), "<-", args, USE.NAMES = FALSE)
   })
