@@ -6,7 +6,6 @@
 #' 
 #' Note: Note here.
 #'
-#' @param code Logical. If TRUE, returns the code of a design, otherwise returns a design.
 #' @param N Size of sample
 #' @param a Effect of treatment (Z) on mediatior (M)
 #' @param b Effect of mediatior (M) on outcome (Y)
@@ -19,73 +18,63 @@
 #' # To make a design using default arguments:
 #' mediation_analysis_design <- mediation_analysis_designer()
 #'
-#' # To export DeclareDesign code for a design:
-#' mediation_analysis_designer(code = TRUE)
-#'
 
 
 mediation_analysis_designer <- function(N = 100,
                                         a = .5,
                                         b = .5,
                                         d = .5,
-                                        rho = .2,
-                                        code = FALSE)
+                                        rho = .2)
 {
   if(rho < -1 | rho > 1) stop("rho must be in [-1, 1]")
   
-  design_code <- function() {
-    # Below is grabbed by get_design_code
-    
-    {{{
-      pop <- declare_population(
-        N = N, 
-        e1 = rnorm(N),
-        e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
+  {{{
+    pop <- declare_population(
+      N = N, 
+      e1 = rnorm(N),
+      e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
+    )
+    pos_M <-
+      declare_potential_outcomes(M ~ a * Z + e1)
+    pos_Y <-
+      declare_potential_outcomes(Y ~ d * Z + b * M + e2)
+    assignment <- declare_assignment(prob = 0.5)
+    mand_a <- declare_estimand(a = a)
+    mand_b <- declare_estimand(b = b)
+    mand_d <- declare_estimand(d = d)
+    mediator_regression <- declare_estimator(
+      M ~ Z,
+      model = lm_robust,
+      coefficients = "Z",
+      estimand = mand_a,
+      label = "Mediator regression"
+    )
+    outcome_regression <- declare_estimator(
+      Y ~ Z + M,
+      model = lm_robust,
+      coefficients = c("M","Z"),
+      estimand = c(mand_b,mand_d),
+      label = "Outcome regression"
+    )
+    mediation_analysis_design <-
+      declare_design(
+        pop,
+        pos_M,
+        assignment,
+        declare_reveal(M, Z),
+        pos_Y,
+        mand_a,
+        mand_b,
+        mand_d,
+        declare_reveal(Y, Z),
+        mediator_regression,
+        outcome_regression
       )
-      pos_M <-
-        declare_potential_outcomes(M ~ a * Z + e1)
-      pos_Y <-
-        declare_potential_outcomes(Y ~ d * Z + b * M + e2)
-      assignment <- declare_assignment(prob = 0.5)
-      mand_a <- declare_estimand(a = a)
-      mand_b <- declare_estimand(b = b)
-      mand_d <- declare_estimand(d = d)
-      mediator_regression <- declare_estimator(
-        M ~ Z,
-        model = lm_robust,
-        coefficients = "Z",
-        estimand = mand_a,
-        label = "Mediator regression"
-      )
-      outcome_regression <- declare_estimator(
-        Y ~ Z + M,
-        model = lm_robust,
-        coefficients = c("M","Z"),
-        estimand = c(mand_b,mand_d),
-        label = "Outcome regression"
-      )
-      mediation_analysis_design <-
-        declare_design(
-          pop,
-          pos_M,
-          assignment,
-          declare_reveal(M, Z),
-          pos_Y,
-          mand_a,
-          mand_b,
-          mand_d,
-          declare_reveal(Y, Z),
-          mediator_regression,
-          outcome_regression
-        )
-    }}}
-    mediation_analysis_design
-  }
-  if (code)
-    out <- get_design_code(design_code)
-  else
-    out <- design_code()
-  return(out)
+  }}}
+  attr(mediation_analysis_design, "code") <- 
+    construct_design_code(mediation_analysis_designer, match.call.defaults())
+  
+  mediation_analysis_design
 }
 
 attr(mediation_analysis_designer,"shiny_arguments") <- list(
@@ -102,4 +91,10 @@ attr(mediation_analysis_designer,"tips") <- c(
   d = "Direct effect of treatment (Z) on outcome (Y)",
   rho = "Correlation of mediator (M) and outcome (Y) error terms"
 )
-
+attr(mediation_analysis_designer,"description") <- "
+<p> A mediation analysis design, with sample of size <code>N</code>, 
+    effect of treatment (Z) on mediator (M) equal to <code>a</code>, 
+    effect of mediator (M) on outcome (Y) equal to <code>b</code>, 
+    and direct effect of treatment (Z) on outcome (Y) equal to <code>d</code>. 
+<p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>.
+"

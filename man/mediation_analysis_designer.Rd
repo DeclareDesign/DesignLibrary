@@ -5,7 +5,7 @@
 \title{Create a design for mediation analysis}
 \usage{
 mediation_analysis_designer(N = 100, a = 0.5, b = 0.5, d = 0.5,
-  rho = 0.2, code = FALSE)
+  rho = 0.2)
 }
 \arguments{
 \item{N}{Size of sample}
@@ -17,8 +17,6 @@ mediation_analysis_designer(N = 100, a = 0.5, b = 0.5, d = 0.5,
 \item{d}{Direct effect of treatment (Z) on outcome (Y)}
 
 \item{rho}{Correlation of mediator (M) and outcome (Y) error terms}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
 A mediation analysis design.
@@ -34,8 +32,5 @@ Note: Note here.
 \examples{
 # To make a design using default arguments:
 mediation_analysis_design <- mediation_analysis_designer()
-
-# To export DeclareDesign code for a design:
-mediation_analysis_designer(code = TRUE)
 
 }
