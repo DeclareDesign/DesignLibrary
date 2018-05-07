@@ -13,12 +13,10 @@
 #' @examples
 #' # To make a design using default arguments:
 #' audit_experiment_design <- audit_experiment_designer()
-#'
-#' # To export DeclareDesign code for a design:
-#' audit_experiment_designer(code = TRUE)
 
 
-audit_experiment_designer <- function(N = 100){
+audit_experiment_designer <- function(N = 100
+){
   {{{
     # M: Model
     population <-
