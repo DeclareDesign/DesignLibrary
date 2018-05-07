@@ -7,8 +7,7 @@
 block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
   N_i_in_cluster = 1, sd_block = 0.2, sd_cluster = 0.2,
   sd_i = sqrt(max(0, 1 - sd_block^2 - sd_cluster^2)), prob = 0.5,
-  control_mean = 0, ate = 1, treatment_mean = control_mean + ate,
-  code = FALSE)
+  control_mean = 0, ate = 1, treatment_mean = control_mean + ate)
 }
 \arguments{
 \item{N_blocks}{Number of blocks.}

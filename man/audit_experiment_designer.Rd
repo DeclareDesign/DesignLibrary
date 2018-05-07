@@ -8,8 +8,6 @@ audit_experiment_designer(N = 100)
 }
 \arguments{
 \item{N}{Size of sample}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
 An audit experiment design.
