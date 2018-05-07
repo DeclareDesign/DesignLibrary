@@ -10,7 +10,6 @@
 #' across subjects between no one treated and only that subject treated.  
 #' 
 #' 
-#' @param code Logical. If TRUE, returns the code of a design, otherwise returns a design.
 #' @param N_groups Number of groups.
 #' @param group_size Number of units in each group. May be scalar, or vector of length(n_groups) 
 #' @param sd Standard deviation of individual level shock
@@ -24,48 +23,45 @@
 #'
 
 
-simple_spillover_designer <- function(n_groups = 80, group_size = 3, sd = .2, gamma = 2, code = FALSE)
+simple_spillover_designer <- function(n_groups = 80, group_size = 3, sd = .2, gamma = 2)
 {
-
-  design_code <- function() {
-    # Below is grabbed by get_design_code
-    
-    {{{
-
-# Model ----------------------------------------------------------------------
-
-pop <- declare_population(G = add_level(N = n_groups, n = group_size), 
-                          i = add_level(N = n, zeros = 0, ones =1))
-      
-dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd
-      
-# Inquiry --------------------------------------------------------------------
-estimand <- declare_estimand(Treat_1 = mean(
-        sapply(1:length(G), function(i) {
-          Z_i <- (1:length(G))==i
-          dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
-      ), label = "estimand")
-      # Data
-      assignt <- declare_assignment()
-      
-reveal <- declare_reveal(handler=fabricate,
-                         Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
-      
-# Answer Strategy -------------------------------------------------------------
-estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
-                               model = lm_robust, label = "naive")
-
-# Design ----------------------------------------------------------------------
-simple_spillover_design <- pop / estimand / assignt / reveal /  estimator
-      
-    }}}
-    simple_spillover_design
-  }
   
-  if (code)
-    out <- get_design_code(design_code)
-  else
-    out <- design_code()
-  return(out)
+  {{{
+    # Model ----------------------------------------------------------------------
+    pop <- declare_population(G = add_level(N = n_groups, n = group_size), 
+                              i = add_level(N = n, zeros = 0, ones =1))
+    
+    dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd
+    
+    # Inquiry --------------------------------------------------------------------
+    estimand <- declare_estimand(Treat_1 = mean(
+      sapply(1:length(G), function(i) {
+        Z_i <- (1:length(G))==i
+        dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
+    ), label = "estimand")
+    # Data
+    assignt <- declare_assignment()
+    
+    reveal <- declare_reveal(handler=fabricate,
+                             Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
+    
+    # Answer Strategy -------------------------------------------------------------
+    estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
+                                   model = lm_robust, label = "naive")
+    
+    # Design ----------------------------------------------------------------------
+    simple_spillover_design <- pop / estimand / assignt / reveal /  estimator
+    
+  }}}
+  attr(simple_spillover_design, "code") <- 
+    construct_design_code(simple_spillover_designer, match.call.defaults())
+  
+  simple_spillover_design
 }
+
+
+
+
+
+
 

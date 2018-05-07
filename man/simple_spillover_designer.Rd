@@ -5,7 +5,7 @@
 \title{Create a simple design with spillovers}
 \usage{
 simple_spillover_designer(n_groups = 80, group_size = 3, sd = 0.2,
-  gamma = 2, code = FALSE)
+  gamma = 2)
 }
 \arguments{
 \item{group_size}{Number of units in each group. May be scalar, or vector of length(n_groups)}
@@ -13,8 +13,6 @@ simple_spillover_designer(n_groups = 80, group_size = 3, sd = 0.2,
 \item{sd}{Standard deviation of individual level shock}
 
 \item{gamma}{Parameter that controls whether spillovers within groups substitue for each other or complement each other}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 
 \item{N_groups}{Number of groups.}
 }
