@@ -5,8 +5,7 @@
 \title{Create a design for cluster random sampling}
 \usage{
 cluster_sampling_designer(n_clusters = 100, n_subjects_per_cluster = 10,
-  icc = 0.2, N_clusters = 1000, N_subjects_per_cluster = 50,
-  code = FALSE)
+  icc = 0.2, N_clusters = 1000, N_subjects_per_cluster = 50)
 }
 \arguments{
 \item{n_clusters}{An integer. Number of clusters to sample.}
@@ -18,8 +17,6 @@ cluster_sampling_designer(n_clusters = 100, n_subjects_per_cluster = 10,
 \item{N_clusters}{An integer. Total number of clusters in the population.}
 
 \item{N_subjects_per_cluster}{An integer. Total number of subjects per cluster in the population.}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
 A cluster sampling design.
@@ -36,7 +33,5 @@ Note: Note here.
 # To make a design using default arguments:
 cluster_sampling_design <- cluster_sampling_designer()
 
-# To export DeclareDesign code for a design:
-cluster_sampling_designer(code = TRUE)
 
 }
