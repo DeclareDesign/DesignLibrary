@@ -3,7 +3,13 @@
 #' @return Verbatim code 
 #' @export
 #'
-get_design_code <- function(designer) {
+get_design_code <- function(design){
+  cat(attr(design, "code"), sep = "\n")
+}
+
+#' @export
+construct_design_code <- function(designer, args){
+  # get the code for the design 
   txt <- as.character(getSrcref(designer))
   
   open <- grep("[{]{3}", txt)
@@ -18,8 +24,32 @@ get_design_code <- function(designer) {
   indentation <- indentation[cumprod(indentation == " ") == 1]
   indentation <- paste0("^", paste(indentation, collapse=""))
   
-  sub(indentation, "", txt)
+  code <- sub(indentation, "", txt)
+  
+  # convert args to text
+  args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
+  
+  # add arguments and code
+  code <- c(args_text, "", code)
+  
+  code
 }
+
+#' @export
+match.call.defaults <- function(...) {
+  call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
+  formals <- evalq(formals(), parent.frame(1))
+  
+  for(i in setdiff(names(formals), names(call)))
+    call[i] <- list( formals[[i]] )
+  
+  
+  match.call(sys.function(sys.parent()), call)
+}
+
+
+
+
 
 #' Run diagnosis and store RDS
 #' @param ... Design, number of simulations and bootstraps for DeclareDesign
