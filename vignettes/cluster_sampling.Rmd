@@ -34,28 +34,28 @@ library(DesignLibrary)
 
 
 
-```{r, code = designer_default_args_text(cluster_sampling_designer)}
-```
+<!-- ```{r, code = designer_default_args_text(cluster_sampling_designer)} -->
+<!-- ``` -->
 
-  
-```{r, code = cluster_sampling_designer(code = TRUE)}
-```
-  
 
-```{r cluster_sampling_diagnosis,echo = FALSE}
- diagnosis <- get_or_run_diagnosis(cluster_sampling_design, sims = 1000, bootstrap = FALSE)
- knitr::kable(reshape_diagnosis(diagnosis, digits = 2))
-```
-  
-  
+<!-- ```{r, code = cluster_sampling_designer(code = TRUE)} -->
+<!-- ``` -->
 
-```{r cluster_sampling_shiny_diagnosis,include = FALSE}
- get_or_run_shiny_diagnosis(cluster_sampling_designer, 1000, bootstrap = FALSE)
-```
-                     
 
-```{r,eval = FALSE}
-diagnosis <- diagnose_design(cluster_sampling_design, sims = 1000, bootstrap = FALSE)
-```
+<!-- ```{r cluster_sampling_diagnosis,echo = FALSE} -->
+<!--  diagnosis <- get_or_run_diagnosis(cluster_sampling_design, sims = 1000, bootstrap = FALSE) -->
+<!--  knitr::kable(reshape_diagnosis(diagnosis, digits = 2)) -->
+<!-- ``` -->
+
+
+
+<!-- ```{r cluster_sampling_shiny_diagnosis,include = FALSE} -->
+<!--  get_or_run_shiny_diagnosis(cluster_sampling_designer, 1000, bootstrap = FALSE) -->
+<!-- ``` -->
+
+
+<!-- ```{r,eval = FALSE} -->
+<!-- diagnosis <- diagnose_design(cluster_sampling_design, sims = 1000, bootstrap = FALSE) -->
+<!-- ``` -->
 
 

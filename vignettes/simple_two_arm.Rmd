@@ -33,27 +33,27 @@ library(DesignLibrary)
 --> 
 </div>
             
-  
 
- Create a simple two arm design
 
-```{r, code = designer_default_args_text(simple_two_arm_designer)}
-```
+<!--  Create a simple two arm design -->
 
-  
-```{r, code = simple_two_arm_designer(code = TRUE)}
-```
-```{r,eval = FALSE}
-diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
-```
-```{r simple_two_arm_diagnosis,echo = FALSE}
- diagnosis <- get_or_run_diagnosis(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
- knitr::kable(reshape_diagnosis(diagnosis, digits = 2), digits = 2)
-```
+<!-- ```{r, code = designer_default_args_text(simple_two_arm_designer)} -->
+<!-- ``` -->
 
-```{r simple_two_arm_shiny_diagnosis,include = FALSE}
- get_or_run_shiny_diagnosis(simple_two_arm_designer(), 1000, bootstrap = FALSE)
-```
-                     
+
+<!-- ```{r, code = simple_two_arm_designer(code = TRUE)} -->
+<!-- ``` -->
+<!-- ```{r,eval = FALSE} -->
+<!-- diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE) -->
+<!-- ``` -->
+<!-- ```{r simple_two_arm_diagnosis,echo = FALSE} -->
+<!--  diagnosis <- get_or_run_diagnosis(simple_two_arm_design, sims = 1000, bootstrap = FALSE) -->
+<!--  knitr::kable(reshape_diagnosis(diagnosis, digits = 2), digits = 2) -->
+<!-- ``` -->
+
+<!-- ```{r simple_two_arm_shiny_diagnosis,include = FALSE} -->
+<!--  get_or_run_shiny_diagnosis(simple_two_arm_designer(), 1000, bootstrap = FALSE) -->
+<!-- ``` -->
+
 
 
