@@ -5,7 +5,7 @@
 \title{Create a pretest-posttest design}
 \usage{
 pretest_posttest_designer(N = 100, ate = 0.25, rho = 0.5,
-  attrition_rate = 0.1, code = FALSE)
+  attrition_rate = 0.1)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -15,8 +15,6 @@ pretest_posttest_designer(N = 100, ate = 0.25, rho = 0.5,
 \item{rho}{A number in [0,1]. Correlation in outcomes between pre- and post-test}
 
 \item{attrition_rate}{A number in [0,1]. Proportion of respondents lost when using pre-test data}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
 A pretest-posttest design.
@@ -33,6 +31,4 @@ Note: Note here.
 # To make a design using default arguments:
 pretest_posttest_design <- pretest_posttest_designer()
 
-# To export DeclareDesign code for a design:
-pretest_posttest_designer(code = TRUE)
 }
