@@ -4,7 +4,7 @@
 \alias{get_design_code}
 \title{Get code from a designer}
 \usage{
-get_design_code(designer)
+get_design_code(design)
 }
 \arguments{
 \item{designer}{A function that builds designs, and contains the code to be grabbed inside triple braces}

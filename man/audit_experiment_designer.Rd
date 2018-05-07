@@ -4,7 +4,7 @@
 \alias{audit_experiment_designer}
 \title{Create an audit experiment design}
 \usage{
-audit_experiment_designer(N = 100, code = FALSE)
+audit_experiment_designer(N = 100)
 }
 \arguments{
 \item{N}{Size of sample}
