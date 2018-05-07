@@ -5,7 +5,7 @@
 \title{Create a crossover design}
 \usage{
 crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.1,
-  rho = 0.2, code = FALSE)
+  rho = 0.2)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -17,8 +17,6 @@ crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.1,
 \item{crossover}{A number. Size of crossover effect}
 
 \item{rho}{A number in [0,1]. Correlation in errors of outcomes A and B}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
 A crossover design.
@@ -35,6 +33,4 @@ Note: Note here.
 # To make a design using default arguments:
 crossover_design <- audit_experiment_designer()
 
-# To export DeclareDesign code for a design:
-crossover_designer(code = TRUE)
 }
