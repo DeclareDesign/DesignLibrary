@@ -29,8 +29,6 @@ block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
 \item{ate}{Average treatment effect.}
 
 \item{treatment_mean}{Average outcome in treatment.}
-
-\item{code}{Logical. If TRUE, returns the code of a design, otherwise returns a design.}
 }
 \value{
 A function that returns a design.
@@ -54,7 +52,5 @@ Analysis uses differences in means accounting for blocks and clusters.
 # To make a design using default arguments:
 block_cluster_two_arm_design <- block_cluster_two_arm_designer()
 
-# To export DeclareDesign code for a design:
-block_cluster_two_arm_designer(code = TRUE)
 
 }
