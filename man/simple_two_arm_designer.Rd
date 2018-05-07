@@ -6,7 +6,7 @@
 \usage{
 simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
   control_sd = 1, ate = 1, treatment_mean = control_mean + ate,
-  treatment_sd = control_sd, rho = 1, code = FALSE)
+  treatment_sd = control_sd, rho = 1)
 }
 \arguments{
 \item{N}{Number of units}
@@ -21,5 +21,4 @@ Create a simple two arm design
 }
 \examples{
 simple_two_arm_design <- simple_two_arm_designer()
-simple_two_arm_designer(code = TRUE)
 }
