@@ -62,6 +62,20 @@ simple_spillover_designer <- function(n_groups = 80, group_size = 3, sd = .2, ga
 
 
 
+#' A simple spillover design
+#'
+#' Default design created with  \code{\link{simple_spillover_designer}}
+#' 
+#' @seealso \code{\link{simple_spillover_designer}} 
+#' @format A design object 
+"simple_spillover_design"
+
+
+
+
+
+
+
 
 
 

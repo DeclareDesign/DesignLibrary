@@ -99,4 +99,20 @@ attr(regression_discontinuity_designer,"description") <- "
 <p> Polynomial regression of order <code>poly_order</code> is used to estimate tau, within a bandwidth of size
     <code>bandwidth</code> around the cutoff situated at <code>cutoff</code> on the running variable.
 "
+
+
+
+#' A regression discontinuity design
+#'
+#' Default design created with  \code{\link{regression_discontinuity_designer}}
+#' 
+#' @seealso \code{\link{regression_discontinuity_designer}} 
+#' @format A design object 
+"regression_discontinuity_design"
+
+
+
+
+
+
   

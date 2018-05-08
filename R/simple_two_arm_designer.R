@@ -53,3 +53,22 @@ attr(simple_two_arm_designer, "tips") <-
     N = "Number of blocks",
     ate = "The average treatment effect"
   )
+
+attr(simple_two_arm_designer, "description") <- "
+<p> A simple two arm design of sample size <code>N</code> and with constant average treatment effect equal to <code>ate</code>.
+"
+
+
+
+
+#' A simple two arm design
+#'
+#' Default design created with  \code{\link{simple_two_arm_designer}}
+#' 
+#' @seealso \code{\link{simple_two_arm_designer}} 
+#' @format A design object 
+"simple_two_arm_design"
+
+
+
+

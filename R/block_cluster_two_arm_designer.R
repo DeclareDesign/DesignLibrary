@@ -119,3 +119,16 @@ each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn 
 <code>N_i_in_cluster</code> individual units. 
 <p> Estimand is the <code>ate</code> average interaction effect.
 "
+
+
+
+#' A two arm design with blocks and clusters
+#'
+#' Default design created with  \code{\link{block_cluster_two_arm_designer}}
+#' 
+#' @seealso \code{\link{block_cluster_two_arm_designer}} 
+#' @format A design object 
+"block_cluster_two_arm_design"
+
+
+

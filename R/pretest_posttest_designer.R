@@ -102,6 +102,15 @@ attr(pretest_posttest_designer, "description") <- "
 
 
 
+#' A pretest-posttest design
+#'
+#' Default design created with  \code{\link{pretest_posttest_designer}}
+#' 
+#' @seealso \code{\link{pretest_posttest_designer}} 
+#' @format A design object 
+"pretest_posttest_design"
+
+
 
 
 

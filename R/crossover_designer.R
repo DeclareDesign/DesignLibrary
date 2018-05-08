@@ -120,6 +120,16 @@ Outcomes correlated by <code>rho</code>.
 
 
 
+#' A crossover design
+#'
+#' Default design created with  \code{\link{crossover_designer}}
+#' 
+#' @seealso \code{\link{crossover_designer}} 
+#' @format A design object 
+"crossover_design"
+
+
+
 
 
 

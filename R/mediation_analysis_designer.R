@@ -98,3 +98,19 @@ attr(mediation_analysis_designer,"description") <- "
     and direct effect of treatment (Z) on outcome (Y) equal to <code>d</code>. 
 <p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>.
 "
+
+
+
+
+#' A mediation analysis design
+#'
+#' Default design created with  \code{\link{mediation_analysis_designer}}
+#' 
+#' @seealso \code{\link{mediation_analysis_designer}} 
+#' @format A design object 
+"mediation_analysis_design"
+
+
+
+
+

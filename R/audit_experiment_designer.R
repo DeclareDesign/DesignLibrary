@@ -94,7 +94,13 @@ attr(audit_experiment_designer, "description") <- "<p> An audit experiment with 
 
 
 
-
+#' An audit experiment design
+#'
+#' Default design created with  \code{\link{audit_experiment_designer}}
+#' 
+#' @seealso \code{\link{audit_experiment_designer}} 
+#' @format A design object 
+"audit_experiment_design"
 
 
 
