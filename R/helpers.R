@@ -4,7 +4,7 @@
 #' @export
 #'
 get_design_code <- function(design){
-  cat(attr(design, "code"), sep = "\n")
+  attr(design, "code")
 }
 
 #' @export
@@ -42,8 +42,6 @@ match.call.defaults <- function(...) {
   
   for(i in setdiff(names(formals), names(call)))
     call[i] <- list( formals[[i]] )
-  
-  
   match.call(sys.function(sys.parent()), call)
 }
 
@@ -64,12 +62,12 @@ match.call.defaults <- function(...) {
 #' @export
 #'
 #' @examples
-#' diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3)
-#' reshape_diagnosis(diagnosis)
-#' reshape_diagnosis(diagnosis, col.names = 1:11)
-#' reshape_diagnosis(diagnosis, col.names = "default")
-#' diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3, bootstrap = 0)
-#' reshape_diagnosis(diagnosis, col.names = "default")
+#' # diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3)
+#' # reshape_diagnosis(diagnosis)
+#' # reshape_diagnosis(diagnosis, col.names = 1:11)
+#' # reshape_diagnosis(diagnosis, col.names = "default")
+#' # diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3, bootstrap = 0)
+#' # reshape_diagnosis(diagnosis, col.names = "default")
 
 
 reshape_diagnosis <- function(diagnosis, 
