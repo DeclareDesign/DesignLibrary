@@ -20,3 +20,4 @@ r_packages:
 - rmarkdown
 - ggplot2
 - tidyverse
+- dplyr
