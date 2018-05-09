@@ -62,12 +62,12 @@ match.call.defaults <- function(...) {
 #' @export
 #'
 #' @examples
-#' diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3)
-#' reshape_diagnosis(diagnosis)
-#' reshape_diagnosis(diagnosis, col.names = 1:11)
-#' reshape_diagnosis(diagnosis, col.names = "default")
-#' diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3, bootstrap = 0)
-#' reshape_diagnosis(diagnosis, col.names = "default")
+#' # diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3)
+#' # reshape_diagnosis(diagnosis)
+#' # reshape_diagnosis(diagnosis, col.names = 1:11)
+#' # reshape_diagnosis(diagnosis, col.names = "default")
+#' # diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3, bootstrap = 0)
+#' # reshape_diagnosis(diagnosis, col.names = "default")
 
 
 reshape_diagnosis <- function(diagnosis, 
