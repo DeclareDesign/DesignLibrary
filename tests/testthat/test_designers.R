@@ -65,21 +65,21 @@ for(designer in designers){
       }
     )
     
-    
-    testthat::test_that(
-      desc = paste0("shiny_arguments in ",designer," evaluate properly."),
-      code = {
-        shiny_args <- expand_designer_shiny_args_text(designer = the_designer)
-        lapply(shiny_args,function(x)eval(parse(text = x)))
-      }
-    )
-    
-    testthat::test_that(
-      desc = paste0("get_shiny_diagnosis works with ",designer," for at least 5 sims."),
-      code = {
-        get_shiny_diagnosis(designer = the_designer,sims = 2)
-      }
-    )
+    # Should create a dependency on ShinyDeclareDesign and put these tests back in:
+    # testthat::test_that(
+    #   desc = paste0("shiny_arguments in ",designer," evaluate properly."),
+    #   code = {
+    #     shiny_args <- expand_designer_shiny_args_text(designer = the_designer)
+    #     lapply(shiny_args,function(x)eval(parse(text = x)))
+    #   }
+    # )
+    # 
+    # testthat::test_that(
+    #   desc = paste0("get_shiny_diagnosis works with ",designer," for at least 5 sims."),
+    #   code = {
+    #     get_shiny_diagnosis(designer = the_designer,sims = 2)
+    #   }
+    # )
   }
 }
 
