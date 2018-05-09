@@ -11,7 +11,6 @@ vignette: >
 
 ```{r MIDA, echo = FALSE,include = FALSE}
 library(DesignLibrary)
-library(pander)
 ```
 
 <div class="btn-group">
@@ -55,25 +54,15 @@ How does this design work? One way to think about it is to compare the random as
     We subtract the mean of the control group from the mean of the treatment group in order to estimate the average treatment effect.
 
 
-```{r, code = designer_default_args_text(simple_two_arm_designer)}
+```{r, code = get_design_code(simple_two_arm_designer())}
 ```
 
-```{r, code = simple_two_arm_designer(code = TRUE)}
-```
 
 ```{r,eval = FALSE}
 diagnosis <- diagnose_design(simple_two_arm_design, sims = 1000, bootstrap = FALSE)
 ```
 
-```{r crossover_diagnosis, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
- diagnosis <- get_or_run_diagnosis(crossover_design, sims = 1000, bootstrap = FALSE)
- panderOptions('table.continues', "")
- pandoc.table(reshape_diagnosis(diagnosis),digits = 2, split.tables = 120, style = "rmarkdown")
-```
 
-```{r simple_two_arm_shiny_diagnosis,include = FALSE}
-get_or_run_shiny_diagnosis(simple_two_arm_designer, sims = 1000, bootstrap = FALSE)
-```
 
 
 

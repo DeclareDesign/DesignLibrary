@@ -4,7 +4,7 @@
 #' @export
 #'
 get_design_code <- function(design){
-  cat(attr(design, "code"), sep = "\n")
+  attr(design, "code")
 }
 
 #' @export
@@ -42,8 +42,6 @@ match.call.defaults <- function(...) {
   
   for(i in setdiff(names(formals), names(call)))
     call[i] <- list( formals[[i]] )
-  
-  
   match.call(sys.function(sys.parent()), call)
 }
 
