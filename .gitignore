@@ -4,3 +4,4 @@
 .Ruserdata
 vignettes/*.html
 vignettes/*.R
+vignettes/simple_two_arm.Rmd

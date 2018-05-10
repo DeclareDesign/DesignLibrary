@@ -1,4 +1,4 @@
 library(testthat)
-library(designs)
+library(DesignLibrary)
 
-test_check("designs")
+test_check(package = "DesignLibrary")
