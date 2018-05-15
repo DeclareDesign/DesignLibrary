@@ -211,7 +211,7 @@ You can also add keywords and reference other related designs and designers.
 Finally, give yourself credit for your work.
 ```{r, eval=FALSE}
 #' 
-#' @author The DeclareDesign Team
+#' @author DeclareDesign Team
 ```
 
 
