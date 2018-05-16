@@ -188,7 +188,6 @@ Next, list and describe all arguments needed in the design code following the sy
 ```{r, eval=FALSE}
 #' @param N A integer. Sample size
 #' @param prob A number within the interval [0,1]. Probability of assigment to treatment.
-#'
 #' @return A design.
 #' @examples
 #' To make a design using default arguments:
@@ -200,7 +199,6 @@ Next, list and describe all arguments needed in the design code following the sy
 You can also add keywords and reference other related designs and designers.
 ```{r, eval=FALSE}
 #' @concept two arm design
-#'
 #' @seealso \code{\link{my_design}} \code{\link{simple_two_arm_designer}} 
 ```
 

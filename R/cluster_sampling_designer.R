@@ -13,7 +13,7 @@
 #' @param icc A real number in [0,1] Intra-cluster Correlation. 
 #' @return A cluster sampling design.
 #' @export
-#'
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @examples
 #' # To make a design using default arguments:
 #' cluster_sampling_design <- cluster_sampling_designer()

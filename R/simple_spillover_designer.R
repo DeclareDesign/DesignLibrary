@@ -10,15 +10,14 @@
 #' The default estimand is the average difference 
 #' across subjects between no one treated and only that subject treated.  
 #' 
-#' 
 #' @param N_groups Number of groups.
 #' @param group_size Number of units in each group. May be scalar, or vector of length(n_groups) 
 #' @param sd Standard deviation of individual level shock
 #' @param gamma Parameter that controls whether spillovers within groups substitue for each other or complement each other
 #' @return A function that returns a design.
 #' @export
-#'
 #' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @examples
 #' # To make a design using default arguments:
 #' simple_spillover_design <- simple_spillover_designer()
 #'

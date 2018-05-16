@@ -14,7 +14,6 @@
 #' @return A crossover design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
-#'
 #' @examples
 #' # To make a design using default arguments:
 #' crossover_design <- audit_experiment_designer()
