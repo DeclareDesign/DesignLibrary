@@ -20,7 +20,6 @@ Imports:
 Suggests: knitr,
     testthat
 Enhances:
-  systemfit,
   Matching
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
