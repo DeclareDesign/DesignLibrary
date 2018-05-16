@@ -1,10 +1,10 @@
 #' Create a simple two arm design
 #'
-#' This designer builds adesign with one treatment and one control arm.
+#' This designer builds a design with one treatment and one control arm.
 #' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 #' or by specifying an \code{ate}.
 #' 
-#' Notes: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+#' Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' @param N An integer. Sample size.
 #' @param prob A number within the interval [0,1]. Probability of assigment to treatment.
 #' @param control_mean A number. Average outcome in control.
@@ -14,7 +14,7 @@
 #' @param treatment_sd  A non-negative number. Standard deviation in treatment. 
 #' @param rho. A number within the interval [-1,1]. Correlation between treatment and control outcomes.
 #' @return A function that returns a design.
-#' @author DeclareDesign Team
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
 #' @examples
 #' simple_two_arm_design <- simple_two_arm_designer()
@@ -31,7 +31,7 @@ simple_two_arm_designer <- function(N = 100,
 ){
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(prob < 0 | prob > 1) stop("prob must be in [0,1]")
-  if( rho < 1 | prob > 1) stop("rho must be in [-1,1]")
+  if( rho < -1 | rho > 1) stop("rho must be in [-1,1]")
   {{{
     # M: Model
     pop <- declare_population(
