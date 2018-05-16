@@ -58,26 +58,6 @@ crossover_designer <- function(N = 100,
                                           coefficients = "A",
                                           estimand = estimand,
                                           label = "Direct estimator")
-    estimator_sur <- declare_estimator(
-      handler = tidy_estimator(function(data){
-        sur_fit <- systemfit::systemfit(
-          formula = list(
-            YA ~ A,
-            YB ~ B),
-          method = "SUR",
-          data = data)
-        data.frame(
-          coefficient = "A",
-          est = coef(sur_fit)["eq1_A"],
-          se = sqrt(diag(vcov(sur_fit)))["eq1_A"],
-          p = summary(sur_fit)$coefficients["eq1_A","Pr(>|t|)"],
-          ci_lower = confint(sur_fit)["eq1_A",1],
-          ci_upper = confint(sur_fit)["eq1_A",2]
-        )}),
-      estimand = estimand,
-      label = "SUR"
-    )
-    
     crossover_design <- declare_design(
       population,
       potential_outcomes_A,
@@ -89,8 +69,7 @@ crossover_designer <- function(N = 100,
       declare_reveal(YA,Z),
       declare_reveal(YB,Z),
       estimator_sat,
-      estimator_direct,
-      estimator_sur)
+      estimator_direct)
   }}}
   attr(crossover_design, "code") <- 
     construct_design_code(crossover_designer, match.call.defaults())

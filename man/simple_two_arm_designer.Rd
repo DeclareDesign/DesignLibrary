@@ -9,16 +9,36 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
   treatment_sd = control_sd, rho = 1)
 }
 \arguments{
-\item{N}{Number of units}
+\item{N}{An integer. Sample size.}
 
-\item{code}{If TRUE designer returns the code of a design}
+\item{prob}{A number within the interval [0,1]. Probability of assigment to treatment.}
+
+\item{control_mean}{A number. Average outcome in control.}
+
+\item{control_sd}{A positive number. Standard deviation in control.}
+
+\item{ate}{A number. Average treatment effect.}
+
+\item{treatment_mean}{A number. Average outcome in treatment.}
+
+\item{treatment_sd}{A non-negative number. Standard deviation in treatment.}
+
+\item{rho.}{A number within the interval [-1,1]. Correlation between treatment and control outcomes.}
 }
 \value{
-a function that returns a design
+A function that returns a design.
 }
 \description{
-Create a simple two arm design
+This designer builds adesign with one treatment and one control arm.
+Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
+or by specifying an \code{ate}.
+}
+\details{
+Notes: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 }
 \examples{
 simple_two_arm_design <- simple_two_arm_designer()
+}
+\author{
+DeclareDesign Team
 }
