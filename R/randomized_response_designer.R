@@ -16,9 +16,7 @@
 #' @examples
 #' # To make a design using default arguments:
 #' randomized_response_design <- randomized_response_designer()
-#'
 
-#' @export
 randomized_response_designer <- function(
   N = 1000,
   prob_forced_yes = .6,
