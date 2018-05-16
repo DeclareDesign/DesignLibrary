@@ -173,45 +173,41 @@ The documentation must be written as [Roxygen comments](http://r-pkgs.had.co.nz/
 
 
 ```{r, eval=FALSE}
-#' Create a simple spillover design
+#' Create a design
 #'
-#' This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
-#' Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
-#' the effect is spread equally among members of the group.
+#' This designer builds a design with \code{N} units. 
+#'
+#' Key limitations: ate cannot be specified
 #' 
-#' Key limitations: Spillover effects cannot be modifiable
-#' 
-#' Note: Parameter \code{gamma} controls interactions between spillover effects. For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{group_size} no matter how many others are already treated. For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated. The default estimand is the average difference across subjects between no one treated and only that subject treated.  
+#' Note: Units are assigned to treatment with probability \code{prob} using complete random assignment  
 #'
 
 ```
 
 Next, list and describe all arguments needed in the design code following the syntax, `@param name Description`. You should also specify the output of your designer using the tag `@return` and provide an example that contains executable code.
 ```{r, eval=FALSE}
-#' @param N_groups Number of groups.
-#' @param group_size Number of units in each group. May be scalar, or vector of length(n_groups) 
-#' @param sd Standard deviation of individual level shock
-#' @param gamma Parameter that controls whether spillovers within groups substitute for each other or complement each other
+#' @param N A integer. Sample size
+#' @param prob A number within the interval [0,1]. Probability of assigment to treatment.
 #'
-#' @return A simple spillovers design.
+#' @return A design.
 #' @examples
 #' To make a design using default arguments:
-#' simple_spillover_design <- simple_spillover_designer()
+#' my_design <- my_designer()
 #'
 ```
 
 
 You can also add keywords and reference other related designs and designers.
 ```{r, eval=FALSE}
-#' @concept spillovers
+#' @concept two arm design
 #'
-#' @seealso \code{\link{spillover_design}} 
+#' @seealso \code{\link{my_design}} \code{\link{simple_two_arm_designer}} 
 ```
 
 Finally, give yourself credit for your work.
 ```{r, eval=FALSE}
 #' 
-#' @author DeclareDesign Team
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 ```
 
 
