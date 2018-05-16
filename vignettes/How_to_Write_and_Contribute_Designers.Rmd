@@ -164,7 +164,7 @@ attr(my_designer, "description") <- "
 
 ## Contributing Designers
 
-The designer should be added to the `DesignLibrary` using a [pull request][How to Do a Pull Request]. 
+The designer should be added to the `DesignLibrary` using a [pull request](http://r-pkgs.had.co.nz/git.html#git-pullreq). 
 
 ### How to document your designer
 
@@ -216,6 +216,3 @@ Finally, give yourself credit for your work.
 
 
 
-### How to do a pull request
-
-(see http://r-pkgs.had.co.nz/man.html#roxygen-comments for more details)
