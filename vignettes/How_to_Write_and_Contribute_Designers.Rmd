@@ -168,18 +168,53 @@ The designer should be added to the `DesignLibrary` using a [pull request][How t
 
 ### How to document your designer
 
-The documentation should be included as Roxygen comments
+
+The documentation must be written as [Roxygen comments](http://r-pkgs.had.co.nz/man.html#roxygen-comments) and come at the top of the designer code; It should begin with a title and short description of what your designer does. When relevant, mention key limitations of your designer and add notes that can help others understand your code better. 
+
 
 ```{r, eval=FALSE}
-#' Create a design
-#' @param N Number of units
-#' @param code If TRUE designer returns the code of a design 
-#' @return a function that returns a design
-#' @export
+#' Create a simple spillover design
 #'
-#' @examples
-#' my_design <- my_designer()
+#' This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
+#' Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
+#' the effect is spread equally among members of the group.
+#' 
+#' Key limitations: Spillover effects cannot be modifiable
+#' 
+#' Note: Parameter \code{gamma} controls interactions between spillover effects. For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{group_size} no matter how many others are already treated. For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated. The default estimand is the average difference across subjects between no one treated and only that subject treated.  
+#'
+
 ```
+
+Next, list and describe all arguments needed in the design code following the syntax, `@param name Description`. You should also specify the output of your designer using the tag `@return` and provide an example that contains executable code.
+```{r, eval=FALSE}
+#' @param N_groups Number of groups.
+#' @param group_size Number of units in each group. May be scalar, or vector of length(n_groups) 
+#' @param sd Standard deviation of individual level shock
+#' @param gamma Parameter that controls whether spillovers within groups substitute for each other or complement each other
+#'
+#' @return A simple spillovers design.
+#' @examples
+#' To make a design using default arguments:
+#' simple_spillover_design <- simple_spillover_designer()
+#'
+```
+
+
+You can also add keywords and reference other related designs and designers.
+```{r, eval=FALSE}
+#' @concept spillovers
+#'
+#' @seealso \code{\link{spillover_design}} 
+```
+
+Finally, give yourself credit for your work.
+```{r, eval=FALSE}
+#' 
+#' @author DeclareDesign Team
+```
+
+
 
 ### How to do a pull request
 
