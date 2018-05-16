@@ -29,8 +29,8 @@ For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member re
 The default estimand is the average difference 
 across subjects between no one treated and only that subject treated.
 }
-\examples{
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
 # To make a design using default arguments:
 simple_spillover_design <- simple_spillover_designer()
-
 }
