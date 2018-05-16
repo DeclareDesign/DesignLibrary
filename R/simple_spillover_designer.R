@@ -17,7 +17,6 @@
 #' @return A function that returns a design.
 #' @export
 #'
-#' @examples
 #' @author DeclareDesign Team \url{https://declaredesign.org/}
 #' # To make a design using default arguments:
 #' simple_spillover_design <- simple_spillover_designer()
