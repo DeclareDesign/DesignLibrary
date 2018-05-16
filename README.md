@@ -8,8 +8,8 @@ Designs
 
 Please see here for an overview of the library.
 
-Installing randomizr for R
---------------------------
+Installing the design library
+-----------------------------
 
 Installing the latest version of **DesignLibrary** in `R`:.
 
@@ -33,4 +33,4 @@ Build notes
 -----------
 
     R_KEEP_PKG_SOURCE=yes R CMD build .
-    R CMD INSTALL designs_0.1.0.tar.gz
+    R CMD INSTALL DesignLibrary_0.1.0.tar.gz
