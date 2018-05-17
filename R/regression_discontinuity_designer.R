@@ -1,23 +1,17 @@
 #' Create a regression discontinuity design
-#' 
-#' Description: here.
-#' 
-#' Key limitations: here.
-#' 
-#' Note: here.
-#' 
+#'
 #' @param N An integer. Size of population to sample from.
 #' @param tau A scalar number. Difference in potential outcomes functions at the threshold.
 #' @param cutoff A scalar number in (0,1). Threshold on running variable beyond which units are treated.
 #' @param bandwidth A scalar number. Bandwidth around threshold from which to include units.
 #' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
 #' @return A regression discontinuity design design
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @author Clara B
+#' @export
 #' @examples
 #' # A regression discontinuity design using default arguments:
 #' regression_discontinuity_design <- regression_discontinuity_designer()
-#' 
-#' @export
+
 regression_discontinuity_designer <- function(
   N = 1000,
   tau = .15,

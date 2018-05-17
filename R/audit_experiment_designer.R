@@ -8,8 +8,8 @@
 #'
 #' @param N Size of sample
 #' @return An audit experiment design.
+#' @author DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @examples
 #' # To make a design using default arguments:
 #' audit_experiment_design <- audit_experiment_designer()

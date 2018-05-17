@@ -29,16 +29,16 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 A function that returns a design.
 }
 \description{
-This designer builds adesign with one treatment and one control arm.
+This designer builds a design with one treatment and one control arm.
 Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 or by specifying an \code{ate}.
 }
 \details{
-Notes: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 }
 \examples{
 simple_two_arm_design <- simple_two_arm_designer()
 }
 \author{
-DeclareDesign Team
+DeclareDesign Team \url{https://declaredesign.org/}
 }

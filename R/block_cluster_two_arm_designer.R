@@ -24,7 +24,7 @@
 #' @param ate  Average treatment effect.
 #' @param treatment_mean Average outcome in treatment.
 #' @return A function that returns a design.
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @author DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
 #' @examples
 #' # To make a design using default arguments:

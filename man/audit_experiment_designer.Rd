@@ -24,3 +24,6 @@ Note: Note here.
 # To make a design using default arguments:
 audit_experiment_design <- audit_experiment_designer()
 }
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
+}

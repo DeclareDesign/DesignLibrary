@@ -129,9 +129,3 @@ reshape_diagnosis <- function(diagnosis,
   return(out)
 }
 
-
-
-
-
-
- 
