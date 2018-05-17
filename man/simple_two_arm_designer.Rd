@@ -11,7 +11,6 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 \arguments{
 \item{N}{An integer. Sample size.}
 
-<<<<<<< HEAD
 \item{prob}{A number within the interval [0,1]. Probability of assigment to treatment.}
 
 \item{control_mean}{A number. Average outcome in control.}
@@ -25,19 +24,6 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 \item{treatment_sd}{A non-negative number. Standard deviation in treatment.}
 
 \item{rho}{A number within the interval [-1,1]. Correlation between treatment and control outcomes.}
-=======
-\item{control_mean}{Scalar. Average value for Y(0).}
-
-\item{control_sd}{Non negative scalar. Standard deviation for Y(0).}
-
-\item{ate}{scalar. Average treatment effect.}
-
-\item{treatment_mean}{Treatment mean. Defaults to control_mean + ate; if specified overrides ate}
-
-\item{treatment_sd}{Non negative scalar. Standard deviation on Y(1) potential outcomes. Defaults to standard deviation of Y(0) potential outcomes}
-
-\item{rho}{scalar in [0,1]. Correlation between Y(0) and Y(1)}
->>>>>>> master
 }
 \value{
 A function that returns a design.
