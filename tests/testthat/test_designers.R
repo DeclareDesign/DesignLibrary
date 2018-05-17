@@ -29,7 +29,7 @@ for(designer in designers){
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
     code = {
-      expect_equal(class(diagnose_design(one_design,sims = 5,bootstrap = F)$diagnosands),"data.frame")
+      expect_is(diagnose_design(one_design,sims = 5,bootstrap = F)$diagnosands,"data.frame")
     })
   
   testthat::test_that(
