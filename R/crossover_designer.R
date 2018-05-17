@@ -113,7 +113,7 @@ attr(crossover_designer,"description") <- "
 <p> A crossover design with a size <code>N</code> sample. 
 Constant main effect of interest equal to <code>a</code>, effect of other 
 treatment on other outcome equal to <code>b</code>. 
-Proportion of <code>b</code> that crosses over onto main outcome of interest is equal to <code>crosover</code>. 
+Proportion of <code>b</code> that crosses over onto main outcome of interest is equal to <code>crossover</code>. 
 Outcomes correlated by <code>rho</code>.
 "
 
