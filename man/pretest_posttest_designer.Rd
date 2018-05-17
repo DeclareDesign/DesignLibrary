@@ -32,3 +32,6 @@ Note: Note here.
 pretest_posttest_design <- pretest_posttest_designer()
 
 }
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
+}

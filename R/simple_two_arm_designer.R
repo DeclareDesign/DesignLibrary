@@ -1,12 +1,20 @@
 #' Create a simple two arm design
-#' @param N Number of units
-#' @param control_mean Scalar. Average value for Y(0).
-#' @param control_sd Non negative scalar. Standard deviation for Y(0).
-#' @param ate scalar. Average treatment effect.
-#' @param treatment_mean Treatment mean. Defaults to control_mean + ate; if specified overrides ate 
-#' @param treatment_sd Non negative scalar. Standard deviation on Y(1) potential outcomes. Defaults to standard deviation of Y(0) potential outcomes 
-#' @param rho scalar in [0,1]. Correlation between Y(0) and Y(1)
-#' @return a function that returns a design
+#'
+#' This designer builds a design with one treatment and one control arm.
+#' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
+#' or by specifying an \code{ate}.
+#' 
+#' Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+#' @param N An integer. Sample size.
+#' @param prob A number within the interval [0,1]. Probability of assigment to treatment.
+#' @param control_mean A number. Average outcome in control.
+#' @param control_sd A positive number. Standard deviation in control.
+#' @param ate A number. Average treatment effect.
+#' @param treatment_mean A number. Average outcome in treatment. 
+#' @param treatment_sd  A non-negative number. Standard deviation in treatment. 
+#' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
+#' @return A function that returns a design.
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
 #'
 #' @examples
@@ -22,14 +30,16 @@ simple_two_arm_designer <- function(N = 100,
                                     treatment_sd = control_sd,
                                     rho = 1
 ){
-  
+  if(control_sd < 0 ) stop("control_sd must be non-negative")
+  if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
+  if( abs(rho) > 1) stop("rho must be in [-1,1]")
   {{{
     # M: Model
     pop <- declare_population(
       N = N,
       u_0 = rnorm(N, sd = control_sd),
-      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd)
-    )
+      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd))
+    
     potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z) * (u_0 + control_mean) + 
                                                           Z    * (u_1 + treatment_mean)
                                                      )

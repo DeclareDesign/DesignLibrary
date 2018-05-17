@@ -12,8 +12,8 @@
 #' @param d Direct effect of treatment (Z) on outcome (Y)
 #' @param rho Correlation of mediator (M) and outcome (Y) error terms
 #' @return A mediation analysis design.
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
-#'
 #' @examples
 #' # To make a design using default arguments:
 #' mediation_analysis_design <- mediation_analysis_designer()

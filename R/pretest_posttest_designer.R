@@ -11,8 +11,8 @@
 #' @param rho A number in [0,1]. Correlation in outcomes between pre- and post-test
 #' @param attrition_rate A number in [0,1]. Proportion of respondents lost when using pre-test data
 #' @return A pretest-posttest design.
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
-#'
 #' @examples
 #' # To make a design using default arguments:
 #' pretest_posttest_design <- pretest_posttest_designer()

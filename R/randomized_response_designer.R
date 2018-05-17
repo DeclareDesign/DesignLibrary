@@ -11,14 +11,13 @@
 #' @param prevalence_rate A number. Probability that individual has the sensitive trait.
 #' @param withholding_rate A number. Probability that an individual with the sensitive trait hides it.
 #' @return A randomized response design.
+#' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
 #'
 #' @examples
 #' # To make a design using default arguments:
 #' randomized_response_design <- randomized_response_designer()
-#'
 
-#' @export
 randomized_response_designer <- function(
   N = 1000,
   prob_forced_yes = .6,

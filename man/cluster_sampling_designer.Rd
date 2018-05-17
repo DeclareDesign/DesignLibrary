@@ -35,3 +35,6 @@ cluster_sampling_design <- cluster_sampling_designer()
 
 
 }
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
+}

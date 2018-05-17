@@ -34,3 +34,6 @@ Note: Note here.
 crossover_design <- audit_experiment_designer()
 
 }
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
+}
