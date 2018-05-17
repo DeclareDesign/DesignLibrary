@@ -12,7 +12,7 @@
 #' @param ate A number. Average treatment effect.
 #' @param treatment_mean A number. Average outcome in treatment. 
 #' @param treatment_sd  A non-negative number. Standard deviation in treatment. 
-#' @param rho. A number within the interval [-1,1]. Correlation between treatment and control outcomes.
+#' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
 #' @return A function that returns a design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export

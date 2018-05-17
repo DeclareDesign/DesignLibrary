@@ -34,3 +34,6 @@ Note: Note here.
 mediation_analysis_design <- mediation_analysis_designer()
 
 }
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
+}

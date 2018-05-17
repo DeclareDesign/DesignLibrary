@@ -30,5 +30,7 @@ Note: Note here.
 \examples{
 # To make a design using default arguments:
 randomized_response_design <- randomized_response_designer()
-
+}
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
 }

@@ -8,13 +8,13 @@ simple_spillover_designer(n_groups = 80, group_size = 3, sd = 0.2,
   gamma = 2)
 }
 \arguments{
+\item{n_groups}{Number of groups.}
+
 \item{group_size}{Number of units in each group. May be scalar, or vector of length(n_groups)}
 
 \item{sd}{Standard deviation of individual level shock}
 
 \item{gamma}{Parameter that controls whether spillovers within groups substitue for each other or complement each other}
-
-\item{N_groups}{Number of groups.}
 }
 \value{
 A function that returns a design.
@@ -22,15 +22,20 @@ A function that returns a design.
 \description{
 This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
 Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
-the effect is spread equally among members of the group. 
-Parameter \code{gamma} controls interactions between spillover effects. 
+the effect is spread equally among members of the group.
+}
+\details{
+Note: Parameter \code{gamma} controls interactions between spillover effects. 
 For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{group_size} no matter how many others are already treated.
 For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
 The default estimand is the average difference 
 across subjects between no one treated and only that subject treated.
 }
-\author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\examples{
 # To make a design using default arguments:
 simple_spillover_design <- simple_spillover_designer()
+
+}
+\author{
+DeclareDesign Team \url{https://declaredesign.org/}
 }
