@@ -29,5 +29,5 @@ Create a regression discontinuity design
 regression_discontinuity_design <- regression_discontinuity_designer()
 }
 \author{
-Clara B
+DeclareDesign Team \url{https://declaredesign.org/}
 }
