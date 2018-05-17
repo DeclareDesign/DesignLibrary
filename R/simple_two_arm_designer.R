@@ -16,6 +16,7 @@
 #' @return A function that returns a design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @export
+#'
 #' @examples
 #' simple_two_arm_design <- simple_two_arm_designer()
 
@@ -37,11 +38,12 @@ simple_two_arm_designer <- function(N = 100,
     pop <- declare_population(
       N = N,
       u_0 = rnorm(N, sd = control_sd),
-      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd)
-    )
+      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd))
+    
     potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z) * (u_0 + control_mean) + 
-                                                       Z * (u_1 + treatment_mean)
-    )
+                                                          Z    * (u_1 + treatment_mean)
+                                                     )
+    
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
@@ -50,9 +52,10 @@ simple_two_arm_designer <- function(N = 100,
     
     # A: Analysis
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
+    reveal    <- declare_reveal()
     
     # Design
-    simple_two_arm_design <- pop / potential_outcomes / estimand / assignment / declare_reveal() / estimator
+    simple_two_arm_design <- pop / potential_outcomes / estimand / assignment / reveal / estimator
   }}}
   
   attr(simple_two_arm_design, "code") <- 
