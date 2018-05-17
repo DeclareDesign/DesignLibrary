@@ -23,7 +23,7 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 
 \item{treatment_sd}{A non-negative number. Standard deviation in treatment.}
 
-\item{rho.}{A number within the interval [-1,1]. Correlation between treatment and control outcomes.}
+\item{rho}{A number within the interval [-1,1]. Correlation between treatment and control outcomes.}
 }
 \value{
 A function that returns a design.
