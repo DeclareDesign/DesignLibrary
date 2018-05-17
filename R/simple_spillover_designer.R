@@ -41,6 +41,7 @@ simple_spillover_designer <- function(n_groups = 80,
         Z_i <- (1:length(G))==i
         dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
     ), label = "estimand")
+    
     # Data
     assignt <- declare_assignment()
     
