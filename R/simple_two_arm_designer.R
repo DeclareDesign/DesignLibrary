@@ -1,4 +1,5 @@
 #' Create a simple two arm design
+<<<<<<< HEAD
 #'
 #' This designer builds a design with one treatment and one control arm.
 #' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
@@ -15,6 +16,16 @@
 #' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
 #' @return A function that returns a design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+=======
+#' @param N Number of units
+#' @param control_mean Scalar. Average value for Y(0).
+#' @param control_sd Non negative scalar. Standard deviation for Y(0).
+#' @param ate scalar. Average treatment effect.
+#' @param treatment_mean Treatment mean. Defaults to control_mean + ate; if specified overrides ate 
+#' @param treatment_sd Non negative scalar. Standard deviation on Y(1) potential outcomes. Defaults to standard deviation of Y(0) potential outcomes 
+#' @param rho scalar in [0,1]. Correlation between Y(0) and Y(1)
+#' @return a function that returns a design
+>>>>>>> master
 #' @export
 #'
 #' @examples
@@ -30,16 +41,25 @@ simple_two_arm_designer <- function(N = 100,
                                     treatment_sd = control_sd,
                                     rho = 1
 ){
+<<<<<<< HEAD
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(prob < 0 | prob > 1) stop("prob must be in [0,1]")
   if( rho < -1 | rho > 1) stop("rho must be in [-1,1]")
+=======
+  
+>>>>>>> master
   {{{
     # M: Model
     pop <- declare_population(
       N = N,
       u_0 = rnorm(N, sd = control_sd),
+<<<<<<< HEAD
       u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd))
     
+=======
+      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd)
+    )
+>>>>>>> master
     potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z) * (u_0 + control_mean) + 
                                                           Z    * (u_1 + treatment_mean)
                                                      )
