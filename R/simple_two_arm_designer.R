@@ -1,6 +1,11 @@
 #' Create a simple two arm design
 #' @param N Number of units
-#' @param code If TRUE designer returns the code of a design 
+#' @param control_mean Scalar. Average value for Y(0).
+#' @param control_sd Non negative scalar. Standard deviation for Y(0).
+#' @param ate scalar. Average treatment effect.
+#' @param treatment_mean Treatment mean. Defaults to control_mean + ate; if specified overrides ate 
+#' @param treatment_sd Non negative scalar. Standard deviation on Y(1) potential outcomes. Defaults to standard deviation of Y(0) potential outcomes 
+#' @param rho scalar in [0,1]. Correlation between Y(0) and Y(1)
 #' @return a function that returns a design
 #' @export
 #'
@@ -22,10 +27,12 @@ simple_two_arm_designer <- function(N = 100,
     # M: Model
     pop <- declare_population(
       N = N,
-      Z0 = rnorm(N, mean = control_mean, sd = control_sd),
-      Z1 = correlate(given = Z0, rho = rho, rnorm, mean = treatment_mean, sd = treatment_sd)
+      u_0 = rnorm(N, sd = control_sd),
+      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd)
     )
-    potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z) * Z0 + Z * Z1)
+    potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z) * (u_0 + control_mean) + 
+                                                          Z    * (u_1 + treatment_mean)
+                                                     )
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -35,9 +42,10 @@ simple_two_arm_designer <- function(N = 100,
     
     # A: Analysis
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
+    reveal    <- declare_reveal()
     
     # Design
-    simple_two_arm_design <- pop / potential_outcomes / estimand / assignment / declare_reveal() / estimator
+    simple_two_arm_design <- pop / potential_outcomes / estimand / assignment / reveal / estimator
   }}}
   
   attr(simple_two_arm_design, "code") <- 

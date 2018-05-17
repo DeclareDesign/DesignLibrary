@@ -11,7 +11,17 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 \arguments{
 \item{N}{Number of units}
 
-\item{code}{If TRUE designer returns the code of a design}
+\item{control_mean}{Scalar. Average value for Y(0).}
+
+\item{control_sd}{Non negative scalar. Standard deviation for Y(0).}
+
+\item{ate}{scalar. Average treatment effect.}
+
+\item{treatment_mean}{Treatment mean. Defaults to control_mean + ate; if specified overrides ate}
+
+\item{treatment_sd}{Non negative scalar. Standard deviation on Y(1) potential outcomes. Defaults to standard deviation of Y(0) potential outcomes}
+
+\item{rho}{scalar in [0,1]. Correlation between Y(0) and Y(1)}
 }
 \value{
 a function that returns a design
