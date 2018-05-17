@@ -206,6 +206,7 @@ Finally, give yourself credit for your work.
 ```{r, eval=FALSE}
 #' 
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @export
 ```
 
 
