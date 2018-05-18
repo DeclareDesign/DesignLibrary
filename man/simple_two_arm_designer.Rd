@@ -34,6 +34,8 @@ Treatment effects can be specified either by providing \code{control_mean} and \
 or by specifying an \code{ate}.
 }
 \details{
+Check out the vignette here: \url{/library/articles/simple_two_arm.html}
+
 Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 }
 \examples{
