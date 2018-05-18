@@ -4,7 +4,7 @@
 #' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 #' or by specifying an \code{ate}.
 #' 
-#' Check out the vignette here: \url{/library/articles/simple_two_arm.html}
+#' \href{/library/articles/simple_two_arm.html}{Check out the vignette here.}
 #' 
 #' Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' @param N An integer. Sample size.
