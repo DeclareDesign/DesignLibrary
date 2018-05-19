@@ -39,12 +39,12 @@ simple_two_arm_designer <- function(N = 100,
     # M: Model
     pop <- declare_population(
       N = N,
-      u_0 = rnorm(N, sd = control_sd),
-      u_1 = correlate(given = u_0, rho = rho, rnorm, sd = treatment_sd))
+      u_0 = rnorm(N),
+      u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
     
-    potential_outcomes <- declare_potential_outcomes(Y ~ (1-Z) * (u_0 + control_mean) + 
-                                                          Z    * (u_1 + treatment_mean)
-                                                     )
+    potential_outcomes <- declare_potential_outcomes(
+      Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
+          Z     * (u_1*treatment_sd + treatment_mean))
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
