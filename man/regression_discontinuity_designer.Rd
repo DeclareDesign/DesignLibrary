@@ -29,5 +29,10 @@ Create a regression discontinuity design
 regression_discontinuity_design <- regression_discontinuity_designer()
 }
 \author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\href{https://declaredesign.org/}{DeclareDesign Team}
+}
+\concept{
+observational
+
+regression discontinuity
 }

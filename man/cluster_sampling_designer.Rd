@@ -36,5 +36,12 @@ cluster_sampling_design <- cluster_sampling_designer()
 
 }
 \author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\href{https://declaredesign.org/}{DeclareDesign Team}
+}
+\concept{
+clusters
+
+observational
+
+measurement
 }

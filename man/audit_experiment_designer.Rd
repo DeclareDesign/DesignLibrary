@@ -25,5 +25,8 @@ Note: Note here.
 audit_experiment_design <- audit_experiment_designer()
 }
 \author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\href{https://declaredesign.org/}{DeclareDesign Team}
+}
+\concept{
+experiment
 }
