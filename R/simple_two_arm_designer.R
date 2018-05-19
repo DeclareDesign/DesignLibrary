@@ -16,7 +16,7 @@
 #' @param treatment_sd  A non-negative number. Standard deviation in treatment. 
 #' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
 #' @return A function that returns a design.
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @export
 #'

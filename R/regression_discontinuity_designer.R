@@ -6,7 +6,7 @@
 #' @param bandwidth A scalar number. Bandwidth around threshold from which to include units.
 #' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
 #' @return A regression discontinuity design design
-#' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
 #' @export

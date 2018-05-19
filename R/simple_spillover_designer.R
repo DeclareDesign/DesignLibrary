@@ -14,7 +14,7 @@
 #' @param sd Standard deviation of individual level shock
 #' @param gamma Parameter that controls whether spillovers within groups substitue for each other or complement each other
 #' @return A function that returns a design.
-#' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
 #' @export

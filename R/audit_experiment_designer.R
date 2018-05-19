@@ -8,7 +8,7 @@
 #'
 #' @param N Size of sample
 #' @return An audit experiment design.
-#' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept experiment
 #' @export
 #' @examples
