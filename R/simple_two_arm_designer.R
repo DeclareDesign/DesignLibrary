@@ -71,7 +71,7 @@ attr(simple_two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate 
 
 attr(simple_two_arm_designer, "tips") <-
   list(
-    N = "Number of blocks",
+    N = "Sample size",
     ate = "The average treatment effect"
   )
 
