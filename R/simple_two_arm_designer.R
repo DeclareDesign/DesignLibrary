@@ -17,6 +17,7 @@
 #' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
 #' @return A function that returns a design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
 #' @export
 #'
 #' @examples

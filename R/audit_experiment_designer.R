@@ -9,6 +9,7 @@
 #' @param N Size of sample
 #' @return An audit experiment design.
 #' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
 #' @export
 #' @examples
 #' # To make a design using default arguments:

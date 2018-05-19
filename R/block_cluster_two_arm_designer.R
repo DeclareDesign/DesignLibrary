@@ -27,6 +27,8 @@
 #' @param rho Correlation in individual shock to Y(1) and Y(0)
 #' @return A function that returns a design.
 #' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment 
+#' @concept blocking
 #' @export
 #' @examples
 #' # To make a design using default arguments:

@@ -13,6 +13,8 @@
 #' @param rho Correlation of mediator (M) and outcome (Y) error terms
 #' @return A mediation analysis design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
+#' @concept mediation
 #' @export
 #' @examples
 #' # To make a design using default arguments:

@@ -12,6 +12,8 @@
 #' @param withholding_rate A number. Probability that an individual with the sensitive trait hides it.
 #' @return A randomized response design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
+#' @concept descriptive
 #' @export
 #'
 #' @examples

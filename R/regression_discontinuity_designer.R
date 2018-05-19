@@ -7,6 +7,8 @@
 #' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
 #' @return A regression discontinuity design design
 #' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept observational
+#' @concept regression discontinuity
 #' @export
 #' @examples
 #' # A regression discontinuity design using default arguments:

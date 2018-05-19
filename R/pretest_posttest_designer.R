@@ -12,6 +12,9 @@
 #' @param attrition_rate A number in [0,1]. Proportion of respondents lost when using pre-test data
 #' @return A pretest-posttest design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
+#' @concept difference-in-differences
+#' @concept baseline
 #' @export
 #' @examples
 #' # To make a design using default arguments:

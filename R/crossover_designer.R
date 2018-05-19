@@ -13,6 +13,8 @@
 #' @param rho A number in [0,1]. Correlation in errors of outcomes A and B
 #' @return A crossover design.
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
+#' @concept multiarm
 #' @export
 #' @examples
 #' # To make a design using default arguments:

@@ -15,6 +15,8 @@
 #' @param gamma Parameter that controls whether spillovers within groups substitue for each other or complement each other
 #' @return A function that returns a design.
 #' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @concept experiment
+#' @concept spillovers
 #' @export
 #' @examples
 #' # To make a design using default arguments:

@@ -12,6 +12,9 @@
 #' @param n_subjects_per_cluster An integer. Number of subjects per cluster to sample.
 #' @param icc A real number in [0,1] Intra-cluster Correlation. 
 #' @return A cluster sampling design.
+#' @concept clusters
+#' @concept observational
+#' @concept measurement
 #' @export
 #' @author  DeclareDesign Team \url{https://declaredesign.org/}
 #' @examples
