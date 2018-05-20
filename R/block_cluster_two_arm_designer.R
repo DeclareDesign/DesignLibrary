@@ -26,7 +26,9 @@
 #' @param treatment_mean Average outcome in treatment.
 #' @param rho Correlation in individual shock to Y(1) and Y(0)
 #' @return A function that returns a design.
-#' @author DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
+#' @concept experiment 
+#' @concept blocking
 #' @export
 #' @examples
 #' # To make a design using default arguments:

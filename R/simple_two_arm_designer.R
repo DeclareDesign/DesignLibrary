@@ -16,7 +16,8 @@
 #' @param treatment_sd  A non-negative number. Standard deviation in treatment. 
 #' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
 #' @return A function that returns a design.
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
+#' @concept experiment
 #' @export
 #'
 #' @examples
@@ -70,7 +71,7 @@ attr(simple_two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate 
 
 attr(simple_two_arm_designer, "tips") <-
   list(
-    N = "Number of blocks",
+    N = "Sample size",
     ate = "The average treatment effect"
   )
 

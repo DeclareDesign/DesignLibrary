@@ -32,5 +32,10 @@ Note: Note here.
 randomized_response_design <- randomized_response_designer()
 }
 \author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\href{https://declaredesign.org/}{DeclareDesign Team}
+}
+\concept{
+experiment
+
+descriptive
 }

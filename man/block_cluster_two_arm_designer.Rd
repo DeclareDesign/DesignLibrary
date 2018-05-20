@@ -60,5 +60,10 @@ block_cluster_two_arm_design <- block_cluster_two_arm_designer()
 
 }
 \author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\href{https://declaredesign.org/}{DeclareDesign Team}
+}
+\concept{
+experiment
+
+blocking
 }

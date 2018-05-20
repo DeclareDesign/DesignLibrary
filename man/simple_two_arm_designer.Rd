@@ -42,5 +42,8 @@ Note: Units are assigned to treatment using complete random assignment. Potentia
 simple_two_arm_design <- simple_two_arm_designer()
 }
 \author{
-DeclareDesign Team \url{https://declaredesign.org/}
+\href{https://declaredesign.org/}{DeclareDesign Team}
+}
+\concept{
+experiment
 }
