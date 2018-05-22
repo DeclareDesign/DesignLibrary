@@ -39,8 +39,8 @@ How does this design work? One way to think about it is to compare the random as
     We subtract the mean of the control group from the mean of the treatment group in order to estimate the average treatment effect.
 
 
-<!-- ```{r, code = get_design_code(simple_two_arm_designer())} -->
-<!-- ``` -->
+```{r, code = get_design_code(simple_two_arm_design), eval=FALSE}
+```
 
 
 ```{r,eval = FALSE}
