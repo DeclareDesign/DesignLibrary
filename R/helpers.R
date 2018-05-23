@@ -10,7 +10,7 @@ get_design_code <- function(design){
 #' @export
 construct_design_code <- function(designer, args){
   # get the code for the design 
-  txt <- as.character(getSrcref(designer))
+  txt <- capture.output(designer)
   
   open <- grep("[{]{3}", txt)
   close <- grep("[}]{3}", txt)
