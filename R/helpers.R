@@ -12,7 +12,7 @@ construct_design_code <- function(designer, args){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
-    txt <- capture.output(designer)
+    txt <- deparse(designer)
     x <- grep("[{]", txt)
     open <- x[which(diff(x) == 1)]
     if(length(open)>3) stop("More than three consecutive `{` found in ", substitute(designer))
