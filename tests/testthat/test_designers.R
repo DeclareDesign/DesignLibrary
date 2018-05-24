@@ -45,6 +45,12 @@ for(designer in designers){
     })
   
   testthat::test_that(
+    desc = paste0(designer, "'s default design code runs without errors"),
+    code = {
+      expect_error(eval(parse(text = get_design_code(one_design))), NA)
+    })
+  
+  testthat::test_that(
     desc = paste0("Code inside ",designer, " runs and creates an appropriately named design object."),
     code = {
       eval(parse(text = design_attr$code))
