@@ -16,11 +16,11 @@ construct_design_code <- function(designer, args){
     x <- grep("[{]", txt)
     open <- x[which(diff(x) == 1)]
     if(length(open)>3) stop("More than three consecutive `{` found in ", substitute(designer))
-    open <- open[3]+1
+    open <- max(open)+1
     x <- grep("[}]", txt)
     close <- x[which(diff(x) == 1)]
     if(length(close)>2) stop("More than three consecutive `}` found in ", substitute(designer))
-    close <- close[1]
+    close <- min(close)
   }else{
     open <- grep("[{]{3}", txt)
     close <- grep("[}]{3}", txt)
