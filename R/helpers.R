@@ -13,11 +13,11 @@ construct_design_code <- function(designer, args){
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
     txt <- deparse(designer)
-    x <- grep("[{]", txt)
+    x <- grep("^[[:blank:]]*[{]", txt)
     open <- x[which(diff(x) == 1)]
     if(length(open)>3) stop("More than three consecutive `{` found in ", substitute(designer))
     open <- max(open)+1
-    x <- grep("[}]", txt)
+    x <- grep("^[[:blank:]]*[}]", txt)
     close <- x[which(diff(x) == 1)]
     if(length(close)>2) stop("More than three consecutive `}` found in ", substitute(designer))
     close <- min(close)
