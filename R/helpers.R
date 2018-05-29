@@ -8,29 +8,39 @@ get_design_code <- function(design){
 }
 
 #' @export
+find_triple_bracket <- function(f){
+  
+  pred <- function(expr, depth=3) {
+    (depth == 0) || (
+      length(expr) > 1 &&
+        expr[[1]] == as.symbol('{') &&
+        Recall(expr[[2]], depth - 1)
+    )
+  }
+  
+  clean <- function(ch, n=length(ch)-1) ch[2:n]
+  
+  ret <- Filter(pred, body(f))
+  
+  if(length(ret) == 0) "" else clean(deparse(ret[[1]][[2]][[2]]))
+  
+}
+
+#' @export
 construct_design_code <- function(designer, args){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
-    txt <- deparse(designer)
-    x <- grep("^[[:blank:]]*[{]", txt)
-    open <- x[which(diff(x) == 1)]
-    if(length(open)>3) stop("More than three consecutive `{` found in ", substitute(designer))
-    open <- max(open)+1
-    x <- grep("^[[:blank:]]*[}]", txt)
-    close <- x[which(diff(x) == 1)]
-    if(length(close)>2) stop("More than three consecutive `}` found in ", substitute(designer))
-    close <- min(close)
+    txt <- find_triple_bracket(designer)
   }else{
     open <- grep("[{]{3}", txt)
     close <- grep("[}]{3}", txt)
+    
+    if(length(open) != 1) stop("could not find opening tag in ", substitute(designer))
+    if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
+    txt <- txt[seq(open + 1, close - 1)]
   }
-  
-  if(length(open) != 1) stop("could not find opening tag in ", substitute(designer))
-  if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
-  
-  txt <- txt[seq(open + 1, close - 1)]
-  
+
   indentation <- strsplit(txt[1], "")[[1]]
   indentation <- indentation[cumprod(indentation == " ") == 1]
   indentation <- paste0("^", paste(indentation, collapse=""))
