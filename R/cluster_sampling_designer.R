@@ -10,7 +10,7 @@
 #' @param N_subjects_per_cluster An integer. Total number of subjects per cluster in the population.
 #' @param n_clusters An integer. Number of clusters to sample.
 #' @param n_subjects_per_cluster An integer. Number of subjects per cluster to sample.
-#' @param icc A real number in [0,1] Intra-cluster Correlation. 
+#' @param icc A real number in [0,1] Intra-cluster Correlation Coefficient. 
 #' @return A cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
