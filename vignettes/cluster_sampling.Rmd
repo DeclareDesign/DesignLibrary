@@ -1,0 +1,86 @@
+---
+title: "Cluster Sampling"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+nocite: | 
+  @murray1998design  
+vignette: >
+  %\VignetteIndexEntry{Cluster Sampling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(ggplot2)
+```
+
+## Cluster Sampling
+
+Researchers often cannot randomly sample at the individual level because it may, among other reasons, be too costly or logistically impractical. Instead, they may choose to randomly sample households, political precincts, or any group of individuals in order to draw inferences about the population.
+
+<!-- Include reference to simple random sampling vignette below -->
+In *Simple Random Sampling*, we discused the example of estimating the average political ideology in Portola, California. Consider instead we are interested in the average party ideology in the entire state of California. Due to costs, we need to restrain survey to a limited number of counties. Using cluster sampling, we randomly sample counties within the state, and within each selected county, randomly sample individuals to survey.
+
+Assuming enough variation in the outcome of interest, random cluster assignment yields unbiased but inprecise estimates.^[We assume clusters are the same size. Other designs might include different-sized clusters, but we do not discuss these cases here.] In ordinary least square (OLS) models, we assume errors are independent (error terms between individual observations are uncorrelated with each other) and heteroskedastic (that the size of errors varies with the outcome). In reality, this is often not the case with cluster sampling. By design, we select groups of individuals who share common attributes which may be correlated with the measure of interest. The higher the degree of within-cluster similarity, the more variance we observe in cluster-level averages and the more imprecise are our estimates under common assumptions. We address this by considering cluster-robust standard errors in our answer strategy below.
+
+### Design Declaration
+
+- **M**odel: We specify the variable of interest $Y$ (political ideology) as a discrete scale ranging from 1 (most liberal) to 7 (most conservative). We do not define a functional model since we are interested in the population mean of $Y$. The model also includes information about the number of sampled clusters and the number of individuals per cluster.
+
+- **I**nquiry: Our estimand is the population mean of political identification $Y$. Because we employed random sampling, we can expect the value of the sample mean ($\widehat{\overline{y}}$) to approximate the true population parameter ($\widehat{\overline{Y}}$).
+
+- **D**ata strategy: sampling follows a two-stage strategy. We first draw a random sample 30 counties in California, and in each county select 20 individuals at random. This guarantees that ach county has the same probability of being included in the sample and each resident within a county the same probability of being in the sample. In this design we estimate $Y$ for n = 600 respondents.
+
+- **A**nswer strategy: We estimate the population mean with the sample mean estimator: $\widehat{\overline{Y}} = \frac{1}{n} \sum_1^n Y_i$, and estimate standard errors under the assumption of independent and heteroskedastic errors as well as cluster-robust standard errors to take into account correlation of errors within clusters.
+
+```{r design, echo=FALSE, warning=FALSE}
+califonia_design <- cluster_sampling_designer(n_clusters = 30, n_subjects_per_cluster = 20, icc = 0.402)
+diagnosis <- diagnose_design(califonia_design)
+
+sims <- diagnosis$simulations
+  
+dd_theme <-
+  function() {
+    theme_bw() +
+      theme(
+        axis.ticks = element_blank(),
+        axis.line = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major = element_line(color = '#eeeeee'),
+        strip.background = element_blank(),
+        legend.position = "bottom"
+        # text = element_text(family = "Palatino")
+        )
+  }
+
+  sims$covered <- factor(1 + (sims$ci_lower < sims$estimand & sims$estimand < sims$ci_upper), 1:2, labels = c("Estimand not covered by confidence interval", "Estimand covered by confidence interval"))
+  sims$estimator_label <- as.factor(sims$estimator_label)
+  sims$estimand_label <- as.factor(sims$estimand_label)
+  
+  g <- ggplot(sims, aes(x=est)) +
+    geom_errorbar(aes(ymin=ci_lower, ymax=ci_upper, color=covered), alpha=.4) +
+    geom_hline(aes(yintercept=mean(estimand))) +
+    geom_text(aes(x=x, y=y, label=label),
+              data=function(df){
+                data.frame(x=min(df$est),
+                           y=mean(df$estimand),
+                           label=sprintf('  Avg Estimand:\n  %4.3f', mean(df$estimand)),
+                           stringsAsFactors = FALSE)
+              }, hjust='left') +
+    facet_wrap(estimand_label~estimator_label) +
+    ylab("Estimate") +
+    scale_x_continuous(labels=NULL, breaks = NULL, name='') +
+    scale_color_discrete(drop=FALSE, name = '') +
+    coord_flip() +
+    dd_theme()
+  
+  g
+```
+
+```{r,eval = FALSE, code = get_design_code(cluster_sampling_design)}
+
+```
+
+## Further reading
