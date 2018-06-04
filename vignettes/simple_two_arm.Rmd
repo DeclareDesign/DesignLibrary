@@ -2,6 +2,8 @@
 title: "Two-Arm Experiment"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
+designer: "simple_two_arm_designer.Rd"
+example-design: "simple_two_arm_design.Rd"
 vignette: >
   %\VignetteIndexEntry{Two-Arm Experiment}
   %\VignetteEngine{knitr::rmarkdown}
