@@ -2,6 +2,8 @@
 title: "Regression Discontinuity"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
+designer: "regression_discontinuity_designer.Rd"
+example-design: "regression_discontinuity_design.Rd"
 vignette: >
   %\VignetteIndexEntry{Regression Discontinuity}
   %\VignetteEngine{knitr::rmarkdown}
