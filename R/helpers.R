@@ -4,11 +4,10 @@
 #' @export
 #'
 get_design_code <- function(design){
-  out <- capture.output( cat(attr(design, "code"),sep =  "\n"))
-  out <- gsub("\\{|\\}", "", out)
-  out <- gsub("\\\"#|\\\"\\}", "
- #", out)
-  cat(out, sep =  "\n")
+  out <- attr(design, "code")
+  # out <- gsub("\\{|\\}", "", out)
+  # out <- gsub("\\\"#|\\\"\\}", "\n#", out)
+  out
 }
 
 #' @export
