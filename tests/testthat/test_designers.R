@@ -29,7 +29,7 @@ for(designer in designers){
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
     code = {
-      expect_is(diagnose_design(one_design,sims = 5,bootstrap = F)$diagnosands,"data.frame")
+      expect_is(diagnose_design(one_design,sims = 5,bootstrap_sims = F)$diagnosands,"data.frame")
     })
   
   testthat::test_that(
@@ -42,6 +42,12 @@ for(designer in designers){
     desc = paste0(designer, " uses declare_design declaration somewhere"),
     code = {
       expect_true(any(grepl("declare_design|/",design_attr$code)))
+    })
+  
+  testthat::test_that(
+    desc = paste0(designer, "'s default design code runs without errors"),
+    code = {
+      expect_error(eval(parse(text = get_design_code(one_design))), NA)
     })
   
   testthat::test_that(
