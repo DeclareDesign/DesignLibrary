@@ -4,22 +4,46 @@
 #' @export
 #'
 get_design_code <- function(design){
-  attr(design, "code")
+  out <- attr(design, "code")
+  # out <- gsub("\\{|\\}", "", out)
+  # out <- gsub("\\\"#|\\\"\\}", "\n#", out)
+  out
+}
+
+#' @export
+find_triple_bracket <- function(f){
+  
+  pred <- function(expr, depth=3) {
+    (depth == 0) || (
+      length(expr) > 1 &&
+        expr[[1]] == as.symbol('{') &&
+        Recall(expr[[2]], depth - 1)
+    )
+  }
+  
+  clean <- function(ch, n=length(ch)-1) ch[2:n]
+  
+  ret <- Filter(pred, body(f))
+  
+  if(length(ret) == 0) "" else clean(deparse(ret[[1]][[2]][[2]]))
+  
 }
 
 #' @export
 construct_design_code <- function(designer, args){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
-  
-  open <- grep("[{]{3}", txt)
-  close <- grep("[}]{3}", txt)
-  
-  if(length(open) != 1) stop("could not find opening tag in ", substitute(designer))
-  if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
-  
-  txt <- txt[seq(open + 1, close - 1)]
-  
+  if(length(txt)==0){
+    txt <- find_triple_bracket(designer)
+  }else{
+    open <- grep("[{]{3}", txt)
+    close <- grep("[}]{3}", txt)
+    
+    if(length(open) != 1) stop("could not find opening tag in ", substitute(designer))
+    if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
+    txt <- txt[seq(open + 1, close - 1)]
+  }
+
   indentation <- strsplit(txt[1], "")[[1]]
   indentation <- indentation[cumprod(indentation == " ") == 1]
   indentation <- paste0("^", paste(indentation, collapse=""))
@@ -66,66 +90,3 @@ match.call.defaults <- function(...) {
     call[i] <- list( formals[[i]] )
   match.call(sys.function(sys.parent()), call)
 }
-
-
-
-
-#' Clean up DeclareDesign diagnosis object for printing 
-#'
-#' If diagnosands are bootstrapped, se's are put in parenthese on a second line and rounded to \code{digits}. 
-#' Function uses presence of "se(" to identify bootrapped diagnoses; avoid errors by not using "se(" in naming of diagnosands. 
-#'
-#' @param diagnosis An object from \code{declare_design} 
-#' @param digits Number of digits.
-#' @param col.names Allows user to provide names of columns for output. If NULL uses names from diagnosis object, if "default" uses names of default diagnosands.
-#' @param n_text_fields Number of initial text fields in diagnosis that do not have associated standard errors.  
-#' @return A formatted text table with bootstrapped standard errors in parentheses.
-#' @export
-#'
-#' @examples
-#' # diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3)
-#' # reshape_diagnosis(diagnosis)
-#' # reshape_diagnosis(diagnosis, col.names = 1:11)
-#' # reshape_diagnosis(diagnosis, col.names = "default")
-#' # diagnosis <- diagnose_design(simple_two_arm_designer(), sims = 3, bootstrap = 0)
-#' # reshape_diagnosis(diagnosis, col.names = "default")
-
-reshape_diagnosis <- function(diagnosis, 
-                              digits = 2, 
-                              col.names = NULL, 
-                              default.names = c("Estimator", "Coef Name", "Estimand", "Bias", "RMSE",  "Power", "Coverage", "Mean(Estimate)", "sd(Estimate)", "Mean(se)", "Type S", "Mean(Estimand)")
-) { 
-  
-  # Housekeeping
-  diagnosis     <- diagnosis[[2]]
-  
-  if(sum(grepl("se\\(", names(diagnosis))) == 0) { 
-    out <- diagnosis
-    if(is.null(col.names)) col.names <- colnames(out)
-    
-  } else {
-    n_text_fields <- min(which(grepl("se\\(", names(diagnosis)))) - 2
-    D             <- as.matrix(diagnosis[,(n_text_fields+1):ncol(diagnosis)])
-    rows          <- nrow(D)
-    
-    cols       <- ncol(D)/2
-    out.width  <- cols+n_text_fields
-    
-    # Reformatting
-    out <- matrix(NA, 2*rows, out.width)
-    out[2*(1:rows)-1, (n_text_fields + 1):ncol(out)] <- round(D[,2*(1:cols)-1], digits)
-    out[2*(1:rows),   (n_text_fields + 1):ncol(out)] <- paste0("(", round(D[,2*(1:cols)], digits), ")")
-    
-    out[2*(1:rows)-1, 1:n_text_fields] <- as.matrix(diagnosis)[, 1:n_text_fields]
-    out[2*(1:rows), 1:n_text_fields] <- " "
-    if(is.null(col.names))        col.names <- colnames(diagnosis[,c(1:n_text_fields, n_text_fields+2*(1:cols)-1)])
-    
-  }
-  
-  # Column Names  
-  if(col.names[1] == "default") col.names <- default.names  
-  colnames(out) <- col.names
-  
-  return(out)
-}
-
