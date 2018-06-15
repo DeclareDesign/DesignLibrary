@@ -1,11 +1,11 @@
 ---
-title: "Regression Discontinuity"
+title: "Audit Experiment"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
-designer: "regression_discontinuity_designer.Rd"
-example-design: "regression_discontinuity_design.Rd"
+designer: "audit_experiment_designer.Rd"
+example-design: "audit_experiment_design.Rd"
 vignette: >
-  %\VignetteIndexEntry{Regression Discontinuity}
+  %\VignetteIndexEntry{Audit Experiment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,13 +30,13 @@ Consider an audit experiment that seeks to assess the effects of an email from a
 design <- audit_experiment_designer(N = 500)
 
 causal_types <- draw_data(design) %>%
-  select(-ID, -discrimination, -Ystar_Z_0, -Ystar_Z_1) %>%
+  select(type, R_Z_0, R_Z_1, Y_Z_0, Y_Z_1, ) %>%
   arrange(type) %>% unique()
 
 kable(causal_types, caption = "Causal Types")
 ```
 
-- **I**nquiry: We have two inquiries. The first is straightforward: $E[Ri(1) 􀀀 Ri(0)]$ is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: $E[$Y_i$(1) -􀀀 $Y_i$(0)]$. We will also consider a third inquiry, which is defined: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types.
+- **I**nquiry: We have two inquiries. The first is straightforward: $E[R_i(1)-R_i(0)]� Ri(0)]$ is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: $E[$Y_i$(1) -􀀀 $Y_i$(0)]$. We will also consider a third inquiry, which is defined: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types.
 
 - **D**ata strategy: The data strategy will be to use complete random assignment to assign 250 of 500 units to treatment.
 
