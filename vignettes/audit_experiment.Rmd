@@ -1,0 +1,77 @@
+---
+title: "Regression Discontinuity"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+designer: "regression_discontinuity_designer.Rd"
+example-design: "regression_discontinuity_design.Rd"
+vignette: >
+  %\VignetteIndexEntry{Regression Discontinuity}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(ggplot2)
+library(knitr)
+library(dplyr)
+```
+
+## Audit Experiment
+
+Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on whether and how well election officials respond to requests for information. For example, do they use a positive or negative tone? These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone is undefined. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is undefined for one of their potential outcomes.
+
+### Design Declaration
+
+  - **M**odel: The model has two outcome variables, $R_i$ and $Y_i$. $R_i$ stands for "response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $R_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because messages never sent have no tone. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with 40% A, 5% B, 10% C, and 45% D.
+
+```{r, echo=FALSE}
+design <- audit_experiment_designer(N = 500)
+
+causal_types <- draw_data(design) %>%
+  select(-ID, -discrimination, -Ystar_Z_0, -Ystar_Z_1) %>%
+  arrange(type) %>% unique()
+
+kable(causal_types, caption = "Causal Types")
+```
+
+- **I**nquiry: We have two inquiries. The first is straightforward: $E[Ri(1) 􀀀 Ri(0)]$ is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: $E[$Y_i$(1) -􀀀 $Y_i$(0)]$. We will also consider a third inquiry, which is defined: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types.
+
+- **D**ata strategy: The data strategy will be to use complete random assignment to assign 250 of 500 units to treatment.
+
+- **A**nswer strategy: We’ll try to answer all three inquiries with the difference-in-means estimator, but as the diagnosis will reveal, this strategy works well for some inquiries but not others.
+
+```{r,eval = FALSE, code = get_design_code(audit_experiment_design)}
+
+```
+
+### Takeaways
+
+```{r}
+diagnosis <- diagnose_design(design, sims = 10000, bootstrap_sims = 1000, diagnosands = diagnosands)
+```
+
+```{r, echo=FALSE}
+diagnosis
+```
+
+We learn three things from the design diagnosis. First, as expected, our experiment is unbiased for the average treatment effect on response.
+
+Next, we see that our second inquiry, as well as our diagnostics for it, are undefined. The diagnosis tells us that our definition of potential outcomes produces a definition problem for the estimand. Note that the diagnosands that are defined, including power, depend only on the answer strategy and not on the estimand.
+
+Finally, our third estimand ---the average effects for the A types--- is defined but our estimates are biased. The reason for this is that we cannot tell from the data which types are the A types: we are not conditioning on the correct subset. Indeed, we are unable to condition on the correct subset. If a subject responds in the treatment group, we don’t know if she is an A or a B type; in the control group, we can’t tell if a responder is an A or a C type. Our difference-in-means estimator of the ATE on $Y$ among As will be off whenever As have different outcomes from Bs and Cs.
+
+In some cases, the problem might be resolved by changing the inquiry. Closely related estimands can often be defined, perhaps by redefining $Y$ (e.g., emails never sent have a tone of zero). Some redefinitions of the problem, as in the one we examine above, require estimating effects for unobserved subgroups which is a difficult challenge.
+
+### Applications
+
+This kind of problem is surprisingly common. Here are three more distinct instances of the problem:
+
+1. $Y$ is the decision to vote Democrat ($Y = 1$) or Republican ($Y = 0$), $R$ is the decision to turn out to vote and $Z$ is a campaign message. The decision to vote may depend on treatment but if subjects do not vote then $Y$ is undefined.
+
+2. $Y$ is the weight of infants, $R$ is whether a child is born and $Z$ is a maternal health intervention. Fertility may depend on treatment but the weight of unborn (possibly never conceived) babies is not defined.
+
+3. $Y$ is the charity to whom contributions are made during fundraising and $R$ is whether anything is contributed and $Z$ is an encouragement to contribute. The identity of beneficiaries is not defined if there are no contributions.
+
+All of these problem exhibit a form of post treatment bias (see section Post treatment bias) but the issue goes beyond picking the right estimator. Our problem here is conceptual: the effect of treatment on the outcome just doesn’t exist for some subjects.
