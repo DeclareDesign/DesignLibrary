@@ -33,15 +33,16 @@ cluster_sampling_designer <- function(n_clusters = 100,
   if(n_subjects_per_cluster > N_subjects_per_cluster) stop(paste0("n_subjects_per_cluster must be smaller than the maximum of ", N_subjects_per_cluster, " subjects per cluster."))
   {{{
     # M: Model
-    population <-
+    fixed_pop <-
       declare_population(
-        cluster = add_level(N = n_clusters),
-        subject = add_level(N = n_subjects_per_cluster,
+        cluster = add_level(N = N_clusters),
+        subject = add_level(N = N_subjects_per_cluster,
                             latent_ideology = draw_normal_icc(mean = 0, N = N, clusters = cluster, ICC = icc),
                             Y = draw_ordered(x = latent_ideology, breaks = qnorm(seq(0, 1, length.out = 8)))
         )
       )
-    fixed_pop <- population()
+    
+    population <- declare_population(data = fixed_pop())
     
     # I: Inquiry
     estimand <- declare_estimand(mean(Y), label = "Ybar")
@@ -63,7 +64,7 @@ cluster_sampling_designer <- function(n_clusters = 100,
     
     
     # Design
-    cluster_sampling_design <- declare_design(fixed_pop, estimand, stage_1_sampling, stage_2_sampling, no_clustering, clustered_ses)
+    cluster_sampling_design <- population + estimand + stage_1_sampling + stage_2_sampling + no_clustering + clustered_ses
   }}}
   
   attr(cluster_sampling_design, "code") <- 
