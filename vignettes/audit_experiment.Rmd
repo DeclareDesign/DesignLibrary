@@ -24,19 +24,19 @@ Consider an audit experiment that seeks to assess the effects of an email from a
 
 ### Design Declaration
 
-  - **M**odel: The model has two outcome variables, $R_i$ and $Y_i$. $R_i$ stands for "response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $R_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because messages never sent have no tone. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with 40% A, 5% B, 10% C, and 45% D.
+  - **M**odel: The model has two outcome variables, $R_i$ and $Y_i$. $R_i$ stands for "response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $R_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because messages never sent have no tone. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with 50% A, 34% B, 14% C, and 2% D.
 
 ```{r, echo=FALSE}
 design <- audit_experiment_designer(N = 500)
 
 causal_types <- draw_data(design) %>%
-  select(type, R_Z_0, R_Z_1, Y_Z_0, Y_Z_1, ) %>%
+  select(type, R_Z_0, R_Z_1, Y_Z_0, Y_Z_1, Ystar_Z_0, Ystar_Z_1) %>%
   arrange(type) %>% unique()
 
-kable(causal_types, caption = "Causal Types")
+kable(causal_types, caption = "Causal Types", row.names = FALSE)
 ```
 
-- **I**nquiry: We have two inquiries. The first is straightforward: $E[R_i(1)-R_i(0)]� Ri(0)]$ is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: $E[$Y_i$(1) -􀀀 $Y_i$(0)]$. We will also consider a third inquiry, which is defined: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types.
+- **I**nquiry: We have two inquiries. The first is straightforward: $E[R_i(1)-R_i(0)]$ is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: $E[$Y_i$(1) -􀀀 $Y_i$(0)]$. We will also consider a third inquiry, which is defined: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types.
 
 - **D**ata strategy: The data strategy will be to use complete random assignment to assign 250 of 500 units to treatment.
 
@@ -49,11 +49,18 @@ kable(causal_types, caption = "Causal Types")
 ### Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(design, sims = 10000, bootstrap_sims = 1000, diagnosands = diagnosands)
+diagnosis <- diagnose_design(design)
 ```
 
 ```{r, echo=FALSE}
-diagnosis
+kable(get_diagnosands(diagnosis)[,
+                                 c("estimand_label", "mean_estimand",
+                                   "mean_estimate",
+                                   "se(mean_estimate)", "bias", "se(bias)")],
+      col.names = c("Estimand Label", "Mean Estimand",
+                                   "Mean Estimate", "SE(Mean Estimate)",
+                    "Bias", "SE(Bias)"),
+      digits = 2)
 ```
 
 We learn three things from the design diagnosis. First, as expected, our experiment is unbiased for the average treatment effect on response.
