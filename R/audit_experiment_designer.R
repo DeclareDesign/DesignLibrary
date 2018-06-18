@@ -69,17 +69,16 @@ audit_experiment_designer <- function(N = 100
       declare_estimator(Ystar ~ Z, estimand = estimand_3, label = "ATE on Tone (Alternative)")
     
     # Design
-    audit_experiment_design <- declare_design(
-      population,
-      potential_outcomes,
-      assignment,
-      estimand_1,
-      estimand_2,
-      estimand_3,
-      declare_reveal(outcome_variables = c("R", "Y", "Ystar")),
-      estimator_1,
-      estimator_2,
-      estimator_3)
+    audit_experiment_design <- population +
+      potential_outcomes +
+      assignment +
+      estimand_1 +
+      estimand_2 +
+      estimand_3 +
+      declare_reveal(outcome_variables = c("R" + "Y" + "Ystar")) +
+      estimator_1 +
+      estimator_2 +
+      estimator_3
   }}}
   
   attr(audit_experiment_design, "code") <- 
