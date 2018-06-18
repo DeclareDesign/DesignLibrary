@@ -35,14 +35,39 @@ Assuming enough variation in the outcome of interest, random cluster assignment 
 
 - **A**nswer strategy: We estimate the population mean with the sample mean estimator: $\widehat{\overline{Y}} = \frac{1}{n} \sum_1^n Y_i$, and estimate standard errors under the assumption of independent and heteroskedastic errors as well as cluster-robust standard errors to take into account correlation of errors within clusters. Below we demonstrate the the imprecision of our estimated $\widehat{\overline{Y}}$ when we cluster standard errors and when we do not in the presence of an intracluster correlation coefficient (ICC) of 0.402.
 
-```{r design, echo=FALSE, warning=FALSE}
+```{r design}
+design <- cluster_sampling_designer(n_clusters = 30,
+                                    n_subjects_per_cluster = 20,
+                                    icc = 0.402)
+```
 
-califonia_design <- cluster_sampling_designer(n_clusters = 30,
-                                              n_subjects_per_cluster = 20,
-                                              icc = 0.402)
+```{r,eval = FALSE, code = get_design_code(cluster_sampling_design)}
 
-diagnosis <- diagnose_design(califonia_design)
+```
 
+### Takeaways
+
+We now diagnose the design:
+
+```{r}
+diagnosis <- diagnose_design(design)
+```
+
+```{r, echo=FALSE}
+kable(get_diagnosands(diagnosis)[,c("estimator_label", "mean_estimand", 
+                                    "mean_estimate", "se(mean_estimate)", 
+                                    "bias", "se(bias)",
+                                    "coverage", "se(coverage)")],
+      digits = 2,
+      column_names = c("Estimator Label", "Estimand", 
+                       "Estimator", "SE(Estimator)", 
+                       "Bias", "SE(Bias)",
+                       "coverage", "SE(coverage)"))
+```
+
+And also plot simulated values of our estimand withour clustered standard errors and with clustered standard errors.
+
+```{r plot, echo=FALSE, warning=FALSE}
 sims <- diagnosis$simulations
   
 dd_theme <-
@@ -61,6 +86,7 @@ dd_theme <-
 
   sims$covered <- factor(1 + (sims$ci_lower < sims$estimand & sims$estimand < sims$ci_upper), 1:2, labels = c("Estimand not covered by confidence interval", "Estimand covered by confidence interval"))
   sims$estimator_label <- as.factor(sims$estimator_label)
+  sims$estimator_label <- factor(sims$estimator_label, levels = rev(levels(sims$estimator_label)))
   sims$estimand_label <- as.factor(sims$estimand_label)
   
   ggplot(sims, aes(x=est)) +
@@ -82,12 +108,6 @@ dd_theme <-
   
 ```
 
-```{r,eval = FALSE, code = get_design_code(cluster_sampling_design)}
-
-```
-
-```{r, echo=FALSE}
-diagnosis
-```
+The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The diagnosis table demonstrates that the coverage (the proportion of simulations that contain our true estimand) is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both speficications.
 
 ## Further reading
