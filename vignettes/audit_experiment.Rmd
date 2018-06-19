@@ -2,10 +2,10 @@
 title: "Audit Experiment"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
-designer: "audit_experiment_designer.Rd"
-example-design: "audit_experiment_design.Rd"
+designer: "post_treatment_designer.Rd"
+example-design: "post_treatment_design.Rd"
 vignette: >
-  %\VignetteIndexEntry{Audit Experiment}
+  %\VignetteIndexEntry{Post-treatment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,13 +18,15 @@ library(knitr)
 library(dplyr)
 ```
 
-## Audit Experiment
+## Post-treatment
 
-Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on whether and how well election officials respond to requests for information. For example, do they use a positive or negative tone? These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone is undefined. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is undefined for one of their potential outcomes.
+Post-treatment designs are a specific application of *simple-two-arm* designs in which our outcome is conditioned by a variable that is itself a consequence of treatment. We consider its application to the context of an audit experiment.^[Audit experiments are designs in which we seek to study how bureaucrats, politicians, landlords etc respond to requests by research confederates similar along all characteristics excepting the one(s) under study. Social scientists often use audit studies to measure discrimination in various settings.]
+
+Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on whether and how well election officials respond to requests for information. For example, do they use a positive or negative tone? These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone is undefined. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is undefined for one of their potential outcomes. That means that some of the variation we observe in tone due to treatment is being accounted for by response. Below we discuss the implications of this set up for our estimations.
 
 ### Design Declaration
 
-  - **M**odel: The model has two outcome variables, $R_i$ and $Y_i$. $R_i$ stands for "response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $R_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because messages never sent have no tone. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with 50% A, 34% B, 14% C, and 2% D.
+  - **M**odel: The model has two outcome variables, $R_i$ and $Y_i$. $R_i$ stands for "response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $R_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because we do not observe tone if messages are never sent. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with roughly 50% A, 34% B, 14% C, and 2% D.
 
 ```{r, echo=FALSE}
 design <- audit_experiment_designer(N = 500)
@@ -36,7 +38,7 @@ causal_types <- draw_data(design) %>%
 kable(causal_types, caption = "Causal Types", row.names = FALSE)
 ```
 
-- **I**nquiry: We have two inquiries. The first is straightforward: $E[R_i(1)-R_i(0)]$ is the Average Treatment Effect on response. The second inquiry is the undefined inquiry that does not have an answer: $E[$Y_i$(1) -􀀀 $Y_i$(0)]$. We will also consider a third inquiry, which is defined: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types.
+- **I**nquiry: We have three inquiries. The first is straightforward: $E[R_i(1)-R_i(0)]$ is the Average Treatment Effect on response. The inquiry for the average treatment effect on tone ($E[Y_i(1) - Y_i(0)]$) is the undefined inquiry that does not have an answer. We consider two additonal inquiries, defined as: $E[Y_i(1) - Y_i(0) | Type = A]$, which is the average effect of treatment on tone among A types, and $E[Y^*_i(1) - Y^*_i(0)]$, in which we specify an alternative outcome ($Y^*$) whereby we impute the value of 0 for missing tone observations.
 
 - **D**ata strategy: The data strategy will be to use complete random assignment to assign 250 of 500 units to treatment.
 
@@ -53,23 +55,25 @@ diagnosis <- diagnose_design(design)
 ```
 
 ```{r, echo=FALSE}
-kable(get_diagnosands(diagnosis)[,
-                                 c("estimand_label", "mean_estimand",
-                                   "mean_estimate",
-                                   "se(mean_estimate)", "bias", "se(bias)")],
-      col.names = c("Estimand Label", "Mean Estimand",
-                                   "Mean Estimate", "SE(Mean Estimate)",
+diagnosis_table <- get_diagnosands(diagnosis)[,c("estimand_label", "estimator_label",
+                                                 "mean_estimand",
+                                                 "mean_estimate", "se(mean_estimate)",
+                                                 "bias", "se(bias)")]
+
+kable(diagnosis_table,
+      col.names = c("Estimand Label", "Estimator Label", "Mean Estimand",
+                    "Mean Estimate", "SE(Mean Estimate)",
                     "Bias", "SE(Bias)"),
       digits = 2)
 ```
 
-We learn three things from the design diagnosis. First, as expected, our experiment is unbiased for the average treatment effect on response.
+We learn four things from the design diagnosis. First, as expected, our experiment is unbiased for the average treatment effect on response.
 
 Next, we see that our second inquiry, as well as our diagnostics for it, are undefined. The diagnosis tells us that our definition of potential outcomes produces a definition problem for the estimand. Note that the diagnosands that are defined, including power, depend only on the answer strategy and not on the estimand.
 
-Finally, our third estimand ---the average effects for the A types--- is defined but our estimates are biased. The reason for this is that we cannot tell from the data which types are the A types: we are not conditioning on the correct subset. Indeed, we are unable to condition on the correct subset. If a subject responds in the treatment group, we don’t know if she is an A or a B type; in the control group, we can’t tell if a responder is an A or a C type. Our difference-in-means estimator of the ATE on $Y$ among As will be off whenever As have different outcomes from Bs and Cs.
+Our third estimand ---the average effect for the A types--- is defined but our estimates are biased. The reason for this is that we cannot tell from the data which types are the A types: we are not conditioning on the correct subset. Indeed, we are unable to condition on the correct subset. If a subject responds in the treatment group, we don’t know if she is an A or a B type; in the control group, we can’t tell if a responder is an A or a C type. Our difference-in-means estimator of the ATE on $Y$ among As will be off whenever As have different outcomes from Bs and Cs.
 
-In some cases, the problem might be resolved by changing the inquiry. Closely related estimands can often be defined, perhaps by redefining $Y$ (e.g., emails never sent have a tone of zero). Some redefinitions of the problem, as in the one we examine above, require estimating effects for unobserved subgroups which is a difficult challenge.
+Finally, in some cases, the problem might be resolved by changing the inquiry. Closely related estimands can often be defined, perhaps by redefining $Y$ (e.g., emails never sent have a tone of zero). We observe that our alternative measure of tone (where we impute missing tone as "0") yields unbiased difference-in-means estimates. Estimating effects for unobserved subgroups, however, is a difficult challenge and requires careful consideration.
 
 ### Applications
 
