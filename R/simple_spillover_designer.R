@@ -32,7 +32,7 @@ simple_spillover_designer <- function(n_groups = 80,
   
   {{{
     # Model ----------------------------------------------------------------------
-    pop <- declare_population(G = add_level(N = n_groups, n = group_size), 
+    population <- declare_population(G = add_level(N = n_groups, n = group_size), 
                               i = add_level(N = n, zeros = 0, ones =1))
     
     dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd
@@ -45,7 +45,7 @@ simple_spillover_designer <- function(n_groups = 80,
     ), label = "estimand")
     
     # Data
-    assignt <- declare_assignment()
+    assignment <- declare_assignment()
     
     reveal <- declare_reveal(handler=fabricate,
                              Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
@@ -55,7 +55,7 @@ simple_spillover_designer <- function(n_groups = 80,
                                    model = lm_robust, label = "naive")
     
     # Design ----------------------------------------------------------------------
-    simple_spillover_design <- pop / estimand / assignt / reveal /  estimator
+    simple_spillover_design <- population + estimand + assignment + reveal + estimator
     
   }}}
   attr(simple_spillover_design, "code") <- 

@@ -27,7 +27,7 @@ pretest_posttest_designer <- function(N = 100,
 {
   {{{
     # M: Model
-    pop <- declare_population(
+    population <- declare_population(
       N = N,
       u_t1 = rnorm(N, 0, sqrt(1 - rho)),
       u_t2 = rnorm(N, 0, sqrt(1 - rho)),
@@ -63,19 +63,17 @@ pretest_posttest_designer <- function(N = 100,
       label = "Posttest only"
     )
     # Design
-    pretest_posttest_design <- declare_design(
-      pop,
-      pos_t1,
-      pos_t2,
-      estimand,
-      assignment,
-      report,
-      declare_reveal(Y_t1),
-      declare_reveal(Y_t2),
-      pretest_lhs,
-      pretest_rhs,
+    pretest_posttest_design <- population +
+      pos_t1 +
+      pos_t2 +
+      estimand +
+      assignment +
+      report +
+      declare_reveal(Y_t1) +
+      declare_reveal(Y_t2) +
+      pretest_lhs +
+      pretest_rhs +
       posttest_only
-    )
   }}}
   
   attr(pretest_posttest_design, "code") <- 

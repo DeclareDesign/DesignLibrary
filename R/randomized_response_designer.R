@@ -57,15 +57,13 @@ randomized_response_designer <- function(
       estimand = estimand,
       label = "Direct Question"
     )
-    randomized_response_design <- declare_design(
-      population,
-      coin_flip,
-      potential_outcomes,
-      estimand,
-      declare_reveal(Y,Z),
-      randomized_response_estimator,
+    randomized_response_design <- population +
+      coin_flip +
+      potential_outcomes +
+      estimand +
+      declare_reveal(Y, Z) +
+      randomized_response_estimator +
       direct_question_estimator
-    )
   }}}
   attr(randomized_response_design, "code") <- 
     construct_design_code(randomized_response_designer, match.call.defaults())
