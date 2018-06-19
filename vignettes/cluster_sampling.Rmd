@@ -14,6 +14,7 @@ vignette: >
 ```{r MIDA, echo = FALSE,include = FALSE}
 library(DesignLibrary)
 library(ggplot2)
+library(knitr)
 ```
 
 ## Cluster Sampling
@@ -54,10 +55,11 @@ diagnosis <- diagnose_design(design)
 ```
 
 ```{r, echo=FALSE}
-kable(get_diagnosands(diagnosis)[,c("estimator_label", "mean_estimand", 
-                                    "mean_estimate", "se(mean_estimate)", 
-                                    "bias", "se(bias)",
-                                    "coverage", "se(coverage)")],
+diagnosis_table <- get_diagnosands(diagnosis)[, c("estimator_label", "mean_estimand", 
+                                                  "mean_estimate", "se(mean_estimate)", 
+                                                  "bias", "se(bias)",
+                                                  "coverage", "se(coverage)")]
+kable(diagnosis_table,
       digits = 2,
       column_names = c("Estimator Label", "Estimand", 
                        "Estimator", "SE(Estimator)", 
@@ -65,11 +67,11 @@ kable(get_diagnosands(diagnosis)[,c("estimator_label", "mean_estimand",
                        "coverage", "SE(coverage)"))
 ```
 
-And also plot simulated values of our estimand withour clustered standard errors and with clustered standard errors.
+And also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors.
 
 ```{r plot, echo=FALSE, warning=FALSE}
 sims <- diagnosis$simulations
-  
+
 dd_theme <-
   function() {
     theme_bw() +
@@ -108,6 +110,6 @@ dd_theme <-
   
 ```
 
-The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The diagnosis table demonstrates that the coverage (the proportion of simulations that contain our true estimand) is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both speficications.
+The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The blue lines in the graph demonstrate the estimates from simulations which contain our estimand. As our table and graphs show, the share of these simulations over the total number of simulations, also known as coverage, is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both speficications.
 
 ## Further reading
