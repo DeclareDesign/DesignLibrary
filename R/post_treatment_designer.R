@@ -1,6 +1,6 @@
 #' Create a post-treatment design
 #'
-#' Description here
+#' This design is an application of a simple-two-arm design where an outcome (Y) is observed conditional on a post-treatment variable (C).
 #' 
 #' Key limitations: Limitations here.
 #' 
@@ -91,7 +91,7 @@ post_treatment_designer <- function(N = 100
 }
 attr(post_treatment_designer, "tips") <- c(N = "Size of sample")
 attr(post_treatment_designer, "shiny_arguments") <- list(N = c(100, 500, 1000))
-attr(post_treatment_designer, "description") <- "<p> A post-treatment with a size <code>N</code> population. <p>"
+attr(post_treatment_designer, "description") <- "<p> A post-treatment design with a size <code>N</code> population. This design is an application of a simple-two-arm design where an outcome (Y) is observed conditional on a post-treatment variable (C).<p>"
 
 
 
