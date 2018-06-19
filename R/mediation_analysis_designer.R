@@ -31,7 +31,7 @@ mediation_analysis_designer <- function(N = 100,
   if(rho < -1 | rho > 1) stop("rho must be in [-1, 1]")
   
   {{{
-    pop <- declare_population(
+    population <- declare_population(
       N = N, 
       e1 = rnorm(N),
       e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
@@ -59,19 +59,17 @@ mediation_analysis_designer <- function(N = 100,
       label = "Outcome regression"
     )
     mediation_analysis_design <-
-      declare_design(
-        pop,
-        pos_M,
-        assignment,
-        declare_reveal(M, Z),
-        pos_Y,
-        mand_a,
-        mand_b,
-        mand_d,
-        declare_reveal(Y, Z),
-        mediator_regression,
+        population +
+        pos_M +
+        assignment +
+        declare_reveal(M, Z) +
+        pos_Y +
+        mand_a +
+        mand_b +
+        mand_d +
+        declare_reveal(Y, Z) +
+        mediator_regression +
         outcome_regression
-      )
   }}}
   attr(mediation_analysis_design, "code") <- 
     construct_design_code(mediation_analysis_designer, match.call.defaults())

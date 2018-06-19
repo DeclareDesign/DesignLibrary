@@ -27,7 +27,7 @@ regression_discontinuity_designer <- function(
       as.vector(poly(X, 4, raw = T) %*% c(.7, -.8, .5, 1))}
     treatment <- function(X) {
       as.vector(poly(X, 4, raw = T) %*% c(0, -1.5, .5, .8)) + tau}
-    pop <- declare_population(
+    population <- declare_population(
       N = N,
       X = runif(N,0,1) - cutoff,
       noise = rnorm(N,0,.1),
@@ -52,7 +52,7 @@ regression_discontinuity_designer <- function(
     
     # Design
     regression_discontinuity_design <- 
-      pop / pos / estimand / declare_reveal(Y) / sampling / estimator
+      population + pos + estimand + declare_reveal(Y) + sampling + estimator
   }}}
   regression_discontinuity_design <- insert_step(regression_discontinuity_design, after=length(regression_discontinuity_design), declare_citation(
     citation = utils::bibentry(
