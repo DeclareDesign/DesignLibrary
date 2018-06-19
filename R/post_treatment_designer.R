@@ -1,4 +1,4 @@
-#' Create an audit experiment design
+#' Create a post-treatment design
 #'
 #' Description here
 #' 
@@ -7,16 +7,16 @@
 #' Note: Note here.
 #'
 #' @param N Size of sample
-#' @return An audit experiment design.
+#' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
-#' @concept experiment
+#' @concept post-treatment
 #' @export
 #' @examples
 #' # To make a design using default arguments:
-#' audit_experiment_design <- audit_experiment_designer()
+#' post_treatment_design <- post_treatment_designer()
 
 
-audit_experiment_designer <- function(N = 100
+post_treatment_designer <- function(N = 100
 ){
   {{{
     # M: Model
@@ -25,7 +25,7 @@ audit_experiment_designer <- function(N = 100
         N = N,
         latent_trait = rnorm(N),
         type = draw_ordered(
-          discrimination,
+          latent_trait,
           breaks = c(-Inf, 0, 0.5, 2, Inf),
           break_labels = c("A", "B", "C", "D")
         )
@@ -33,8 +33,8 @@ audit_experiment_designer <- function(N = 100
     
     potential_outcomes <-
       declare_potential_outcomes(
-        R_Z_0 = as.numeric(type %in% c("A", "C")),
-        R_Z_1 = as.numeric(type %in% c("A", "B")),
+        C_Z_0 = as.numeric(type %in% c("A", "C")),
+        C_Z_1 = as.numeric(type %in% c("A", "B")),
         Y_Z_0 = ifelse(
           type %in% c("A", "C"),
           draw_binary(latent = latent_trait, link = "probit"),
@@ -51,59 +51,60 @@ audit_experiment_designer <- function(N = 100
     
     # I: Inquiry
     estimand_1 <-
-      declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on Y1 (Unconditioned)")
+      declare_estimand(mean(C_Z_1 - C_Z_0), label = "ATE on C")
     estimand_2 <-
-      declare_estimand(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y2 (Conditioned by Y1)")
+      declare_estimand(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y (Conditioned by C)")
     estimand_3 <-
-      declare_estimand(mean(Y_Z_1[type == "A"] - Y_Z_0[type == "A"]), label = "ATE on Y2 (When Y2 Always Observed)")
+      declare_estimand(mean(Y_Z_1[type == "A"] - Y_Z_0[type == "A"]), label = "ATE on Y (When Y Always Observed)")
     estimand_4 <-
-      declare_estimand(mean(Ystar_Z_1 - Ystar_Z_0), label = "ATE on Y2 (Alternative)")
+      declare_estimand(mean(Ystar_Z_1 - Ystar_Z_0), label = "ATE on Y (Alternative)")
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = 0.5)
     
     # A: Answer Strategy
     estimator_1 <-
-      declare_estimator(R ~ Z, estimand = estimand_1, label = "ATE on Y1 (Unconditioned)")
+      declare_estimator(C ~ Z, estimand = estimand_1, label = "ATE on C")
     estimator_2 <-
-      declare_estimator(Y ~ Z, estimand = c(estimand_2, estimand_3), label = "ATE on Y2 (Conditioned by Y1)")
+      declare_estimator(Y ~ Z, estimand = c(estimand_2, estimand_3), label = "ATE on Y (Conditioned by C)")
     estimator_3 <-
-      declare_estimator(Ystar ~ Z, estimand = estimand_3, label = "ATE on Y2 (Alternative)")
+      declare_estimator(Ystar ~ Z, estimand = estimand_3, label = "ATE on Y (Alternative)")
     
     # Design
-    audit_experiment_design <- population +
+    post_treatment_design <- population +
       potential_outcomes +
       assignment +
       estimand_1 +
       estimand_2 +
       estimand_3 +
       estimand_4 +
-      declare_reveal(outcome_variables = c("R", "Y", "Ystar")) +
+      declare_reveal(outcome_variables = c("C", "Y", "Ystar")) +
       estimator_1 +
       estimator_2 +
       estimator_3
   }}}
   
-  attr(audit_experiment_design, "code") <- 
-    construct_design_code(audit_experiment_designer, match.call.defaults())
+  attr(post_treatment_design, "code") <- 
+    construct_design_code(post_treatment_designer, match.call.defaults())
   
-  audit_experiment_design
+  post_treatment_design
 }
-attr(audit_experiment_designer, "tips") <- c(N = "Size of sample")
-attr(audit_experiment_designer, "shiny_arguments") <- list(N = c(100, 500, 1000))
-attr(audit_experiment_designer, "description") <- "<p> An audit experiment with a size <code>N</code> population <p>"
+attr(post_treatment_designer, "tips") <- c(N = "Size of sample")
+attr(post_treatment_designer, "shiny_arguments") <- list(N = c(100, 500, 1000))
+attr(post_treatment_designer, "description") <- "<p> A post-treatment with a size <code>N</code> population. <p>"
 
 
 
 
 
-#' An audit experiment design
+#' A post-treatment design
 #'
-#' Default design created with  \code{\link{audit_experiment_designer}}
+#' Default design created with  \code{\link{post_treatment_designer}}
 #' 
-#' @seealso \code{\link{audit_experiment_designer}} 
+#' @seealso \code{\link{post_treatment_designer}} 
+#' @seealso \code{\link{simple_two_arm_designer}} 
 #' @format A design object 
-"audit_experiment_design"
+"post_treatment_design"
 
 
 
