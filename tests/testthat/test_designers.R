@@ -37,12 +37,6 @@ for(designer in designers){
     code = {
       expect_true(class(design_attr$code) == "character")
     })
-
-  testthat::test_that(
-    desc = paste0(designer, " uses declare_design declaration somewhere"),
-    code = {
-      expect_true(any(grepl("declare_design|/",design_attr$code)))
-    })
   
   testthat::test_that(
     desc = paste0(designer, "'s default design code runs without errors"),
