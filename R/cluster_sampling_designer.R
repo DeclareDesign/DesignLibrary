@@ -35,8 +35,8 @@ cluster_sampling_designer <- function(n_clusters = 100,
     # M: Model
     fixed_pop <-
       declare_population(
-        cluster = add_level(N = n_clusters),
-        subject = add_level(N = n_subjects_per_cluster,
+        cluster = add_level(N = N_clusters),
+        subject = add_level(N = N_subjects_per_cluster,
                             latent_ideology = draw_normal_icc(mean = 0, N = N, clusters = cluster, ICC = icc),
                             Y = draw_ordered(x = latent_ideology, breaks = qnorm(seq(0, 1, length.out = 8)))
         )
