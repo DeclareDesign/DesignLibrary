@@ -61,7 +61,7 @@ randomized_response_designer <- function(
       coin_flip +
       potential_outcomes +
       estimand +
-      declare_reveal(outcome_variables = Y, assignment_variables = Z) +
+      declare_reveal(Y, Z) +
       randomized_response_estimator +
       direct_question_estimator
   }}}
