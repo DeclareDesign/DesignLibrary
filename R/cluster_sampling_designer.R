@@ -40,10 +40,10 @@ cluster_sampling_designer <- function(n_clusters = 100,
                             latent_ideology = draw_normal_icc(mean = 0, N = N, clusters = cluster, ICC = icc),
                             Y = draw_ordered(x = latent_ideology, breaks = qnorm(seq(0, 1, length.out = 8)))
         )
-      )
+      )()
     
-    population <- declare_population(data = fixed_pop())
-    
+    population <- declare_population(data = fixed_pop)
+
     # I: Inquiry
     estimand <- declare_estimand(mean(Y), label = "Ybar")
     
