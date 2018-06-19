@@ -49,6 +49,15 @@ crossover_designer <- function(N = 100,
     )
     estimand <- declare_estimand(a = a)
     assignment <- declare_assignment(num_arms = 4)
+    
+    get_AB <- function(data){
+      fabricate(data = data,
+                A = as.numeric(Z %in% c("T2", "T4")),
+                B = as.numeric(Z %in% c("T3", "T4")))
+    }
+    
+    indicator_AB <- declare_assignment(handler = get_AB)
+  
     estimator_sat <- declare_estimator(YA ~ A + B,
                                        model = lm_robust,
                                        coefficients = "A",
@@ -59,18 +68,17 @@ crossover_designer <- function(N = 100,
                                           coefficients = "A",
                                           estimand = estimand,
                                           label = "Direct estimator")
-    crossover_design <- declare_design(
-      population,
-      potential_outcomes_A,
-      potential_outcomes_B,
-      estimand,
-      assignment,
-      fabricate(A = as.numeric(Z %in% c("T2", "T4")),
-                B = as.numeric(Z %in% c("T3", "T4"))),
-      declare_reveal(YA,Z),
-      declare_reveal(YB,Z),
-      estimator_sat,
-      estimator_direct)
+    crossover_design <- 
+      population +
+      potential_outcomes_A +
+      potential_outcomes_B +
+      estimand +
+      assignment +
+      indicator_AB +
+      declare_reveal(YA, Z) +
+      declare_reveal(YB, Z) +
+      estimator_sat +
+      estimator_direct
   }}}
   attr(crossover_design, "code") <- 
     construct_design_code(crossover_designer, match.call.defaults())
