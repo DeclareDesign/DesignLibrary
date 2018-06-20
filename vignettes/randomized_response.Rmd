@@ -2,14 +2,16 @@
 title: "Randomized Response"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
+nocite: |
+  @warner1965randomized
+  @greenberg1969unrelated
+
 designer: "randomized_response_designer.Rd"
 example-design: "randomized_response_design.Rd"
 vignette: >
   %\VignetteIndexEntry{Randomized Response}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  
-  warner1965randomized, greenberg1969unrelated
 ---
 
 
