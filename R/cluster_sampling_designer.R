@@ -2,7 +2,7 @@
 #'
 #' A cluster sampling design with <code>n_clusters</code> clusters each comprising <code>n_subjects_per_cluster</code> units. Outcomes within clusters have ICC approximately equal to <code>ICC</code>.
 #' 
-#' Key limitations: Samples are taken from a population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
+#' Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
 #' 
 #' Note: Note here.
 #'
