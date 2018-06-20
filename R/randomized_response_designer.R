@@ -48,7 +48,7 @@ randomized_response_designer <- function(
           data,
           data.frame(est = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
       estimand = estimand,
-      label = "Forced Response"
+      label = "Forced Randomized Response"
     )
     direct_question_estimator <- declare_estimator(
       handler = tidy_estimator(function(data) with(
