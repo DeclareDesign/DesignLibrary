@@ -1,0 +1,64 @@
+---
+title: "Randomized Response"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+designer: "randomized_response_designer.Rd"
+example-design: "randomized_response_design.Rd"
+vignette: >
+  %\VignetteIndexEntry{Randomized Response}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  
+  warner1965randomized, greenberg1969unrelated
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(knitr)
+```
+
+## Randomized Response
+
+Randomized response is a tool used in survey research aimed at increasing subject privacy and mitigate potential bias, particularly when our inquiries of interest pertain sensitive or controversial behavior or beliefs. For example, researchers may be interested in measuring participation in violence, engagement in illicit activities, or support for the opposition in authoritarian contexts.
+
+Let us consider a specific type of randomized response design in which respondents are asked to use a randomization device, such as a die, whose outcome is unobserved to the enumerator. Respondents are then asked to answer "Yes" if the die shows numbers "1", "2", "3", or "4" and to answer truthfully if the die shows "5", or "6." This is aimed at increasing the privacy of respondent's and ellicit them to indeed respond truthfully.
+
+Say, for example, we are interested in measuring the rate of intimate partner violence (IPV) in a given locality. Our design compares estimates from direct questions and questions using the randomized response principle.
+
+### Design Declaration
+
+  - **M**odel: Respodents are asked expected to answer the sensitive question with a probability $p$ (a known quantity). $L_i$ is a latent binary response to the sensitive question that equals 0 for respondent $i$ if he or she does not engage in IPV and 1 if he or she does. This is defined in our design as the prevalence rate. $Y_i$ is the response observed by researchers from the randomized approach. $D_i$ is the response to the direct question of whether respondent engages in IPV. We expect respondents who engage in IPV to be inclined to misreport if asked to answer directly (we define this as the withholding rate).
+
+- **I**nquiry: Our estimand is the rate of intimate partner violence in the studied locality, or the population mean of L. Formally, we expect $Pr(Y_i = 1) = p + (1-p)Pr(L_i = 1)$.
+
+- **D**ata strategy: We collect survey data on a representative sample of 1,000 individuals and respondents are assigned to respond "Yes" with probability $p = \frac{4}{6}$ and truthfully with probability $1 - p = \frac{1}{3}$.
+
+- **A**nswer strategy: We estimate our population rate of IPV in two ways: firstly by averaging the responses observed via direct question ($\hat{\bar{L}} = \bar{D}$), and secondly via randomized response: $\hat{\bar{L}} = \frac{\bar{Y} - p}{1 - p}$.
+
+```{r,eval = FALSE, code = get_design_code(randomized_response_design)}
+
+```
+
+### Takeaways
+
+```{r}
+diagnosis <- diagnose_design(randomized_response_design)
+```
+
+```{r, echo=FALSE}
+diagnosis_table <- get_diagnosands(diagnosis)[,c("estimand_label", "estimator_label",
+                                                 "mean_estimand",
+                                                 "mean_estimate", "se(mean_estimate)",
+                                                 "bias", "se(bias)")]
+
+kable(diagnosis_table,
+      col.names = c("Estimand Label", "Estimator Label", "Mean Estimand",
+                    "Mean Estimate", "SE(Mean Estimate)",
+                    "Bias", "SE(Bias)"),
+      digits = 2)
+```
+
+Our diagnosis of the design indicates that randomized response yields an unbiased estimate of the true rate of IPV in the study sample and offer a better alternative to direct questions involving sensitive or controversial inquiries.
+
+## Futher Reading
