@@ -5,6 +5,7 @@ bibliography: bib.bib
 nocite: |
   @warner1965randomized
   @greenberg1969unrelated
+  @blair2015design
 
 designer: "randomized_response_designer.Rd"
 example-design: "randomized_response_design.Rd"
