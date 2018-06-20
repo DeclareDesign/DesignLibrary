@@ -1,8 +1,8 @@
 #' Create a randomized response design
 #'
-#' Description here
+#' A randomized response design.
 #' 
-#' Key limitations: Limitations here.
+#' Key limitations: This design employs a specific variation of randomized response that randomly requires respondents to provide a fixed answer to the sensitive question (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 #' 
 #' Note: Note here.
 #'
@@ -84,7 +84,7 @@ attr(randomized_response_designer,"shiny_arguments") <-
     withholding_rate = c(.5,seq(.05,.95,.1))
   )
 attr(randomized_response_designer,"description") <- "
-<p> A randomized response design
+<p> A randomized response design.
 "
 
 
