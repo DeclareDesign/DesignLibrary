@@ -1,0 +1,69 @@
+---
+title: "Pre-Test Post-Test"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+designer: "pretest_posttest_designer.Rd"
+example-design: "pretest_posttest_design.Rd"
+vignette: >
+  %\VignetteIndexEntry{Pre-Test Post-Test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(knitr)
+```
+
+## Pre-Test Post-Test
+
+Pre-test post-test designs are designs in which researchers observe the characteristics of a sample prior to, and after, a given treatment or intervention in order to estimate the change between post and prior occasioned by the treatment. These designs are often preferred to post-test designs only (which simply compare different in means of outcomes between control and treatment group *after* treatment assignment) because they allow researchers to establish the degree of similarity between control and treatment groups and assess threats to validity such as whether there was any assignment bias.
+
+In spite of the insight pre-testing yields with regards to pre-treatment balance, researchers might choose *not* to have a pre-test post-test design due to lack of resources or, more importantly, due to concerns that pre-testing might affect how individuals respond to the intervention or treatment, which may subsequently affect our measure of the outcome of interest.
+
+Below we consider the example of a pre-test post-test applied to a study that seeks to evaluate the effect of a family-planning program on the incidence of teenage pregnancy.
+
+### Design Declaration
+
+  - **M**odel:
+  
+- **I**nquiry: Our estimand---the effect of family pregnancy programs $Z$ on rates of teenage pregnancy---is defined as the difference in the conditional expectation functions of post-treatment potential outcomes for control and treatment. Formally: $Y_{i, post}[Z = 1] - Y_{i,post}[Z = 0]$, where $Z = 1$ denotes assignment to the program.
+
+- **D**ata strategy: We observe the incidence of teenage pregnancy ($Y_i$) for individual $i$ for a sample of 100 individuals at time $t_1$ (just prior to treatment) and at time $t_2$ (a year after treatment). We randomly sample 50 out of 100 women between the ages of 15 and 19 to receive treatment.
+
+- **A**nswer strategy: We define three estimators. Firstly, we estimate an OLS regression of the difference between observed post- and pre-treatment outcomes on treatment assignment. We define the second estimator via and OLS regression of the post-treatment outcome on treatment when controling for pre-treatment outcome (in this case incidence of teenage pregnancy pre-treatment). Thirdly, we regress post-test outcome measures on treatment. We use the last estimator to highlight how well an estimator relying solely on post-test data does compared to estimates that pre-testing affords in this particular study set up.
+
+```{r, eval = FALSE, code = get_design_code(pretest_posttest_design)}
+
+```
+
+### Takeaways
+
+```{r}
+diagnosis <- diagnose_design(pretest_posttest_design)
+```
+
+```{r, echo=FALSE}
+diagnosis_table <- get_diagnosands(diagnosis)[,c("estimand_label", "estimator_label",
+                                                 "mean_estimand",
+                                                 "mean_estimate", "se(mean_estimate)",
+                                                 "bias", "se(bias)")]
+kable(diagnosis_table,
+      col.names = c("Estimand Label", "Estimator Label", "Mean Estimand",
+                    "Mean Estimate", "SE(Mean Estimate)",
+                    "Bias", "SE(Bias)"),
+      digits = 2)
+```
+
+Quick notes on takeaways:
+
+Although the first two estimates are similar in size and both unbiased, score change estimator is less efficient than the Condition on pretest estimator because we essentially "lose" information by defining an estimator as a difference.
+
+Post-test only estimator is slightly biased.
+
+How well these designs do depends on sample size, attrition rate, and ATE.
+
+
+
+
