@@ -25,6 +25,9 @@ pretest_posttest_designer <- function(N = 100,
                                       rho = .5,
                                       attrition_rate = .1)
 {
+  if(rho < 0 | rho > 1) stop("'rho' must be a value from 0 to 1")
+  if(attrition_rate < 0 | attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
+  
   {{{
     # M: Model
     population <- declare_population(
@@ -95,8 +98,8 @@ attr(pretest_posttest_designer, "tips") <- c(
 )
 attr(pretest_posttest_designer, "description") <- "
 <p> A pretest-posttest design with sample of size <code>N</code>, average treatment effect of size <code>ate</code>, 
-    and correlation between pre- and post-test outcomes equal to  <code>rho</code>. The proportion of pre-test respondents  
-   missing at random from  the post-test follow-up can be set using  <code>attrition_rate</code>.
+    and correlation between pre- and post-test outcomes equal to <code>rho</code>. The proportion of pre-test respondents  
+   missing at random from  the post-test follow-up can be set using <code>attrition_rate</code>.
 "
 
 
