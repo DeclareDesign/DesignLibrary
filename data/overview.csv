@@ -1,11 +1,11 @@
 design,designer,vignette,keywords,shiny,author,author_url
-audit_experiment_design,audit_experiment_designer,,,audit-experiment,Declare Design,www.declaredesign.org
-block_cluster_two_arm_design,block_cluster_two_arm_designer,,,,,
-cluster_sampling_design,cluster_sampling_designer,,,,,
-crossover_design,crossover_designer,,,,,
-mediation_analysis_design,mediation_analysis_designer,,,,,
-pretest_posttest_design,pretest_posttest_designer,,,,,
-randomized_response_design,randomized_response_designer,,,,,
-regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,,,
-simple_spillover_design,simple_spillover_designer,,,,,
-simple_two_arm_design,simple_two_arm_designer,simple_two_arm,,,,
+audit_experiment_design,audit_experiment_designer,,,,DeclareDesign,https://declaredesign.org
+block_cluster_two_arm_design,block_cluster_two_arm_designer,,,,DeclareDesign,https://declaredesign.org
+cluster_sampling_design,cluster_sampling_designer,,,,DeclareDesign,https://declaredesign.org
+crossover_design,crossover_designer,,,,DeclareDesign,https://declaredesign.org
+mediation_analysis_design,mediation_analysis_designer,,,,DeclareDesign,https://declaredesign.org
+pretest_posttest_design,pretest_posttest_designer,,,,DeclareDesign,https://declaredesign.org
+randomized_response_design,randomized_response_designer,,,,DeclareDesign,https://declaredesign.org
+regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,,DeclareDesign,https://declaredesign.org
+simple_spillover_design,simple_spillover_designer,,,,DeclareDesign,https://declaredesign.org
+simple_two_arm_design,simple_two_arm_designer,simple_two_arm,,,DeclareDesign,https://declaredesign.org
