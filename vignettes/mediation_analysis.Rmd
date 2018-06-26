@@ -56,7 +56,7 @@ And two complex potential outcomes.
 
 - **D**ata strategy:  We use assign units to treatment using complete random assigment.
 
-- **A**nswer strategy:  First, we regress $M$ on $Z$. Then regress $Y$ on $M$ and $Z$. Our estimators are the coefficient of regressors.
+- **A**nswer strategy:  First, we regress $M$ on $Z$. Then we regress $Y$ on $M$ and $Z$. Our estimators are the coefficient of regressors.
 
 In code:
 
