@@ -1,6 +1,6 @@
 #' Create a design for cluster random sampling
 #'
-#' A cluster sampling design with <code>n_clusters</code> clusters each comprising <code>n_subjects_per_cluster</code> units. Outcomes within clusters have ICC approximately equal to <code>ICC</code>.
+#' A cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
 #' 
 #' Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
 #' 
@@ -83,8 +83,8 @@ attr(cluster_sampling_designer, "shiny_arguments") <- list(
   icc = c(0.2, seq(0.002, .999, by = 0.2))
 )
 attr(cluster_sampling_designer, "description") <- "
-<p> A cluster sampling design with <code>n_clusters</code> clusters each comprising 
-    <code>n_subjects_per_cluster</code> units. Outcomes within clusters have ICC approximately equal to 
+<p> A cluster sampling design that samples <code>n_clusters</code> clusters each comprising 
+    <code>n_subjects_per_cluster</code> units. The population comprises <code>N_clusters</code> with <code>N_subjects_per_cluster</code> units each. Outcomes within clusters have ICC approximately equal to 
     <code>ICC</code>. 
 "
 
