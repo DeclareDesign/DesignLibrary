@@ -26,13 +26,13 @@ Below we consider the example of a pre-test post-test applied to a study that se
 
 ### Design Declaration
 
-  - **M**odel:
+  - **M**odel: We define a population of size $N$, where effect at time T1 (pre-program) and T2 (post-program) are taken from a normal distribution of mean 0 and standard deviation smaller than 1. We assume pre- and post-test outcomes to be highly and positively correlated ($\rho = 0.5$). We also expect subjects to leave the study at a rate of 10%, meaning we do not observe post-treatment outcomes for a tenth of the sample.
   
-- **I**nquiry: Our estimand---the effect of family pregnancy programs $Z$ on rates of teenage pregnancy---is defined as the difference in the conditional expectation functions of post-treatment potential outcomes for control and treatment. Formally: $Y_{i, post}[Z = 1] - Y_{i,post}[Z = 0]$, where $Z = 1$ denotes assignment to the program.
+- **I**nquiry: Our estimand---the average effect of family pregnancy programs $Z$ on rates of teenage pregnancy---is defined as the difference in the conditional expectation functions of post-treatment potential outcomes for control and treatment. Formally: $E{post}[Z = 1] - E{post}[Z = 0]$, where $Z = 1$ denotes assignment to the program.
 
 - **D**ata strategy: We observe the incidence of teenage pregnancy ($Y_i$) for individual $i$ for a sample of 100 individuals at time $t_1$ (just prior to treatment) and at time $t_2$ (a year after treatment). We randomly sample 50 out of 100 women between the ages of 15 and 19 to receive treatment.
 
-- **A**nswer strategy: We define three estimators. Firstly, we estimate an OLS regression of the difference between observed post- and pre-treatment outcomes on treatment assignment. We define the second estimator via and OLS regression of the post-treatment outcome on treatment when controling for pre-treatment outcome (in this case incidence of teenage pregnancy pre-treatment). Thirdly, we regress post-test outcome measures on treatment. We use the last estimator to highlight how well an estimator relying solely on post-test data does compared to estimates that pre-testing affords in this particular study set up.
+- **A**nswer strategy: We define three estimators. Firstly, we estimate an ordinaly least squares (OLS) regression of the difference between observed post- and pre-treatment outcomes on treatment assignment. We define the second estimator via and OLS regression of the post-treatment outcome on treatment when controling for pre-treatment outcome (in this case incidence of teenage pregnancy pre-treatment). Thirdly, we regress post-test outcome measures on treatment. We use the last estimator to highlight how well an estimator relying solely on post-test data does compared to estimates that pre-testing affords in this particular study set up.
 
 ```{r, eval = FALSE, code = get_design_code(pretest_posttest_design)}
 
@@ -56,14 +56,10 @@ kable(diagnosis_table,
       digits = 2)
 ```
 
-Quick notes on takeaways:
+<!-- By running the diagnosis on our design, we observe that although the first two estimates are similar in magnitude and both unbiased, our "Change score" estimator (our first inquiry) is less efficient than the "Condition on pretest" estimator (our second inquiry) because we essentially "lose" information by defining an estimator as a difference. -->
 
-Although the first two estimates are similar in size and both unbiased, score change estimator is less efficient than the Condition on pretest estimator because we essentially "lose" information by defining an estimator as a difference.
+<!-- Our "Posttest only" estimator is slightly biased. -->
 
-Post-test only estimator is slightly biased.
-
-How well these designs do depends on sample size, attrition rate, and ATE.
-
-
+<!-- How well these designs do depends on sample size, attrition rate, and ATE. -->
 
 
