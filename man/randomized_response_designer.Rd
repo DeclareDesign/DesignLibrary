@@ -24,8 +24,6 @@ A forced randomized response design that measures the share of individuals with 
 }
 \details{
 Key limitations: This design employs a specific variation of randomized response that randomly requires respondents to provide a fixed answer to the sensitive question (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
-
-Note: Note here.
 }
 \examples{
 # To make a design using default arguments:
