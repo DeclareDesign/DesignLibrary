@@ -55,6 +55,26 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 - As the diagnosis reveals, the estimate of the ATE is unbiased, but our coverage is above what it should be (95\%). This reflects the fact that conventional estimators of the standard error for the difference in means make conservative assumptions about the true covariance in potential outcomes, and thus tend to produce confidence intervals that are too wide. In other words, while the estimate of the difference in outcomes is unbiased, our estimate of the variation in this difference is biased upwards.
 
 
+### Using the Simple Two Arm Designer
+
+In R, you can generate a simple two arm design using the template function `simple_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we can create a design called `my_simple_two_arm_design` where `N`, `prob`, and `ate` set to 500, .5, and .4, respectively, and other parameters use default values. To do so, we run the lines below.
+
+```{r, eval=FALSE}
+simple_two_arm_design <- simple_two_arm_designer(N = 500, prob = .5, ate = .4)
+```
+
+You can see more details on the `simple_two_arm_designer()` function, its arguments, and default values, by running the following line of code:
+
+```{r, eval=FALSE}
+??simple_two_arm_designer
+```
 
 
 
