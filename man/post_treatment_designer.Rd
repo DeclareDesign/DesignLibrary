@@ -7,18 +7,15 @@
 post_treatment_designer(N = 100)
 }
 \arguments{
-\item{N}{Size of sample}
+\item{N}{Integer. Size of sample}
 }
 \value{
 A post-treatment design.
 }
 \description{
-This design is an application of a simple-two-arm design where an outcome (Y) is observed conditional on a post-treatment variable (C).
-}
-\details{
-Key limitations: Limitations here.
-
-Note: Note here.
+This designer creates designs that are a special caseof a simple-two-arm 
+design where an outcome (Y) is observed conditional on 
+a post-treatment variable (C).
 }
 \examples{
 # To make a design using default arguments:
