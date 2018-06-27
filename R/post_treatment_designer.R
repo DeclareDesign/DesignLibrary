@@ -1,12 +1,10 @@
 #' Create a post-treatment design
 #'
-#' This design is an application of a simple-two-arm design where an outcome (Y) is observed conditional on a post-treatment variable (C).
+#' This designer creates designs that are a special caseof a simple-two-arm 
+#' design where an outcome (Y) is observed conditional on 
+#' a post-treatment variable (C).
 #' 
-#' Key limitations: Limitations here.
-#' 
-#' Note: Note here.
-#'
-#' @param N Size of sample
+#' @param N Integer. Size of sample
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
@@ -61,24 +59,25 @@ post_treatment_designer <- function(N = 100
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = 0.5)
+    reveal_outcomes <- declare_reveal(outcome_variables = c("C", "Y", "Ystar")) 
     
     # A: Answer Strategy
     estimator_1 <-
-      declare_estimator(C ~ Z, estimand = estimand_1, label = "ATE on C")
+      declare_estimator(C ~ Z, coefficients = "Z", estimand = estimand_1, label = "ATE on C")
     estimator_2 <-
-      declare_estimator(Y ~ Z, estimand = c(estimand_2, estimand_3), label = "ATE on Y (Conditioned by C)")
+      declare_estimator(Y ~ Z, coefficients = "Z", estimand = c(estimand_2, estimand_3), label = "ATE on Y (Conditioned by C)")
     estimator_3 <-
-      declare_estimator(Ystar ~ Z, estimand = estimand_3, label = "ATE on Y (Alternative)")
+      declare_estimator(Ystar ~ Z, coefficients = "Z", estimand = estimand_3, label = "ATE on Y (Alternative)")
     
     # Design
     post_treatment_design <- population +
       potential_outcomes +
       assignment +
+      reveal_outcomes +
       estimand_1 +
       estimand_2 +
       estimand_3 +
       estimand_4 +
-      declare_reveal(outcome_variables = c("C", "Y", "Ystar")) +
       estimator_1 +
       estimator_2 +
       estimator_3
@@ -105,8 +104,6 @@ attr(post_treatment_designer, "description") <- "<p> A post-treatment design wit
 #' @seealso \code{\link{simple_two_arm_designer}} 
 #' @format A design object 
 "post_treatment_design"
-
-
 
 
 
