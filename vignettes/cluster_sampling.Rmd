@@ -112,4 +112,28 @@ dd_theme <-
 
 The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The blue lines in the graph demonstrate the estimates from simulations which contain our estimand. As our table and graphs show, the share of these simulations over the total number of simulations, also known as coverage, is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both speficications.
 
+### Using the Cluster Sampling Designer
+
+In R, you can generate a pre-test post-test design using the template function `cluster_sampling_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_cluster_sampling_design` with `N`, `ate`, `rho`, and `attrition_rate` set to 300, .2, .4, and .15, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+my_cluster_sampling_design <- cluster_sampling_designer(N = 300,
+                                                        ate = .2,
+                                                        rho = .4,
+                                                        attrition_rate = .15)
+```
+
+You can see more details on the `cluster_sampling_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??cluster_sampling_designer
+```
+
 ## Further reading
