@@ -14,8 +14,6 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-## Pre-Test Post-Test Design
-
 Pre-test post-test designs are designs in which researchers estimate the change in outcomes before and after an intervention. These designs are often preferred to post-test-only designs (which simply compare outcomes between control and treatment group *after* treatment assignment), because they enable much more efficient estimation and more informed assessment of imbalance.
 
 Nevertheless, baseline measurement often comes at a cost: when faced with budget constraints, researchers may be forced to decrease endline sample size in order to facilitate a baseline. Whether it is worth doing so often depends on how well the baseline will predict outcomes at endline.
@@ -34,7 +32,7 @@ Below we consider the example of a pre-test post-test applied to a study that se
 
 - **A**nswer strategy: We define three estimators. First, we estimate effects on the ``change score'': the dependent variable is defined as the difference between observed post- and pre-treatment outcomes. The second estimator treats only the post-treatment outcome as the dependent variable, but conditions on the pre-treatment outcome on the righthand side of the regression. Finally, we also look at effects when we only use post-test outcome measures, so as to evaluate the gain from using a baseline. 
 
-```{r, eval = FALSE, code = get_design_code(pretest_posttest_designer())}
+```{r, eval = TRUE, code = get_design_code(pretest_posttest_designer())}
 
 ```
 
@@ -45,15 +43,7 @@ diagnosis <- diagnose_design(pretest_posttest_design)
 ```
 
 ```{r, echo=FALSE}
-diagnosis_table <- get_diagnosands(diagnosis)[,c("estimand_label", "estimator_label",
-                                                 "mean_estimand",
-                                                 "mean_estimate", "se(mean_estimate)",
-                                                 "bias", "se(bias)")]
-kable(diagnosis_table,
-      col.names = c("Estimand Label", "Estimator Label", "Mean Estimand",
-                    "Mean Estimate", "SE(Mean Estimate)",
-                    "Bias", "SE(Bias)"),
-      digits = 2)
+kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 ```
 
 <!-- By running the diagnosis on our design, we observe that although the first two estimates are similar in magnitude and both unbiased, our "Change score" estimator (our first inquiry) is less efficient than the "Condition on pretest" estimator (our second inquiry) because we essentially "lose" information by defining an estimator as a difference. -->
