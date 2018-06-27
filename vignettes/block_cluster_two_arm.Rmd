@@ -18,21 +18,19 @@ library(knitr)
 ```
 
 
+Cluster randomization is a research design in which subjects are grouped into clusters and assigned as a group to either treatment or control. When the clusters are of equal size the difference-in-means estimator yields  unbiased but imprecise estimates, especially when individuals are very similar within clusters and share characteristics that can potentially influence outcomes. Despite their drawbacks, cluster designs are sometimes unavoidable. For instance, imagine that we want to evaluate the effects of radio advertisements on donations to aid relief campaigns. It is, of course, impossible to target such advertising to a single individual, and the treatment must instead be assigned at a higher level; for instance at the city level.
 
+In block random assignment the population is sorted into separate blocks or "bins" -- sometimes according to  pre-treatment covariates --, and treatment is randomized independently within each block. In a clustered and blocked design with two arms, for example, entire clusters are assigned to either treatment or control conditions, separately within each block.
 
-Cluster randomization is a research design in which subjects are grouped into clusters and assigned as a group to either treatment or control. When the clusters are of equal size the difference-in-difference estimator yields  unbiased but inprecise estimates, especially when individuals are very similar within clusters and share characteristics that can potentially influence outcomes. Despite its drawbacks, cluster designs are sometimes unavoidable. For instance, imagine that we want to evaluate the effects of radio advertisements on donations to aid relief campaigns. It is, of course, impossible to target such ad to a single individual, and the treatment must instead be assigned at a higher level; for instance at the city level.
-
-In block random assignment the population is sorted according to some pre-treatment covariates into separate blocks or "bins", and treatment is randomized within each block such that entire clusters are assigned to either treatment or control conditions (in block-cluster-two-arm designs).
-
-Two main objectives can be achieved with block randomization: first, we can reduce sampling variability when individuals that belong to a specific block have similar potential outcomes. Secondly, we can ensure that certain characteristics that we care about are present at a particular rate in our treatment and control samples. For instance, policymakers might be interested in having an equal number of women and men in treatment and control. We can define blocks that have equal shares of men and women.
+Two main objectives can be achieved with block randomization: first, we can reduce sampling variability when individuals that belong to a specific block have similar potential outcomes. Secondly, we can ensure that certain characteristics that we care about are present at a particular rate in our treatment and control samples. For instance, policymakers might be interested in having an equal number of women and men in treatment and control. By defining one block as men and another as women and conducting the randomization separately for each gender, we can ensure that exactly half of the men and half of the women are treated.
 
 Looking back to our radio ad example, imagine that policymakers specify that four cities within each region should be treated and four assigned to control. This means that in the control and treatment groups there will be individuals from all regions, but only from a few cities within each region. We declare this design below.
 
 ### Design Declaration
 
-- **M**odel:  We specify a population partitioned into $N\_blocks = 2$ regions. Each region has $N\_clusters\_in\_block = 4$ cities and within each city there are $N\_in\_cluster = 5$ individuals.  Our potential outcomes are the amount donated to aid relief campaigns per subject under the treatment ($Y_i(Z=1)$) and under control ($Y_i(Z=0)$). The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. The treatment effect is computed as $Y_i(Z = 1) - Y_i(Z = 0)$
+- **M**odel:  We specify a population partitioned into $N\_blocks = 2$ regions. Each region has $N\_clusters\_in\_block = 4$ cities and within each city there are $N\_in\_cluster = 5$ individuals.  Our potential outcomes are the amount donated to aid relief campaigns per subject under the treatment ($Y_i(Z=1)$) and under control ($Y_i(Z=0)$). The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. 
   
-- **I**nquiry: We are interested in the average treatment effect between control and treatment groups. Formally, $E[Y_i(Z = 1) - Y_i(Z = 0)]$.
+- **I**nquiry: We are interested in the average difference in individuals' treatment and control outcomes. Formally, $E[Y_i(Z = 1) - Y_i(Z = 0)]$.
 
 - **D**ata strategy:  The units of randomization are cities (clusters). Cities are blocked by region so that we ensure that $4$ cities from each region are included in control and $4$ in treatment. All individuals belonging to the same city are either treated or assigned to control.
 
