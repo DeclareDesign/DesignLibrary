@@ -18,7 +18,7 @@
 #' @export
 #' @examples
 #' # To make a design using default arguments:
-#' crossover_design <- audit_experiment_designer()
+#' crossover_design <- crossover_designer()
 #'
 
 
