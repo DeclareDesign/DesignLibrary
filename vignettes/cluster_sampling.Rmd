@@ -114,7 +114,7 @@ The figure above may give us the impression that our estimate with clustered sta
 
 ### Using the Cluster Sampling Designer
 
-In R, you can generate a pre-test post-test design using the template function `cluster_sampling_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+In R, you can generate a cluster sampling design using the template function `cluster_sampling_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
 install.packages("DesignLibrary")
