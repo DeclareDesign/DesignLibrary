@@ -1,5 +1,7 @@
 #' Create a regression discontinuity design
 #'
+#' A regression discontinuity design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+#'
 #' @param N An integer. Size of population to sample from.
 #' @param tau A scalar number. Difference in potential outcomes functions at the threshold.
 #' @param cutoff A scalar number in (0,1). Threshold on running variable beyond which units are treated.
@@ -85,20 +87,6 @@ attr(regression_discontinuity_designer,"description") <- "
 <p> Polynomial regression of order <code>poly_order</code> is used to estimate tau, within a bandwidth of size
     <code>bandwidth</code> around the cutoff situated at <code>cutoff</code> on the running variable.
 "
-
-
-
-#' A regression discontinuity design
-#'
-#' Default design created with  \code{\link{regression_discontinuity_designer}}
-#' 
-#' @seealso \code{\link{regression_discontinuity_designer}} 
-#' @format A design object 
-"regression_discontinuity_design"
-
-
-
-
 
 
   

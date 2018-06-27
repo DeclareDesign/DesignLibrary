@@ -88,16 +88,3 @@ attr(cluster_sampling_designer, "description") <- "
     <code>ICC</code>. 
 "
 
-
-
-#' A cluster random sampling design
-#'
-#' Default design created with  \code{\link{cluster_sampling_designer}}
-#' 
-#' @seealso \code{\link{cluster_sampling_designer}} 
-#' @format A design object 
-"cluster_sampling_design"
-
-
-
-

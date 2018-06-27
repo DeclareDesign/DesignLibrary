@@ -101,16 +101,3 @@ attr(mediation_analysis_designer,"description") <- "
 
 
 
-
-#' A mediation analysis design
-#'
-#' Default design created with  \code{\link{mediation_analysis_designer}}
-#' 
-#' @seealso \code{\link{mediation_analysis_designer}} 
-#' @format A design object 
-"mediation_analysis_design"
-
-
-
-
-
