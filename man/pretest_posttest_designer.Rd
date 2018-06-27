@@ -20,12 +20,7 @@ pretest_posttest_designer(N = 100, ate = 0.25, rho = 0.5,
 A pretest-posttest design.
 }
 \description{
-Description here
-}
-\details{
-Key limitations: Limitations here.
-
-Note: Note here.
+This designer produces designs in which an outcome Y is observed pre- and post-treatment. It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes and for at random missingness in the observation of post-treatment outcomes.
 }
 \examples{
 # To make a design using default arguments:
