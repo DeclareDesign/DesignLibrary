@@ -1,9 +1,7 @@
 ---
-title: "Audit Experiment"
+title: "Post-Treatment Estimands"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
-designer: "post_treatment_designer.Rd"
-example-design: "post_treatment_design.Rd"
 vignette: >
   %\VignetteIndexEntry{Post-treatment}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,7 +18,7 @@ library(dplyr)
 
 ## Post-treatment
 
-Post-treatment designs are a specific application of *simple-two-arm* designs in which our outcome is conditioned by a variable that is itself a consequence of treatment. We consider its application to the context of an audit experiment.^[Audit experiments are designs in which we seek to study how bureaucrats, politicians, landlords etc respond to requests by research confederates similar along all characteristics excepting the one(s) under study. Social scientists often use audit studies to measure discrimination in various settings.]
+In post-treatment designs the outcome is conditioned by a variable that is itself a consequence of treatment. We consider this issue in the context of an audit experiment, a special case of a two-arm design. Audit experiments are designs in which we seek to study how bureaucrats, politicians, landlords etc respond to requests by research confederates similar along all characteristics excepting the one(s) under study. Social scientists often use audit studies to measure discrimination in various settings.
 
 Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on whether and how well election officials respond to requests for information. For example, do they use a positive or negative tone? These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone would be missing. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is missing for one of their potential outcomes. That means that some of the variation we observe in tone due to treatment is being accounted for by response. Below we discuss the implications of this set up for our estimations.
 
@@ -29,10 +27,10 @@ Consider an audit experiment that seeks to assess the effects of an email from a
   - **M**odel: The model has two outcome variables, $R_i$ and $Y_i$. $R_i$ stands for "response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $R_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because we do not observe tone if messages are never sent. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with roughly 50% A, 34% B, 14% C, and 2% D.
 
 ```{r, echo=FALSE}
-design <- audit_experiment_designer(N = 500)
+design <- post_treatment_designer(N = 500)
 
 causal_types <- draw_data(design) %>%
-  select(type, R_Z_0, R_Z_1, Y_Z_0, Y_Z_1, Ystar_Z_0, Ystar_Z_1) %>%
+  select(type, C_Z_0, C_Z_1, Y_Z_0, Y_Z_1, Ystar_Z_0, Ystar_Z_1) %>%
   arrange(type) %>% unique()
 
 kable(causal_types, caption = "Causal Types", row.names = FALSE)
@@ -44,27 +42,17 @@ kable(causal_types, caption = "Causal Types", row.names = FALSE)
 
 - **A**nswer strategy: We’ll try to answer all three inquiries with the difference-in-means estimator, but as the diagnosis will reveal, this strategy works well for some inquiries but not others.
 
-```{r,eval = FALSE, code = get_design_code(audit_experiment_design)}
-
+```{r,eval = TRUE, code = get_design_code(post_treatment_designer())}
 ```
 
 ### Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(design)
+diagnosis <- diagnose_design(post_treatment_design)
 ```
 
 ```{r, echo=FALSE}
-diagnosis_table <- get_diagnosands(diagnosis)[,c("estimand_label", "estimator_label",
-                                                 "mean_estimand",
-                                                 "mean_estimate", "se(mean_estimate)",
-                                                 "bias", "se(bias)")]
-
-kable(diagnosis_table,
-      col.names = c("Estimand Label", "Estimator Label", "Mean Estimand",
-                    "Mean Estimate", "SE(Mean Estimate)",
-                    "Bias", "SE(Bias)"),
-      digits = 2)
+kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 ```
 
 We learn four things from the design diagnosis. First, as expected, our experiment is unbiased for the average treatment effect on response.
