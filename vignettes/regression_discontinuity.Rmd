@@ -90,7 +90,7 @@ ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) +
 
 - **A**nswer strategy: We will approximate the treated and untreated conditional expectation functions to the left and right of the cutoff using a flexible regression specification estimated via OLS. In particular, we fit each regression using a fourth-order polynomial. Much of the literature on regression discontinuity designs focuses on the tradeoffs among answer strategies, with many analysts recommending against higher-order polynomial regression specifications. We use one here to highlight how well such an answer strategy does when it matches the functional form in the model. We discuss alternative estimators in the exercises. 
 
-```{r,eval = FALSE, code = get_design_code(regression_discontinuity_design)}
+```{r, eval = TRUE, code = get_design_code(regression_discontinuity_designer())}
 
 ```
 
