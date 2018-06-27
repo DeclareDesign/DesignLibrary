@@ -1,10 +1,6 @@
 #' Create a design for mediation analysis
 #'
-#' Description here
-#' 
-#' Key limitations: Limitations here.
-#' 
-#' Note: Note here.
+#' A mediation analysis design where we are interested in the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
 #'
 #' @param N Size of sample
 #' @param a Effect of treatment (Z) on mediatior (M)
