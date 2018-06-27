@@ -74,3 +74,27 @@ This kind of problem is surprisingly common. Here are three more distinct instan
 3. $Y$ is the charity to whom contributions are made during fundraising and $R$ is whether anything is contributed and $Z$ is an encouragement to contribute. The identity of beneficiaries is not defined if there are no contributions.
 
 All of these problem exhibit a form of post treatment bias (see section Post treatment bias) but the issue goes beyond picking the right estimator. Our problem here is conceptual: the effect of treatment on the outcome just doesn’t exist for some subjects.
+
+### Using the Post Treatment Designer
+
+In R, you can generate a post_treatment design using the template function `post_treatment_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_post_treatment_design` with `N`, `ate`, `rho`, and `attrition_rate` set to 300, .2, .4, and .15, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+post_treatment_design <- post_treatment_designer(N = 300,
+                                                        ate = .2,
+                                                        rho = .4,
+                                                        attrition_rate = .15)
+```
+
+You can see more details on the `post_treatment_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??post_treatment_designer
+```
