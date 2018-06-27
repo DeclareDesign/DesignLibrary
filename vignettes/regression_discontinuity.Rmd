@@ -37,6 +37,7 @@ We'll consider an application of the regression discontinuity design that examin
     
     
 ```{r,include=FALSE, warning=FALSE, message=FALSE}
+regression_discontinuity_design <- regression_discontinuity_designer()
 pro_con_colors <- c("#C67800", "#205C8A")
 dd_theme <-
   function() {

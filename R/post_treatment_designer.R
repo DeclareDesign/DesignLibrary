@@ -96,17 +96,3 @@ attr(post_treatment_designer, "description") <- "<p> A post-treatment design wit
 
 
 
-#' A post-treatment design
-#'
-#' Default design created with  \code{\link{post_treatment_designer}}
-#' 
-#' @seealso \code{\link{post_treatment_designer}} 
-#' @seealso \code{\link{simple_two_arm_designer}} 
-#' @format A design object 
-"post_treatment_design"
-
-
-
-
-
-
