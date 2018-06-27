@@ -94,6 +94,28 @@ ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) +
 
 ```
 
+### Takeaways
 
+We now diagnose the design:
 
+```{r}
+diagnosis <- diagnose_design(regression_discontinuity_design)
+```
 
+```{r}
+kable(reshape_diagnosis(diagnosis), digits = 2)
+```
+
+We highlight three takeaways. First, the power of this design is very low: with 1,000 units we do not achieve even 10% statistical power. However, our estimates of the uncertainty are not too wide: the coverage probability indicates that our confidence intervals indeed contain the estimand 95% of the time as they should. Our answer strategy is highly uncertain because the fourth-order polynomial specification in regression model gives weights to the data that greatly increase the variance of the estimator (Gelman and Imbens, 2017). In the exercises we explore alternative answer strategies that perform better.
+
+Second, the design is biased because polynomial approximations of the average effect at exactly the point of the threshold will be inaccurate in small samples (Sekhon and Titiunik, 2017), especially as units farther away from the cutoff are incorporated into the answer strategy. We know that the estimated bias is not due to simulation error by examining the bootstrapped standard error of the bias estimates.
+
+Finally, from the figure, we can see how poorly the average effect at the threshold approximates the average effect for all units. The average treatment effect among the treated (to the right of the threshold in the figure) is negative, whereas at the threshold it is positive. This clarifies that the estimand of the regression discontinuity design, the difference at the cutoff, is only relevant for a small – and possibly empty – set of units very close to the cutoff.
+
+## Further reading
+
+1. Since its rediscovery by social scientists in the late 1990s, the regression discontinuity design has been widely used to study diverse causal effects such as: prison on recidivism (Mitchell et al., 2017); China’s one child policy on human capital (Qin, Zhuang and Yang, 2017); eligibility for World Bank loans on political liberalization (Carnegie and Samii, 2017); and anti-discrimination laws on minority employment (Hahn, Todd and Van der Klaauw, 1999).
+
+2. We’ve discussed a “sharp” regression discontinuity design in which all units above the threshold were treated and all units below were untreated. In fuzzy regression discontinuity designs, some units above the cutoff remain untreated or some units below take treatment. This setting is analogous to experiments that experience noncompliance and may require instrumental variables approaches to the answer strategy (see Compliance is a Potential Outcome).
+
+3. Geographic regression discontinuity designs use distance to a border as the running variable: units on one side of the border are treated and units on the other are untreated. Keele and Titiunik (2016) use such a design to study whether voters are more likely to turn out when they have the opportunity to vote directly on legislation on so-called ballot initiatives. A complication of this design is how to measure distance to the border in two dimensions.
