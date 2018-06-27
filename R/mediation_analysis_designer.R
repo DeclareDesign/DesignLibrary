@@ -37,6 +37,8 @@ mediation_analysis_designer <- function(N = 100,
     pos_Y <-
       declare_potential_outcomes(Y ~ d * Z + b * M + e2)
     assignment <- declare_assignment(prob = 0.5)
+    reveal_mediator <- declare_reveal(M, Z)
+    reveal_outcome <- declare_reveal(Y, Z) 
     mand_a <- declare_estimand(a = a)
     mand_b <- declare_estimand(b = b)
     mand_d <- declare_estimand(d = d)
@@ -55,17 +57,17 @@ mediation_analysis_designer <- function(N = 100,
       label = "Outcome regression"
     )
     mediation_analysis_design <-
-        population +
-        pos_M +
-        assignment +
-        declare_reveal(M, Z) +
-        pos_Y +
-        mand_a +
-        mand_b +
-        mand_d +
-        declare_reveal(Y, Z) +
-        mediator_regression +
-        outcome_regression
+      population +
+      pos_M +
+      assignment +
+      reveal_mediator +
+      pos_Y +
+      mand_a +
+      mand_b +
+      mand_d +
+      reveal_outcome +
+      mediator_regression +
+      outcome_regression
   }}}
   attr(mediation_analysis_design, "code") <- 
     construct_design_code(mediation_analysis_designer, match.call.defaults())
