@@ -121,7 +121,7 @@ install.packages("DesignLibrary")
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_cluster_sampling_design` with `n_clusters`, `n_subjects_per_cluster`, `icc`, `N_clusters`, and `N_subjects_per_cluster` set to 300, .2, .4, and .15, respectively, by running the lines below.
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_cluster_sampling_design` with `n_clusters`, `n_subjects_per_cluster`, `icc`, `N_clusters`, and `N_subjects_per_cluster` set to 40, 20, .2, 1000, and 50, respectively, by running the lines below.
 
 ```{r, eval=FALSE}
 my_cluster_sampling_design <- cluster_sampling_designer(n_clusters = 40,
