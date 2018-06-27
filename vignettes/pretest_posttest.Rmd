@@ -52,4 +52,28 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 
 <!-- How well these designs do depends on sample size, attrition rate, and ATE. -->
 
+### Using the Pre-test Post-test Designer
+
+In R, you can generate a pre-test post-test design using the template function `pretest_posttest_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_pretest_posttest_design` with `N`, `ate`, `rho`, and `attrition_rate` set to 300, .2, .4, and .15, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+my_pretest_posttest_design <- pretest_posttest_designer(N = 300,
+                                                        ate = .2,
+                                                        rho = .4,
+                                                        attrition_rate = .15)
+```
+
+You can see more details on the `pretest_posttest_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??pretest_posttest_designer
+```
+
 
