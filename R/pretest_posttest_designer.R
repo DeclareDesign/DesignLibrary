@@ -1,10 +1,6 @@
 #' Create a pretest-posttest design
 #'
-#' Description here
-#'
-#' Key limitations: Limitations here.
-#'
-#' Note: Note here.
+#' This designer produces designs in which an outcome Y is observed pre- and post-treatment. It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes and for at random missingness in the observation of post-treatment outcomes. 
 #'
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect
