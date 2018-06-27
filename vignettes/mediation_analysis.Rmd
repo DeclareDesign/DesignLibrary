@@ -68,6 +68,7 @@ In code:
 ### Diagnosis
 
 Let us first diagnose this design when the correlation between the error term of the mediator regression and the error term of the outcome regression.
+
 ```{r,eval = TRUE}
 diagnosis <- diagnose_design( mediation_analysis_designer(rho = 0.5))
 ```
@@ -76,6 +77,8 @@ diagnosis <- diagnose_design( mediation_analysis_designer(rho = 0.5))
 ```{r,eval = TRUE, echo = FALSE}
 kable(reshape_diagnosis(diagnosis)[, -c(1, 4:6, 13,14)], digits = 2)
 ```
+
+Our diagnosis indicates that the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects.
 
 Now, let us see what happens with the bias when the correlation between the error terms is zero.
 
@@ -87,7 +90,7 @@ diagnosis <- diagnose_design( mediation_analysis_designer(rho = 0))
 kable(reshape_diagnosis(diagnosis)[, -c(1, 4:6, 13,14)], digits = 2)
 ```
 
-We can see that when the error terms of the mediator regression and the outcome regression are not correlated the direct and indirect effects can be estimated without bias.
+We can see that when the error terms of the mediator regression and the outcome regression are not correlated the direct and indirect effects can be estimated without bias. Unfortunately, the assumption of no correlation is not always guaranteed since $M$ is not assigned at random and can be correlated with $Y$.
 ### Using the Mediation Analysis Designer
 
 In R, you can generate a mediation_analysis design using the template function `mediation_analysis_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
