@@ -84,13 +84,10 @@ install.packages("DesignLibrary")
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_post_treatment_design` with `N`, `ate`, `rho`, and `attrition_rate` set to 300, .2, .4, and .15, respectively, by running the lines below.
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_post_treatment_design` with `N` set to 500, by running the lines below.
 
 ```{r, eval=FALSE}
-post_treatment_design <- post_treatment_designer(N = 300,
-                                                        ate = .2,
-                                                        rho = .4,
-                                                        attrition_rate = .15)
+post_treatment_design <- post_treatment_designer(N = 500)
 ```
 
 You can see more details on the `post_treatment_designer()` function and its arguments by running the following line of code:
