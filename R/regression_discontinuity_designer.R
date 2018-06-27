@@ -35,6 +35,7 @@ regression_discontinuity_designer <- function(
     pos <- declare_potential_outcomes(
       Y_Z_0 = control(X) + noise,
       Y_Z_1 = treatment(X) + noise)
+    reveal_Y <- declare_reveal(Y)
     
     # I: Inquiry
     estimand <- declare_estimand(LATE = treatment(0) - control(0))
@@ -52,18 +53,8 @@ regression_discontinuity_designer <- function(
     
     # Design
     regression_discontinuity_design <- 
-      population + pos + estimand + declare_reveal(Y) + sampling + estimator
+      population + pos + estimand + reveal_Y + sampling + estimator
   }}}
-  regression_discontinuity_design <- insert_step(regression_discontinuity_design, after=length(regression_discontinuity_design), declare_citation(
-    citation = utils::bibentry(
-      bibtype = "Article",
-      title = "Regression-discontinuity analysis: An alternative to the ex post facto experiment.",
-      author= "Thistlethwaite, Donald L and Campbell, Donald T",
-      journal= "Journal of Educational Psychology",
-      volume = "51",
-      number = "6",
-      year = "1960",
-      page = 309)))
   
   attr(regression_discontinuity_design, "code") <- 
     construct_design_code(regression_discontinuity_designer, match.call.defaults())
