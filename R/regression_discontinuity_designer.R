@@ -89,18 +89,4 @@ attr(regression_discontinuity_designer,"description") <- "
 "
 
 
-
-#' A regression discontinuity design
-#'
-#' Default design created with  \code{\link{regression_discontinuity_designer}}
-#' 
-#' @seealso \code{\link{regression_discontinuity_designer}} 
-#' @format A design object 
-"regression_discontinuity_design"
-
-
-
-
-
-
   
