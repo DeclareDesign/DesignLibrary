@@ -14,6 +14,7 @@ vignette: >
 ```{r MIDA, echo = FALSE,include = FALSE}
 library(DesignLibrary)
 library(ggplot2)
+library(knitr)
 ```
 
 ## Regression Discontinuity
@@ -35,7 +36,7 @@ We'll consider an application of the regression discontinuity design that examin
     A major assumption required for regression discontinuity is that the conditional expectation functions for both treatment and control potential outcomes are continuous at the cutoff.^[An alternative motivation for some designs that do not rely on continuity at the cutoff is "local randomization".] To satisfy this assumption, we specify two smooth conditional expectation functions, one for each potential outcome. The figure plots $Y$ (the Democratic vote margin at time $t$) against $X$ (the margin at time $t-1$). We've also plotted the true conditional expectation functions for the treated and control potential outcomes. The solid lines correspond to the observed data and the dashed lines correspond to the unobserved data.
     
     
-```{r,include=FALSE}
+```{r,include=FALSE, warning=FALSE, message=FALSE}
 pro_con_colors <- c("#C67800", "#205C8A")
 dd_theme <-
   function() {
@@ -71,7 +72,7 @@ control_frame <- data.frame(
 plot_frame <- rbind(treatment_frame, control_frame)
 ```
 
-    ```{r,echo=FALSE}
+    ```{r,echo=FALSE,warning=FALSE, message=FALSE}
 ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) + 
   geom_line(aes(linetype = observed)) +
   geom_point(data = mock_data, alpha = .2, size = .5) +
@@ -102,8 +103,8 @@ We now diagnose the design:
 diagnosis <- diagnose_design(regression_discontinuity_design)
 ```
 
-```{r}
-kable(reshape_diagnosis(diagnosis), digits = 2)
+```{r, echo=FALSE}
+kable(reshape_diagnosis(diagnosis)[,-c(1:2)], digits = 2)
 ```
 
 We highlight three takeaways. First, the power of this design is very low: with 1,000 units we do not achieve even 10% statistical power. However, our estimates of the uncertainty are not too wide: the coverage probability indicates that our confidence intervals indeed contain the estimand 95% of the time as they should. Our answer strategy is highly uncertain because the fourth-order polynomial specification in regression model gives weights to the data that greatly increase the variance of the estimator (Gelman and Imbens, 2017). In the exercises we explore alternative answer strategies that perform better.
@@ -121,13 +122,14 @@ install.packages("DesignLibrary")
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_regression_discontinuity_design` with `N`, `ate`, `rho`, and `attrition_rate` set to 300, .2, .4, and .15, respectively, by running the lines below.
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_regression_discontinuity_design` with our chosen values for `N`, `tau`, `cutoff`, `bandwidth`, and `poly_order` by running the lines below.
 
 ```{r, eval=FALSE}
 regression_discontinuity_design <- regression_discontinuity_designer(N = 300,
-                                                        ate = .2,
-                                                        rho = .4,
-                                                        attrition_rate = .15)
+                                                        tau = .2,
+                                                        cutoff = .4,
+                                                        bandwidth = .01,
+                                                        poly_order = .15)
 ```
 
 You can see more details on the `regression_discontinuity_designer()` function and its arguments by running the following line of code:
