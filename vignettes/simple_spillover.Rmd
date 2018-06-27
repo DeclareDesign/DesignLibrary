@@ -84,7 +84,29 @@ The simplest point to note is that the estimates of effects are biased. This ren
 
 The sign of the bias term is perhaps more surprising. The idea that positive spillovers produce an underestimate of effects is a familiar one. An interesting feature of the structure of spillovers in this design is that positive spillovers can produce an *over*estimate of treatment effects when spillover effects are increasing in the number of neighbors treated. The reason is that if a treated individual is more likely to be in a group with multiple treated individuals than is an untreated individual and so outcomes for *treated* units are enhanced by within group spillovers 
 
+### Using the Spillover Designer
 
+In R, you can generate a simple_spillover design using the template function `simple_spillover_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_simple_spillover_design` with `n_groups`, `group_size`, `sd`, and `gamma` set to 40, 10, .25, and 4, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+simple_spillover_design <- simple_spillover_designer(n_groups = 40, 
+                                                     group_size = 10,
+                                                     sd = .25,
+                                                     gamma = 4)
+```
+
+You can see more details on the `simple_spillover_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??simple_spillover_designer
+```
 
 
 
