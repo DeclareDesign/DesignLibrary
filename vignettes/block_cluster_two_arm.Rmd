@@ -44,7 +44,6 @@ In code:
 
 ### Diagnosis
 
-
 ```{r,eval = TRUE}
 diagnosis <- diagnose_design(block_cluster_two_arm_design)
 ```
@@ -55,5 +54,35 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6, 13,14)], digits = 2)
 ```
 
 Our diagnosis indicates that the difference-in-means estimator produces unbiased but noisy estimates. In fact, due to the size of its standard error and the sample size, our power is low and thus we would often fail to reject the hyphotesis of null effects. This becomes less of a problem as sample size increases.
+
+### Using the BLock Cluster Designer
+
+In R, you can generate a block_cluster_two_arm design using the template function `block_cluster_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_block_cluster_two_arm_design` with our own parameter specifications by running the lines below.
+
+```{r, eval=FALSE}
+block_cluster_two_arm_design <- block_cluster_two_arm_designer(N_blocks = 50,
+                                                               N_clusters_in_block = 30,
+                                                               N_i_in_cluster = 200,
+                                                               sd_block = .5,
+                                                               sd_cluster = .5,
+                                                               sd_i_0 = .3,
+                                                               sd_i_1 = .6,
+                                                               prob = .5,
+                                                               control_mean = 0,
+                                                               treatment_mean = .2)
+```
+
+You can see more details on the `block_cluster_two_arm_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??block_cluster_two_arm_designer
+```
 
 ### Further reading 
