@@ -67,30 +67,23 @@ In code:
 
 ### Diagnosis
 
-Let us first diagnose this design when the correlation between the error term of the mediator regression and the error term of the outcome regression.
+Let us diagnose two versions of this design: one in which the correlation between the error term of the mediator regression and one of the outcome regression ($\rho$) is greater than zero, and another in which $\rho$ equals zero.
+
 
 ```{r,eval = TRUE}
-diagnosis <- diagnose_design( mediation_analysis_designer(rho = 0.5))
+correlated <- mediation_analysis_designer(rho = 0.5)
+not_correlated <- mediation_analysis_designer(rho = 0)
+diagnosis <- diagnose_design( correlated, not_correlated)
 ```
 
 
 ```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c(1, 4:6, 13,14)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[, -c( 5:6, 13:15)], digits = 2)
 ```
 
-Our diagnosis indicates that the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects.
+Our diagnosis indicates that when the error terms are not correlated, the direct and indirect effects can be estimated without bias.In contrast, when $\rho$ equals zero, the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects of $Z$ on $Y$.
 
-Now, let us see what happens with the bias when the correlation between the error terms is zero.
-
-```{r,eval = TRUE}
-diagnosis <- diagnose_design( mediation_analysis_designer(rho = 0))
-```
-
-```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c(1, 4:6, 13,14)], digits = 2)
-```
-
-We can see that when the error terms of the mediator regression and the outcome regression are not correlated the direct and indirect effects can be estimated without bias. Unfortunately, the assumption of no correlation is not always guaranteed since $M$ is not assigned at random and might be correlated with $Y$.
+Unfortunately, the assumption of no correlation is not always guaranteed since $M$ is not assigned at random and might be correlated with $Y$.
 
 ### Using the Mediation Analysis Designer
 
