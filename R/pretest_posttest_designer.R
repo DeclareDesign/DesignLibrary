@@ -32,8 +32,8 @@ pretest_posttest_designer <- function(N = 100,
     # M: Model
     population <- declare_population(
       N = N,
-      u_t1 = rnorm(N, 0, sqrt(1 - rho)),
-      u_t2 = rnorm(N, 0, sqrt(1 - rho)),
+      u_t1 = rnorm(N),
+      u_t2 = rnorm(N, u_t1 * rho, sqrt(1 - rho^2)),
       u_i = rnorm(N, 0, sqrt(rho))
     )
     pos_t1 <- declare_potential_outcomes(Y_t1 ~ u_i + u_t1)
