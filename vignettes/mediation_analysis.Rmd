@@ -113,6 +113,6 @@ You can see more details on the `mediation_analysis_designer()` function and its
 ??mediation_analysis_designer
 ```
 
-## Further Reading
+### Further Reading
 
 
