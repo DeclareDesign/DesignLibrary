@@ -61,4 +61,29 @@ kable(diagnosis_table,
 
 Our diagnosis of the design indicates that randomized response yields an unbiased estimate of the true rate of IPV in the study sample and offer a better alternative to direct questions involving sensitive or controversial inquiries.
 
+### Using the Randomized Response Designer
+
+In R, you can generate a randomized response design using the template function `randomized_response_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+install.packages("DesignLibrary")
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_randomized_response_design` with `N`, `ate`, `rho`, and `attrition_rate` set to 300, .2, .4, and .15, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+my_randomized_response_design <- randomized_response_designer(N = 300,
+                                                        ate = .2,
+                                                        rho = .4,
+                                                        attrition_rate = .15)
+```
+
+You can see more details on the `randomized_response_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??randomized_response_designer
+```
+
+
 ## Futher Reading
