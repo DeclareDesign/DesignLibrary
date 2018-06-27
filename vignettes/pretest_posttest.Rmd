@@ -1,9 +1,7 @@
 ---
-title: "Pre-Test Post-Test"
+title: "Pre-Test Post-Test Design"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
-designer: "pretest_posttest_designer.Rd"
-example-design: "pretest_posttest_design.Rd"
 vignette: >
   %\VignetteIndexEntry{Pre-Test Post-Test}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,25 +14,27 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-## Pre-Test Post-Test
+## Pre-Test Post-Test Design
 
-Pre-test post-test designs are designs in which researchers observe the characteristics of a sample prior to, and after, a given treatment or intervention in order to estimate the change between post and prior occasioned by the treatment. These designs are often preferred to post-test designs only (which simply compare different in means of outcomes between control and treatment group *after* treatment assignment) because they allow researchers to establish the degree of similarity between control and treatment groups and assess threats to validity such as whether there was any assignment bias.
+Pre-test post-test designs are designs in which researchers estimate the change in outcomes before and after an intervention. These designs are often preferred to post-test-only designs (which simply compare outcomes between control and treatment group *after* treatment assignment), because they enable much more efficient estimation and more informed assessment of imbalance.
 
-In spite of the insight pre-testing yields with regards to pre-treatment balance, researchers might choose *not* to have a pre-test post-test design due to lack of resources or, more importantly, due to concerns that pre-testing might affect how individuals respond to the intervention or treatment, which may subsequently affect our measure of the outcome of interest.
+Nevertheless, baseline measurement often comes at a cost: when faced with budget constraints, researchers may be forced to decrease endline sample size in order to facilitate a baseline. Whether it is worth doing so often depends on how well the baseline will predict outcomes at endline.
+
+Furthermore, there is much debate about how best to estimate treatment effects in such designs: when are researchers better off using  change scores versus conditioning on the baseline?
 
 Below we consider the example of a pre-test post-test applied to a study that seeks to evaluate the effect of a family-planning program on the incidence of teenage pregnancy.
 
 ### Design Declaration
 
-  - **M**odel: We define a population of size $N$, where effect at time T1 (pre-program) and T2 (post-program) are taken from a normal distribution of mean 0 and standard deviation smaller than 1. We assume pre- and post-test outcomes to be highly and positively correlated ($\rho = 0.5$). We also expect subjects to leave the study at a rate of 10%, meaning we do not observe post-treatment outcomes for a tenth of the sample.
+  - **M**odel: We define a population of size $N$, where effect at time $t = 1$ (pre-program) and $t = 2$ (post-program) are taken from a normal distribution of mean 0 and standard deviation smaller than 1. We assume pre- and post-test outcomes to be highly and positively correlated ($\rho = 0.5$). We also expect subjects to leave the study at a rate of 10%, meaning we do not observe post-treatment outcomes for a tenth of the sample.
   
-- **I**nquiry: Our estimand---the average effect of family pregnancy programs $Z$ on rates of teenage pregnancy---is defined as the difference in the conditional expectation functions of post-treatment potential outcomes for control and treatment. Formally: $E{post}[Z = 1] - E{post}[Z = 0]$, where $Z = 1$ denotes assignment to the program.
+- **I**nquiry: We wish to know the average effect of family pregnancy programs $Z$ on rates of teenage pregnancy. Formally: $E[Y(Z = 1) - Y(Z = 0) \mid t = 2]$, where $Z = 1$ denotes assignment to the program.
 
-- **D**ata strategy: We observe the incidence of teenage pregnancy ($Y_i$) for individual $i$ for a sample of 100 individuals at time $t_1$ (just prior to treatment) and at time $t_2$ (a year after treatment). We randomly sample 50 out of 100 women between the ages of 15 and 19 to receive treatment.
+- **D**ata strategy: We observe the incidence of teenage pregnancy ($Y_i$) for individual $i$ for a sample of 100 individuals at time $t = 1$ (just prior to treatment) and at time $t = 2$ (a year after treatment). We randomly assign 50 out of 100 women between the ages of 15 and 19 to receive treatment. 
 
-- **A**nswer strategy: We define three estimators. Firstly, we estimate an ordinaly least squares (OLS) regression of the difference between observed post- and pre-treatment outcomes on treatment assignment. We define the second estimator via and OLS regression of the post-treatment outcome on treatment when controling for pre-treatment outcome (in this case incidence of teenage pregnancy pre-treatment). Thirdly, we regress post-test outcome measures on treatment. We use the last estimator to highlight how well an estimator relying solely on post-test data does compared to estimates that pre-testing affords in this particular study set up.
+- **A**nswer strategy: We define three estimators. First, we estimate effects on the ``change score'': the dependent variable is defined as the difference between observed post- and pre-treatment outcomes. The second estimator treats only the post-treatment outcome as the dependent variable, but conditions on the pre-treatment outcome on the righthand side of the regression. Finally, we also look at effects when we only use post-test outcome measures, so as to evaluate the gain from using a baseline. 
 
-```{r, eval = FALSE, code = get_design_code(pretest_posttest_design)}
+```{r, eval = FALSE, code = get_design_code(pretest_posttest_designer())}
 
 ```
 
