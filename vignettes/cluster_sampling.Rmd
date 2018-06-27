@@ -36,14 +36,8 @@ Assuming enough variation in the outcome of interest, random cluster assignment 
 
 - **A**nswer strategy: We estimate the population mean with the sample mean estimator: $\widehat{\overline{Y}} = \frac{1}{n} \sum_1^n Y_i$, and estimate standard errors under the assumption of independent and heteroskedastic errors as well as cluster-robust standard errors to take into account correlation of errors within clusters. Below we demonstrate the the imprecision of our estimated $\widehat{\overline{Y}}$ when we cluster standard errors and when we do not in the presence of an intracluster correlation coefficient (ICC) of 0.402.
 
-```{r design}
-design <- cluster_sampling_designer(n_clusters = 30,
-                                    n_subjects_per_cluster = 20,
-                                    icc = 0.402)
-```
 
-```{r,eval = FALSE, code = get_design_code(cluster_sampling_design)}
-
+```{r,eval = TRUE, code = get_design_code(cluster_sampling_designer(n_clusters = 30,n_subjects_per_cluster = 20,icc = 0.402))}
 ```
 
 ### Takeaways
@@ -51,20 +45,11 @@ design <- cluster_sampling_designer(n_clusters = 30,
 We now diagnose the design:
 
 ```{r}
-diagnosis <- diagnose_design(design)
+diagnosis <- diagnose_design(cluster_sampling_design)
 ```
 
-```{r, echo=FALSE}
-diagnosis_table <- get_diagnosands(diagnosis)[, c("estimator_label", "mean_estimand", 
-                                                  "mean_estimate", "se(mean_estimate)", 
-                                                  "bias", "se(bias)",
-                                                  "coverage", "se(coverage)")]
-kable(diagnosis_table,
-      digits = 2,
-      column_names = c("Estimator Label", "Estimand", 
-                       "Estimator", "SE(Estimator)", 
-                       "Bias", "SE(Bias)",
-                       "coverage", "SE(coverage)"))
+```{r,eval = TRUE, echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 ```
 
 And also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors.
