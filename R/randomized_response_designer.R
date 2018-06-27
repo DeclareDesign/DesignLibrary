@@ -4,7 +4,6 @@
 #' 
 #' Key limitations: This design employs a specific variation of randomized response that randomly requires respondents to provide a fixed answer to the sensitive question (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 #' 
-#' Note: Note here.
 #'
 #' @param N An integer. Size of sample.
 #' @param prob_forced_yes A number. Probability of a forced yes.
