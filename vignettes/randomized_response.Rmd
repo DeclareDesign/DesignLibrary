@@ -36,7 +36,7 @@ Say, for example, we are interested in measuring the rate of intimate partner vi
 
 - **A**nswer strategy: We estimate our population rate of IPV in two ways: firstly by averaging the responses observed via direct question ($\hat{\bar{L}} = \bar{D}$), and secondly via randomized response: $\hat{\bar{L}} = \frac{\bar{Y} - p}{1 - p}$.
 
-```{r,eval = FALSE, code = get_design_code(randomized_response_design)}
+```{r,eval = TRUE, code = get_design_code(randomized_response_designer())}
 
 ```
 
@@ -46,18 +46,12 @@ Say, for example, we are interested in measuring the rate of intimate partner vi
 diagnosis <- diagnose_design(randomized_response_design)
 ```
 
-```{r, echo=FALSE}
-diagnosis_table <- get_diagnosands(diagnosis)[,c("estimand_label", "estimator_label",
-                                                 "mean_estimand",
-                                                 "mean_estimate", "se(mean_estimate)",
-                                                 "bias", "se(bias)")]
 
-kable(diagnosis_table,
-      col.names = c("Estimand Label", "Estimator Label", "Mean Estimand",
-                    "Mean Estimate", "SE(Mean Estimate)",
-                    "Bias", "SE(Bias)"),
-      digits = 2)
+```{r,eval = TRUE, echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 ```
+
+
 
 Our diagnosis of the design indicates that randomized response yields an unbiased estimate of the true rate of IPV in the study sample and offer a better alternative to direct questions involving sensitive or controversial inquiries.
 

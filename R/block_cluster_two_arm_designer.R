@@ -128,13 +128,3 @@ each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn 
 
 
 
-#' A two arm design with blocks and clusters
-#'
-#' Default design created with  \code{\link{block_cluster_two_arm_designer}}
-#' 
-#' @seealso \code{\link{block_cluster_two_arm_designer}} 
-#' @format A design object 
-"block_cluster_two_arm_design"
-
-
-
