@@ -87,7 +87,7 @@ diagnosis <- diagnose_design( mediation_analysis_designer(rho = 0))
 kable(reshape_diagnosis(diagnosis)[, -c(1, 4:6, 13,14)], digits = 2)
 ```
 
-
+We can see that when the error terms of the mediator regression and the outcome regression are not correlated the direct and indirect effects can be estimated without bias.
 ### Using the Mediation Analysis Designer
 
 In R, you can generate a mediation_analysis design using the template function `mediation_analysis_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
