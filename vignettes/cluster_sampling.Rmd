@@ -17,8 +17,6 @@ library(ggplot2)
 library(knitr)
 ```
 
-## Cluster Sampling
-
 Researchers often cannot randomly sample at the individual level because it may, among other reasons, be too costly or logistically impractical. Instead, they may choose to randomly sample households, political precincts, or any group of individuals in order to draw inferences about the population.
 
 <!-- Include reference to simple random sampling vignette below -->
@@ -26,7 +24,7 @@ In *Simple Random Sampling*, we discused the example of estimating the average p
 
 Assuming enough variation in the outcome of interest, random cluster assignment yields unbiased but imprecise estimates.^[We assume clusters are the same size. Other designs might include different-sized clusters, but we do not discuss these cases here.] By sampling clusters, we select groups of individuals who may share common attributes. Unlike simple random sampling, we need to take into account this intra-cluster correlation in our estimation of the standard error.^[The intra-cluster correlation coefficient (ICC) can be calculated directly and is a feature of this design.] The higher the degree of within-cluster similarity, the more variance we observe in cluster-level averages and the more imprecise are our estimates.^[In ordinary least square (OLS) models, we assume errors are independent (error terms between individual observations are uncorrelated with each other) and homoskedastic (the size of errors is homogeneous across individuals). In reality, this is often not the case with cluster sampling.] We address this by considering cluster-robust standard errors in our answer strategy below.
 
-### Design Declaration
+## Design Declaration
 
 - **M**odel: We specify the variable of interest $Y$ (political ideology) as a discrete scale ranging from 1 (most liberal) to 7 (most conservative). We do not define a functional model since we are interested in the population mean of $Y$. The model also includes information about the number of sampled clusters and the number of individuals per cluster.
 
@@ -40,7 +38,7 @@ Assuming enough variation in the outcome of interest, random cluster assignment 
 ```{r,eval = TRUE, code = get_design_code(cluster_sampling_designer(n_clusters = 30,n_subjects_per_cluster = 20,icc = 0.402))}
 ```
 
-### Takeaways
+## Takeaways
 
 We now diagnose the design:
 
@@ -97,12 +95,12 @@ dd_theme <-
 
 The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The blue lines in the graph demonstrate the estimates from simulations which contain our estimand. As our table and graphs show, the share of these simulations over the total number of simulations, also known as coverage, is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both speficications.
 
-### Using the Cluster Sampling Designer
+## Using the Cluster Sampling Designer
 
 In R, you can generate a cluster sampling design using the template function `cluster_sampling_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-install.packages("DesignLibrary")
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

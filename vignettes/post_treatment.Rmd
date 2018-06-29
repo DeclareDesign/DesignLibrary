@@ -22,7 +22,7 @@ In designs that try to answer ''post-treatment'' questions, the outcome is condi
 
 Consider an audit experiment that seeks to assess the effects of an email from a Latino name (versus a White name) on whether and how well election officials respond to requests for information. For example, do they use a positive or negative tone? These questions seem reasonable enough. The problem, however, is that if there are officials who don’t send responses, tone would be missing. More subtly, if there is an official that does send an email but would not have sent it in a different treatment condition, then tone is missing for one of their potential outcomes. That means that some of the variation we observe in tone due to treatment is being accounted for by response. Below we discuss the implications of this set up for our estimations.
 
-### Design Declaration
+## Design Declaration
 
   - **M**odel: The model has two outcome variables, $C_i$ and $Y_i$. $C_i$ stands for "conditional on response" and is equal to 1 if a response is sent, and 0 otherwise. $Y_i$ is the tone of the response and is normally distributed when it is defined. $Z_i$ is the treatment and equals 1 if the email is sent using a Latino name and 0 otherwise. The table below shows the potential outcomes for four possible types of subjects, depending on the potential outcomes of $C_i$. A types always respond regardless of treatment and D types never respond, regardless of treatment. B types respond if and only if they are treated, whereas C types respond if and only if they are not treated. The table also includes columns for the potential outcomes of $Y_i$, showing which potential outcome subjects would express depending on their type. The key thing to note is that for the B, C, and D types, the effect of treatment on $Y_i$ is undefined because we do not observe tone if messages are never sent. The last (and very important) feature of our model is that the outcomes $Y_i$ are possibly correlated with subject type. Even though both $E[$Y_i$(1)|Type = A]$ and $E[$Y_i$(1)|Type = B]$ exist, there's no reason to expect that they are the same. In the design we assume a distribution of types with roughly 50% A, 34% B, 14% C, and 2% D.
 
@@ -45,7 +45,7 @@ kable(causal_types, caption = "Causal Types", row.names = FALSE)
 ```{r,eval = TRUE, code = get_design_code(post_treatment_designer())}
 ```
 
-### Takeaways
+## Takeaways
 
 ```{r}
 diagnosis <- diagnose_design(post_treatment_design)
@@ -63,7 +63,7 @@ Our third estimand ---the average effect for the A types--- is defined but our e
 
 Finally, in some cases, the problem might be resolved by changing the inquiry. Closely related estimands can often be defined, perhaps by redefining $Y$ (e.g., emails never sent have a tone of zero). We observe that our alternative measure of tone (where we impute missing tone as "0") yields unbiased difference-in-means estimates. Estimating effects for unobserved subgroups, however, is a difficult challenge and requires careful consideration.
 
-### Applications
+## Applications
 
 This kind of problem is surprisingly common. Here are three more distinct instances of the problem:
 
@@ -75,12 +75,12 @@ This kind of problem is surprisingly common. Here are three more distinct instan
 
 All of these problem exhibit a form of post treatment bias (see section Post treatment bias) but the issue goes beyond picking the right estimator. Our problem here is conceptual: the effect of treatment on the outcome just doesn’t exist for some subjects.
 
-### Using the Post Treatment Designer
+## Using the Post Treatment Designer
 
 In R, you can generate a post_treatment design using the template function `post_treatment_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-install.packages("DesignLibrary")
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

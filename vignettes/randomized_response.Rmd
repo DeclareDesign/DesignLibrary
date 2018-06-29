@@ -26,7 +26,7 @@ Let us consider a specific type of randomized response design in which responden
 
 Say, for example, we are interested in measuring the rate of intimate partner violence (IPV) in a given locality. Our design compares estimates from direct questions and questions using the randomized response principle.
 
-### Design Declaration
+## Design Declaration
 
   - **M**odel: Respodents are expected to answer the sensitive question with a probability $p$ (a known quantity). $L_i$ is a latent binary response to the sensitive question that equals 0 for respondent $i$ if he or she does not engage in IPV and 1 if he or she does. This is defined in our design as the prevalence rate. $Y_i$ is the response observed by researchers from the randomized approach. $D_i$ is the response to the direct question of whether respondent engages in IPV. We expect respondents who engage in IPV to be inclined to misreport if asked to answer directly (we define this as the withholding rate).
 
@@ -40,7 +40,7 @@ Say, for example, we are interested in measuring the rate of intimate partner vi
 
 ```
 
-### Takeaways
+## Takeaways
 
 ```{r}
 diagnosis <- diagnose_design(randomized_response_design)
@@ -55,12 +55,12 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 
 Our diagnosis of the design indicates that randomized response yields an unbiased estimate of the true rate of IPV in the study sample and offer a better alternative to direct questions involving sensitive or controversial inquiries.
 
-### Using the Randomized Response Designer
+## Using the Randomized Response Designer
 
 In R, you can generate a randomized response design using the template function `randomized_response_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-install.packages("DesignLibrary")
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

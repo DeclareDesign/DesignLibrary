@@ -28,7 +28,7 @@ Identifyng causal mechanisms is not a simple task. It involves complex potential
 
 We define below a mediation analysis design.
 
-### Design Declaration
+## Design Declaration
 
 - **M**odel:  
 We specify a population of size $N$. Individuals from this population have two potential outcomes related to the mediatior.
@@ -65,7 +65,7 @@ In code:
 
 ```
 
-### Diagnosis
+## Diagnosis
 
 Let us diagnose two versions of this design: one in which the correlation between the error term of the mediator regression and one of the outcome regression ($\rho$) is greater than zero, and another in which $\rho$ equals zero.
 
@@ -85,12 +85,12 @@ Our diagnosis indicates that when the error terms are not correlated, the direct
 
 Unfortunately, the assumption of no correlation is not always guaranteed since $M$ is not assigned at random and might be correlated with $Y$.
 
-### Using the Mediation Analysis Designer
+## Using the Mediation Analysis Designer
 
 In R, you can generate a mediation_analysis design using the template function `mediation_analysis_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-install.packages("DesignLibrary")
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

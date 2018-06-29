@@ -11,6 +11,13 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+First, install the latest version of **DesignLibrary** in `R`:
+
+```{r,eval=FALSE}
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
+```
+
 A designer is a function that returns designs. For example, `simple_two_arm_designer()` generates simple two-arm designs as `DeclareDesign` objects. 
 
 In addition to using our pre-made designers, you can contribute your own designers to the `DesignLibrary`, using the following guidelines. 
@@ -66,7 +73,7 @@ We'll discuss features of this designer below.
 
 We've devised an easy way to include code in design objects returned by a designer. But you can use your own method!
 
-### Our method for adding code
+## Our method for adding code
 
 One easy way to add code to the designs that your designer returns is to use our triple braces method. Any checks (such as those that look to see whether `prob` is between 0 and 1) come before the opening triple braces, `{{{`. Then, all the code needed to build the design, including the `declare_design()` call, goes between the triple braces:
 
@@ -102,7 +109,7 @@ attr(my_design, "code") <- construct_design_code(designer = my_designer,
 ```
 
 
-### An alternative method
+## An alternative method
 
 Here's one example of an alternative way to embed the code that created it in a design returned by a designer:
 
@@ -166,7 +173,7 @@ attr(my_designer, "description") <- "
 
 The designer should be added to the `DesignLibrary` using a [pull request](http://r-pkgs.had.co.nz/git.html#git-pullreq). 
 
-### How to document your designer
+## How to document your designer
 
 
 The documentation must be written as [Roxygen comments](http://r-pkgs.had.co.nz/man.html#roxygen-comments) and come at the top of the designer code; It should begin with a title and short description of what your designer does. When relevant, mention key limitations of your designer and add notes that can help others understand your code better. 
