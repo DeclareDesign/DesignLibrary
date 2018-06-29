@@ -16,7 +16,6 @@ library(knitr)
 library(dplyr)
 ```
 
-## Post-treatment
 
 In designs that try to answer ''post-treatment'' questions, the outcome is conditioned by a variable that is itself a consequence of treatment. We consider this issue in the context of an audit experiment, a special case of a two-arm design. Audit experiments are designs in which we seek to study how public-facing actors -- bureaucrats, politicians, landlords, employers, etc. -- respond to requests by research confederates. By varying the attributes of the confederates experimentally, social scientists use audit studies to measure discrimination in diverse settings.
 
