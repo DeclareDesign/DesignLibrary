@@ -55,7 +55,7 @@ SUR <- declare_estimator(
 
 The code for a single run of the default design produced by `crossover_designer()` is as follows:
 
-```{r, code = get_design_code(crossover_designer()), eval=TRUE}
+```{r, code = get_design_code(crossover_designer(N = 120, a = .5, b = .5, crossover = .2, rho = .6)), eval=TRUE}
 ```
 
 We add the SUR estimator and diagnose the design:
@@ -66,10 +66,11 @@ diagnosis <- diagnose_design(crossover_design)
 ```
 
 ```{r,echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[c(1,4,2,5,3,6), -c(1:2, 4:5)], digits = 2,row.names = F)
+kable(reshape_diagnosis(diagnosis)[-c(1,2,4)], digits = 2,row.names = F)
+# kable(reshape_diagnosis(diagnosis)[c(1,4,2,5,3,6), -c(1:2, 4:5)], digits = 2,row.names = F)
 ```
 
-The diagnosis reveals a bias-variance tradeoff. Here, the no crossover effect assumption is violated. This causes a small amount of bias in the SUR estimator. However, even a small amount of correlation in the errors --- $\rho = .2$ --- significantly increases the efficiency of the SUR estimator here. Thus, in terms of RMSE the bias is offset by the increased power of the estimator. 
+The diagnosis reveals a bias-variance tradeoff. Here, the no crossover effect assumption is violated. This causes some bias in the SUR estimator. However, the correlation in the errors strongly increases the efficiency of the SUR estimator here. Thus, in terms of RMSE the bias is offset by the increased power of the SUR approach. 
 
 ## Using the Crossover Designer
 
