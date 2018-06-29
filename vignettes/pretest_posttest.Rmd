@@ -22,7 +22,7 @@ Furthermore, there is much debate about how best to estimate treatment effects i
 
 Below we consider the example of a pre-test post-test applied to a study that seeks to evaluate the effect of a family-planning program on the incidence of teenage pregnancy.
 
-### Design Declaration
+## Design Declaration
 
   - **M**odel: We define a population of size $N$, where effect at time $t = 1$ (pre-program) and $t = 2$ (post-program) are taken from a normal distribution of mean 0 and standard deviation smaller than 1. We assume pre- and post-test outcomes to be highly and positively correlated ($\rho = 0.5$). We also expect subjects to leave the study at a rate of 10%, meaning we do not observe post-treatment outcomes for a tenth of the sample.
   
@@ -36,14 +36,14 @@ Below we consider the example of a pre-test post-test applied to a study that se
 
 ```
 
-### Takeaways
+## Takeaways
 
 ```{r}
 diagnosis <- diagnose_design(pretest_posttest_design)
 ```
 
 ```{r, echo=FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,-c(1,2,4)], digits = 2)
 ```
 
 <!-- By running the diagnosis on our design, we observe that although the first two estimates are similar in magnitude and both unbiased, our "Change score" estimator (our first inquiry) is less efficient than the "Condition on pretest" estimator (our second inquiry) because we essentially "lose" information by defining an estimator as a difference. -->
@@ -52,12 +52,12 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 
 <!-- How well these designs do depends on sample size, attrition rate, and ATE. -->
 
-### Using the Pre-test Post-test Designer
+## Using the Pre-test Post-test Designer
 
 In R, you can generate a pre-test post-test design using the template function `pretest_posttest_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-install.packages("DesignLibrary")
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

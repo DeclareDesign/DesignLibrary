@@ -27,7 +27,7 @@ Regression discontinuity designs identify a *local* average treatment effect: th
 
 We'll consider an application of the regression discontinuity design that examines party incumbency advantage -- the effect of a party winning an election on its vote margin in the next election.
 
-### Design Declaration
+## Design Declaration
 
   - **M**odel: Regression discontinuity designs have four components: A running variable, a cutoff, a treatment variable, and an outcome. The cutoff determines which units are treated depending on the value of the running variable.
   
@@ -96,7 +96,7 @@ ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) +
 
 ```
 
-### Takeaways
+## Takeaways
 
 We now diagnose the design:
 
@@ -114,12 +114,12 @@ Second, the design is biased because polynomial approximations of the average ef
 
 Finally, from the figure, we can see how poorly the average effect at the threshold approximates the average effect for all units. The average treatment effect among the treated (to the right of the threshold in the figure) is negative, whereas at the threshold it is positive. This clarifies that the estimand of the regression discontinuity design, the difference at the cutoff, is only relevant for a small – and possibly empty – set of units very close to the cutoff.
 
-### Using the Regression Discontinuity Designer
+## Using the Regression Discontinuity Designer
 
 In R, you can generate a regression_discontinuity design using the template function `regression_discontinuity_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-install.packages("DesignLibrary")
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 
