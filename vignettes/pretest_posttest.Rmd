@@ -43,7 +43,7 @@ diagnosis <- diagnose_design(pretest_posttest_design)
 ```
 
 ```{r, echo=FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,-c(1,2,4)], digits = 2)
 ```
 
 <!-- By running the diagnosis on our design, we observe that although the first two estimates are similar in magnitude and both unbiased, our "Change score" estimator (our first inquiry) is less efficient than the "Condition on pretest" estimator (our second inquiry) because we essentially "lose" information by defining an estimator as a difference. -->

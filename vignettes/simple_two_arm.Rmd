@@ -49,7 +49,7 @@ diagnosis <- diagnose_design(simple_two_arm_design)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
 ```
 
 - As the diagnosis reveals, the estimate of the ATE is unbiased, but our coverage is above what it should be (95\%). This reflects the fact that conventional estimators of the standard error for the difference in means make conservative assumptions about the true covariance in potential outcomes, and thus tend to produce confidence intervals that are too wide. In other words, while the estimate of the difference in outcomes is unbiased, our estimate of the variation in this difference is biased upwards.

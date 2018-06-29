@@ -71,14 +71,13 @@ Let us diagnose two versions of this design: one in which the correlation betwee
 
 
 ```{r,eval = TRUE}
-correlated <- mediation_analysis_designer(rho = 0.5)
-not_correlated <- mediation_analysis_designer(rho = 0)
-diagnosis <- diagnose_design( correlated, not_correlated)
+designs <- expand_design(mediation_analysis_designer, rho = c(0,.5))
+diagnosis <- diagnose_design(designs)
 ```
 
 
 ```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c( 5:6, 13:15)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,-1], digits = 2)
 ```
 
 Our diagnosis indicates that when the error terms are not correlated, the direct and indirect effects can be estimated without bias.In contrast, when $\rho$ equals zero, the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects of $Z$ on $Y$.

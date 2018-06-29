@@ -51,7 +51,7 @@ diagnosis <- diagnose_design(post_treatment_design)
 ```
 
 ```{r, echo=FALSE}
-kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,-1], digits = 2)
 ```
 
 We learn four things from the design diagnosis. First, as expected, our experiment is unbiased for the average treatment effect on response.
