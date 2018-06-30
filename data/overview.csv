@@ -1,11 +1,11 @@
 design,designer,vignette,keywords,shiny,author,author_url
-post_treatment_design,post_treatment_designer,post_treatment,,post_treatment,DeclareDesign Team,https://declaredesign.org/about/
-block_cluster_two_arm_design,block_cluster_two_arm_designer,block_cluster_two_arm,,block_cluster_two_arm,DeclareDesign Team,https://declaredesign.org/about/
-cluster_sampling_design,cluster_sampling_designer,cluster_sampling,,cluster_sampling,DeclareDesign Team,https://declaredesign.org/about/
-crossover_design,crossover_designer,crossover,,crossover,DeclareDesign Team,https://declaredesign.org/about/
-mediation_analysis_design,mediation_analysis_designer,mediation_analysis,,mediation_analysis,DeclareDesign Team,https://declaredesign.org/about/
-pretest_posttest_design,pretest_posttest_designer,pretest_posttest,,pretest_posttest,DeclareDesign Team,https://declaredesign.org/about/
-randomized_response_design,randomized_response_designer,randomized_response,,randomized_response,DeclareDesign Team,https://declaredesign.org/about/
-regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,regression_discontinuity,DeclareDesign Team,https://declaredesign.org/about/
-simple_spillover_design,simple_spillover_designer,simple_spillover,,simple_spillover,DeclareDesign Team,https://declaredesign.org/about/
-simple_two_arm_design,simple_two_arm_designer,simple_two_arm,,simple_two_arm,DeclareDesign Team,https://declaredesign.org/about/
+post_treatment_design,post_treatment_designer,post_treatment,,post_treatment,DeclareDesign,https://declaredesign.org/about/
+block_cluster_two_arm_design,block_cluster_two_arm_designer,block_cluster_two_arm,,block_cluster_two_arm,DeclareDesign,https://declaredesign.org/about/
+cluster_sampling_design,cluster_sampling_designer,cluster_sampling,,cluster_sampling,DeclareDesign,https://declaredesign.org/about/
+crossover_design,crossover_designer,crossover,,crossover,DeclareDesign,https://declaredesign.org/about/
+mediation_analysis_design,mediation_analysis_designer,mediation_analysis,,mediation_analysis,DeclareDesign,https://declaredesign.org/about/
+pretest_posttest_design,pretest_posttest_designer,pretest_posttest,,pretest_posttest,DeclareDesign,https://declaredesign.org/about/
+randomized_response_design,randomized_response_designer,randomized_response,,randomized_response,DeclareDesign,https://declaredesign.org/about/
+regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,regression_discontinuity,DeclareDesign,https://declaredesign.org/about/
+simple_spillover_design,simple_spillover_designer,simple_spillover,,simple_spillover,DeclareDesign,https://declaredesign.org/about/
+simple_two_arm_design,simple_two_arm_designer,simple_two_arm,,simple_two_arm,DeclareDesign,https://declaredesign.org/about/
