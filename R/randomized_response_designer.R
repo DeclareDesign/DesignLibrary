@@ -26,21 +26,25 @@ randomized_response_designer <- function(
   withholding_rate = .5
 ){
   {{{
+    # M: Model
     population <- declare_population(
       N = N,
       sensitive_trait = draw_binary(prob = prevalence_rate, N = N),
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    coin_flip <- declare_assignment(
-      prob = prob_forced_yes,
-      conditions = c("Truth","Yes")
-    )
     potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
+    # I: Inquiry
     estimand <- declare_estimand(true_rate = prevalence_rate)
+    # D: Data strategy
+    coin_flip <- declare_assignment(
+      prob = prob_forced_yes,
+      conditions = c("Truth","Yes")
+    )
+    # A: Answer strategy
     randomized_response_estimator <- declare_estimator(
       handler = tidy_estimator(
         function(data) with(
@@ -56,6 +60,7 @@ randomized_response_designer <- function(
       estimand = estimand,
       label = "Direct Question"
     )
+    # Design
     randomized_response_design <- population +
       coin_flip +
       potential_outcomes +

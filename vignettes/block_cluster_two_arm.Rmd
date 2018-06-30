@@ -83,7 +83,7 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6, 13,14)], digits = 2)
 Diagnosis reveals that the efficiency is greatest when variance comes from blocks, and lowest when it comes from clusters. The reason for this is that our estimator models block-level variance, and can estimate the treatment effect independently from block-level effects because treatment assignment is orthogonal to blocks. However, any variance at the cluster level covaries with our treatment, and thus makes it harder to estimate the treatment effect. 
 
 
-## Using the BLock Cluster Designer
+## Using the Block Cluster Designer
 
 In R, you can generate a block_cluster_two_arm design using the template function `block_cluster_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 

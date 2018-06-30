@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-First, install the latest version of **DesignLibrary** in `R`:
+First, install the development version of **DesignLibrary** in `R`:
 
 ```{r,eval=FALSE}
 devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
