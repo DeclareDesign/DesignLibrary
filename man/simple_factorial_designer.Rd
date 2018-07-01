@@ -42,7 +42,9 @@ This designer builds a two by two factorial design in which asignments to each f
 If you want a factorial with non independent assignments use the multi arm designer.
 }
 \details{
-Designer gives possibility of including blocks for assignment and estimation.
+Three estimands are declared: the unweighted average of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
+
+The Designer gives the possibility of including blocks for assignment and estimation.
 Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units in a block
 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 

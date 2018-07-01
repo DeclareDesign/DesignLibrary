@@ -7,7 +7,7 @@
 get_design_code(design)
 }
 \arguments{
-\item{designer}{A function that builds designs, and contains the code to be grabbed inside triple braces}
+\item{design}{A function that pulls code atribute from design.}
 }
 \value{
 Verbatim code
