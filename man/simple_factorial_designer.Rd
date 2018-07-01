@@ -4,9 +4,10 @@
 \alias{simple_factorial_designer}
 \title{Create a simple factorial design}
 \usage{
-simple_factorial_designer(N = NULL, n_blocks = 2, n_per_block = NULL,
-  prob_A = 0.5, prob_B = 0.5, outcome_means = rep(0, 4),
-  outcome_sds = rep(1, 4))
+simple_factorial_designer(N = 100, n_blocks = 2, n_per_block = N/n_blocks,
+  prob_A = 0.5, prob_B = 0.5, outcome_sds = rep(1, 4),
+  control_outcome = 0, ate_A_B0 = 0, ate_B_A0 = 0, interaction = 0,
+  outcome_means = NULL, block_sd = 1)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -19,9 +20,19 @@ simple_factorial_designer(N = NULL, n_blocks = 2, n_per_block = NULL,
 
 \item{prob_B}{A number within the interval [0,1]. Probability of assigment to treatment B.}
 
-\item{outcome_means}{A 4-vector. Average outcome in each condition (in order AB = 00, 01, 10, 11)}
+\item{outcome_sds}{A non-negative 4-vector.  Standard deviation in each condition (in order AB = 00, 01, 10, 11)}
 
-\item{control_sds}{A non-negative 4-vector.  Standard deviation in each condition (in order AB = 00, 01, 10, 11)}
+\item{control_outcome}{Average outcome in A=0, B=0 condition,}
+
+\item{ate_A_B0}{Average effect of A given B = 0.}
+
+\item{ate_B_A0}{Average effect of B given A = 0.}
+
+\item{interaction}{Interaction between treatments A and B,}
+
+\item{outcome_means}{A 4-vector. Average outcome in each condition (in order AB = 00, 01, 10, 11). If NULL outcome_means is formed from control_outcome, ate_A_B0, ate_B_A0, and interaction; otherwise it overrides these arguments.}
+
+\item{block_sd}{A non-negative number.  Standard deviation of block shock}
 }
 \value{
 A function that returns a design.
@@ -32,17 +43,25 @@ If you want a factorial with non independent assignments use the multi arm desig
 }
 \details{
 Designer gives possibility of including blocks for assignment and estimation.
+Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units in a block
+3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 
 \href{/library/articles/simple_factorial_arm.html}{Check out the vignette here.}
 
 Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 }
 \examples{
-simple_factorial_design <- simple_factorial_designer(outcome_means = c(0,1,1,2)/4)
+design <- simple_factorial_designer(N = 100, n_blocks = 2, outcome_means = c(0,1,1,4)/4, prob_A = .8, prob_B = .2)
+df <- draw_data(design)
+with(df, table(A, B, blocks))
+get_estimates(design)
+get_design_code(design)
+# Note that this design is biased for the specified estimands:
+diagnose_design(design)
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
 \concept{
-experiment
+experiment blocks factorial
 }
