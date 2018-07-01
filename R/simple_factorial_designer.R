@@ -4,6 +4,8 @@
 #' If you want a factorial with non independent assignments use the multi arm designer. 
 #' 
 #' Designer gives possibility of including blocks for assignment and estimation.
+#' Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units in a block
+#' 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 #' 
 #' 
 #' \href{/library/articles/simple_factorial_arm.html}{Check out the vignette here.}
@@ -23,16 +25,28 @@
 #' @export
 #'
 #' @examples
-#' simple_factorial_design <- simple_factorial_designer(outcome_means = c(0,1,1,2)/4)
+#' design <- simple_factorial_designer(N = 80, outcome_means = c(0,1,1,4)/4)
+#' df <- draw_data(design)
+#' with(df, table(A, B))
+#' diagnose_design(design, sims = 1000)
+#' get_design_code(design)
 
 
-simple_factorial_designer <- function(N = NULL,
+simple_factorial_designer <- function(N = 100,
                                       n_blocks = 2,
                                       n_per_block = NULL,
                                       prob_A = .5,
                                       prob_B = .5,
-                                      outcome_means = rep(0,4),
                                       outcome_sds = rep(1,4),
+                                      pure_control = 0, 
+                                      ate_A_given_B0 = 0, 
+                                      ate_B_given_A0 = 0, 
+                                      interaction = 0,
+                                      outcome_means = pure_control + 
+                                         c(0, 
+                                           ate_A_given_B0,  
+                                           ate_B_given_A0,  
+                                           ate_B_given_A0 + ate_A_given_B0 + interaction),
                                       block_sd = 1
 ){
 
@@ -111,17 +125,18 @@ simple_factorial_designer <- function(N = NULL,
     construct_design_code(simple_factorial_designer, match.call.defaults())
   
 
-  attr(simple_factorial_design, "shiny_arguments") <- list(N = c(16, 32, 64)) 
-  
-  attr(simple_factorial_design, "tips") <-
-    list(
-      N = "Sample size"
-    )
-  
-  attr(simple_factorial_design, "description") <- "
-  <p> A simple factorial design of sample size <code>N</code>.
-  "
   
   simple_factorial_design
   }
 
+
+attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64)) 
+
+attr(simple_factorial_designer, "tips") <-
+  list(
+    N = "Sample size"
+  )
+
+attr(simple_factorial_designer, "description") <- "
+<p> A simple factorial design of sample size <code>N</code>.
+"
