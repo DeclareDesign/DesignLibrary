@@ -20,12 +20,10 @@ randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
 A randomized response design.
 }
 \description{
-Description here
+A forced randomized response design that measures the share of individuals with a given trait \code{prevalence_trait} in a population of size \code{N}. Probability of forced response ("Yes") is given by \code{prob_forced_yes}, and rate at which individuals with trait lie is given by \code{withholding_rate}.
 }
 \details{
-Key limitations: Limitations here.
-
-Note: Note here.
+Key limitations: This design employs a specific variation of randomized response that randomly requires respondents to provide a fixed answer to the sensitive question (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 }
 \examples{
 # To make a design using default arguments:

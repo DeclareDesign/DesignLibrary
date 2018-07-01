@@ -22,12 +22,7 @@ mediation_analysis_designer(N = 100, a = 0.5, b = 0.5, d = 0.5,
 A mediation analysis design.
 }
 \description{
-Description here
-}
-\details{
-Key limitations: Limitations here.
-
-Note: Note here.
+A mediation analysis design where we are interested in the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
 }
 \examples{
 # To make a design using default arguments:

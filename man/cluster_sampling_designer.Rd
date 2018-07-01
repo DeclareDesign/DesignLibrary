@@ -12,7 +12,7 @@ cluster_sampling_designer(n_clusters = 100, n_subjects_per_cluster = 10,
 
 \item{n_subjects_per_cluster}{An integer. Number of subjects per cluster to sample.}
 
-\item{icc}{A real number in [0,1] Intra-cluster Correlation.}
+\item{icc}{A real number in [0,1] Intra-cluster Correlation Coefficient.}
 
 \item{N_clusters}{An integer. Total number of clusters in the population.}
 
@@ -22,10 +22,10 @@ cluster_sampling_designer(n_clusters = 100, n_subjects_per_cluster = 10,
 A cluster sampling design.
 }
 \description{
-Description here
+A cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
 }
 \details{
-Key limitations: Limitations here.
+Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
 
 Note: Note here.
 }

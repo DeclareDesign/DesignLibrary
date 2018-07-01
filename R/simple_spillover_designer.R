@@ -64,23 +64,3 @@ simple_spillover_designer <- function(n_groups = 80,
   simple_spillover_design
 }
 
-
-
-
-#' A simple spillover design
-#'
-#' Default design created with  \code{\link{simple_spillover_designer}}
-#' 
-#' @seealso \code{\link{simple_spillover_designer}} 
-#' @format A design object 
-"simple_spillover_design"
-
-
-
-
-
-
-
-
-
-

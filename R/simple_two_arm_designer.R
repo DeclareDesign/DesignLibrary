@@ -80,16 +80,3 @@ attr(simple_two_arm_designer, "description") <- "
 "
 
 
-
-
-#' A simple two arm design
-#'
-#' Default design created with  \code{\link{simple_two_arm_designer}}
-#' 
-#' @seealso \code{\link{simple_two_arm_designer}} 
-#' @format A design object 
-"simple_two_arm_design"
-
-
-
-

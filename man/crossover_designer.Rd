@@ -22,16 +22,17 @@ crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.1,
 A crossover design.
 }
 \description{
-Description here
-}
-\details{
-Key limitations: Limitations here.
-
-Note: Note here.
+This designer produces designs that have two treatments, A and B, 
+which each correspond to their own outcomes, YA and YB. 
+The basic premise of the design is that treatment A does not affect outcome YB, 
+and that treatment B does not affect outome YA. Using the crossover parameter
+researchers can assess robustness of the design to violations of this assumption.
+The \href{/library/articles/crossover.html}{vignette} shows that adding a 
+SUR estimator to the design can greatly increase efficiency.
 }
 \examples{
 # To make a design using default arguments:
-crossover_design <- audit_experiment_designer()
+crossover_design <- crossover_designer()
 
 }
 \author{

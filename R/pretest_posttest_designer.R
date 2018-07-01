@@ -1,10 +1,6 @@
 #' Create a pretest-posttest design
 #'
-#' Description here
-#'
-#' Key limitations: Limitations here.
-#'
-#' Note: Note here.
+#' This designer produces designs in which an outcome Y is observed pre- and post-treatment. It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes and for at random missingness in the observation of post-treatment outcomes. 
 #'
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect
@@ -25,12 +21,15 @@ pretest_posttest_designer <- function(N = 100,
                                       rho = .5,
                                       attrition_rate = .1)
 {
+  if(rho < 0 | rho > 1) stop("'rho' must be a value from 0 to 1")
+  if(attrition_rate < 0 | attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
+  
   {{{
     # M: Model
     population <- declare_population(
       N = N,
-      u_t1 = rnorm(N, 0, sqrt(1 - rho)),
-      u_t2 = rnorm(N, 0, sqrt(1 - rho)),
+      u_t1 = rnorm(N),
+      u_t2 = rnorm(N, u_t1 * rho, sqrt(1 - rho^2)),
       u_i = rnorm(N, 0, sqrt(rho))
     )
     pos_t1 <- declare_potential_outcomes(Y_t1 ~ u_i + u_t1)
@@ -95,22 +94,9 @@ attr(pretest_posttest_designer, "tips") <- c(
 )
 attr(pretest_posttest_designer, "description") <- "
 <p> A pretest-posttest design with sample of size <code>N</code>, average treatment effect of size <code>ate</code>, 
-    and correlation between pre- and post-test outcomes equal to  <code>rho</code>. The proportion of pre-test respondents  
-   missing at random from  the post-test follow-up can be set using  <code>attrition_rate</code>.
+    and correlation between pre- and post-test outcomes equal to <code>rho</code>. The proportion of pre-test respondents  
+   missing at random from  the post-test follow-up can be set using <code>attrition_rate</code>.
 "
-
-
-
-
-
-#' A pretest-posttest design
-#'
-#' Default design created with  \code{\link{pretest_posttest_designer}}
-#' 
-#' @seealso \code{\link{pretest_posttest_designer}} 
-#' @format A design object 
-"pretest_posttest_design"
-
 
 
 

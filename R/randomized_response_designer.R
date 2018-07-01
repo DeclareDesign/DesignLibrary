@@ -1,10 +1,9 @@
 #' Create a randomized response design
 #'
-#' Description here
+#' A forced randomized response design that measures the share of individuals with a given trait \code{prevalence_trait} in a population of size \code{N}. Probability of forced response ("Yes") is given by \code{prob_forced_yes}, and rate at which individuals with trait lie is given by \code{withholding_rate}.
 #' 
-#' Key limitations: Limitations here.
+#' Key limitations: This design employs a specific variation of randomized response that randomly requires respondents to provide a fixed answer to the sensitive question (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 #' 
-#' Note: Note here.
 #'
 #' @param N An integer. Size of sample.
 #' @param prob_forced_yes A number. Probability of a forced yes.
@@ -27,28 +26,32 @@ randomized_response_designer <- function(
   withholding_rate = .5
 ){
   {{{
+    # M: Model
     population <- declare_population(
       N = N,
       sensitive_trait = draw_binary(prob = prevalence_rate, N = N),
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    coin_flip <- declare_assignment(
-      prob = prob_forced_yes,
-      conditions = c("Truth","Yes")
-    )
     potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
+    # I: Inquiry
     estimand <- declare_estimand(true_rate = prevalence_rate)
+    # D: Data strategy
+    coin_flip <- declare_assignment(
+      prob = prob_forced_yes,
+      conditions = c("Truth","Yes")
+    )
+    # A: Answer strategy
     randomized_response_estimator <- declare_estimator(
       handler = tidy_estimator(
         function(data) with(
           data,
           data.frame(est = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
       estimand = estimand,
-      label = "Forced Response"
+      label = "Forced Randomized Response"
     )
     direct_question_estimator <- declare_estimator(
       handler = tidy_estimator(function(data) with(
@@ -57,6 +60,7 @@ randomized_response_designer <- function(
       estimand = estimand,
       label = "Direct Question"
     )
+    # Design
     randomized_response_design <- population +
       coin_flip +
       potential_outcomes +
@@ -84,22 +88,6 @@ attr(randomized_response_designer,"shiny_arguments") <-
     withholding_rate = c(.5,seq(.05,.95,.1))
   )
 attr(randomized_response_designer,"description") <- "
-<p> A randomized response design
+<p> A forced randomized response design that measures the share of individuals with a given trait (whose value is defined by <code>prevalence_trait</code>) in a population of size <code>N</code>. Probability of forced response ('Yes') is given by <code>prob_forced_yes</code>, and rate at which individuals with trait lie is defined by <code>withholding_rate</code>.
 "
-
-
-
-
-#' A randomized response design
-#'
-#' Default design created with  \code{\link{randomized_response_designer}}
-#' 
-#' @seealso \code{\link{randomized_response_designer}} 
-#' @format A design object 
-"randomized_response_design"
-
-
-
-
-
 
