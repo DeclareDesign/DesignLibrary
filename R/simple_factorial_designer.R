@@ -1,29 +1,29 @@
-#' Create a simple two arm design
+#' Create a simple factorial design
 #'
 #' This designer builds a two by two factorial design in which asignments to each factor are independent of each other
 #' If you want a factorial with non independent assignments use the multi arm designer. 
 #' 
-#' Treatment effects can be specified either by providing a four element vector  \code{control_mean} and \code{treatment_mean}
-#' or by specifying a three element vector \code{ate}.
+#' Designer gives possibility of including blocks for assignment and estimation.
+#' 
 #' 
 #' \href{/library/articles/simple_factorial_arm.html}{Check out the vignette here.}
 #' 
 #' Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' @param N An integer. Sample size.
-#' @param prob A number within the interval [0,1]. Probability of assigment to treatment.
-#' @param control_mean A number. Average outcome in control.
-#' @param control_sd A positive number. Standard deviation in control.
-#' @param ate A number. Average treatment effect.
-#' @param out_means A number. Average outcome in treatment. 
-#' @param out_sds  A non-negative number. Standard deviation in treatment. 
-#' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
+#' @param n_blocks Integer. Number of blocks, defaults to 1.
+#' @param n_per_block Integer of vector of length n_blocks. Number of units per block.
+#' @param prob_A A number within the interval [0,1]. Probability of assigment to treatment A.
+#' @param prob_B A number within the interval [0,1]. Probability of assigment to treatment B.
+#' @param outcome_means A 4-vector. Average outcome in each condition (in order AB = 00, 01, 10, 11)
+#' @param outcome_sds A non-negative 4-vector.  Standard deviation in each condition (in order AB = 00, 01, 10, 11)
+#' @param block_sd A non-negative number.  Standard deviation of block shock
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
-#' @concept experiment
+#' @concept experiment blocks factorial
 #' @export
 #'
 #' @examples
-#' simple_two_arm_design <- simple_two_arm_designer()
+#' simple_factorial_design <- simple_factorial_designer(outcome_means = c(0,1,1,2)/4)
 
 
 simple_factorial_designer <- function(N = NULL,
@@ -31,18 +31,18 @@ simple_factorial_designer <- function(N = NULL,
                                       n_per_block = NULL,
                                       prob_A = .5,
                                       prob_B = .5,
-                                      control_mean = 0,
-                                      outcome_means = c(0,1,1,2)/4,
-                                      outcome_sd = c(1,1,1,1)
+                                      outcome_means = rep(0,4),
+                                      outcome_sds = rep(1,4),
+                                      block_sd = 1
 ){
 
   if(is.null(N) & is.null(n_per_block)) stop("Please provide either N or n_per_block")
   if(is.null(n_per_block))  if(N/n_blocks > floor(N/n_blocks)) stop("N is not divisible by n_blocks")
   if(!is.null(n_per_block) & !is.null(N)) warning("N to be determined by n_blocks and n_per_block")
   if(is.null(n_per_block)) n_per_block <- N/n_blocks
-  if(length(outcome_sd)==1) outcome_sd <- rep(outcome_sd, 4)
+  if(length(outcome_sds)==1) outcome_sds <- rep(outcome_sd, 4)
   
-  if(max(outcome_sd < 0) )        stop("sd must be non-negative")
+  if(max(outcome_sds < 0) )        stop("sd must be non-negative")
   if(max(c(prob_A, prob_B) < 0))  stop("prob must be non-negative")
   if(max(c(prob_A, prob_B) >1)) stop("prob must not exceed 1")
   {{{
@@ -51,13 +51,13 @@ simple_factorial_designer <- function(N = NULL,
     population <- declare_population(
       blocks = add_level(
         N = n_blocks, 
-        block_shock = rnorm(N)),
+        block_shock = rnorm(N)*block_sd),
       subjects  = fabricatr::add_level(
         N = n_per_block, 
-        shock_00 = rnorm(N)*outcome_sd[1] + block_shock,
-        shock_01 = rnorm(N)*outcome_sd[2] + block_shock,
-        shock_10 = rnorm(N)*outcome_sd[3] + block_shock,
-        shock_11 = rnorm(N)*outcome_sd[4] + block_shock)
+        shock_00 = rnorm(N)*outcome_sds[1] + block_shock,
+        shock_01 = rnorm(N)*outcome_sds[2] + block_shock,
+        shock_10 = rnorm(N)*outcome_sds[3] + block_shock,
+        shock_11 = rnorm(N)*outcome_sds[4] + block_shock)
     )
     
     potentials <- declare_potential_outcomes(
@@ -110,18 +110,18 @@ simple_factorial_designer <- function(N = NULL,
   attr(simple_factorial_design, "code") <- 
     construct_design_code(simple_factorial_designer, match.call.defaults())
   
+
+  attr(simple_factorial_design, "shiny_arguments") <- list(N = c(16, 32, 64)) 
+  
+  attr(simple_factorial_design, "tips") <-
+    list(
+      N = "Sample size"
+    )
+  
+  attr(simple_factorial_design, "description") <- "
+  <p> A simple factorial design of sample size <code>N</code>.
+  "
+  
   simple_factorial_design
-}
-
-attr(simple_factorial_design, "shiny_arguments") <- list(N = c(10, 20, 50)) 
-
-attr(simple_factorial_design, "tips") <-
-  list(
-    N = "Sample size"
-  )
-
-attr(simple_factorial_design, "description") <- "
-<p> A simple factorial design of sample size <code>N</code>.
-"
-
+  }
 
