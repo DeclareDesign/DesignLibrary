@@ -2,7 +2,7 @@
 #'
 #' This designer creates designs that are a special caseof a simple-two-arm 
 #' design where an outcome (Y) is observed conditional on 
-#' a post-treatment variable (C).
+#' a post-treatment variable (R).
 #' 
 #' @param N Integer. Size of sample
 #' @return A post-treatment design.
@@ -31,8 +31,8 @@ post_treatment_designer <- function(N = 100
     
     potential_outcomes <-
       declare_potential_outcomes(
-        C_Z_0 = as.numeric(type %in% c("A", "C")),
-        C_Z_1 = as.numeric(type %in% c("A", "B")),
+        R_Z_0 = as.numeric(type %in% c("A", "C")),
+        R_Z_1 = as.numeric(type %in% c("A", "B")),
         Y_Z_0 = ifelse(
           type %in% c("A", "C"),
           draw_binary(latent = latent_trait, link = "probit"),
@@ -49,9 +49,9 @@ post_treatment_designer <- function(N = 100
     
     # I: Inquiry
     estimand_1 <-
-      declare_estimand(mean(C_Z_1 - C_Z_0), label = "ATE on C")
+      declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
     estimand_2 <-
-      declare_estimand(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y (Conditioned by C)")
+      declare_estimand(mean((Y_Z_1 - Y_Z_0)[R==1]), label = "ATE on Y (Conditioned by R)")
     estimand_3 <-
       declare_estimand(mean(Y_Z_1[type == "A"] - Y_Z_0[type == "A"]), label = "ATE on Y (When Y Always Observed)")
     estimand_4 <-
@@ -59,28 +59,21 @@ post_treatment_designer <- function(N = 100
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = 0.5)
-    reveal_outcomes <- declare_reveal(outcome_variables = c("C", "Y", "Ystar")) 
+    reveal_outcomes <- declare_reveal(outcome_variables = c("R", "Y", "Ystar")) 
     
     # A: Answer Strategy
     estimator_1 <-
-      declare_estimator(C ~ Z, coefficients = "Z", estimand = estimand_1, label = "ATE on C")
+      declare_estimator(R ~ Z, coefficients = "Z", estimand = estimand_1, label = "ATE on R")
     estimator_2 <-
-      declare_estimator(Y ~ Z, coefficients = "Z", estimand = c(estimand_2, estimand_3), label = "ATE on Y (Conditioned by C)")
+      declare_estimator(Y ~ Z, coefficients = "Z", estimand = c(estimand_2, estimand_3), label = "ATE on Y (Conditioned by R)")
     estimator_3 <-
       declare_estimator(Ystar ~ Z, coefficients = "Z", estimand = estimand_3, label = "ATE on Y (Alternative)")
     
     # Design
-    post_treatment_design <- population +
-      potential_outcomes +
-      assignment +
-      reveal_outcomes +
-      estimand_1 +
-      estimand_2 +
-      estimand_3 +
-      estimand_4 +
-      estimator_1 +
-      estimator_2 +
-      estimator_3
+    post_treatment_design <- population + potential_outcomes +
+      assignment  + reveal_outcomes +
+      estimand_1  + estimand_2  + estimand_3 + estimand_4 +
+      estimator_1 + estimator_2 + estimator_3
   }}}
   
   attr(post_treatment_design, "code") <- 
@@ -90,7 +83,7 @@ post_treatment_designer <- function(N = 100
 }
 attr(post_treatment_designer, "tips") <- c(N = "Size of sample")
 attr(post_treatment_designer, "shiny_arguments") <- list(N = c(100, 500, 1000))
-attr(post_treatment_designer, "description") <- "<p> A post-treatment design with a size <code>N</code> population. This design is an application of a simple-two-arm design where an outcome (Y) is observed conditional on a post-treatment variable (C).<p>"
+attr(post_treatment_designer, "description") <- "<p> A post-treatment design with a size <code>N</code> population. This design is an application of a simple-two-arm design where an outcome (Y) is observed conditional on a post-treatment variable (R).<p>"
 
 
 
