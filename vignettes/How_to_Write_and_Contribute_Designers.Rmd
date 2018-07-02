@@ -9,6 +9,7 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(DesignLibrary)
 ```
 
 
@@ -42,7 +43,7 @@ Optionally, if you want your designer to work with [our online shiny inspector](
 
 The following code creates a designer that creates a simple two-arm experiment of size, `N`, assigning units to treatment with probability `prob`. Note that the code is added to the attribute of the design using `construct_design_code`. 
 
-```{r, eval=FALSE}
+```{r}
 my_designer <- function(N = 100,
                         prob = .5){
   if(0 > prob | 1 < prob) stop("prob must be in [0,1]")
@@ -54,18 +55,24 @@ my_designer <- function(N = 100,
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     reveal <- declare_reveal(Y,Z)
-    my_design <- declare_design(population,
-                                potential_outcomes,
-                                estimand,
-                                assignment,
-                                reveal,
-                                estimator)
+    my_design <- population +
+      potential_outcomes +
+      estimand +
+      assignment +
+      reveal +
+      estimator
   }}}
   attr(my_design, "code") <- construct_design_code(designer = my_designer,
                                                    args =  match.call.defaults())
   my_design
 }
 ```
+
+```{r,include=F}
+# For testing:
+my_designer()
+```
+
 
 We'll discuss features of this designer below.
 
@@ -85,12 +92,12 @@ One easy way to add code to the designs that your designer returns is to use our
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     reveal <- declare_reveal(Y,Z)
-    my_design <- declare_design(population,
-                                potential_outcomes,
-                                estimand,
-                                assignment,
-                                reveal,
-                                estimator)
+    my_design <- population +
+      potential_outcomes +
+      estimand +
+      assignment +
+      reveal +
+      estimator
 }}}
 ```
 
@@ -123,12 +130,12 @@ my_designer <- function(N = 100,
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     reveal <- declare_reveal(Y,Z)
-    my_design <- declare_design(population,
-                                potential_outcomes,
-                                estimand,
-                                assignment,
-                                reveal,
-                                estimator)")
+    my_design <- population +
+      potential_outcomes +
+      estimand +
+      assignment +
+      reveal +
+      estimator")
   my_design <- eval(parse(text = design_code))
   attr(my_design, "code") <- design_code
   my_design
@@ -212,7 +219,7 @@ You can also add keywords and reference other related designs and designers.
 Finally, give yourself credit for your work.
 ```{r, eval=FALSE}
 #' 
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @export
 ```
 
