@@ -2,7 +2,8 @@
 % Please edit documentation in R/helpers.R
 \name{get_design_code}
 \alias{get_design_code}
-\title{Get code from a designer}
+\title{Get code from a designer
+Simply takes the attribute "code", if it is present}
 \usage{
 get_design_code(design)
 }
@@ -14,4 +15,5 @@ Verbatim code
 }
 \description{
 Get code from a designer
+Simply takes the attribute "code", if it is present
 }

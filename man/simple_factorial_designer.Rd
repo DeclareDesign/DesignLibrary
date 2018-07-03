@@ -5,9 +5,8 @@
 \title{Create a simple factorial design}
 \usage{
 simple_factorial_designer(N = 100, n_blocks = 2, n_per_block = N/n_blocks,
-  prob_A = 0.5, prob_B = 0.5, outcome_sds = rep(1, 4),
-  control_outcome = 0, ate_A_B0 = 0, ate_B_A0 = 0, interaction = 0,
-  outcome_means = NULL, block_sd = 1)
+  prob_A = 0.5, prob_B = 0.5, w_A = 0.5, w_B = 0.5,
+  outcome_sds = rep(1, 4), outcome_means = rep(0, 4), block_sd = 1)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -20,19 +19,15 @@ simple_factorial_designer(N = 100, n_blocks = 2, n_per_block = N/n_blocks,
 
 \item{prob_B}{A number within the interval [0,1]. Probability of assigment to treatment B.}
 
-\item{outcome_sds}{A non-negative 4-vector.  Standard deviation in each condition (in order AB = 00, 01, 10, 11)}
+\item{w_A}{Weight placed on A=1 condition in definition of "average effect of B" estimand.}
 
-\item{control_outcome}{Average outcome in A=0, B=0 condition,}
+\item{w_B}{Weight placed on B=1 condition in definition of "average effect of A" estimand.}
 
-\item{ate_A_B0}{Average effect of A given B = 0.}
+\item{block_sd}{A non-negative number.  Standard deviation of block shock.}
 
-\item{ate_B_A0}{Average effect of B given A = 0.}
+\item{Y_means}{A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.}
 
-\item{interaction}{Interaction between treatments A and B,}
-
-\item{outcome_means}{A 4-vector. Average outcome in each condition (in order AB = 00, 01, 10, 11). If NULL outcome_means is formed from control_outcome, ate_A_B0, ate_B_A0, and interaction; otherwise it overrides these arguments.}
-
-\item{block_sd}{A non-negative number.  Standard deviation of block shock}
+\item{Y_sds}{A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.}
 }
 \value{
 A function that returns a design.

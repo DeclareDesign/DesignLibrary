@@ -3,61 +3,59 @@
 #' This designer builds a two by two factorial design in which asignments to each factor are independent of each other
 #' If you want a factorial with non independent assignments use the multi arm designer. 
 #' 
-#' Three estimands are declared: the unweighted average of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
+#' Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
 #' 
-#' The Designer gives the possibility of including blocks for assignment and estimation.
 #' Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units in a block
 #' 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
-#' 
 #' 
 #' \href{/library/articles/simple_factorial_arm.html}{Check out the vignette here.}
 #' 
 #' Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' @param N An integer. Sample size.
-#' @param n_blocks Integer. Number of blocks, defaults to 1.
-#' @param n_per_block Integer of vector of length n_blocks. Number of units per block.
 #' @param prob_A A number within the interval [0,1]. Probability of assigment to treatment A.
 #' @param prob_B A number within the interval [0,1]. Probability of assigment to treatment B.
-#' @param control_outcome   Average outcome in A=0, B=0 condition,
-#' @param ate_A_B0 Average effect of A given B = 0.
-#' @param ate_B_A0 Average effect of B given A = 0.
-#' @param interaction    Interaction between treatments A and B,
-#' @param outcome_means A 4-vector. Average outcome in each condition (in order AB = 00, 01, 10, 11). If NULL outcome_means is formed from control_outcome, ate_A_B0, ate_B_A0, and interaction; otherwise it overrides these arguments. 
-#' @param outcome_sds A non-negative 4-vector.  Standard deviation in each condition (in order AB = 00, 01, 10, 11)
-#' @param block_sd A non-negative number.  Standard deviation of block shock
+#' @param w_A Weight placed on A=1 condition in definition of "average effect of B" estimand.
+#' @param w_B Weight placed on B=1 condition in definition of "average effect of A" estimand.
+#' @param Y_means A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  
+#' @param Y_sds A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.
+#' @param block_sd A non-negative number.  Standard deviation of block shock.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment blocks factorial
 #' @export
 #'
 #' @examples
-#' design <- simple_factorial_designer(N = 100, n_blocks = 2, outcome_means = c(0,1,1,4)/4, prob_A = .8, prob_B = .2)
+#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 #' df <- draw_data(design)
 #' with(df, table(A, B, blocks))
 #' get_estimates(design)
 #' get_design_code(design)
-#' # Note that this design is biased for the specified estimands:
+#' 
+#' # A design that biased for the specified estimands:
+#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
 #' diagnose_design(design)
-
-
-simple_factorial_designer <- function(N = 100,
-                                      n_blocks = 2,
-                                      n_per_block = N/n_blocks,
-                                      prob_A = .5,
-                                      prob_B = .5,
-                                      outcome_sds = rep(1,4),
-                                      control_outcome = 0, 
-                                      ate_A_B0 = 0, 
-                                      ate_B_A0 = 0, 
-                                      interaction = 0,
-                                      outcome_means = NULL,
-                                      block_sd = 1
+#' 
+#' # A design wtih estimands that "match" the assignment:
+#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2, w_A = .8, w_B = .2)
+#' diagnose_design(design)
+#' 
+#' # Compare power with and without interactions, given same average effects in each arm
+#' designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
+#' diagnose_design(designs)
+#' 
+#' 
+simple_factorial_designer <- function(
+  N = 100,
+  prob_A = .5,
+  prob_B = .5,
+  w_A = .5, 
+  w_B = .5, 
+  outcome_sds = rep(1,4),
+  outcome_means = rep(0,4),
+  block_sd = 1
 ){
 
-  if(N/n_blocks > floor(N/n_blocks)) stop("N is not divisible by n_blocks")
-  if(length(n_per_block)!=1 & length(n_per_block)!=n_blocks)  stop("n_per_block inconsistent with N, n_blocks")
-  if(length(n_per_block)==1 & (n_per_block != N/n_blocks))    stop("n_per_block inconsistent with N, n_blocks")
-  if(length(n_per_block)==n_blocks & sum(n_per_block != N))   stop("n_per_block inconsistent with N, n_blocks")
+  if((w_A<0) | (w_B <0) | (w_A >1) | (w_B > 1) )      stop("w_A and w_B must be in 0,1")
   if(max(outcome_sds < 0) )      stop("sd must be non-negative")
   if(block_sd < 0)               stop("block_sd must be non-negative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob must be non-negative")
@@ -65,31 +63,21 @@ simple_factorial_designer <- function(N = 100,
   {{{
 
     # Model ----------------------------------------------------------------------
-    population <- declare_population(
-      blocks = add_level(
-        N = n_blocks, 
-        block_shock = rnorm(N)*block_sd),
-      subjects  = fabricatr::add_level(
-        N = n_per_block, 
-        shock_00 = rnorm(N)*outcome_sds[1] + block_shock,
-        shock_01 = rnorm(N)*outcome_sds[2] + block_shock,
-        shock_10 = rnorm(N)*outcome_sds[3] + block_shock,
-        shock_11 = rnorm(N)*outcome_sds[4] + block_shock)
-    )
+    population <- declare_population(N)
 
-    if(is.null(outcome_means)) outcome_means <- 
-        control_outcome + c(0, ate_A_B0, ate_B_A0,  ate_B_A0 + ate_A_B0 + interaction)
-    
     potentials <- declare_potential_outcomes(
-      Y_A_0_B_0 = outcome_means[1] + shock_00,  Y_A_1_B_0 = outcome_means[3] + shock_10,
-      Y_A_0_B_1 = outcome_means[2] + shock_01,  Y_A_1_B_1 = outcome_means[4] + shock_11)
-    
+      Y_A_0_B_0 = outcome_means[1] + rnorm(N, sd = outcome_sds[1]),  
+      Y_A_0_B_1 = outcome_means[2] + rnorm(N, sd = outcome_sds[2]),  
+      Y_A_1_B_0 = outcome_means[3] + rnorm(N, sd = outcome_sds[3]),
+      Y_A_1_B_1 = outcome_means[4] + rnorm(N, sd = outcome_sds[4]))
+
+
     # Inquiry ----------------------------------------------------------------------
     estimand_1 <- declare_estimand(
-      ate_A = mean((Y_A_1_B_1 - Y_A_0_B_1) + (Y_A_1_B_0 - Y_A_0_B_0))/2)
+      ate_A = w_B*mean(Y_A_1_B_1 - Y_A_0_B_1) + (1-w_B)*mean(Y_A_1_B_0 - Y_A_0_B_0))
 
     estimand_2 <- declare_estimand(
-      ate_B = mean((Y_A_1_B_1 - Y_A_1_B_0) + (Y_A_0_B_1 - Y_A_0_B_0))/2)
+      ate_B = w_A*mean(Y_A_1_B_1 - Y_A_1_B_0) + (1-w_A)*mean(Y_A_0_B_1 - Y_A_0_B_0))
     
     estimand_3 <- declare_estimand(
       interaction = mean((Y_A_1_B_1 - Y_A_1_B_0) - (Y_A_0_B_1 - Y_A_0_B_0)))
@@ -97,21 +85,16 @@ simple_factorial_designer <- function(N = 100,
     # Data Strategy ----------------------------------------------------------------
     
     # Factorial assignments
-    assign_A <- declare_assignment(prob = prob_A, 
-      blocks = blocks, assignment_variable = A)
-    assign_B <- declare_assignment(prob = prob_B,
-      blocks = paste0(A, blocks), assignment_variable = B)
-    
-    reveal <- declare_reveal(outcome_variables = Y, assignment_variables = c(A,B))
+    assign_A <- declare_assignment(prob = prob_A, assignment_variable = A)
+    assign_B <- declare_assignment(prob = prob_B, assignment_variable = B)
+    reveal   <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
     
     # Answer Strategy --------------------------------------------------------------
     estimator_1 <- declare_estimator(Y ~ A + B,
-                                     fixed_effects = ~ blocks,
                                      model = lm_robust,
                                      coefficients = c("A", "B"),
                                      estimand = c("ate_A", "ate_B"), label = "No_Interaction")
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
-                                     fixed_effects = ~ blocks,
                                      model = lm_robust,
                                      coefficients = "A:B", 
                                      estimand = "interaction", label = "Interaction")
@@ -127,17 +110,16 @@ simple_factorial_designer <- function(N = 100,
   attr(simple_factorial_design, "code") <- 
     construct_design_code(simple_factorial_designer, match.call.defaults())
   
-
-  
   simple_factorial_design
   }
 
 
-attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64)) 
+attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64), w_A = c(0, .5)) 
 
 attr(simple_factorial_designer, "tips") <-
   list(
-    N = "Sample size"
+    N = "Sample size",
+    w_A = "Weight on B=1 condition for effect of A estimand"
   )
 
 attr(simple_factorial_designer, "description") <- "

@@ -15,7 +15,7 @@ A post-treatment design.
 \description{
 This designer creates designs that are a special caseof a simple-two-arm 
 design where an outcome (Y) is observed conditional on 
-a post-treatment variable (C).
+a post-treatment variable (R).
 }
 \examples{
 # To make a design using default arguments:
