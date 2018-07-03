@@ -62,7 +62,7 @@ simple_two_arm_designer <- function(N = 100,
   }}}
   
   attr(simple_two_arm_design, "code") <- 
-    construct_design_code(simple_two_arm_designer, match.call.defaults())
+    construct_design_code(simple_two_arm_designer, match.call.defaults(), exclude_args = "ate")
   
   simple_two_arm_design
 }
