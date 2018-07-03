@@ -28,8 +28,10 @@ find_triple_bracket <- function(f){
   
 }
 
+
+
 #' @export
-construct_design_code <- function(designer, args){
+construct_design_code <- function(designer, args, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
@@ -42,21 +44,31 @@ construct_design_code <- function(designer, args){
     if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
     txt <- txt[seq(open + 1, close - 1)]
   }
-
+  
   indentation <- strsplit(txt[1], "")[[1]]
   indentation <- indentation[cumprod(indentation == " ") == 1]
   indentation <- paste0("^", paste(indentation, collapse=""))
   
   code <- sub(indentation, "", txt)
   
+  # Get names of arguments   
+  arg_names <- names(args[-1])
+
+    # Evaluate args in order provided in formals
+  for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", args[arg_names[j]])))  
+  arg_vals = sapply(arg_names, function(x) eval(parse(text = paste0("c(", paste(x, collapse = ","), ")"))))
+
   # convert args to text
-  args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
-  
+  args_text <- paste(sapply(arg_names, function(x) paste(x, "<-",     arg_vals[x])))
+
+  # optionally exclude arguments
+  if(!is.null(exclude_args)) args_text <- args_text[!(arg_names%in%exclude_args)]
+
   # add arguments and code
-  code <- c(args_text, "", code)
-  
-  code
+  c(args_text, "", code)
 }
+
+
 
 #' Argument matching with defaults
 #' 

@@ -19,7 +19,9 @@
 #' diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1))
 
 
-two_arm_attrition_designer <- function(N = 100, b_R = 2, b_Y = 2
+two_arm_attrition_designer <- function(N = 100, 
+                                       b_R = 2, 
+                                       b_Y = 2
 ){
   {{{
     # M: Model
@@ -50,16 +52,16 @@ two_arm_attrition_designer <- function(N = 100, b_R = 2, b_Y = 2
                         estimand = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
-    post_treatment_design <- population + potentials_R +  potentials_Y +
+    two_arm_attrition_design <- population + potentials_R +  potentials_Y +
       assignment  + reveal + observed +
       estimand_1  + estimand_2  + estimand_3 +
       estimator_1 + estimator_2 + estimator_3
   }}}
   
-  attr(two_arm_attrition_designer, "code") <- 
+  attr(two_arm_attrition_design, "code") <- 
     construct_design_code(two_arm_attrition_designer, match.call.defaults())
   
-  post_treatment_design
+  two_arm_attrition_design
 }
 
 attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample", b_R = "How reporting is related to treatment")

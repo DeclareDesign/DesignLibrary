@@ -16,7 +16,11 @@
 #' @param prob_B A number within the interval [0,1]. Probability of assigment to treatment B.
 #' @param w_A Weight placed on A=1 condition in definition of "average effect of B" estimand.
 #' @param w_B Weight placed on B=1 condition in definition of "average effect of A" estimand.
-#' @param outcome_means A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  
+#' @param outcome_means A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1
+#' @param mean_A0B0 Mean outcome in A=0, B=0 condition
+#' @param mean_A0B1 Mean outcome in A=0, B=1 condition
+#' @param mean_A1B0 Mean outcome in A=1, B=0 condition
+#' @param mean_A1B1 Mean outcome in A=1, B=1 condition
 #' @param outcome_sds A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -43,14 +47,17 @@
 #' diagnose_design(designs)
 #' 
 #' 
-simple_factorial_designer <- function(
-  N = 100,
+simple_factorial_designer <- function(N = 100,
   prob_A = .5,
   prob_B = .5,
   w_A = .5, 
   w_B = .5, 
-  outcome_sds = rep(1,4),
-  outcome_means = rep(0,4)
+  outcome_means = rep(0,4),
+  mean_A0B0 = outcome_means[1],
+  mean_A0B1 = outcome_means[2],
+  mean_A1B0 = outcome_means[3],
+  mean_A1B1 = outcome_means[4],
+  outcome_sds = rep(1,4)
 ){
 
   if((w_A<0) | (w_B <0) | (w_A >1) | (w_B > 1) )      stop("w_A and w_B must be in 0,1")
@@ -63,10 +70,10 @@ simple_factorial_designer <- function(
     population <- declare_population(N)
 
     potentials <- declare_potential_outcomes(
-      Y_A_0_B_0 = outcome_means[1] + rnorm(N, sd = outcome_sds[1]),  
-      Y_A_0_B_1 = outcome_means[2] + rnorm(N, sd = outcome_sds[2]),  
-      Y_A_1_B_0 = outcome_means[3] + rnorm(N, sd = outcome_sds[3]),
-      Y_A_1_B_1 = outcome_means[4] + rnorm(N, sd = outcome_sds[4]))
+      Y_A_0_B_0 = mean_A0B0 + rnorm(N, sd = outcome_sds[1]),  
+      Y_A_0_B_1 = mean_A0B1 + rnorm(N, sd = outcome_sds[2]),  
+      Y_A_1_B_0 = mean_A1B0 + rnorm(N, sd = outcome_sds[3]),
+      Y_A_1_B_1 = mean_A1B1 + rnorm(N, sd = outcome_sds[4]))
 
 
     # Inquiry ----------------------------------------------------------------------
@@ -105,18 +112,25 @@ simple_factorial_designer <- function(
   }}}
   
   attr(simple_factorial_design, "code") <- 
-    construct_design_code(simple_factorial_designer, match.call.defaults())
+    construct_design_code(simple_factorial_designer, match.call.defaults(), exclude_args = "outcome_means")
+
+  # args <- match.call.defaults()
+  # arg_names <- names(args[2:(length(args)-1)])
+  # if(!is.null(exclude_args)) arg_names <- arg_names[!(arg_names%in%names("outcome_means"))]
+  # print(arg_names)
   
+
   simple_factorial_design
   }
 
 
-attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64), w_A = c(0, .5)) 
+attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64), w_A = c(0, .5), mean_A0B1 = 0:1, mean_A1B0 = 0:1, mean_A1B1 = -1:3) 
 
 attr(simple_factorial_designer, "tips") <-
   list(
     N = "Sample size",
-    w_A = "Weight on B=1 condition for effect of A estimand"
+    w_A = "Weight on B=1 condition for effect of A estimand",
+    mean_A0B1 = "Mean outcome for A=0, B=1"
   )
 
 attr(simple_factorial_designer, "description") <- "

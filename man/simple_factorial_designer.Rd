@@ -5,8 +5,10 @@
 \title{Create a simple factorial design}
 \usage{
 simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
-  w_A = 0.5, w_B = 0.5, outcome_sds = rep(1, 4), outcome_means = rep(0,
-  4))
+  w_A = 0.5, w_B = 0.5, outcome_means = rep(0, 4),
+  mean_A0B0 = outcome_means[1], mean_A0B1 = outcome_means[2],
+  mean_A1B0 = outcome_means[3], mean_A1B1 = outcome_means[4],
+  outcome_sds = rep(1, 4))
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -19,9 +21,17 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 
 \item{w_B}{Weight placed on B=1 condition in definition of "average effect of A" estimand.}
 
-\item{outcome_sds}{A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.}
+\item{outcome_means}{A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1}
 
-\item{outcome_means}{A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.}
+\item{mean_A0B0}{Mean outcome in A=0, B=0 condition}
+
+\item{mean_A0B1}{Mean outcome in A=0, B=1 condition}
+
+\item{mean_A1B0}{Mean outcome in A=1, B=0 condition}
+
+\item{mean_A1B1}{Mean outcome in A=1, B=1 condition}
+
+\item{outcome_sds}{A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.}
 }
 \value{
 A function that returns a design.
