@@ -16,9 +16,8 @@
 #' @param prob_B A number within the interval [0,1]. Probability of assigment to treatment B.
 #' @param w_A Weight placed on A=1 condition in definition of "average effect of B" estimand.
 #' @param w_B Weight placed on B=1 condition in definition of "average effect of A" estimand.
-#' @param Y_means A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  
-#' @param Y_sds A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.
-#' @param block_sd A non-negative number.  Standard deviation of block shock.
+#' @param outcome_means A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  
+#' @param outcome_sds A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment blocks factorial
@@ -51,13 +50,11 @@ simple_factorial_designer <- function(
   w_A = .5, 
   w_B = .5, 
   outcome_sds = rep(1,4),
-  outcome_means = rep(0,4),
-  block_sd = 1
+  outcome_means = rep(0,4)
 ){
 
   if((w_A<0) | (w_B <0) | (w_A >1) | (w_B > 1) )      stop("w_A and w_B must be in 0,1")
   if(max(outcome_sds < 0) )      stop("sd must be non-negative")
-  if(block_sd < 0)               stop("block_sd must be non-negative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob must be non-negative")
   if(max(c(prob_A, prob_B) >1))  stop("prob must not exceed 1")
   {{{

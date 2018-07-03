@@ -4,16 +4,12 @@
 \alias{simple_factorial_designer}
 \title{Create a simple factorial design}
 \usage{
-simple_factorial_designer(N = 100, n_blocks = 2, n_per_block = N/n_blocks,
-  prob_A = 0.5, prob_B = 0.5, w_A = 0.5, w_B = 0.5,
-  outcome_sds = rep(1, 4), outcome_means = rep(0, 4), block_sd = 1)
+simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
+  w_A = 0.5, w_B = 0.5, outcome_sds = rep(1, 4), outcome_means = rep(0,
+  4))
 }
 \arguments{
 \item{N}{An integer. Sample size.}
-
-\item{n_blocks}{Integer. Number of blocks, defaults to 1.}
-
-\item{n_per_block}{Integer of vector of length n_blocks. Number of units per block.}
 
 \item{prob_A}{A number within the interval [0,1]. Probability of assigment to treatment A.}
 
@@ -23,11 +19,9 @@ simple_factorial_designer(N = 100, n_blocks = 2, n_per_block = N/n_blocks,
 
 \item{w_B}{Weight placed on B=1 condition in definition of "average effect of A" estimand.}
 
-\item{block_sd}{A non-negative number.  Standard deviation of block shock.}
+\item{outcome_sds}{A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.}
 
-\item{Y_means}{A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.}
-
-\item{Y_sds}{A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.}
+\item{outcome_means}{A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.}
 }
 \value{
 A function that returns a design.
@@ -37,9 +31,8 @@ This designer builds a two by two factorial design in which asignments to each f
 If you want a factorial with non independent assignments use the multi arm designer.
 }
 \details{
-Three estimands are declared: the unweighted average of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
+Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
 
-The Designer gives the possibility of including blocks for assignment and estimation.
 Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units in a block
 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 
@@ -48,13 +41,25 @@ Treatment A is assigned first and then Treatment B within blocks defined by trea
 Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 }
 \examples{
-design <- simple_factorial_designer(N = 100, n_blocks = 2, outcome_means = c(0,1,1,4)/4, prob_A = .8, prob_B = .2)
+design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 df <- draw_data(design)
 with(df, table(A, B, blocks))
 get_estimates(design)
 get_design_code(design)
-# Note that this design is biased for the specified estimands:
+
+# A design that biased for the specified estimands:
+design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
 diagnose_design(design)
+
+# A design wtih estimands that "match" the assignment:
+design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2, w_A = .8, w_B = .2)
+diagnose_design(design)
+
+# Compare power with and without interactions, given same average effects in each arm
+designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
+diagnose_design(designs)
+
+
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
