@@ -26,9 +26,13 @@
 #' # To make a design using default argument (missing completely at random):
 #' two_arm_attrition_design <- two_arm_attrition_designer()
 #' diagnose_design(two_arm_attrition_design)
-#' # Attrition can produce bias even when not associated with treatment
-#' # Here the linear estimate using R=1 data is unbiased for "ATE on Y (Given R)" with b_R = 0 but not when  b_R = 1   
-#' diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1, rho = .5))
+#' 
+#' # Attrition can produce bias even for unconditional ATE even when not associated with treatment
+#' diagnose_design(two_arm_attrition_designer(b_R = 0, rho = .3))
+#'  
+#' # Here the linear estimate using R=1 data is unbiased for
+#' # "ATE on Y (Given R)" with b_R = 0 but not when  b_R = 1   
+#' diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1, rho = .2))
 
 
 two_arm_attrition_designer <- function(N = 100,
@@ -81,7 +85,7 @@ two_arm_attrition_designer <- function(N = 100,
   two_arm_attrition_design
 }
 
-attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample", b_R = "How reporting is related to treatment")
-attr(two_arm_attrition_designer, "shiny_arguments") <- list(N = c(100, 500), b_R = 0:2)
+attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample", b_R = "How reporting is related to treatment", rho = "Correlation between reporting error term and outcome error term")
+attr(two_arm_attrition_designer, "shiny_arguments") <- list(N = c(100, 500), b_R = 0:2, rho = c(0,1))
 attr(two_arm_attrition_designer, "description") <- "<p> A design in which an outcome (Y) is observed conditional on a post-treatment variable (R).<p>"
 
