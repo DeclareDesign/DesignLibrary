@@ -43,7 +43,7 @@ If you want a factorial with non independent assignments use the multi arm desig
 \details{
 Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
 
-Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units in a block
+Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units 
 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 
 \href{/library/articles/simple_factorial_arm.html}{Check out the vignette here.}
@@ -52,8 +52,6 @@ Note: Units are assigned to treatment using complete random assignment. Potentia
 }
 \examples{
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
-df <- draw_data(design)
-with(df, table(A, B, blocks))
 get_estimates(design)
 get_design_code(design)
 
@@ -75,5 +73,5 @@ diagnose_design(designs)
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
 \concept{
-experiment blocks factorial
+experiment factorial
 }
