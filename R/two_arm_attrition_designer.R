@@ -1,33 +1,50 @@
 #' Create design with risk of attrition or post treatment conditioning
 #'
 #' This designer creates a two arm design but where a researcher is interested in an estimand that is conditional on a post treatment outcome 
-#' (the effect on Y given R) or has  access to conditional data (Y given R)
+#' (the effect on Y given R) or has  access to conditional data (Y given R).
+#' 
+#' The data generating process is of the form: 
+#' 
+#'     R ~ (a_R + b_R*Z > u_R)
+#'     
+#'     Y ~ (a_Y + b_Y*Z > u_Y)
+#'     
+#'     where u_R and u_Y are joint normally distributed with correlation rho
 #' 
 #' 
 #' @param N Integer. Size of sample
-#' @param b_R Coefficient relating treatment to responses
-#' @param b_Y Coefficient relating treatment to outcome
+#' @param a_R Constant in equation relating treatment to responses
+#' @param b_R Slope coefficient in equation relating treatment to responses
+#' @param a_Y Constant in equation relating treatment to outcome
+#' @param b_Y Slope coefficient in equation relating treatment to outcome
+#' @param rho correlation between shocks in equations for R and Y
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
 #' @export
 #' @examples
-#' # To make a design using default arguments:
+#' # To make a design using default argument (missing completely at random):
 #' two_arm_attrition_design <- two_arm_attrition_designer()
 #' diagnose_design(two_arm_attrition_design)
 #' # Attrition can produce bias even when not associated with treatment
-#' diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1))
+#' # Here the linear estimate using R=1 data is unbiased for "ATE on Y (Given R)" with b_R = 0 but not when  b_R = 1   
+#' diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1, rho = .5))
 
 
-two_arm_attrition_designer <- function(N = 100, 
-                                       b_R = 2, 
-                                       b_Y = 2
+two_arm_attrition_designer <- function(N = 100,
+                                       a_R = 0,
+                                       b_R = 1,
+                                       a_Y = 0,
+                                       b_Y = 1,
+                                       rho = 0
 ){
   {{{
     # M: Model
-    population   <- declare_population(N = N, u = rnorm(N), e = rnorm(N))
-    potentials_R <- declare_potential_outcomes(R ~ (b_R*Z > u))
-    potentials_Y <- declare_potential_outcomes(Y ~ (b_Y*Z > u + e))
+    population   <- declare_population(N   = N, 
+                                       u_R = rnorm(N), 
+                                       u_Y = rnorm(N, mean = rho * u_R, sd = sqrt(1 - rho^2)))
+    potentials_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
+    potentials_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
     
     # I: Inquiry
     estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
