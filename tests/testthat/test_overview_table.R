@@ -1,7 +1,8 @@
 context(desc = "Testing that overview table is correctly formatted")
 
 # Design overview table
-overview <- read.csv("../../data/overview.csv")
+overview <- read.csv(textConnection(as.character(overview[,1])),header = F)
+names(overview) <- c("design","designer","vignette","keywords","shiny","author","author_url")
 
 # Get designers
 functions <- ls("package:DesignLibrary")
