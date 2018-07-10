@@ -43,12 +43,12 @@ SUR <- declare_estimator(
 			data = data)
 		SUR_summ <- summary(sur_fit)$coefficients["eq1_A",]
 		data.frame(
-			coefficient = "A",
-			est = SUR_summ["Estimate"],
-			se = SUR_summ["Std. Error"],
-			p = SUR_summ["Pr(>|t|)"],
-			ci_lower = SUR_summ["Estimate"] - 1.96 * SUR_summ["Std. Error"],
-			ci_upper = SUR_summ["Estimate"] + 1.96 * SUR_summ["Std. Error"],
+			term = "A",
+			estimate = SUR_summ["Estimate"],
+			std.error = SUR_summ["Std. Error"],
+			p.value = SUR_summ["Pr(>|t|)"],
+			conf.low = SUR_summ["Estimate"] - 1.96 * SUR_summ["Std. Error"],
+			conf.high = SUR_summ["Estimate"] + 1.96 * SUR_summ["Std. Error"],
 			estimand_label = "a",
 			estimator_label = "SUR")})
 ```
