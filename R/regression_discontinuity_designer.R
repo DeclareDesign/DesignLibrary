@@ -50,7 +50,7 @@ regression_discontinuity_designer <- function(
     estimator <- declare_estimator(
       formula = Y ~ poly(X, poly_order) * Z,
       model = lm_robust,
-      coefficients = "Z",
+      term = "Z",
       estimand = estimand)
     
     # Design
