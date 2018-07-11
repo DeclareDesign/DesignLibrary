@@ -57,12 +57,12 @@ crossover_designer <- function(N = 100,
     reveal_YB <-   declare_reveal(YB, Z) 
     estimator_direct <- declare_estimator(YA ~ A,
                                           model = lm_robust,
-                                          coefficients = "A",
+                                          term = "A",
                                           estimand = estimand,
                                           label = "Direct estimator")
     estimator_sat <- declare_estimator(YA ~ A + B,
                                        model = lm_robust,
-                                       coefficients = "A",
+                                       term = "A",
                                        estimand = estimand,
                                        label = "Saturated estimator")
     crossover_design <- 
