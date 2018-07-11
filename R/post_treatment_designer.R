@@ -67,7 +67,7 @@ post_treatment_designer <- function(N = 100
     estimator_2 <-
       declare_estimator(Y ~ Z, term = "Z", estimand = c(estimand_2, estimand_3), label = "ATE on Y (Conditioned by C)")
     estimator_3 <-
-      declare_estimator(Ystar ~ Z, term = "Z", estimand = estimand_3, label = "ATE on Y (Alternative)")
+      declare_estimator(Ystar ~ Z, term = "Z", estimand = estimand_4, label = "ATE on Y (Alternative)")
     
     # Design
     post_treatment_design <- population +
