@@ -34,7 +34,7 @@ factorial_designer <- function(
 ){
   if(length(means) != 2^k || length(sds) != 2^k) stop("`means' and `sds` arguments must be the same as length of 2^(k).")
   if(length(probs) != k) stop("`probs` must be the same as length of k.")
-  if(k <= 0 || round(k)!=k) stop("`k' should be a positive integer.")
+  if(k <= 0 || !rlang::is_integerish(k)) stop("`k' should be a positive integer.")
   if(any(sds<=0)) stop("`sds' should be positive.")
   if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
