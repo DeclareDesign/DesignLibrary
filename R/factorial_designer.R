@@ -4,8 +4,8 @@
 #'
 #' @param N An integer. Size of sample.
 #' @param k An integer. The number of factors in the design.
-#' @param means A scalar. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}. 
-#' @param sds A scalar. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}. 
+#' @param means A scalar. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
+#' @param sds A scalar. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
 #' @param probs A scalar of length \code{k}. Independent probability of assignment to each treatment. 
 #' @return A factorial design.
 #' @details 
@@ -60,7 +60,7 @@ factorial_designer <- function(
   f_Y = formula(paste0(
     "Y ~ ", paste0(paste0("(", means, " + ", "u_", 1:2^k, ")"), "* (", cond_logical, ")", collapse = " + "),  " + u")
   )
-
+  
   estimand <- paste0("estimands <- declare_estimand('(Intercept)' = mean(Y_", assignment_string[1], "), ",
                      paste0("Z_", assignment_string[-1], " = mean(Y_", assignment_string[-1], " - Y_",
                             assignment_string[1], collapse = "), "), "), term = TRUE)")
@@ -98,7 +98,7 @@ factorial_designer <- function(
     potential_outcomes <- declare_potential_outcomes(formula = f_Y, conditions = cond_list)
     
     reveal_Y <- declare_reveal(Y, assignment_variables(cond_names))
-
+    
     # I: Inquiry
     estimand
     
@@ -154,5 +154,6 @@ attr(factorial_designer,"tips") <-
   )
 
 attr(factorial_designer,"description") <- "
-<p> A <code>2^k</code> factorial design with sample size <code>N</code> and <code>k</code> treatment factors.
+<p> A <code>2^k</code> factorial design with sample size <code>N</code>
+    and <code>k</code> treatment factors.
 "
