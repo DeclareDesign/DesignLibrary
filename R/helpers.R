@@ -1,15 +1,10 @@
-#' Get code from a designer
-#' Simply takes the attribute "code", if it is present
-#' 
-#' @param design A function that pulls code atribute from design.
-#' @return Verbatim code 
+#' Get the code from a design
+#' @param design A design that has code as an attribute.
 #' @export
-#' 
-#'
 get_design_code <- function(design) attr(design, "code")
 
 
-#' @export
+
 find_triple_bracket <- function(f){
   
   pred <- function(expr, depth=3) {
@@ -29,7 +24,6 @@ find_triple_bracket <- function(f){
 }
 
 
-#' @export
 construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
