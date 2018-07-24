@@ -94,11 +94,11 @@ simple_factorial_designer <- function(N = 100,
     # Answer Strategy --------------------------------------------------------------
     estimator_1 <- declare_estimator(Y ~ A + B,
                                      model = lm_robust,
-                                     coefficients = c("A", "B"),
+                                     term = c("A", "B"),
                                      estimand = c("ate_A", "ate_B"), label = "No_Interaction")
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
                                      model = lm_robust,
-                                     coefficients = "A:B", 
+                                     term = "A:B", 
                                      estimand = "interaction", label = "Interaction")
 
     # Design -----------------------------------------------------------------------

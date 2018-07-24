@@ -63,13 +63,13 @@ two_arm_attrition_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <-
-      declare_estimator(R ~ Z, coefficients = "Z", 
+      declare_estimator(R ~ Z, term = "Z", 
                         estimand = estimand_1, label = "DIM on R")
     estimator_2 <-
-      declare_estimator(Y_obs ~ Z, coefficients = "Z", 
+      declare_estimator(Y_obs ~ Z, term = "Z", 
                         estimand = c(estimand_2, estimand_3), label = "DIM on Y_obs")
     estimator_3 <-
-      declare_estimator(Y ~ Z, coefficients = "Z", 
+      declare_estimator(Y ~ Z, term = "Z", 
                         estimand = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
