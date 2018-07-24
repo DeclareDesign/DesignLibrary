@@ -9,3 +9,5 @@ randomized_response_design,randomized_response_designer,randomized_response,,ran
 regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,regression_discontinuity,DeclareDesign,https://declaredesign.org/about/
 simple_spillover_design,simple_spillover_designer,simple_spillover,,simple_spillover,DeclareDesign,https://declaredesign.org/about/
 simple_two_arm_design,simple_two_arm_designer,simple_two_arm,,simple_two_arm,DeclareDesign,https://declaredesign.org/about/
+simple_factorial_design,simple_factorial_designer,,,,DeclareDesign,https://declaredesign.org/about/
+two_arm_attrition_design,two_arm_attrition_designer,,,,DeclareDesign,https://declaredesign.org/about/
