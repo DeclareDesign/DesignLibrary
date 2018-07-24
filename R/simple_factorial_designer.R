@@ -110,13 +110,10 @@ simple_factorial_designer <- function(N = 100,
   }}}
   
   attr(simple_factorial_design, "code") <- 
-    construct_design_code(simple_factorial_designer, match.call.defaults(), exclude_args = "outcome_means")
-
-  # args <- match.call.defaults()
-  # arg_names <- names(args[2:(length(args)-1)])
-  # if(!is.null(exclude_args)) arg_names <- arg_names[!(arg_names%in%names("outcome_means"))]
-  # print(arg_names)
-  
+    construct_design_code(designer = simple_factorial_designer, 
+                          args = match.call.defaults(), 
+                          exclude_args = "outcome_means",
+                          arguments_as_values = TRUE)
 
   simple_factorial_design
   }
