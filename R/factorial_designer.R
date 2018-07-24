@@ -51,10 +51,10 @@ factorial_designer <- function(
   
   cond_row <- lapply(1:k, function(x) which(cond_grid[,x]==1))
   
-  c <- sapply(1:k, function(c) ifelse(cond_grid[,c]==1, paste0("T", c, "==1"), paste0("T", c, "==0")))
-  cond_logical <- sapply(1:2^k, function(r) paste0(c[r,], collapse = " & "))
+  cond <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0("T", x, "==1"), paste0("T", x, "==0")))
+  cond_logical <- sapply(1:2^k, function(r) paste0(cond[r,], collapse = " & "))
   
-  a <- sapply(1:k, function(c) ifelse(cond_grid[,c]==1, paste0("T", c, "_1"), paste0("T", c, "_0")))
+  a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0("T", x, "_1"), paste0("T", x, "_0")))
   assignment_string <- sapply(1:2^k, function(r) paste0(a[r,], collapse = "_"))
   
   f_Y = formula(paste0(
