@@ -45,14 +45,14 @@ mediation_analysis_designer <- function(N = 100,
     mediator_regression <- declare_estimator(
       M ~ Z,
       model = lm_robust,
-      coefficients = "Z",
+      term = "Z",
       estimand = mand_a,
       label = "Mediator regression"
     )
     outcome_regression <- declare_estimator(
       Y ~ Z + M,
       model = lm_robust,
-      coefficients = c("M","Z"),
+      term = c("M","Z"),
       estimand = c(mand_b,mand_d),
       label = "Outcome regression"
     )
