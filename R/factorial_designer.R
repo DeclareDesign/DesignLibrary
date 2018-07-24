@@ -62,7 +62,7 @@ factorial_designer <- function(
   )
   
   estimand <- paste0("estimands <- declare_estimand('(Intercept)' = mean(Y_", assignment_string[1], "), ",
-                     paste0("Z_", assignment_string[-1], " = mean(Y_", assignment_string[-1], " - Y_",
+                     paste0(assignment_string[-1], " = mean(Y_", assignment_string[-1], " - Y_",
                             assignment_string[1], collapse = "), "), "), term = TRUE)")
   
   
