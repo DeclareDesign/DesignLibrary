@@ -1,123 +1,164 @@
 #' Create a factorial design
 #'
-#' Description:
+#' A \code{2^k} factorial designer.
 #'
-#' @param N An integer. Size of population to sample from.
-#' @return A factorial design
+#' @param N An integer. Size of sample.
+#' @param k An integer. The number of factors in the design.
+#' @param means A scalar. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}. 
+#' @param sds A scalar. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}. 
+#' @param probs A scalar of length \code{k}. Independent probability of assignment to each treatment. 
+#' @return A factorial design.
+#' @details 
+#' 
+#' \code{factorial_designer} creates a factorial design with \code{2^k} treatment combinations resulting from \code{k} factors, each with two conditions each (\code{c(0,1)}). The order of the scalar arguments \code{means} and \code{sds} must follow the one returned by \code{expand.grid(rep(list(c(0,1)), k))}, where each of the columns is a treatment
+#' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
 #' @export
 #' @examples
-#' # A factorial design using default arguments:
+#' # A factorial design using default arguments
 #' factorial_design <- factorial_designer()
+#' 
+#' # A 2 x 2 x 2 factorial design with unequal probabilities of assignment
+#' # to each treatment
+#' factorial_designer(k = 3, probs = c(1/2, 1/4, 1/4))
 
 factorial_designer <- function(
-  N = 100,
-  n_arms = 3,
-  sd = rep(.1, n_arms),
-  #n_conditons = 2 # number of conditions per arm
-  #prob = .5 # probability of each arm (should be a scalar with length 2^n_arms)
-  means = seq(.1:.5, length.out = 8)#rep(0, n_arms)
+  N = 500,
+  k = 2,
+  means = seq(0:.5, length.out = 2^k),
+  sds = rep(.1, 2^k),
+  probs = rep(.5, k),
+  fixed = NULL
 ){
-  if(length(means) != 2^n_arms) stop("`ATEs' argument must be the same as length 
-                                    of 2^(n_arms). The order of the scalar should
-                                    follow the one returned by expand.grid().")
+  if(length(means) != 2^k || length(sds) != 2^k) stop("`means' and `sds` arguments must be the same as length of 2^(k).")
+  if(length(probs) != k) stop("`probs` must be the same as length of k.")
+  if(k <= 0 || round(k)!=k) stop("`k' should be a positive integer.")
+  if(any(sds<=0)) stop("`sds' should be positive.")
+  if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
   # Create list for substitution
-  # conds <- paste0("T", 1:n_arms)
+  cond_names <- paste0("T", 1:k)
+  cond_list <- rep(list(c(0,1)),k)
+  names(cond_list) <- cond_names
+  cond_grid <- expand.grid(cond_list)
   
-  estimand <- paste0("declare_estimand('(Intercept)' = mean(Y_Z_T1), ",
-                     paste0("ZT", 
-                            2:n_arms, 
-                            " = mean(Y_Z_T", 
-                            2:n_arms, 
-                            " - Y_Z_T1)",
-                            collapse = ", "), ", coefficients = TRUE)")
+  # Probability each treatment combination
+  prob_each <- apply(sapply(1:k, function(k){
+    probs[k] * cond_grid[,k] + (1-probs[k]) * (1-cond_grid[,k])
+  }), 1, prod)
   
-  cond_grid <- expand.grid(rep(list(c(0,1)),n_arms))
-  cond_names <- paste0("T", 1:n_arms)
-  names(cond_grid) <- cond_names
+  cond_row <- sapply(1:k, function(x) list(which(cond_grid[,x]==1)))
   
-  cond_req <- sapply(1:n_arms, function(x) list(which(cond_grid[,x]==1)))
+  c <- sapply(1:k, function(c) ifelse(cond_grid[,c]==1, paste0("T", c, "==1"), paste0("T", c, "==0")))
+  cond_logical <- sapply(1:2^k, function(r) paste0(c[r,], collapse = " & "))
   
-  # c <- sapply(1:n_arms, function(c) ifelse(cond_grid[,c]==1, paste0("T", c, "==1"), paste0("T", c, "==0")))
-  # cond_logical <- sapply(1:2^n_arms, function(r) paste0(c[r,], collapse = " & "))
-  
-  # f_Y = formula(paste0(
-  #   "Y ~ ", paste0(means, " * (", cond_logical, ")", collapse = " + "),  " + u")
-  # )
+  a <- sapply(1:k, function(c) ifelse(cond_grid[,c]==1, paste0("T", c, "_1"), paste0("T", c, "_0")))
+  assignment_string <- sapply(1:2^k, function(r) paste0(a[r,], collapse = "_"))
   
   f_Y = formula(paste0(
-    "Y ~ ", paste0(means, " * (Z ==", 1:2^n_arms, ")", collapse = " + "),  " + u")
+    "Y ~ ", paste0(paste0("(", means, " + ", "u_", 1:2^k, ")"), "* (", cond_logical, ")", collapse = " + "),  " + u")
   )
   
-  estimand <- paste0("Q <- declare_estimand('(Intercept)' = mean(Y_Z_1), ",
-                     paste0("ZT", 2:2^n_arms, " = mean(Y_Z_", 2:2^n_arms, " - Y_Z_1)", collapse = ", "), ")")#, ", coefficients = TRUE)")
+  # f_Y = formula(paste0(
+  #   "Y ~ ", paste0(means, " * (Z ==", 1:2^k, ")", collapse = " + "),  " + u")
+  # )
   
-  assignment_given_cond <- paste0("Z2 <- declare_step(fabricate,",
-                                  paste0("T", 1:n_arms, " = as.numeric(Z %in% ",
-                                         cond_req, ")",
-                                         collapse = ","), ")")
+  # estimand <- paste0("Q <- declare_estimand('(Intercept)' = mean(Y_Z_1), ",
+  #                    paste0("ZT", 2:2^k, " = mean(Y_Z_", 2:2^k, " - Y_Z_1)", collapse = ", "), ", term = TRUE)")
   
-  estimator_formula <- formula(paste0("Y ~ ", paste(cond_names, collapse = "*")))
-    
-  fixes <- list(n_arms = n_arms, cond_grid = cond_grid, f_Y = f_Y, assignment_given_cond = assignment_given_cond)#, estimand = estimand)
+  estimand <- paste0("estimands <- declare_estimand('(Intercept)' = mean(Y_", assignment_string[1], "), ",
+                     paste0("Z_", assignment_string[-1], " = mean(Y_", assignment_string[-1], " - Y_",
+                            assignment_string[1], collapse = "), "), "), term = TRUE)")
+  
+  
+  assignment_given_factor <- paste0("assignment <- declare_step(fabricate,",
+                                    paste0("T", 1:k, " = as.numeric(Z %in% ",
+                                           cond_row, ")",
+                                           collapse = ","), ")")
+  
+  list_u <- sapply(1:2^k, function(x) return(paste0("u_", x, " = rnorm(", N, ", ", means[x], ", ", sds[x], ")")))
+  list_u <- paste(list_u, collapse = ", ")
+  
+  # estimator_formula <- formula(paste0("Y ~ ", paste(cond_names, collapse = "*")))
+  pop <- paste0("population <- declare_population(N = ", N, ", u = rnorm(", N, ", 0, .1), ", 
+                list_u, ")")
+  
+  
+  fixes <- list(#k = k, cond_grid = cond_grid, 
+    pop = pop, #declare_population function
+    f_Y = f_Y, cond_list = cond_list, #declare_potential_outcomes function
+    cond_names = cond_names, #reveal_outcomes function
+    estimand = estimand, #declare_estimands function
+    prob_each = prob_each, #declare_assignment function
+    assignment_given_factor = assignment_given_factor, #declare_step function
+    assignment_string = assignment_string) #declare_estimator function
+  
   fixes <- c(fixes, fixed)
   
-  {{{
-    
-    design_code <- substitute({
+  design_code <- substitute({
     
     # M: Model
-    population <- declare_population(N = N,
-                            u = rnorm(N,0,.1))
+    pop
+    
+    potential_outcomes <- declare_potential_outcomes(formula = f_Y, conditions = cond_list)
+    
+    reveal_Y <- declare_reveal(Y, assignment_variables(cond_names))
 
-    pos <- declare_potential_outcomes(formula = f_Y, conditions = 1:8)
-    
-    reveal_Y <- declare_reveal(Y, Z)
-    
     # I: Inquiry
     estimand
     
     # D: Data Strategy
-    Z <- declare_assignment(conditions = 1:2^n_arms)
+    assignment_factors <- declare_assignment(conditions = 1:(2^k), prob_each = prob_each)
     
-    assignment_given_cond
+    assignment_given_factor
     
     # A: Answer Strategy 
-    A <- declare_estimator(estimator_formula, model = lm_robust, term = TRUE)
+    estimators <- declare_estimator(Y ~ as.factor(Z), model = lm_robust,
+                                    term = TRUE, estimand = assignment_string)
     
     # Design
-    factorial_design <- population + pos + Z + Z2 + reveal_Y + Q + A
-    }, fixes)
+    factorial_design <- population + potential_outcomes + assignment_factors + 
+      assignment + reveal_Y + estimands + estimators
     
-  }}}
-    
-    # Run the design code and create the design
-    design_code <- clean_code(paste(design_code))
-    
-    eval(parse(text = (design_code)))
+  }, fixes)
   
+  # Run the design code and create the design
+  design_code <- clean_code(paste(design_code))
+  
+  eval(parse(text = (design_code)))
+  
+  # Get argument list
+  args_text <- function(args, fixes){
+    # Get names of arguments   
+    arg_names <- names(args[2:(length(args)-1)])
+    
+    # Exclude any fixed arguments
+    if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
+    
+    # Format
+    sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
+  }
+  
+  #  Add  code plus argments as attributes
   attr(factorial_design, "code") <- 
-    construct_design_code(factorial_designer, match.call.defaults())
+    paste0(c(args_text(match.call.defaults(), fixes), design_code))
   
-  factorial_design
+  # Return design
+  return(factorial_design)
 }
 
 attr(factorial_designer,"shiny_arguments") <-
   list(
-
+    N = c(50, 100, 500, 1000),
+    k = c(2, 3, 4)
   )
 
 attr(factorial_designer,"tips") <-
-  c(N = "Size of population to sample from",
-     )
+  c(N = "Size of sample",
+    k = "The number of factors in the design"
+  )
 
 attr(factorial_designer,"description") <- "
-<p> A regression discontinuity design with sample from population of size <code>N</code>. 
-The average treatment effect local to the cutpoint is equal to <code>tau</code>. 
-<p> Polynomial regression of order <code>poly_order</code> is used to estimate tau, within a bandwidth of size
-<code>bandwidth</code> around the cutoff situated at <code>cutoff</code> on the running variable.
+<p> A <code>2^k</code> factorial design with sample size <code>N</code> and <code>k</code> treatment factors.
 "
-
-
