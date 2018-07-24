@@ -40,9 +40,13 @@ R ~ (a_R + b_R*Z > u_R)
 # To make a design using default argument (missing completely at random):
 two_arm_attrition_design <- two_arm_attrition_designer()
 diagnose_design(two_arm_attrition_design)
-# Attrition can produce bias even when not associated with treatment
-# Here the linear estimate using R=1 data is unbiased for "ATE on Y (Given R)" with b_R = 0 but not when  b_R = 1   
-diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1, rho = .5))
+
+# Attrition can produce bias even for unconditional ATE even when not associated with treatment
+diagnose_design(two_arm_attrition_designer(b_R = 0, rho = .3))
+ 
+# Here the linear estimate using R=1 data is unbiased for
+# "ATE on Y (Given R)" with b_R = 0 but not when  b_R = 1   
+diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1, rho = .2))
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
