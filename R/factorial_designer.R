@@ -21,7 +21,8 @@
 #' 
 #' # A 2 x 2 x 2 factorial design with unequal probabilities of assignment
 #' # to each treatment
-#' factorial_designer(k = 3, probs = c(1/2, 1/4, 1/4))
+#' factorial_design2 <- factorial_designer(k = 3, probs = c(1/2, 1/4, 1/4))
+#' 
 
 factorial_designer <- function(
   N = 500,
@@ -59,14 +60,7 @@ factorial_designer <- function(
   f_Y = formula(paste0(
     "Y ~ ", paste0(paste0("(", means, " + ", "u_", 1:2^k, ")"), "* (", cond_logical, ")", collapse = " + "),  " + u")
   )
-  
-  # f_Y = formula(paste0(
-  #   "Y ~ ", paste0(means, " * (Z ==", 1:2^k, ")", collapse = " + "),  " + u")
-  # )
-  
-  # estimand <- paste0("Q <- declare_estimand('(Intercept)' = mean(Y_Z_1), ",
-  #                    paste0("ZT", 2:2^k, " = mean(Y_Z_", 2:2^k, " - Y_Z_1)", collapse = ", "), ", term = TRUE)")
-  
+
   estimand <- paste0("estimands <- declare_estimand('(Intercept)' = mean(Y_", assignment_string[1], "), ",
                      paste0("Z_", assignment_string[-1], " = mean(Y_", assignment_string[-1], " - Y_",
                             assignment_string[1], collapse = "), "), "), term = TRUE)")
