@@ -49,7 +49,7 @@ factorial_designer <- function(
     probs[k] * cond_grid[,k] + (1-probs[k]) * (1-cond_grid[,k])
   }), 1, prod)
   
-  cond_row <- sapply(1:k, function(x) list(which(cond_grid[,x]==1)))
+  cond_row <- lapply(1:k, function(x) which(cond_grid[,x]==1))
   
   c <- sapply(1:k, function(c) ifelse(cond_grid[,c]==1, paste0("T", c, "==1"), paste0("T", c, "==0")))
   cond_logical <- sapply(1:2^k, function(r) paste0(c[r,], collapse = " & "))
