@@ -1,6 +1,7 @@
 context(desc = "Testing that overview table is correctly formatted")
 
 # Design overview table
+data(overview)
 overview <- read.csv(textConnection(as.character(overview[,1])),header = F)
 names(overview) <- c("design","designer","vignette","keywords","shiny","author","author_url")
 
