@@ -17,7 +17,7 @@ library(ggplot2)
 library(knitr)
 ```
 
-## Regression Discontinuity
+
 
 Regression discontinuity designs exploit substantive knowledge that treatment is assigned in a particular way: everyone above a threshold is assigned to treatment and everyone below it is not. Even though researchers do not control the assignment, substantive knowledge about the threshold serves as a basis for a strong identification claim.
 
