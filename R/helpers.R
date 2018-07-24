@@ -29,9 +29,8 @@ find_triple_bracket <- function(f){
 }
 
 
-
 #' @export
-construct_design_code <- function(designer, args, exclude_args = NULL){
+construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
@@ -53,21 +52,27 @@ construct_design_code <- function(designer, args, exclude_args = NULL){
   
   # Get names of arguments   
   arg_names <- names(args[-1])
-
+  
+  # If true, arguments are parsed as values -- be careful with functions
+  if(arguments_as_values){
     # Evaluate args in order provided in formals
-  for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", args[arg_names[j]])))  
-  arg_vals = sapply(arg_names, function(x) eval(parse(text = paste0("c(", paste(x, collapse = ","), ")"))))
-
-  # convert args to text
-  args_text <- paste(sapply(arg_names, function(x) paste(x, "<-",     arg_vals[x])))
-
+    for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", args[arg_names[j]])))  
+    arg_vals <- sapply(arg_names, function(x) eval(parse(text = paste0("c(", paste(x, collapse = ","), ")"))))
+    # convert args to text
+    args_text <- paste(sapply(arg_names, function(x) paste(x, " <- ", arg_vals[x])))
+  } else {
+    # convert args to text
+    args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
+  }
+  
   # optionally exclude arguments
-  if(!is.null(exclude_args)) args_text <- args_text[!(arg_names%in%exclude_args)]
-
+  if(!is.null(exclude_args)) args_text <- args_text[!(arg_names %in% exclude_args)]
+  
   # add arguments and code
-  c(args_text, "", code)
+  code <- c(args_text, "", code)
+  
+  code
 }
-
 
 
 #' Argument matching with defaults
