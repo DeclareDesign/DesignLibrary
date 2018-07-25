@@ -25,8 +25,8 @@ mediation_analysis_designer <- function(N = 100,
                                         d = .5,
                                         rho = .2)
 {
+  e1 <- M <- Z <- Y <- NULL
   if(rho < -1 | rho > 1) stop("rho must be in [-1, 1]")
-  
   {{{
     # M: Model
     population <- declare_population(

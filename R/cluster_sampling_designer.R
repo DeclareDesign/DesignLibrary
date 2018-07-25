@@ -29,6 +29,7 @@ cluster_sampling_designer <- function(n_clusters = 100,
                                       N_clusters = 1000,
                                       N_subjects_per_cluster = 50
 ){
+  N <- cluster <- latent_ideology <- Y <- u_a <- NULL
   if(n_clusters > N_clusters) stop(paste0("n_clusters must be smaller than the total number of ", N_clusters, " subjects."))
   if(n_subjects_per_cluster > N_subjects_per_cluster) stop(paste0("n_subjects_per_cluster must be smaller than the maximum of ", N_subjects_per_cluster, " subjects per cluster."))
   {{{

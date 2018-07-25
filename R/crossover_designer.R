@@ -28,6 +28,7 @@ crossover_designer <- function(N = 100,
                                crossover = .1, 
                                rho = .2) 
 {
+  u_a <- u_b <- YA <- Z <- YB <- YA_Z_T2 <- YA_Z_T1 <- NULL
   {{{
     # M: Model
     population <- declare_population(

@@ -57,7 +57,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
   if(prob<0 || prob>1) stop("prob must be in [0,1]")
   if(rho<0 || rho>1) stop("prob must be in [0,1]")
   {{{
-    
+    N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
     # M: Model
     population <- declare_population(
       blocks   = add_level(

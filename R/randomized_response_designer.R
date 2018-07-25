@@ -25,6 +25,7 @@ randomized_response_designer <- function(N = 1000,
                                          prevalence_rate = .1,
                                          withholding_rate = .5
 ){
+  sensitive_trait <- withholder <- Y <- Z <- NULL
   {{{
     # M: Model
     population <- declare_population(

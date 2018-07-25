@@ -24,6 +24,7 @@ regression_discontinuity_designer <- function(
   bandwidth = .5,
   poly_order = 4
 ){
+  X <- noise <- Y <- NULL
   {{{
     # M: Model
     control <- function(X) {
