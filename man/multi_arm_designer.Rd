@@ -14,9 +14,9 @@ multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
 
 \item{means}{A vector of size \code{m_arms}.  Average outcome in each treatment arm.}
 
-\item{fixed}{A list. List of arguments to be fixed in design.}
+\item{sds}{A double. Standard deviation for all treatment arms.}
 
-\item{sd}{A double. Standard deviation for all treatment arms.}
+\item{fixed}{A list. List of arguments to be fixed in design.}
 }
 \value{
 A function that returns a design.

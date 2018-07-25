@@ -5,7 +5,7 @@
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of treatment arms.
 #' @param means A vector of size \code{m_arms}.  Average outcome in each treatment arm.
-#' @param sd A double. Standard deviation for all treatment arms.
+#' @param sds A double. Standard deviation for all treatment arms.
 #' @param fixed A list. List of arguments to be fixed in design.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
