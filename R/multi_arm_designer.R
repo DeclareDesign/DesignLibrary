@@ -1,10 +1,10 @@
-#' Create a m_arm design
+#' Create a m_arms design
 #'
-#' This designer creates a \code{m_arm} arm design with equal assignment probabilities accross arms.
+#' This designer creates an \code{m_arms} arm design with equal assignment probabilities accross arms.
 #'
 #' @param N An integer. Sample size.
-#' @param m_arm An integer. Number of treatment arms.
-#' @param means A vector of size \code{n_arm}.  Average outcome in each treatment arm.
+#' @param m_arms An integer. Number of treatment arms.
+#' @param means A vector of size \code{m_arms}.  Average outcome in each treatment arm.
 #' @param sd A double. Standard deviation for all treatment arms.
 #' @param fixed A list. List of arguments to be fixed in design.
 #' @return A function that returns a design.
@@ -24,7 +24,7 @@
 #' diagnose_design(design)
 #' 
 # A design with fixed sds and means. N is the sole modifiable argument. 
-#' design <- multi_arm_designer(N = 80, m_arm = 4, means = 1:4, fixed = list(m_arm = 4, sds = rep(1, 4), means = 1:4))
+#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, fixed = list(m_arms = 4, sds = rep(1, 4), means = 1:4))
 #' cat(get_design_code(design), sep = '\n')
 #' diagnose_design(design)
 #' 
@@ -35,32 +35,32 @@
 
 multi_arm_designer <- function(
   N = 30, 
-  m_arm = 3, 
-  means = rep(0, m_arm),
-  sds = rep(1, m_arm),   
+  m_arms = 3, 
+  means = rep(0, m_arms),
+  sds = rep(1, m_arms),   
   fixed = NULL
 ){
   # Housekeeping
   if("means" %in% names(fixed)) if(!identical(means, fixed$means)) stop(paste("Conflicting definitions of 'means' in argument list (possibly the default)--(", paste(means, collapse = ","), ")--and in the fixed list--(", paste(fixed$means, collapse = ","), "). If 'means' is defined in fixed list the same definition has to be  given in the arguments list."))
   if("sds" %in% names(fixed)) if(!identical(sds, fixed$sds)) stop(paste("Conflicting definitions of 'sds' in argument list (possibly the default)--(", paste(sds, collapse = ","), ")--and in the fixed list--(", paste(fixed$sds, collapse = ","), "). If 'sds' is defined in fixed list the same definition has to be  given in the arguments list."))
-  if(length(means) != m_arm || length(sds) != m_arm) stop("`means' and `sds` arguments must be the of length m_arm .")
-  if(m_arm <= 0 || round(m_arm)!=m_arm) stop("`m_arm' should be a positive integer.")
+  if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
+  if(m_arms <= 0 || round(m_arms)!=m_arms) stop("`m_arms' should be a positive integer.")
   if(any(sds<=0)) stop("`sds' should be positive.")
   
   # Create list for substitution
-  conds = paste0("T", 1:m_arm)
+  conds = paste0("T", 1:m_arms)
   
   U <- paste0(" population <- declare_population(N = N, ",  
-                        paste0("u_", 1:m_arm, " = rnorm(n = N, sd = ",  sds, ")", collapse = ", "), ")")
+                        paste0("u_", 1:m_arms, " = rnorm(n = N, sd = ",  sds, ")", collapse = ", "), ")")
   
                 
   f_Y = formula(paste0(
-    "Y ~ ", paste0("(", means, " + u_", 1:m_arm, ")*( Z == 'T", 1:m_arm, "')", collapse = " + "))
+    "Y ~ ", paste0("(", means, " + u_", 1:m_arms, ")*( Z == 'T", 1:m_arms, "')", collapse = " + "))
   )
   
   
   Q <- paste0(" estimand <- declare_estimand('(Intercept)' = mean(Y_Z_T1), ",
-                     paste0("ZT", 2:m_arm, " = mean(Y_Z_T", 2:m_arm, " - Y_Z_T1)", collapse = ", "), ", term = TRUE)")
+                     paste0("ZT", 2:m_arms, " = mean(Y_Z_T", 2:m_arms, " - Y_Z_T1)", collapse = ", "), ", term = TRUE)")
   
   fixes <- list(conds = conds, f_Y = f_Y, U = U, Q = Q)
   
@@ -77,7 +77,7 @@ multi_arm_designer <- function(
     Q
     
     "# D: Data"
-    assignment <- declare_assignment(num_arms = m_arm)
+    assignment <- declare_assignment(num_arms = m_arms)
     reveal <- declare_reveal()
     
     "# A: Answer" 
@@ -109,7 +109,7 @@ attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), means = 
 attr( multi_arm_designer, "tips") <-
   list(
     N = "Sample Size",
-    m_arm = "Number of arms",
+    m_arms = "Number of arms",
     means = "The average treatment effects",
     sds  = "The standard deviation in each treatment arm"
   )

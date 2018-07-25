@@ -2,17 +2,17 @@
 % Please edit documentation in R/multi_arm_designer.R
 \name{multi_arm_designer}
 \alias{multi_arm_designer}
-\title{Create a m_arm design}
+\title{Create a m_arms design}
 \usage{
-multi_arm_designer(N = 30, m_arm = 3, means = rep(0, m_arm),
-  sds = rep(1, m_arm), fixed = NULL)
+multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
+  sds = rep(1, m_arms), fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{m_arm}{An integer. Number of treatment arms.}
+\item{m_arms}{An integer. Number of treatment arms.}
 
-\item{means}{A vector of size \code{n_arm}.  Average outcome in each treatment arm.}
+\item{means}{A vector of size \code{m_arms}.  Average outcome in each treatment arm.}
 
 \item{fixed}{A list. List of arguments to be fixed in design.}
 
@@ -22,7 +22,7 @@ multi_arm_designer(N = 30, m_arm = 3, means = rep(0, m_arm),
 A function that returns a design.
 }
 \description{
-This designer creates a \code{m_arm} arm design with equal assignment probabilities accross arms.
+This designer creates an \code{m_arms} arm design with equal assignment probabilities accross arms.
 }
 \examples{
 # To make a design using default arguments:
@@ -35,7 +35,7 @@ get_estimates(design)
 design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
 diagnose_design(design)
 
-design <- multi_arm_designer(N = 80, m_arm = 4, means = 1:4, fixed = list(m_arm = 4, sds = rep(1, 4), means = 1:4))
+design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, fixed = list(m_arms = 4, sds = rep(1, 4), means = 1:4))
 cat(get_design_code(design), sep = '\\n')
 diagnose_design(design)
 
