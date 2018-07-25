@@ -19,5 +19,27 @@ testthat::test_that(
   }
 )
 
+test_that(
+  desc = "internal helpers for when source code is missing work",
+  code = {
+    expect_equal(DesignLibrary:::find_triple_bracket(f = mean),"")
+    expect_false(DesignLibrary:::pred(expr = mean(1:2),depth = 1))
+    expect_true(DesignLibrary:::pred(expr = quote({{{mean(1:2)}}}),depth = 1))
+  })
+
+test_that(desc = "construct_design_code works as it should when source is missing",
+          code = {
+            expect_equal(DesignLibrary:::construct_design_code(designer = mean, args = c("x"),arguments_as_values = F,exclude_args = NULL),c("",""))
+            expect_is(DesignLibrary:::construct_design_code(designer = function(x) {{{x}}}, args = c("x"),arguments_as_values = F,exclude_args = NULL),"character")
+          }) 
+
+
+test_that(desc = "match.call.defaults has all cases tested",
+          code = {
+            test_fun <- function(...){...}
+            expect_error(match.call.defaults(test_fun,expand.dots = T),NA)
+          }) 
+
+
 
 
