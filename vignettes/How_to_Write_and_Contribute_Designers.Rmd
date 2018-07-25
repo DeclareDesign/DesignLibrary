@@ -62,7 +62,7 @@ my_designer <- function(N = 100,
       reveal +
       estimator
   }}}
-  attr(my_design, "code") <- construct_design_code(designer = my_designer,
+  attr(my_design, "code") <- DesignLibrary:::construct_design_code(designer = my_designer,
                                                    args =  match.call.defaults())
   my_design
 }
