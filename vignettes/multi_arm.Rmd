@@ -23,7 +23,7 @@ In settings of multiple treatment arms, we could do a number of pairwise compari
   
 ## Design Declaration
   
-  - **M**odel: We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $k$ $(k = 1, 2, ..., K)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $k$ and the control condition: $Y_i(Z = k)  -Y_i(Z = 0)$.
+  - **M**odel: We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $m$ $(m = 1, 2, ..., M)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $m$ and the control condition: $Y_i(Z = m)  -Y_i(Z = 0)$.
 
 - **I**nquiry:  We are interested in the effect of each treatment arm with respect to a comparison group.
 
