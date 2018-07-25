@@ -11,7 +11,7 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
-#' @import DeclareDesign
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # To make a design using default arguments:

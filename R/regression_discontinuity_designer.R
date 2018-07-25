@@ -11,7 +11,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
-#' @import DeclareDesign
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # A regression discontinuity design using default arguments:
