@@ -1,5 +1,7 @@
 #' Create a regression discontinuity design
 #'
+#' A regression discontinuity design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+#'
 #' @param N An integer. Size of population to sample from.
 #' @param tau A scalar number. Difference in potential outcomes functions at the threshold.
 #' @param cutoff A scalar number in (0,1). Threshold on running variable beyond which units are treated.
@@ -27,7 +29,7 @@ regression_discontinuity_designer <- function(
       as.vector(poly(X, 4, raw = T) %*% c(.7, -.8, .5, 1))}
     treatment <- function(X) {
       as.vector(poly(X, 4, raw = T) %*% c(0, -1.5, .5, .8)) + tau}
-    pop <- declare_population(
+    population <- declare_population(
       N = N,
       X = runif(N,0,1) - cutoff,
       noise = rnorm(N,0,.1),
@@ -35,6 +37,7 @@ regression_discontinuity_designer <- function(
     pos <- declare_potential_outcomes(
       Y_Z_0 = control(X) + noise,
       Y_Z_1 = treatment(X) + noise)
+    reveal_Y <- declare_reveal(Y)
     
     # I: Inquiry
     estimand <- declare_estimand(LATE = treatment(0) - control(0))
@@ -47,23 +50,13 @@ regression_discontinuity_designer <- function(
     estimator <- declare_estimator(
       formula = Y ~ poly(X, poly_order) * Z,
       model = lm_robust,
-      coefficients = "Z",
+      term = "Z",
       estimand = estimand)
     
     # Design
     regression_discontinuity_design <- 
-      pop / pos / estimand / declare_reveal(Y) / sampling / estimator
+      population + pos + estimand + reveal_Y + sampling + estimator
   }}}
-  regression_discontinuity_design <- insert_step(regression_discontinuity_design, after=length(regression_discontinuity_design), declare_citation(
-    citation = utils::bibentry(
-      bibtype = "Article",
-      title = "Regression-discontinuity analysis: An alternative to the ex post facto experiment.",
-      author= "Thistlethwaite, Donald L and Campbell, Donald T",
-      journal= "Journal of Educational Psychology",
-      volume = "51",
-      number = "6",
-      year = "1960",
-      page = 309)))
   
   attr(regression_discontinuity_design, "code") <- 
     construct_design_code(regression_discontinuity_designer, match.call.defaults())
@@ -94,20 +87,6 @@ attr(regression_discontinuity_designer,"description") <- "
 <p> Polynomial regression of order <code>poly_order</code> is used to estimate tau, within a bandwidth of size
     <code>bandwidth</code> around the cutoff situated at <code>cutoff</code> on the running variable.
 "
-
-
-
-#' A regression discontinuity design
-#'
-#' Default design created with  \code{\link{regression_discontinuity_designer}}
-#' 
-#' @seealso \code{\link{regression_discontinuity_designer}} 
-#' @format A design object 
-"regression_discontinuity_design"
-
-
-
-
 
 
   

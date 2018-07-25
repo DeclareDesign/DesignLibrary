@@ -22,7 +22,7 @@ regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
 A regression discontinuity design design
 }
 \description{
-Create a regression discontinuity design
+A regression discontinuity design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
 }
 \examples{
 # A regression discontinuity design using default arguments:

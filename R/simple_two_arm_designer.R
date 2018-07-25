@@ -38,7 +38,7 @@ simple_two_arm_designer <- function(N = 100,
   if( abs(rho) > 1) stop("rho must be in [-1,1]")
   {{{
     # M: Model
-    pop <- declare_population(
+    population <- declare_population(
       N = N,
       u_0 = rnorm(N),
       u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
@@ -58,11 +58,14 @@ simple_two_arm_designer <- function(N = 100,
     reveal    <- declare_reveal()
     
     # Design
-    simple_two_arm_design <- pop / potential_outcomes / estimand / assignment / reveal / estimator
+    simple_two_arm_design <- population + potential_outcomes + estimand + assignment + reveal + estimator
   }}}
   
   attr(simple_two_arm_design, "code") <- 
-    construct_design_code(simple_two_arm_designer, match.call.defaults())
+    construct_design_code(designer = simple_two_arm_designer, 
+                          args = match.call.defaults(), 
+                          exclude_args = "ate",
+                          arguments_as_values = TRUE)
   
   simple_two_arm_design
 }
@@ -78,18 +81,5 @@ attr(simple_two_arm_designer, "tips") <-
 attr(simple_two_arm_designer, "description") <- "
 <p> A simple two arm design of sample size <code>N</code> and with constant average treatment effect equal to <code>ate</code>.
 "
-
-
-
-
-#' A simple two arm design
-#'
-#' Default design created with  \code{\link{simple_two_arm_designer}}
-#' 
-#' @seealso \code{\link{simple_two_arm_designer}} 
-#' @format A design object 
-"simple_two_arm_design"
-
-
 
 

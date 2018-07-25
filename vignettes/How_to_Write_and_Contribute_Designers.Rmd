@@ -9,6 +9,14 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(DesignLibrary)
+```
+
+
+First, install the development version of **DesignLibrary** in `R`:
+
+```{r,eval=FALSE}
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 ```
 
 A designer is a function that returns designs. For example, `simple_two_arm_designer()` generates simple two-arm designs as `DeclareDesign` objects. 
@@ -35,7 +43,7 @@ Optionally, if you want your designer to work with [our online shiny inspector](
 
 The following code creates a designer that creates a simple two-arm experiment of size, `N`, assigning units to treatment with probability `prob`. Note that the code is added to the attribute of the design using `construct_design_code`. 
 
-```{r, eval=FALSE}
+```{r}
 my_designer <- function(N = 100,
                         prob = .5){
   if(0 > prob | 1 < prob) stop("prob must be in [0,1]")
@@ -47,18 +55,24 @@ my_designer <- function(N = 100,
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     reveal <- declare_reveal(Y,Z)
-    my_design <- declare_design(population,
-                                potential_outcomes,
-                                estimand,
-                                assignment,
-                                reveal,
-                                estimator)
+    my_design <- population +
+      potential_outcomes +
+      estimand +
+      assignment +
+      reveal +
+      estimator
   }}}
-  attr(my_design, "code") <- construct_design_code(designer = my_designer,
+  attr(my_design, "code") <- DesignLibrary:::construct_design_code(designer = my_designer,
                                                    args =  match.call.defaults())
   my_design
 }
 ```
+
+```{r,include=F}
+# For testing:
+my_designer()
+```
+
 
 We'll discuss features of this designer below.
 
@@ -66,7 +80,7 @@ We'll discuss features of this designer below.
 
 We've devised an easy way to include code in design objects returned by a designer. But you can use your own method!
 
-### Our method for adding code
+## Our method for adding code
 
 One easy way to add code to the designs that your designer returns is to use our triple braces method. Any checks (such as those that look to see whether `prob` is between 0 and 1) come before the opening triple braces, `{{{`. Then, all the code needed to build the design, including the `declare_design()` call, goes between the triple braces:
 
@@ -78,12 +92,12 @@ One easy way to add code to the designs that your designer returns is to use our
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     reveal <- declare_reveal(Y,Z)
-    my_design <- declare_design(population,
-                                potential_outcomes,
-                                estimand,
-                                assignment,
-                                reveal,
-                                estimator)
+    my_design <- population +
+      potential_outcomes +
+      estimand +
+      assignment +
+      reveal +
+      estimator
 }}}
 ```
 
@@ -102,7 +116,7 @@ attr(my_design, "code") <- construct_design_code(designer = my_designer,
 ```
 
 
-### An alternative method
+## An alternative method
 
 Here's one example of an alternative way to embed the code that created it in a design returned by a designer:
 
@@ -116,12 +130,12 @@ my_designer <- function(N = 100,
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     reveal <- declare_reveal(Y,Z)
-    my_design <- declare_design(population,
-                                potential_outcomes,
-                                estimand,
-                                assignment,
-                                reveal,
-                                estimator)")
+    my_design <- population +
+      potential_outcomes +
+      estimand +
+      assignment +
+      reveal +
+      estimator")
   my_design <- eval(parse(text = design_code))
   attr(my_design, "code") <- design_code
   my_design
@@ -166,7 +180,7 @@ attr(my_designer, "description") <- "
 
 The designer should be added to the `DesignLibrary` using a [pull request](http://r-pkgs.had.co.nz/git.html#git-pullreq). 
 
-### How to document your designer
+## How to document your designer
 
 
 The documentation must be written as [Roxygen comments](http://r-pkgs.had.co.nz/man.html#roxygen-comments) and come at the top of the designer code; It should begin with a title and short description of what your designer does. When relevant, mention key limitations of your designer and add notes that can help others understand your code better. 
@@ -205,7 +219,7 @@ You can also add keywords and reference other related designs and designers.
 Finally, give yourself credit for your work.
 ```{r, eval=FALSE}
 #' 
-#' @author  DeclareDesign Team \url{https://declaredesign.org/}
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @export
 ```
 

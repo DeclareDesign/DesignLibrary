@@ -1,16 +1,10 @@
-#' Get code from a designer
-#' @param designer A function that builds designs, and contains the code to be grabbed inside triple braces
-#' @return Verbatim code 
+#' Get the code from a design
+#' @param design A design that has code as an attribute.
 #' @export
-#'
-get_design_code <- function(design){
-  out <- attr(design, "code")
-  # out <- gsub("\\{|\\}", "", out)
-  # out <- gsub("\\\"#|\\\"\\}", "\n#", out)
-  out
-}
+get_design_code <- function(design) attr(design, "code")
 
-#' @export
+
+
 find_triple_bracket <- function(f){
   
   pred <- function(expr, depth=3) {
@@ -29,8 +23,8 @@ find_triple_bracket <- function(f){
   
 }
 
-#' @export
-construct_design_code <- function(designer, args){
+
+construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
@@ -43,21 +37,38 @@ construct_design_code <- function(designer, args){
     if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
     txt <- txt[seq(open + 1, close - 1)]
   }
-
+  
   indentation <- strsplit(txt[1], "")[[1]]
   indentation <- indentation[cumprod(indentation == " ") == 1]
   indentation <- paste0("^", paste(indentation, collapse=""))
   
   code <- sub(indentation, "", txt)
   
-  # convert args to text
-  args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
+  # Get names of arguments   
+  arg_names <- names(args[-1])
+  
+  # If true, arguments are parsed as values -- be careful with functions
+  if(arguments_as_values){
+    # Evaluate args in order provided in formals
+    for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", args[arg_names[j]])))  
+    arg_vals <- sapply(arg_names, function(x) eval(parse(text = paste0("c(", paste(x, collapse = ","), ")"))))
+    # convert args to text
+    args_text <- paste(sapply(arg_names, function(x) paste(x, " <- ", arg_vals[x])))
+  } else {
+    # convert args to text
+    args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
+  }
+  
+  # optionally exclude arguments
+  if(!is.null(exclude_args)) args_text <- args_text[!(arg_names %in% exclude_args)]
   
   # add arguments and code
   code <- c(args_text, "", code)
   
   code
 }
+
+
 #' Argument matching with defaults
 #' 
 #' This is a version of \code{\link{match.call}} which also includes default arguments.
@@ -82,11 +93,21 @@ construct_design_code <- function(designer, args){
 #' foo(4,nugan='hand')
 #' foo(dots=FALSE,who='ami')
 #' 
-match.call.defaults <- function(...) {
-  call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
-  formals <- evalq(formals(), parent.frame(1))
+
+match.call.defaults <- function(definition = sys.function(sys.parent()),
+                                call = sys.call(sys.parent()),
+                                expand.dots = TRUE,
+                                envir = parent.frame(2L)) {
+  call <- match.call(definition, call, expand.dots, envir)
+  formals <- formals(definition)
+  
+  if(expand.dots && '...' %in% names(formals))
+    formals[['...']] <- NULL
   
   for(i in setdiff(names(formals), names(call)))
     call[i] <- list( formals[[i]] )
-  match.call(sys.function(sys.parent()), call)
+  
+  
+  match.call(definition, call, TRUE, envir)
 }
+

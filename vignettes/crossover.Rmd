@@ -1,0 +1,106 @@
+---
+title: "Crossover Experiment"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+  %\VignetteIndexEntry{Crossover Experiment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+set.seed(1234)
+library(DesignLibrary)
+library(ggplot2)
+library(systemfit)
+library(knitr)
+```
+
+A crossover design is a specific case of a multiarm trial, in which the researcher is only interested in the direct effect of each arm, and believes that each arm affects separate outcomes. For example, suppose that a researcher wants to know the effect of watching public service announcements (PSAs) about recycling on environmental attitudes, on the one hand, and the effect of watching PSAs about washing hands on attitudes toward personal hygiene, on the other. 
+
+Let's refer to the recycling PSA as treatment $A$ and attitudes towards the environment as outcome $Y_A$, and the handwashing PSA as treatment $B$, with attitudes to personal hygiene denoted as outcome $Y_B$. Let's imagine there were 120 participants in the study. In a classic multiarm trial one might assign 1/3 of the sample to control, 1/3 to treatment A, and 1/3 to treatment B. Thus, to estimate the effect of treatment $A$  on $Y_A$ one would compare 40 participants in condition $A$ to 40 participants in control. 
+
+Suppose, however, that the researcher strongly suspected that treatment $B$ would not affect outcome $Y_A$. Formally, this is a ``no crossover effects'' assumption: $(Y_A \mid B = 1) = (Y_A \mid B = 0)$. In this case, the researcher can cross over the different arms of the experiment in order to estimate the effects of each treatment with a larger sample. For example, they might assign 1/4 to control, 1/4 to $A$ only, 1/4 to $B$ only, and 1/4 to both $A$ and $B$. To estimate the effect of $A$, the researcher could now compare 60 participants assigned to control and $B$ only to those 60 assigned to $A$ and a mix of $A$ and $B$. 
+
+There are two important considerations in such designs. First, there is the issue of the ``no crossover effect'' assumption: if it is violated certain estimators can be biased. More subtly, a second consideration is the correlation in the two outcomes, $cor(Y_A,Y_B)$. If these outcomes are positively or negatively correlated --- if people who care little about the environment are less likely to care about personal hygiene, for example --- then seemingly unrelated regression (SUR) estimators can be used to increase the power even further.   
+
+
+ - **M**odel: We stipulate two outcomes, $Y_A$ and $Y_B$, whose error terms are correlated, $cor(u_A,u_B) = \rho$. Indexing treatments $k \in \{A,B\}$ and denoting the treatment effects $\tau_k$, we stipulate the potential outcomes of $Y_k$ to be a function of $k$ and $\neg k$: $Y_k = k \times \tau_k + u_k + \alpha \times (\neg k \times \tau_{\neg k} + u_{\neg k})$. The parameter $\alpha$ thus represents the extent to which the no crossover effects assumption is violated.
+
+ - **I**nquiry: We focus here on the average treatment effect of $A$ when $B = 0$, $E[Y_A(A = 1) - Y_A(A = 0) \mid B = 0]$. 
+ 
+ - **D**ata strategy: We assign 1/4 of our sample to pure control, 1/4 to $A$ only, 1/4 to $B$ only, and 1/4 to a mix of $A$ and $B$. 
+ 
+ - **A**nwer strategy: We compare three estimators. The first assumes that there are no crossover effects of $B$ onto $Y_A$: $Y_A \sim A$. The second models an effect of $B$ on $Y_A$: Y_A ~ A + B$. Finally, we declare a SUR estimator that is not included by default in the `crossover_designer()` and below we add it to the design.
+```{r}
+library(systemfit)
+SUR <- declare_estimator(
+	handler = function(data){
+		sur_fit <- systemfit(
+			formula = list(YA ~ A, YB ~ B),
+			method = "SUR",
+			data = data)
+		SUR_summ <- summary(sur_fit)$coefficients["eq1_A",]
+		data.frame(
+			term = "A",
+			estimate = SUR_summ["Estimate"],
+			std.error = SUR_summ["Std. Error"],
+			p.value = SUR_summ["Pr(>|t|)"],
+			conf.low = SUR_summ["Estimate"] - 1.96 * SUR_summ["Std. Error"],
+			conf.high = SUR_summ["Estimate"] + 1.96 * SUR_summ["Std. Error"],
+			estimand_label = "a",
+			estimator_label = "SUR")})
+```
+
+The code for a single run of the default design produced by `crossover_designer()` is as follows:
+
+```{r, code = get_design_code(crossover_designer(N = 120, a = .5, b = .5, crossover = .2, rho = .6)), eval=TRUE}
+```
+
+We add the SUR estimator and diagnose the design:
+
+```{r}
+crossover_design <- crossover_design + SUR
+diagnosis <- diagnose_design(crossover_design)
+```
+
+```{r,echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[-c(1,2,4)], digits = 2,row.names = F)
+# kable(reshape_diagnosis(diagnosis)[c(1,4,2,5,3,6), -c(1:2, 4:5)], digits = 2,row.names = F)
+```
+
+The diagnosis reveals a bias-variance tradeoff. Here, the no crossover effect assumption is violated. This causes some bias in the SUR estimator. However, the correlation in the errors strongly increases the efficiency of the SUR estimator here. Thus, in terms of RMSE the bias is offset by the increased power of the SUR approach. 
+
+## Using the Crossover Designer
+
+In R, you can generate a crossover design using the template function `crossover_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+
+```{r, eval=FALSE}
+devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_crossover_design` with `N`, `a`, `b`, and `crossover` set to 300, .2, .4, and .15, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+my_crossover_design <- crossover_designer(N = 300,
+                                          a = .2,
+                                          b = .4,
+                                          crossover = .15)
+```
+
+You can see more details on the `crossover_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??crossover_designer
+```
+
+
+
+
+
+
+
+
+

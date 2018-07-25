@@ -57,7 +57,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
   if(prob<0 | prob>1) stop("prob must be in [0,1]")
   {{{
     # M: Model
-    pop <- declare_population(
+    population <- declare_population(
       blocks   = add_level(
         N = N_blocks,
         u_b = rnorm(N) * sd_block),
@@ -93,8 +93,8 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
     )
     
     # Design
-    block_cluster_two_arm_design <-  pop / pos / estimand / assignment / 
-      declare_reveal() / est
+    block_cluster_two_arm_design <-  population + pos + estimand + assignment + 
+      declare_reveal() + est
   }}}
   
   attr(block_cluster_two_arm_design, "code") <- 
@@ -125,16 +125,6 @@ each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn 
 <code>N_i_in_cluster</code> individual units. 
 <p> Estimand is the <code>ate</code> average interaction effect.
 "
-
-
-
-#' A two arm design with blocks and clusters
-#'
-#' Default design created with  \code{\link{block_cluster_two_arm_designer}}
-#' 
-#' @seealso \code{\link{block_cluster_two_arm_designer}} 
-#' @format A design object 
-"block_cluster_two_arm_design"
 
 
 

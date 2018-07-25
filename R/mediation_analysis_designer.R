@@ -1,10 +1,6 @@
 #' Create a design for mediation analysis
 #'
-#' Description here
-#' 
-#' Key limitations: Limitations here.
-#' 
-#' Note: Note here.
+#' A mediation analysis design where we are interested in the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
 #'
 #' @param N Size of sample
 #' @param a Effect of treatment (Z) on mediatior (M)
@@ -31,7 +27,7 @@ mediation_analysis_designer <- function(N = 100,
   if(rho < -1 | rho > 1) stop("rho must be in [-1, 1]")
   
   {{{
-    pop <- declare_population(
+    population <- declare_population(
       N = N, 
       e1 = rnorm(N),
       e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
@@ -41,37 +37,37 @@ mediation_analysis_designer <- function(N = 100,
     pos_Y <-
       declare_potential_outcomes(Y ~ d * Z + b * M + e2)
     assignment <- declare_assignment(prob = 0.5)
+    reveal_mediator <- declare_reveal(M, Z)
+    reveal_outcome <- declare_reveal(Y, Z) 
     mand_a <- declare_estimand(a = a)
     mand_b <- declare_estimand(b = b)
     mand_d <- declare_estimand(d = d)
     mediator_regression <- declare_estimator(
       M ~ Z,
       model = lm_robust,
-      coefficients = "Z",
+      term = "Z",
       estimand = mand_a,
       label = "Mediator regression"
     )
     outcome_regression <- declare_estimator(
       Y ~ Z + M,
       model = lm_robust,
-      coefficients = c("M","Z"),
+      term = c("M","Z"),
       estimand = c(mand_b,mand_d),
       label = "Outcome regression"
     )
     mediation_analysis_design <-
-      declare_design(
-        pop,
-        pos_M,
-        assignment,
-        declare_reveal(M, Z),
-        pos_Y,
-        mand_a,
-        mand_b,
-        mand_d,
-        declare_reveal(Y, Z),
-        mediator_regression,
-        outcome_regression
-      )
+      population +
+      pos_M +
+      assignment +
+      reveal_mediator +
+      pos_Y +
+      mand_a +
+      mand_b +
+      mand_d +
+      reveal_outcome +
+      mediator_regression +
+      outcome_regression
   }}}
   attr(mediation_analysis_design, "code") <- 
     construct_design_code(mediation_analysis_designer, match.call.defaults())
@@ -100,19 +96,6 @@ attr(mediation_analysis_designer,"description") <- "
     and direct effect of treatment (Z) on outcome (Y) equal to <code>d</code>. 
 <p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>.
 "
-
-
-
-
-#' A mediation analysis design
-#'
-#' Default design created with  \code{\link{mediation_analysis_designer}}
-#' 
-#' @seealso \code{\link{mediation_analysis_designer}} 
-#' @format A design object 
-"mediation_analysis_design"
-
-
 
 
 

@@ -22,3 +22,4 @@ r_packages:
 - ggplot2
 - tidyverse
 - dplyr
+r_check_args: "--with-keep.source"

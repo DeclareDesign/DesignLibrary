@@ -1,8 +1,8 @@
 #' Create a design for cluster random sampling
 #'
-#' Description here
+#' A cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
 #' 
-#' Key limitations: Limitations here.
+#' Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
 #' 
 #' Note: Note here.
 #'
@@ -10,7 +10,7 @@
 #' @param N_subjects_per_cluster An integer. Total number of subjects per cluster in the population.
 #' @param n_clusters An integer. Number of clusters to sample.
 #' @param n_subjects_per_cluster An integer. Number of subjects per cluster to sample.
-#' @param icc A real number in [0,1] Intra-cluster Correlation. 
+#' @param icc A real number in [0,1] Intra-cluster Correlation Coefficient. 
 #' @return A cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
@@ -33,16 +33,17 @@ cluster_sampling_designer <- function(n_clusters = 100,
   if(n_subjects_per_cluster > N_subjects_per_cluster) stop(paste0("n_subjects_per_cluster must be smaller than the maximum of ", N_subjects_per_cluster, " subjects per cluster."))
   {{{
     # M: Model
-    population <-
+    fixed_pop <-
       declare_population(
         cluster = add_level(N = N_clusters),
         subject = add_level(N = N_subjects_per_cluster,
                             latent_ideology = draw_normal_icc(mean = 0, N = N, clusters = cluster, ICC = icc),
                             Y = draw_ordered(x = latent_ideology, breaks = qnorm(seq(0, 1, length.out = 8)))
         )
-      )
-    fixed_pop <- population()
+      )()
     
+    population <- declare_population(data = fixed_pop)
+
     # I: Inquiry
     estimand <- declare_estimand(mean(Y), label = "Ybar")
     
@@ -63,7 +64,7 @@ cluster_sampling_designer <- function(n_clusters = 100,
     
     
     # Design
-    cluster_sampling_design <- declare_design(fixed_pop, estimand, stage_1_sampling, stage_2_sampling, no_clustering, clustered_ses)
+    cluster_sampling_design <- population + estimand + stage_1_sampling + stage_2_sampling + no_clustering + clustered_ses
   }}}
   
   attr(cluster_sampling_design, "code") <- 
@@ -82,21 +83,8 @@ attr(cluster_sampling_designer, "shiny_arguments") <- list(
   icc = c(0.2, seq(0.002, .999, by = 0.2))
 )
 attr(cluster_sampling_designer, "description") <- "
-<p> A cluster sampling design with <code>n_clusters</code> clusters each comprising 
-    <code>n_subjects_per_cluster</code> units. Outcomes within clusters have ICC approximately equal to 
+<p> A cluster sampling design that samples <code>n_clusters</code> clusters each comprising 
+    <code>n_subjects_per_cluster</code> units. The population comprises <code>N_clusters</code> with <code>N_subjects_per_cluster</code> units each. Outcomes within clusters have ICC approximately equal to 
     <code>ICC</code>. 
 "
-
-
-
-#' A cluster random sampling design
-#'
-#' Default design created with  \code{\link{cluster_sampling_designer}}
-#' 
-#' @seealso \code{\link{cluster_sampling_designer}} 
-#' @format A design object 
-"cluster_sampling_design"
-
-
-
 

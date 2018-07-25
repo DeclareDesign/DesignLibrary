@@ -2,16 +2,13 @@
 % Please edit documentation in R/helpers.R
 \name{get_design_code}
 \alias{get_design_code}
-\title{Get code from a designer}
+\title{Get the code from a design}
 \usage{
 get_design_code(design)
 }
 \arguments{
-\item{designer}{A function that builds designs, and contains the code to be grabbed inside triple braces}
-}
-\value{
-Verbatim code
+\item{design}{A design that has code as an attribute.}
 }
 \description{
-Get code from a designer
+Get the code from a design
 }
