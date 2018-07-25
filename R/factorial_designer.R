@@ -4,9 +4,9 @@
 #'
 #' @param N An integer. Size of sample.
 #' @param k An integer. The number of factors in the design.
-#' @param means A scalar. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
-#' @param sds A scalar. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
-#' @param probs A scalar of length \code{k}. Independent probability of assignment to each treatment. 
+#' @param means A numeric vector. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
+#' @param sds A numeric vector. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
+#' @param probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
 #' @return A factorial design.
 #' @details 
 #' 
