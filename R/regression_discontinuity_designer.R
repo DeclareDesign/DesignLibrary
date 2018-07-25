@@ -1,20 +1,20 @@
 #' Create a regression discontinuity design
 #'
-#' A regression discontinuity design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
 #'
 #' @param N An integer. Size of population to sample from.
-#' @param tau A scalar number. Difference in potential outcomes functions at the threshold.
-#' @param cutoff A scalar number in (0,1). Threshold on running variable beyond which units are treated.
-#' @param bandwidth A scalar number. Bandwidth around threshold from which to include units.
+#' @param tau A number. Difference in potential outcomes functions at the threshold.
+#' @param cutoff A number in (0,1). Threshold on running variable beyond which units are treated.
+#' @param bandwidth A number. Bandwidth around threshold from which to include units.
 #' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
-#' @return A regression discontinuity design design
+#' @return A regression discontinuity design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
 #' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
-#' # A regression discontinuity design using default arguments:
+#' # Generate a regression discontinuity design using default arguments:
 #' regression_discontinuity_design <- regression_discontinuity_designer()
 
 regression_discontinuity_designer <- function(

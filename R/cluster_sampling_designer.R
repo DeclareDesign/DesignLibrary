@@ -1,16 +1,15 @@
 #' Create a design for cluster random sampling
 #'
-#' A cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
-#' 
+#' Builds a cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
+#'
+#' @details 
 #' Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
 #' 
-#' Note: Note here.
-#'
 #' @param N_clusters An integer. Total number of clusters in the population.
 #' @param N_subjects_per_cluster An integer. Total number of subjects per cluster in the population.
 #' @param n_clusters An integer. Number of clusters to sample.
-#' @param n_subjects_per_cluster An integer. Number of subjects per cluster to sample.
-#' @param icc A real number in [0,1] Intra-cluster Correlation Coefficient. 
+#' @param n_subjects_per_cluster An integer. Number of subjects to sample per cluster.
+#' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
 #' @return A cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
@@ -65,7 +64,8 @@ cluster_sampling_designer <- function(n_clusters = 100,
     
     
     # Design
-    cluster_sampling_design <- population + estimand + stage_1_sampling + stage_2_sampling + no_clustering + clustered_ses
+    cluster_sampling_design <- population + estimand +
+      stage_1_sampling + stage_2_sampling + no_clustering + clustered_ses
   }}}
   
   attr(cluster_sampling_design, "code") <- 
