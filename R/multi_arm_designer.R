@@ -102,14 +102,11 @@ multi_arm_designer <- function(
   return( multi_arm_design)
 }
 
-attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), means = c(0, .5, 0.4)) 
+attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50)) 
 
 attr( multi_arm_designer, "tips") <-
   list(
-    N = "Sample Size",
-    m_arms = "Number of arms",
-    means = "The average treatment effects",
-    sds  = "The standard deviation in each treatment arm"
+    N = "Sample Size"
   )
 
 
