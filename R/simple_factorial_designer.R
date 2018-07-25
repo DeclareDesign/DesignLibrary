@@ -25,6 +25,7 @@
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment factorial
+#' @import DeclareDesign
 #' @export
 #'
 #' @examples

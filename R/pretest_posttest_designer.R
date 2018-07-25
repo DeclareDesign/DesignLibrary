@@ -11,6 +11,7 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
+#' @import DeclareDesign
 #' @export
 #' @examples
 #' # To make a design using default arguments:

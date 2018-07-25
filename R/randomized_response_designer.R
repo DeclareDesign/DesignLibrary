@@ -13,6 +13,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept descriptive
+#' @import DeclareDesign
 #' @export
 #'
 #' @examples

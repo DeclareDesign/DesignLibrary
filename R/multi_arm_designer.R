@@ -11,6 +11,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
 #' @concept multi-trial
+#' @import DeclareDesign
 #' @export
 #' @examples
 #' # To make a design using default arguments:

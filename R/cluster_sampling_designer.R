@@ -16,6 +16,7 @@
 #' @concept clusters
 #' @concept observational
 #' @concept measurement
+#' @import DeclareDesign
 #' @export
 #' @examples
 #' # To make a design using default arguments:
