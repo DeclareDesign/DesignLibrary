@@ -50,7 +50,6 @@ Units are assigned to treatment using complete random assignment. Potential outc
 See \code{\link{multi_arm_designer}} for a factorial design with non independent assignments.
 }
 \examples{
-\dontrun{
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 get_estimates(design)
 get_design_code(design)
