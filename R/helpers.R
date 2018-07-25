@@ -125,3 +125,15 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
   match.call(definition, call, TRUE, envir)
 }
 
+
+#' Clean code for method substitute
+#' @param code A string. Design code
+#' @return clean code 
+#' @export
+#'
+clean_code <- function(code) {
+  out <- capture.output( cat(code,sep =  "\n"))
+  out <- gsub("\\{|\\}", "", out)
+  out <- gsub("#", " \n #", out)
+  out
+}

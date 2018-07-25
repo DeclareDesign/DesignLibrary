@@ -60,7 +60,7 @@ multi_arm_designer <- function(
   
   
   Q <- paste0(" estimand <- declare_estimand('(Intercept)' = mean(Y_Z_T1), ",
-                     paste0("ZT", 2:m_arm, " = mean(Y_Z_T", 2:m_arm, " - Y_Z_T1)", collapse = ", "), ", coefficients = TRUE)")
+                     paste0("ZT", 2:m_arm, " = mean(Y_Z_T", 2:m_arm, " - Y_Z_T1)", collapse = ", "), ", term = TRUE)")
   
   fixes <- list(conds = conds, f_Y = f_Y, U = U, Q = Q)
   
@@ -81,7 +81,7 @@ multi_arm_designer <- function(
     reveal <- declare_reveal()
     
     "# A: Answer" 
-    estimator <- declare_estimator(Y ~ Z, model = lm_robust, coefficients = TRUE)
+    estimator <- declare_estimator(Y ~ Z, model = lm_robust, term = TRUE)
     
     
     "# Design"
@@ -104,7 +104,7 @@ multi_arm_designer <- function(
   return( multi_arm_design)
 }
 
-attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 
+attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), means = c(0, .5, 0.4)) 
 
 attr( multi_arm_designer, "tips") <-
   list(
