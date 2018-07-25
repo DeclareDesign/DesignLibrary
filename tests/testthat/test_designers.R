@@ -91,8 +91,12 @@ test_that(desc = "simple_factorial_designer errors when it should",
             expect_error(simple_factorial_designer(prob_B = 3))
                                })
 
-
-
+test_that(desc = "simple_two_arm_designer errors when it should",
+          code = {
+            expect_error(simple_two_arm_designer(control_sd = -1))
+            expect_error(simple_two_arm_designer(prob = 10))
+            expect_error(simple_two_arm_designer(rho = 10))
+                               })
 
 
 
