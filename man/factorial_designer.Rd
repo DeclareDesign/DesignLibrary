@@ -12,11 +12,11 @@ factorial_designer(N = 500, k = 2, means = seq(0:0.5, length.out = 2^k),
 
 \item{k}{An integer. The number of factors in the design.}
 
-\item{means}{A scalar. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}
+\item{means}{A numeric vector. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}
 
-\item{sds}{A scalar. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}
+\item{sds}{A numeric vector. Standard deviations for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values.}
 
-\item{probs}{A scalar of length \code{k}. Independent probability of assignment to each treatment.}
+\item{probs}{A numeric vector of length \code{k}. Independent probability of assignment to each treatment.}
 }
 \value{
 A factorial design.
