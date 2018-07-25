@@ -65,23 +65,28 @@ for(designer in designers){
       }
     )
     
-    # Should create a dependency on ShinyDeclareDesign and put these tests back in:
-    # testthat::test_that(
-    #   desc = paste0("shiny_arguments in ",designer," evaluate properly."),
-    #   code = {
-    #     shiny_args <- expand_designer_shiny_args_text(designer = the_designer)
-    #     lapply(shiny_args,function(x)eval(parse(text = x)))
-    #   }
-    # )
-    # 
-    # testthat::test_that(
-    #   desc = paste0("get_shiny_diagnosis works with ",designer," for at least 5 sims."),
-    #   code = {
-    #     get_shiny_diagnosis(designer = the_designer,sims = 2)
-    #   }
-    # )
   }
 }
+
+
+# Individual tests for coverage -------------------------------------------
+
+test_that(desc = "block_cluster_two_arm_designer errors when it should",
+          code = {
+            expect_error(block_cluster_two_arm_designer(sd_block = -1))
+            expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
+            expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
+            expect_error(block_cluster_two_arm_designer(sd_i_1 = -1))
+            expect_error(block_cluster_two_arm_designer(prob = 10))
+                               })
+
+
+
+
+
+
+
+
 
 
 
