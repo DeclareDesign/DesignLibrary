@@ -8,24 +8,24 @@ mediation_analysis_designer(N = 100, a = 0.5, b = 0.5, d = 0.5,
   rho = 0.2)
 }
 \arguments{
-\item{N}{Size of sample}
+\item{N}{An integer. Size of sample.}
 
-\item{a}{Effect of treatment (Z) on mediatior (M)}
+\item{a}{A number. Effect of treatment (Z) on mediatior (M).}
 
-\item{b}{Effect of mediatior (M) on outcome (Y)}
+\item{b}{A number. Effect of mediatior (M) on outcome (Y).}
 
-\item{d}{Direct effect of treatment (Z) on outcome (Y)}
+\item{d}{A number. Direct effect of treatment (Z) on outcome (Y).}
 
-\item{rho}{Correlation of mediator (M) and outcome (Y) error terms}
+\item{rho}{A number in [0,1]. Correlation of between mediator (M) and outcome (Y) error terms.}
 }
 \value{
 A mediation analysis design.
 }
 \description{
-A mediation analysis design where we are interested in the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
+A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
 }
 \examples{
-# To make a design using default arguments:
+# Generate a mediation analysis design using default arguments:
 mediation_analysis_design <- mediation_analysis_designer()
 
 }

@@ -11,34 +11,33 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
   outcome_sds = rep(1, 4))
 }
 \arguments{
-\item{N}{An integer. Sample size.}
+\item{N}{An integer. Size of sample.}
 
-\item{prob_A}{A number within the interval [0,1]. Probability of assigment to treatment A.}
+\item{prob_A}{A number in [0,1]. Probability of assigment to treatment A.}
 
-\item{prob_B}{A number within the interval [0,1]. Probability of assigment to treatment B.}
+\item{prob_B}{A number in [0,1]. Probability of assigment to treatment B.}
 
-\item{w_A}{Weight placed on A=1 condition in definition of "average effect of B" estimand.}
+\item{w_A}{A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.}
 
-\item{w_B}{Weight placed on B=1 condition in definition of "average effect of A" estimand.}
+\item{w_B}{A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.}
 
-\item{outcome_means}{A 4-vector. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11.  Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1}
+\item{outcome_means}{A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.}
 
-\item{mean_A0B0}{Mean outcome in A=0, B=0 condition}
+\item{mean_A0B0}{A number. Mean outcome in A=0, B=0 condition.}
 
-\item{mean_A0B1}{Mean outcome in A=0, B=1 condition}
+\item{mean_A0B1}{A number. Mean outcome in A=0, B=1 condition.}
 
-\item{mean_A1B0}{Mean outcome in A=1, B=0 condition}
+\item{mean_A1B0}{A number. Mean outcome in A=1, B=0 condition.}
 
-\item{mean_A1B1}{Mean outcome in A=1, B=1 condition}
+\item{mean_A1B1}{A number. Mean outcome in A=1, B=1 condition.}
 
 \item{outcome_sds}{A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.}
 }
 \value{
-A function that returns a design.
+A two-by-two factorial design.
 }
 \description{
-This designer builds a two by two factorial design in which asignments to each factor are independent of each other
-If you want a factorial with non independent assignments use the multi arm designer.
+Builds a two-by-two factorial design in which asignments to each factor are independent of each other.
 }
 \details{
 Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
@@ -46,26 +45,30 @@ Three types of estimand are declared: weighted averages of the average treatment
 Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units 
 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 
-\href{/library/articles/simple_factorial_arm.html}{Check out the vignette here.}
+Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 
-Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+See \code{\link{multi_arm_designer}} for a factorial design with non independent assignments.
 }
 \examples{
-\dontrun{
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 get_estimates(design)
 get_design_code(design)
 
-# A design that biased for the specified estimands:
+# A design biased for the specified estimands:
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
+\dontrun{
 diagnose_design(design)
+}
 
-# A design wtih estimands that "match" the assignment:
+# A design with estimands that "match" the assignment:
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2, w_A = .8, w_B = .2)
+\dontrun{
 diagnose_design(design)
+}
 
 # Compare power with and without interactions, given same average effects in each arm
 designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
+\dontrun{
 diagnose_design(designs)
 }
 
@@ -74,5 +77,5 @@ diagnose_design(designs)
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
 \concept{
-experiment factorial
+factorial
 }

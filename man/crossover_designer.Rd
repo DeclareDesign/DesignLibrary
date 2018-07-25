@@ -10,28 +10,26 @@ crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.1,
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{a}{A number. Treatment effect of interest}
+\item{a}{A number. Treatment effect of interest.}
 
-\item{b}{A number. Treatment effect of crossed randomization}
+\item{b}{A number. Treatment effect of crossed randomization.}
 
-\item{crossover}{A number. Size of crossover effect}
+\item{crossover}{A number. Size of crossover effect.}
 
-\item{rho}{A number in [0,1]. Correlation in errors of outcomes A and B}
+\item{rho}{A number in [0,1]. Correlation in errors of outcomes A and B.}
 }
 \value{
 A crossover design.
 }
 \description{
 This designer produces designs that have two treatments, A and B, 
-which each correspond to their own outcomes, YA and YB. 
+with each corresponding to their own outcomes, YA and YB. 
 The basic premise of the design is that treatment A does not affect outcome YB, 
 and that treatment B does not affect outome YA. Using the crossover parameter
 researchers can assess robustness of the design to violations of this assumption.
-The \href{/library/articles/crossover.html}{vignette} shows that adding a 
-SUR estimator to the design can greatly increase efficiency.
 }
 \examples{
-# To make a design using default arguments:
+# Generate a crossover design using default arguments:
 crossover_design <- crossover_designer()
 
 }
