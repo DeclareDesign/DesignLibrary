@@ -1,0 +1,148 @@
+---
+title: "Multi-Arm Experiment"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multi-Arm Experiment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, include=FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DeclareDesign)
+library(DesignLibrary)
+library(knitr)
+library(dplyr)
+
+```
+
+Learning about what works within a field often takes time, money and effort. Multi-arm designs can make this process somewhat more efficient: multiple treatments are assigned in parallel and compared against the same control group, which reduces sample size and hence costs. 
+
+Suppose that we want to learn whether there is racial discrimination in the labor market by conducting an experiment. Companies from our population of size $30$ are randomly assigned to receive a résumé from a white, black or Latino candidate. Companies are assigned to one of these three conditions with equal probabilities, and résumés only vary race and are otherwise identical. We define our outcome of interest as the difference in callbacks between experimental conditions. 
+
+In settings of multiple treatment arms, we could do a number of pairwise comparisons: across treatments and each treatment against control. 
+<!--One must be however careful since increasing the number of hyphoteses being tested might increase the probability of type 1 error -->
+  
+
+## Design Declaration
+
+- **M**odel: We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $k$ $(k = 1, 2, ..., K)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $k$ and the control condition: $Y_i(Z = k)  -Y_i(Z = 0)$.
+
+- **I**nquiry:  We are interested in the effect of each treatment arm with respect to a comparison group.
+
+- **D**ata strategy: We randomly assign $k/N$ units to each of the three treatment arms.
+
+- **A**nswer strategy: We fit a linear regression model with individual indicators for each of the treatments as covariates. The average treatment effect is equal to the regression coefficients, which are computed by subtracting the mean of the comparison group from the mean of each treatment group.
+
+
+```{r, include=FALSE}
+get_design_code <- function(design){
+ out <- capture.output( cat(attr(design, "code"),sep =  "\n"))
+ out <- gsub("\\{|\\}", "", out)
+ out <-  gsub("\\\"", " ", out)
+ out <- gsub("#", "
+ #", out)
+ formatR::tidy_source(text = out, indent = 2, width.cutoff = 80, comment = T, blank = T,
+            arrow = T)
+}
+
+```
+
+
+```{r, include=FALSE}
+simple_k_arm_designer <- function(
+    N = 30, 
+    n_arms = 3, 
+    means = rep(0, n_arms),
+    sd = .1,   
+    fixed = NULL
+    ){
+  
+  if("means" %in% names(fixed)) if(!identical(means, fixed$means)) stop(paste("Conflicting definitions of 'means' in argument list (possibly the default)--(", paste(means, collapse = ","), ")--and in the fixed list--(", paste(fixed$means, collapse = ","), "). If 'means' is defined in fixed list the same definition has to be  given in the arguments list."))
+
+  # Create list for substitution
+  conds = paste0("T", 1:n_arms)
+  
+  f_Y = formula(paste0(
+              "Y ~ ", paste0(means, " * (Z == 'T", 1:n_arms, "')", collapse = " + "),  " + u")
+              )
+  estimand <- capture.output(cat(paste0("declare_estimand('(Intercept)' = mean(Y_Z_T1), ",
+             paste0("ZT", 2:n_arms, " = mean(Y_Z_T", 2:n_arms, " - Y_Z_T1)", collapse = ", "), ", coefficients = TRUE)")))
+  fixes <- list(n_arms = n_arms, conds = conds, f_Y = f_Y, estimand = estimand)
+  
+  fixes <- c(fixes, fixed)
+  
+  # Design code with arguments in list substituted
+  design_code <-  substitute({ 
+    "# M: Model "
+    U <- declare_population(N = N, u = sd*rnorm(N))
+    Y <- declare_potential_outcomes(formula = f_Y, conditions = conds)
+    
+    "# I: Inquiry"
+    Q <- eval(parse(text = estimand))
+
+    "# D: Data"
+    Z <- declare_assignment(num_arms = n_arms)
+    R <- declare_reveal()
+    
+    "# A: Answer "
+
+    A <- declare_estimator(Y ~ Z, model = lm_robust, coefficients = TRUE)
+    
+    
+    "# Design "
+
+    simple_k_arm_design <- U / Y / Z / R / Q /  A
+
+     }, fixes)
+  design_code
+  # Run the design code and create the design
+  eval(design_code)
+  
+  # Get argument list
+  args_text <- function(args, fixes){
+    # Get names of arguments   
+    arg_names <- names(args[2:(length(args)-1)])
+    
+    # Exclude any fixed arguments
+    if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
+    
+    # Format
+    sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
+    }
+
+  #  Add  code plus argments as attributes
+  attr(simple_k_arm_design, "code") <- 
+    paste0(c(args_text(match.call.defaults(), fixes), design_code))
+  
+  # Return design
+  return(simple_k_arm_design)
+}
+
+attr(simple_k_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 
+
+attr(simple_k_arm_designer, "tips") <-
+  list(
+    N = "Number of blocks",
+    ate = "The average treatment effect"
+  )
+```
+
+```{r, include=FALSE}
+design <- simple_k_arm_designer(N = 30, n_arms = 3, means = c(2, 1, 1))
+```
+
+```{r, comment = " ", echo=FALSE}
+get_design_code(design)
+```
+
+
+```{r, echo=FALSE}
+diagnosis <- diagnose_design(design, sims = 100)
+kable(reshape_diagnosis(diagnosis)[,-1], digits = 3)
+```
+
+
+<!-- Include example using fixed-->
+
