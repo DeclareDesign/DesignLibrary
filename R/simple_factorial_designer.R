@@ -28,6 +28,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 #' get_estimates(design)
 #' get_design_code(design)
@@ -43,7 +44,7 @@
 #' # Compare power with and without interactions, given same average effects in each arm
 #' designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 #' diagnose_design(designs)
-#' 
+#' }
 #' 
 simple_factorial_designer <- function(N = 100,
   prob_A = .5,
