@@ -25,7 +25,8 @@
 #' @param outcome_sds A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
-#' @concept factorial
+#' @concept experiment factorial
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #'
 #' @examples
@@ -40,13 +41,16 @@
 #' }
 #' 
 #' # A design with estimands that "match" the assignment:
-#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2, w_A = .8, w_B = .2)
+#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
+#'                                     prob_A = .8, prob_B = .2, 
+#'                                     w_A = .8, w_B = .2)
 #' \dontrun{
 #' diagnose_design(design)
 #' }
 #' 
 #' # Compare power with and without interactions, given same average effects in each arm
-#' designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
+#' designs <- redesign(simple_factorial_designer(), 
+#'                     outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 #' \dontrun{
 #' diagnose_design(designs)
 #' }
@@ -63,7 +67,7 @@ simple_factorial_designer <- function(N = 100,
                                       mean_A1B1 = outcome_means[4],
                                       outcome_sds = rep(1,4)
 ){
-  
+  Y_A_0_B_0 <- Y_A_0_B_1 <- Y_A_1_B_0 <- Y_A_1_B_1 <- A <- B <- Y <- NULL
   if((w_A < 0) || (w_B < 0) || (w_A > 1) || (w_B > 1)) stop("w_A and w_B must be in 0,1")
   if(max(outcome_sds < 0) )      stop("sd must be non-negative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob_ arguments must be non-negative")

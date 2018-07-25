@@ -28,6 +28,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
 #' @concept blocking
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # Generate a design using default arguments:
@@ -48,15 +49,14 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
                                            ate = 1,
                                            treatment_mean = control_mean + ate,
                                            rho = 1){  
-  
+  N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
   if(sd_block<0) stop("sd_block must be non-negative")
   if(sd_cluster<0) stop("sd_cluster must be non-negative")
   if(sd_i_0<0) stop("sd_i_0 must be non-negative")
   if(sd_i_1<0) stop("sd_i_1 must be non-negative")
   if(prob<0 || prob>1) stop("prob must be in [0,1]")
   if(rho<0 || rho>1) stop("prob must be in [0,1]")
-  {{{
-    
+  {{{    
     # M: Model
     population <- declare_population(
       blocks   = add_level(

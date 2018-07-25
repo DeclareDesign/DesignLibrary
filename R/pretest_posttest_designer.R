@@ -13,6 +13,7 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # Generate a pre-test post-test design using default arguments:
@@ -23,9 +24,9 @@ pretest_posttest_designer <- function(N = 100,
                                       rho = .5,
                                       attrition_rate = .1)
 {
+  u_t1 <- Y_t2_Z_1 <- Y_t2_Z_0 <- Z <- R <- Y_t1 <- Y_t2 <- NULL
   if(rho < 0 | rho > 1) stop("'rho' must be a value from 0 to 1")
   if(attrition_rate < 0 | attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
-  
   {{{
     # M: Model
     population <- declare_population(

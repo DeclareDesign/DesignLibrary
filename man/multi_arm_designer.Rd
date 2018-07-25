@@ -35,11 +35,14 @@ get_estimates(design)
 design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
 diagnose_design(design)
 
-design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, fixed = list(m_arms = 4, sds = rep(1, 4), means = 1:4))
+design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, 
+                             fixed = list(m_arms = 4, sds = rep(1, 4), 
+                                          means = 1:4))
 cat(get_design_code(design), sep = '\\n')
 diagnose_design(design)
 
-If 'means' or 'sds' are defined in fixed list the same definition has to be  given in the arguments list.
+If 'means' or 'sds' are defined in fixed list the same definition has to be  
+given in the arguments list.
 multi_arm_designer(N = 20, fixed = list(means = 1:3))
 multi_arm_designer(N = 20, fixed = list(sds = 1:3))
 }

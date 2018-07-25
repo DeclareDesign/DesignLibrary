@@ -19,6 +19,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # Generate a simple spillover design using default arguments:
@@ -31,7 +32,7 @@ simple_spillover_designer <- function(N_groups = 80,
                                       sd = .2,
                                       gamma = 2)
 {
-  
+  N <- n <- G <- zeros <- Z <- NULL
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 

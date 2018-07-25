@@ -11,6 +11,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # Generate a regression discontinuity design using default arguments:
@@ -23,6 +24,7 @@ regression_discontinuity_designer <- function(
   bandwidth = .5,
   poly_order = 4
 ){
+  X <- noise <- Y <- NULL
   {{{
     # M: Model
     control <- function(X) {

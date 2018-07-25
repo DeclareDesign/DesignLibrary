@@ -11,6 +11,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
 #' @concept multi-trial
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # To make a design using default arguments:
@@ -24,11 +25,14 @@
 #' diagnose_design(design)
 #' 
 # A design with fixed sds and means. N is the sole modifiable argument. 
-#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, fixed = list(m_arms = 4, sds = rep(1, 4), means = 1:4))
+#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, 
+#'                              fixed = list(m_arms = 4, sds = rep(1, 4), 
+#'                                           means = 1:4))
 #' cat(get_design_code(design), sep = '\n')
 #' diagnose_design(design)
 #' 
-#' If 'means' or 'sds' are defined in fixed list the same definition has to be  given in the arguments list.
+#' If 'means' or 'sds' are defined in fixed list the same definition has to be  
+#' given in the arguments list.
 #' multi_arm_designer(N = 20, fixed = list(means = 1:3))
 #' multi_arm_designer(N = 20, fixed = list(sds = 1:3))
 #' }
