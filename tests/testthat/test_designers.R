@@ -80,6 +80,17 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
             expect_error(block_cluster_two_arm_designer(prob = 10))
                                })
 
+test_that(desc = "simple_factorial_designer errors when it should",
+          code = {
+            expect_error(simple_factorial_designer(w_A = 10))
+            expect_error(simple_factorial_designer(w_B = 10))
+            expect_error(simple_factorial_designer(outcome_sds = -1))
+            expect_error(simple_factorial_designer(prob_A = -1))
+            expect_error(simple_factorial_designer(prob_A = 3))
+            expect_error(simple_factorial_designer(prob_B = -1))
+            expect_error(simple_factorial_designer(prob_B = 3))
+                               })
+
 
 
 
