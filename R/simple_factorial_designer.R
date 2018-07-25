@@ -34,15 +34,20 @@
 #' get_design_code(design)
 #' 
 #' # A design that biased for the specified estimands:
-#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
+#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
+#'                                     prob_A = .8, prob_B = .2)
 #' diagnose_design(design)
 #' 
 #' # A design wtih estimands that "match" the assignment:
-#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2, w_A = .8, w_B = .2)
+#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
+#'                                     prob_A = .8, prob_B = .2, 
+#'                                     w_A = .8, w_B = .2)
 #' diagnose_design(design)
 #' 
-#' # Compare power with and without interactions, given same average effects in each arm
-#' designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
+#' # Compare power with and without interactions, given same average 
+#' effects in each arm
+#' designs <- redesign(simple_factorial_designer(), 
+#'                     outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 #' diagnose_design(designs)
 #' }
 #' 
