@@ -15,7 +15,7 @@ LaTeX: XeLaTeX
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageCheckArgs: --install-args  --with-keep.source
+PackageCheckArgs: --install-args="--with-keep.source"
 PackageRoxygenize: rd,collate,namespace
 
 QuitChildProcessesOnExit: Yes
