@@ -97,21 +97,19 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   code
 }
 
-# This function finds triple braces when there is no source code 
-
+# These functions find triple braces when there is no source code 
 find_triple_bracket <- function(f){
-  pred <- function(expr, depth=3) {
-    (depth == 0) || (
-      length(expr) > 1 &&
-        expr[[1]] == as.symbol('{') &&
-        Recall(expr[[2]], depth - 1)
-    )
-  }
   clean <- function(ch, n=length(ch)-1) ch[2:n]
   ret <- Filter(pred, body(f))
   if(length(ret) == 0) "" else clean(deparse(ret[[1]][[2]][[2]]))
 }
-
+pred <- function(expr, depth=3) {
+  (depth == 0) || (
+    length(expr) > 1 &&
+      expr[[1]] == as.symbol('{') &&
+      Recall(expr[[2]], depth - 1)
+  )
+}
 
 
 # Internal functions for substitute approach ------------------------------
