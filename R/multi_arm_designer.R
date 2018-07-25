@@ -90,11 +90,9 @@ multi_arm_designer <- function(
   }, fixes)
   
   # Run the design code and create the design
-  design_code <- clean_code(paste(design_code) )
+  design_code <- clean_code(design_code) 
   
   eval(parse(text = (design_code)))
-  
-  
 
   #  Add  code plus argments as attributes
   attr( multi_arm_design, "code") <- 

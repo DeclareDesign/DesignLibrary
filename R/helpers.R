@@ -132,7 +132,7 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 #' @export
 #'
 clean_code <- function(code) {
-  out <- capture.output( cat(code,sep =  "\n"))
+  out <- strsplit(paste(code), '\n')
   out <- gsub("\\{|\\}", "", out)
   out <- gsub("#", " \n #", out)
   out
