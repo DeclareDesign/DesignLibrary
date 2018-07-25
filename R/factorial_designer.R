@@ -95,6 +95,14 @@ factorial_designer <- function(
     # M: Model
     pop
     
+    # CHECK:
+    us <- sapply(1:2, function(x) quos(rnorm(500, 0, x)))
+    names(us) <- c("u1", "u2")
+    pop <- quo(declare_population(N = N,
+                                  u = rnorm(N, 0, .1),
+                                  UQS(get_expr(us))))
+    p <- eval_bare(pop)
+    
     potential_outcomes <- declare_potential_outcomes(formula = f_Y, conditions = cond_list)
     
     reveal_Y <- declare_reveal(Y, assignment_variables(cond_names))
