@@ -54,41 +54,22 @@ design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 get_estimates(design)
 get_design_code(design)
 
-<<<<<<< HEAD
 # A design that biased for the specified estimands:
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
                                     prob_A = .8, prob_B = .2)
-=======
-# A design biased for the specified estimands:
-design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
 \dontrun{
->>>>>>> master
 diagnose_design(design)
 }
 
-<<<<<<< HEAD
-# A design wtih estimands that "match" the assignment:
-design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
-                                    prob_A = .8, prob_B = .2, 
-                                    w_A = .8, w_B = .2)
-=======
 # A design with estimands that "match" the assignment:
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2, w_A = .8, w_B = .2)
 \dontrun{
->>>>>>> master
 diagnose_design(design)
 }
 
-<<<<<<< HEAD
-# Compare power with and without interactions, given same average 
-effects in each arm
-designs <- redesign(simple_factorial_designer(), 
-                    outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
-=======
 # Compare power with and without interactions, given same average effects in each arm
 designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 \dontrun{
->>>>>>> master
 diagnose_design(designs)
 }
 
@@ -97,5 +78,5 @@ diagnose_design(designs)
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
 \concept{
-factorial
+experiment factorial
 }
