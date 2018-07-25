@@ -2,19 +2,29 @@ Package: DesignLibrary
 Type: Package
 Title: Library of Research Designs
 Version: 0.1.0
-Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut", "cre")),
+Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut")),
              person("Clara", "Bicalho", email = "clarabmcorreia@gmail.com", role = c("aut")),
-             person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut")),
+             person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut", "cre")),
              person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
              person("Macartan", "Humphreys", email = "macartan@gmail.com", role = c("aut")),
              person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")),
              person("Lily", "Medina", email = "lilymiru@gmail.com", role = c("aut")))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This is a library of functions that return designs built 
+    using the package DeclareDesign. In one line of code users can specify 
+    the parameters of individual designs and diagnose their properties.
+    The designers can also be used to compare performance of a given design
+    across a range of combinations of parameters, such as effect size, sample
+    size, assignment probabilities and more.
+URL: https://declaredesign.org/library/, https://github.com/DeclareDesign/DesignLibrary
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: DeclareDesign
+Depends: 
+    DeclareDesign (>= 0.10.0),
+    R (>= 3.4.0),
+    randomizr (>= 0.16.1),
+    fabricatr (>= 0.4.0),
+    estimatr (>= 0.10.0)
 Imports:
     devtools
 Suggests: rmarkdown, 

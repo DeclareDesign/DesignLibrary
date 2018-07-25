@@ -4,35 +4,34 @@
 \alias{simple_spillover_designer}
 \title{Create a simple design with spillovers}
 \usage{
-simple_spillover_designer(n_groups = 80, group_size = 3, sd = 0.2,
+simple_spillover_designer(N_groups = 80, N_i_group = 3, sd = 0.2,
   gamma = 2)
 }
 \arguments{
-\item{n_groups}{Number of groups.}
+\item{N_groups}{An integer. Number of groups.}
 
-\item{group_size}{Number of units in each group. May be scalar, or vector of length(n_groups)}
+\item{N_i_group}{Number of units in each group. Can be scalar or vector of length \code{N_groups}.}
 
-\item{sd}{Standard deviation of individual level shock}
+\item{sd}{A number. Standard deviation of individual level shock.}
 
-\item{gamma}{Parameter that controls whether spillovers within groups substitue for each other or complement each other}
+\item{gamma}{A number. Parameter that controls whether spillovers within groups substitute or complement each other.}
 }
 \value{
-A function that returns a design.
+A simple spillover design.
 }
 \description{
-This designer builds a design with \code{n_groups} groups each containing \code{group_size} individuals. 
+Builds a design with \code{N_groups} groups each containing \code{N_i_group} individuals. 
 Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
 the effect is spread equally among members of the group.
 }
 \details{
-Note: Parameter \code{gamma} controls interactions between spillover effects. 
-For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{group_size} no matter how many others are already treated.
+Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
 For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
-The default estimand is the average difference 
-across subjects between no one treated and only that subject treated.
+
+The default estimand is the average difference across subjects between no one treated and only that subject treated.
 }
 \examples{
-# To make a design using default arguments:
+# Generate a simple spillover design using default arguments:
 simple_spillover_design <- simple_spillover_designer()
 
 }
