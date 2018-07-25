@@ -68,10 +68,7 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   code
 }
 
-#' Generates character string for non-fixed arguments in a designer using substitution approach.
-#' @param args Function arguments.
-#' @param fixes Function arguments that are fixed (i.e., already evaluated in body of function)
-#' 
+
 return_args <- function(args, fixes){
   # Get names of arguments   
   arg_names <- names(args[2:(length(args)-1)])
@@ -126,11 +123,7 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 }
 
 
-#' Clean code for method substitute
-#' @param code A string. Design code
-#' @return clean code 
-#' @export
-#'
+
 clean_code <- function(code) {
   out <- strsplit(paste(code), '\n')
   out <- gsub("\\{|\\}", "", out)
