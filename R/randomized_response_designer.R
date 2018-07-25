@@ -1,10 +1,10 @@
 #' Create a randomized response design
 #'
-#' A forced randomized response design that measures the share of individuals with a given trait \code{prevalence_trait} in a population of size \code{N}. Probability of forced response ("Yes") is given by \code{prob_forced_yes}, and rate at which individuals with trait lie is given by \code{withholding_rate}.
+#' Produces a (forced) randomized response design that measures the share of individuals with a given trait \code{prevalence_trait} in a population of size \code{N}. Probability of forced response ("Yes") is given by \code{prob_forced_yes}, and rate at which individuals with trait lie is given by \code{withholding_rate}.
 #' 
-#' Key limitations: This design employs a specific variation of randomized response that randomly requires respondents to provide a fixed answer to the sensitive question (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
+#' @details 
+#' \code{randomized_response_designer} employs a specific variation of randomized response designs in which respondents are required to report a fixed answer to the sensitive question with a given probability (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 #' 
-#'
 #' @param N An integer. Size of sample.
 #' @param prob_forced_yes A number. Probability of a forced yes.
 #' @param prevalence_rate A number. Probability that individual has the sensitive trait.
@@ -16,14 +16,13 @@
 #' @export
 #'
 #' @examples
-#' # To make a design using default arguments:
+#' # Generate a randomized response design using default arguments:
 #' randomized_response_design <- randomized_response_designer()
 
-randomized_response_designer <- function(
-  N = 1000,
-  prob_forced_yes = .6,
-  prevalence_rate = .1,
-  withholding_rate = .5
+randomized_response_designer <- function(N = 1000,
+                                         prob_forced_yes = .6,
+                                         prevalence_rate = .1,
+                                         withholding_rate = .5
 ){
   {{{
     # M: Model
@@ -33,19 +32,22 @@ randomized_response_designer <- function(
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    potential_outcomes <- declare_potential_outcomes(
+    pos <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
+    
     # I: Inquiry
     estimand <- declare_estimand(true_rate = prevalence_rate)
-    # D: Data strategy
-    coin_flip <- declare_assignment(
+    
+    # D: Data Strategy
+    assignment <- declare_assignment(
       prob = prob_forced_yes,
       conditions = c("Truth","Yes")
     )
-    # A: Answer strategy
-    randomized_response_estimator <- declare_estimator(
+    
+    # A: Answer Strategy
+    estimator_randomized_response <- declare_estimator(
       handler = tidy_estimator(
         function(data) with(
           data,
@@ -53,21 +55,22 @@ randomized_response_designer <- function(
       estimand = estimand,
       label = "Forced Randomized Response"
     )
-    direct_question_estimator <- declare_estimator(
+    estimator_direct_question <- declare_estimator(
       handler = tidy_estimator(function(data) with(
         data,
         data.frame(est = mean(direct_answer)))),
       estimand = estimand,
       label = "Direct Question"
     )
+    
     # Design
     randomized_response_design <- population +
-      coin_flip +
-      potential_outcomes +
+      assignment +
+      pos +
       estimand +
       declare_reveal(Y, Z) +
-      randomized_response_estimator +
-      direct_question_estimator
+      estimator_randomized_response +
+      estimator_direct_question
   }}}
   attr(randomized_response_design, "code") <- 
     construct_design_code(randomized_response_designer, match.call.defaults())

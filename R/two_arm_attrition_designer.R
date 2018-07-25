@@ -1,23 +1,24 @@
 #' Create design with risk of attrition or post treatment conditioning
 #'
-#' This designer creates a two arm design but where a researcher is interested in an estimand that is conditional on a post treatment outcome 
-#' (the effect on Y given R) or has  access to conditional data (Y given R).
+#' Creates a two arm design with application for when estimand of interest is conditional on a post treatment outcome 
+#' (the effect on Y given R) or data is conditionally observed (Y given R). See `Details` for more information on the data generating process.
 #' 
+#' @details 
 #' The data generating process is of the form: 
 #' 
-#'     R ~ (a_R + b_R*Z > u_R)
+#'     \code{R ~ (a_R + b_R*Z > u_R)}
 #'     
-#'     Y ~ (a_Y + b_Y*Z > u_Y)
+#'     \code{Y ~ (a_Y + b_Y*Z > u_Y)}
 #'     
-#'     where u_R and u_Y are joint normally distributed with correlation rho
+#'     where \code{u_R} and \code{u_Y} are joint normally distributed with correlation \code{rho}.
 #' 
 #' 
-#' @param N Integer. Size of sample
-#' @param a_R Constant in equation relating treatment to responses
-#' @param b_R Slope coefficient in equation relating treatment to responses
-#' @param a_Y Constant in equation relating treatment to outcome
-#' @param b_Y Slope coefficient in equation relating treatment to outcome
-#' @param rho correlation between shocks in equations for R and Y
+#' @param N An integer. Size of sample.
+#' @param a_R A number. Constant in equation relating treatment to responses.
+#' @param b_R A number. Slope coefficient in equation relating treatment to responses.
+#' @param a_Y A number. Constant in equation relating treatment to outcome.
+#' @param b_Y A number. Slope coefficient in equation relating treatment to outcome.
+#' @param rho A number in [0,1]. Correlation between shocks in equations for R and Y.
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
@@ -27,7 +28,8 @@
 #' two_arm_attrition_design <- two_arm_attrition_designer()
 #' diagnose_design(two_arm_attrition_design)
 #' 
-#' # Attrition can produce bias even for unconditional ATE even when not associated with treatment
+#' # Attrition can produce bias even for unconditional ATE even when not
+#' # associated with treatment
 #' diagnose_design(two_arm_attrition_designer(b_R = 0, rho = .3))
 #'  
 #' # Here the linear estimate using R=1 data is unbiased for
@@ -47,8 +49,8 @@ two_arm_attrition_designer <- function(N = 100,
     population   <- declare_population(N   = N, 
                                        u_R = rnorm(N), 
                                        u_Y = rnorm(N, mean = rho * u_R, sd = sqrt(1 - rho^2)))
-    potentials_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
-    potentials_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
+    pos_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
+    pos_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
     
     # I: Inquiry
     estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
@@ -73,7 +75,7 @@ two_arm_attrition_designer <- function(N = 100,
                         estimand = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
-    two_arm_attrition_design <- population + potentials_R +  potentials_Y +
+    two_arm_attrition_design <- population + pos_R +  pos_Y +
       assignment  + reveal + observed +
       estimand_1  + estimand_2  + estimand_3 +
       estimator_1 + estimator_2 + estimator_3
