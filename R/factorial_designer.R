@@ -71,7 +71,7 @@ factorial_designer <- function(
                                            cond_row, ")",
                                            collapse = ","), ")")
   
-  list_u <- sapply(1:2^k, function(x) return(paste0("u_", x, " = rnorm(", N, ", ", means[x], ", ", sds[x], ")")))
+  list_u <- sapply(1:2^k, function(x) return(paste0("u_", x, " = rnorm(", N, ", 0", ", ", sds[x], ")")))
   list_u <- paste(list_u, collapse = ", ")
   
   # estimator_formula <- formula(paste0("Y ~ ", paste(cond_names, collapse = "*")))
