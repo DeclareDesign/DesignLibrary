@@ -122,21 +122,9 @@ factorial_designer <- function(
   
   eval(parse(text = (design_code)))
   
-  # Get argument list
-  args_text <- function(args, fixes){
-    # Get names of arguments   
-    arg_names <- names(args[2:(length(args)-1)])
-    
-    # Exclude any fixed arguments
-    if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
-    
-    # Format
-    sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
-  }
-  
   #  Add  code plus argments as attributes
   attr(factorial_design, "code") <- 
-    paste0(c(args_text(match.call.defaults(), fixes), design_code))
+    paste0(c(return_args(match.call.defaults(), fixes), design_code))
   
   # Return design
   return(factorial_design)
