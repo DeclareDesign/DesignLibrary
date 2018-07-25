@@ -51,6 +51,7 @@ Treatment A is assigned first and then Treatment B within blocks defined by trea
 Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 }
 \examples{
+\dontrun{
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
 get_estimates(design)
 get_design_code(design)
@@ -66,7 +67,7 @@ diagnose_design(design)
 # Compare power with and without interactions, given same average effects in each arm
 designs <- redesign(simple_factorial_designer(), outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 diagnose_design(designs)
-
+}
 
 }
 \author{
