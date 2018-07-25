@@ -41,5 +41,12 @@ test_that(desc = "match.call.defaults has all cases tested",
           }) 
 
 
+test_that(desc = "return_args works fine",
+          code = {
+            expect_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5),fixes = NULL),NA)
+            expect_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5),fixes = LETTERS[1:2]),NA)
+          })
+
+
 
 
