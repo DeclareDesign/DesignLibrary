@@ -17,7 +17,8 @@ LazyData: true
 Depends: DeclareDesign
 Imports:
     devtools
-Suggests: knitr,
+Suggests: rmarkdown, 
+    knitr,
     testthat, 
     systemfit
 Enhances:
