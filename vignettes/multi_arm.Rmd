@@ -43,11 +43,11 @@ diagnosis <- diagnose_design(multi_arm_design)
 kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
 ```
 
-The diagnosis of our design indicates that the difference in means unbiasedly estimates the average treatment effect (ATE) in each arm. These estimates our however not so precise;  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the times.
+The diagnosis of our design indicates that the regression provides unbiased estimates of  the average treatment effect (ATE) in each arm. These estimates, however, are not so precise;  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the time.
 
 ## Using the  Multi-Arm Designer
 
-In R, you can generate a simple two arm design using the template function `multi_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+In R, you can generate a multi-arm design using the template function `multi_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
   
 ```{r, eval=FALSE}
 devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
