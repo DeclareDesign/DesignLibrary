@@ -41,10 +41,16 @@ The data generating process is of the form:
 two_arm_attrition_design <- two_arm_attrition_designer()
 \dontrun{
 diagnose_design(two_arm_attrition_design)
+<<<<<<< HEAD
 }
 # Attrition can produce bias even for unconditional ATE even when not
 # associated with treatment
 \dontrun{
+=======
+
+# Attrition can produce bias even for unconditional ATE even when not
+# associated with treatment
+>>>>>>> master
 diagnose_design(two_arm_attrition_designer(b_R = 0, rho = .3))
 }
 # Here the linear estimate using R=1 data is unbiased for
