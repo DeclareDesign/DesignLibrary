@@ -3,6 +3,7 @@ block_cluster_two_arm_design,block_cluster_two_arm_designer,block_cluster_two_ar
 cluster_sampling_design,cluster_sampling_designer,cluster_sampling,,cluster_sampling,DeclareDesign,https://declaredesign.org/about/
 crossover_design,crossover_designer,crossover,,crossover,DeclareDesign,https://declaredesign.org/about/
 mediation_analysis_design,mediation_analysis_designer,mediation_analysis,,mediation_analysis,DeclareDesign,https://declaredesign.org/about/
+multi_arm_design,multi_arm_designer,multi_arm,,,DeclareDesign,https://declaredesign.org/about/
 pretest_posttest_design,pretest_posttest_designer,pretest_posttest,,pretest_posttest,DeclareDesign,https://declaredesign.org/about/
 randomized_response_design,randomized_response_designer,randomized_response,,randomized_response,DeclareDesign,https://declaredesign.org/about/
 regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,regression_discontinuity,DeclareDesign,https://declaredesign.org/about/
