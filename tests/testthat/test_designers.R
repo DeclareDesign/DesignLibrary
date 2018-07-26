@@ -3,6 +3,7 @@ context(desc = "Testing that designers in the library work as they should")
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
 
+# designers <- designers[-which(designers == "multi_arm_designer")]
 
 for(designer in designers){
   
@@ -98,8 +99,27 @@ test_that(desc = "simple_two_arm_designer errors when it should",
             expect_error(simple_two_arm_designer(rho = 10))
                                })
 
+test_that(desc = "mediation_analysis_designer errors when it should",
+          code = {
+            expect_error(mediation_analysis_designer(rho = 10))
+          })
 
+test_that(desc = "block_cluster_two_arm_designer errors when it should",
+          code = {
+            expect_error(block_cluster_two_arm_designer(rho = 10))
+          })
 
+test_that(desc = "pretest_posttest_designer errors when it should",
+          code = {
+            expect_error(pretest_posttest_designer(rho = 10))
+            expect_error(pretest_posttest_designer(attrition_rate = 10))
+          })
+
+test_that(desc = "cluster_sampling_designer errors when it should",
+          code = {
+            expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
+            expect_error(cluster_sampling_designer(n_subjects_per_cluster = 30,N_subjects_per_cluster = 10))
+          })
 
 
 
