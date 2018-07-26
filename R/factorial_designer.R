@@ -61,10 +61,17 @@ factorial_designer <- function(
     "Y ~ ", paste0(paste0("(", means, " + ", "u_", 1:2^k, ")"), "* (", cond_logical, ")", collapse = " + "),  " + u")
   )
   
+  # errors <- sapply(sds, function(x) quo(rnorm(N, 0, !!x)))
+  
   estimand <- paste0("estimands <- declare_estimand('(Intercept)' = mean(Y_", assignment_string[1], "), ",
                      paste0(assignment_string[-1], " = mean(Y_", assignment_string[-1], " - Y_",
                             assignment_string[1], collapse = "), "), "), term = TRUE)")
   
+  # create names of estimands
+  # estimand_string <- c("(Intercept)", assignment_string[-1])
+  # # create names of potential outcomes
+  # pos_string <- paste0("Y_", assignment_string)
+  # estimand <- rlang::quos(mean(!!pos_string[1] - !!pos_string[1]))
   
   assignment_given_factor <- paste0("assignment <- declare_step(fabricate,",
                                     paste0("T", 1:k, " = as.numeric(Z %in% ",
@@ -92,22 +99,22 @@ factorial_designer <- function(
   
   design_code <- substitute({
     
-    # M: Model
+    "# M: Model"
     pop
     
     potential_outcomes <- declare_potential_outcomes(formula = f_Y, conditions = cond_list)
     
     reveal_Y <- declare_reveal(Y, assignment_variables(cond_names))
     
-    # I: Inquiry
+    "# I: Inquiry"
     estimand
     
-    # D: Data Strategy
+    "# D: Data Strategy"
     assignment_factors <- declare_assignment(conditions = 1:(2^k), prob_each = prob_each)
     
     assignment_given_factor
     
-    # A: Answer Strategy 
+    "# A: Answer Strategy"
     estimators <- declare_estimator(Y ~ as.factor(Z), model = lm_robust,
                                     term = TRUE, estimand = assignment_string)
     
