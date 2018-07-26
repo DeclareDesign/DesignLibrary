@@ -129,7 +129,6 @@ pred <- function(expr, depth=3) {
 #' Clean code for method substitute
 #' @param code A string. Design code
 #' @return clean code 
-#'
 clean_code <- function(code) {
   out <- strsplit(code, "\n")
   out <- gsub("\\{|\\}", "", out)
