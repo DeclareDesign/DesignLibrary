@@ -1,25 +1,24 @@
 #' Create a crossover design
 #'
 #' This designer produces designs that have two treatments, A and B, 
-#' which each correspond to their own outcomes, YA and YB. 
+#' with each corresponding to their own outcomes, YA and YB. 
 #' The basic premise of the design is that treatment A does not affect outcome YB, 
 #' and that treatment B does not affect outome YA. Using the crossover parameter
 #' researchers can assess robustness of the design to violations of this assumption.
-#' The \href{/library/articles/crossover.html}{vignette} shows that adding a 
-#' SUR estimator to the design can greatly increase efficiency.
 #'
 #' @param N An integer. Size of sample.
-#' @param a A number. Treatment effect of interest
-#' @param b A number. Treatment effect of crossed randomization
-#' @param crossover A number. Size of crossover effect
-#' @param rho A number in [0,1]. Correlation in errors of outcomes A and B
+#' @param a A number. Treatment effect of interest.
+#' @param b A number. Treatment effect of crossed randomization.
+#' @param crossover A number. Size of crossover effect.
+#' @param rho A number in [0,1]. Correlation in errors of outcomes A and B.
 #' @return A crossover design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
-#' # To make a design using default arguments:
+#' # Generate a crossover design using default arguments:
 #' crossover_design <- crossover_designer()
 #'
 
@@ -29,7 +28,9 @@ crossover_designer <- function(N = 100,
                                crossover = .1, 
                                rho = .2) 
 {
+  u_a <- u_b <- YA <- Z <- YB <- YA_Z_T2 <- YA_Z_T1 <- NULL
   {{{
+    # M: Model
     population <- declare_population(
       N = N, 
       u_a = rnorm(N),
@@ -47,14 +48,21 @@ crossover_designer <- function(N = 100,
       YB_Z_T3 = b + u_b,
       YB_Z_T4 = b + u_b + crossover * (a + u_a)
     )
+    
+    reveal_YA <- declare_reveal(YA, Z) 
+    reveal_YB <-   declare_reveal(YB, Z) 
+    
+    # I: Inquiry
     estimand <- declare_estimand(a = mean(YA_Z_T2 - YA_Z_T1))
+    
+    # D: Data Strategy
     assignment <- declare_assignment(num_arms = 4)
     get_AB <- declare_step(
       A = as.numeric(Z %in% c("T2", "T4")),
       B = as.numeric(Z %in% c("T3", "T4")),
       handler = fabricate)
-    reveal_YA <- declare_reveal(YA, Z) 
-    reveal_YB <-   declare_reveal(YB, Z) 
+    
+    # A: Answer Strategy
     estimator_direct <- declare_estimator(YA ~ A,
                                           model = lm_robust,
                                           term = "A",
@@ -65,17 +73,11 @@ crossover_designer <- function(N = 100,
                                        term = "A",
                                        estimand = estimand,
                                        label = "Saturated estimator")
-    crossover_design <- 
-      population +
-      potential_outcomes_A +
-      potential_outcomes_B +
-      estimand +
-      assignment +
-      get_AB +
-      reveal_YA + 
-      reveal_YB +
-      estimator_direct + 
-      estimator_sat 
+    
+    # Design
+    crossover_design <- population + potential_outcomes_A + potential_outcomes_B +
+      estimand + assignment + get_AB + reveal_YA + reveal_YB +
+      estimator_direct + estimator_sat 
   }}}
   attr(crossover_design, "code") <- 
     construct_design_code(crossover_designer, match.call.defaults())

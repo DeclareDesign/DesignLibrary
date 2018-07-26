@@ -10,20 +10,22 @@ pretest_posttest_designer(N = 100, ate = 0.25, rho = 0.5,
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{ate}{A number. Average treatment effect}
+\item{ate}{A number. Average treatment effect.}
 
-\item{rho}{A number in [0,1]. Correlation in outcomes between pre- and post-test}
+\item{rho}{A number in [0,1]. Correlation in outcomes between pre- and post-test.}
 
-\item{attrition_rate}{A number in [0,1]. Proportion of respondents lost when using pre-test data}
+\item{attrition_rate}{A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.}
 }
 \value{
 A pretest-posttest design.
 }
 \description{
-This designer produces designs in which an outcome Y is observed pre- and post-treatment. It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes and for at random missingness in the observation of post-treatment outcomes.
+Produces designs in which an outcome Y is observed pre- and post-treatment.
+It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes
+and for at random missingness in the observation of post-treatment outcomes.
 }
 \examples{
-# To make a design using default arguments:
+# Generate a pre-test post-test design using default arguments:
 pretest_posttest_design <- pretest_posttest_designer()
 
 }

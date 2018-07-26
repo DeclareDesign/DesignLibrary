@@ -1,19 +1,22 @@
 #' Create a pretest-posttest design
 #'
-#' This designer produces designs in which an outcome Y is observed pre- and post-treatment. It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes and for at random missingness in the observation of post-treatment outcomes. 
+#' Produces designs in which an outcome Y is observed pre- and post-treatment.
+#' It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes
+#' and for at random missingness in the observation of post-treatment outcomes. 
 #'
 #' @param N An integer. Size of sample.
-#' @param ate A number. Average treatment effect
-#' @param rho A number in [0,1]. Correlation in outcomes between pre- and post-test
-#' @param attrition_rate A number in [0,1]. Proportion of respondents lost when using pre-test data
+#' @param ate A number. Average treatment effect.
+#' @param rho A number in [0,1]. Correlation in outcomes between pre- and post-test.
+#' @param attrition_rate A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.
 #' @return A pretest-posttest design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
-#' # To make a design using default arguments:
+#' # Generate a pre-test post-test design using default arguments:
 #' pretest_posttest_design <- pretest_posttest_designer()
 #'
 pretest_posttest_designer <- function(N = 100,
@@ -21,9 +24,9 @@ pretest_posttest_designer <- function(N = 100,
                                       rho = .5,
                                       attrition_rate = .1)
 {
+  u_t1 <- Y_t2_Z_1 <- Y_t2_Z_0 <- Z <- R <- Y_t1 <- Y_t2 <- NULL
   if(rho < 0 | rho > 1) stop("'rho' must be a value from 0 to 1")
   if(attrition_rate < 0 | attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
-  
   {{{
     # M: Model
     population <- declare_population(
@@ -34,13 +37,15 @@ pretest_posttest_designer <- function(N = 100,
     )
     pos_t1 <- declare_potential_outcomes(Y_t1 ~ u_i + u_t1)
     pos_t2 <- declare_potential_outcomes(Y_t2 ~ ate * Z + u_i + u_t2)
-    report <- declare_assignment(m = round(N * (1 - attrition_rate)),
-                                 assignment_variable = R)
+    
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
+    
     # D: Data Strategy
-    assignment <-
-      declare_assignment(m = round(N / 2), assignment_variable = Z)
+    assignment <- declare_assignment(m = round(N / 2), assignment_variable = Z)
+    report <- declare_assignment(m = round(N * (1 - attrition_rate)),
+                                 assignment_variable = R)
+    
     # A: Answer Strategy
     pretest_lhs <- declare_estimator((Y_t2 - Y_t1) ~ Z,
                                      model = lm_robust,

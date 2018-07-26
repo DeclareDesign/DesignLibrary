@@ -1,21 +1,21 @@
 #' Create a design for cluster random sampling
 #'
-#' A cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
-#' 
+#' Builds a cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
+#'
+#' @details 
 #' Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
 #' 
-#' Note: Note here.
-#'
 #' @param N_clusters An integer. Total number of clusters in the population.
 #' @param N_subjects_per_cluster An integer. Total number of subjects per cluster in the population.
 #' @param n_clusters An integer. Number of clusters to sample.
-#' @param n_subjects_per_cluster An integer. Number of subjects per cluster to sample.
-#' @param icc A real number in [0,1] Intra-cluster Correlation Coefficient. 
+#' @param n_subjects_per_cluster An integer. Number of subjects to sample per cluster.
+#' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
 #' @return A cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
 #' @concept observational
 #' @concept measurement
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # To make a design using default arguments:
@@ -29,6 +29,7 @@ cluster_sampling_designer <- function(n_clusters = 100,
                                       N_clusters = 1000,
                                       N_subjects_per_cluster = 50
 ){
+  N <- cluster <- latent_ideology <- Y <- u_a <- NULL
   if(n_clusters > N_clusters) stop(paste0("n_clusters must be smaller than the total number of ", N_clusters, " subjects."))
   if(n_subjects_per_cluster > N_subjects_per_cluster) stop(paste0("n_subjects_per_cluster must be smaller than the maximum of ", N_subjects_per_cluster, " subjects per cluster."))
   {{{
@@ -64,7 +65,8 @@ cluster_sampling_designer <- function(n_clusters = 100,
     
     
     # Design
-    cluster_sampling_design <- population + estimand + stage_1_sampling + stage_2_sampling + no_clustering + clustered_ses
+    cluster_sampling_design <- population + estimand +
+      stage_1_sampling + stage_2_sampling + no_clustering + clustered_ses
   }}}
   
   attr(cluster_sampling_design, "code") <- 
