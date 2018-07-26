@@ -126,10 +126,6 @@ pred <- function(expr, depth=3) {
   )
 }
 
-
-
-
-<<<<<<< HEAD
 #' Clean code for method substitute
 #' @param code A string. Design code
 #' @return clean code 
@@ -140,7 +136,3 @@ clean_code <- function(code) {
   out <- gsub("#", " \n #", out)
   out
 }
-=======
-
-
->>>>>>> master
