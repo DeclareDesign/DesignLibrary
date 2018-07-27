@@ -68,8 +68,9 @@ multi_arm_designer <- function(
     
     pop <-  rlang::expr(declare_population(N = !!N, !!!us))
     
+    
 design_code <-  exprs( 
-   population <- !!pop,
+    population <- !!pop,
     
     potential_outcomes <- declare_potential_outcomes(formula = !!f_Y, conditions = conds),
  
@@ -83,9 +84,9 @@ design_code <-  exprs(
     
     multi_arm_design <- population + potential_outcomes + assignment + reveal + estimand +  estimator
    
-
 )
-  
+lapply(design_code, function(step) eval_bare(step))
+
     attr( multi_arm_design, "code") <- 
       construct_design_code( multi_arm_design, match.call.defaults())
 
