@@ -5,7 +5,8 @@
 \title{Create a factorial design}
 \usage{
 factorial_designer(N = 500, k = 2, means = seq(0:0.5, length.out = 2^k),
-  sds = rep(0.1, 2^k), probs = rep(0.5, k), fixed = NULL)
+  sds = rep(0.1, 2^k), probs = rep(0.5, k), compare_with = NULL,
+  fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}

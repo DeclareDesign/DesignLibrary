@@ -10,22 +10,22 @@ regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
 \arguments{
 \item{N}{An integer. Size of population to sample from.}
 
-\item{tau}{A scalar number. Difference in potential outcomes functions at the threshold.}
+\item{tau}{A number. Difference in potential outcomes functions at the threshold.}
 
-\item{cutoff}{A scalar number in (0,1). Threshold on running variable beyond which units are treated.}
+\item{cutoff}{A number in (0,1). Threshold on running variable beyond which units are treated.}
 
-\item{bandwidth}{A scalar number. Bandwidth around threshold from which to include units.}
+\item{bandwidth}{A number. Bandwidth around threshold from which to include units.}
 
 \item{poly_order}{An integer. Order of the polynomial regression used to estimate the jump at the cutoff.}
 }
 \value{
-A regression discontinuity design design
+A regression discontinuity design.
 }
 \description{
-A regression discontinuity design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
 }
 \examples{
-# A regression discontinuity design using default arguments:
+# Generate a regression discontinuity design using default arguments:
 regression_discontinuity_design <- regression_discontinuity_designer()
 }
 \author{

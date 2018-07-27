@@ -1,26 +1,28 @@
 #' Create a simple two arm design
 #'
-#' This designer builds a design with one treatment and one control arm.
+#' Builds a design with one treatment and one control arm.
 #' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 #' or by specifying an \code{ate}.
 #' 
-#' \href{/library/articles/simple_two_arm.html}{Check out the vignette here.}
+#' @details 
+#' Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' 
-#' Note: Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' @param N An integer. Sample size.
-#' @param prob A number within the interval [0,1]. Probability of assigment to treatment.
+#' @param prob A number in [0,1]. Probability of assigment to treatment.
 #' @param control_mean A number. Average outcome in control.
 #' @param control_sd A positive number. Standard deviation in control.
 #' @param ate A number. Average treatment effect.
-#' @param treatment_mean A number. Average outcome in treatment. 
-#' @param treatment_sd  A non-negative number. Standard deviation in treatment. 
-#' @param rho A number within the interval [-1,1]. Correlation between treatment and control outcomes.
-#' @return A function that returns a design.
+#' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
+#' @param treatment_sd  A non-negative number. Standard deviation in treatment. By default equals \code{control_sd}.
+#' @param rho A number in [-1,1]. Correlation between treatment and control outcomes.
+#' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #'
 #' @examples
+#' #Generate a simple two-arm design using default arguments
 #' simple_two_arm_design <- simple_two_arm_designer()
 
 
@@ -33,9 +35,10 @@ simple_two_arm_designer <- function(N = 100,
                                     treatment_sd = control_sd,
                                     rho = 1
 ){
+  u_0 <- Y_Z_1 <- Y_Z_0 <- NULL
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
-  if( abs(rho) > 1) stop("rho must be in [-1,1]")
+  if(abs(rho) > 1) stop("rho must be in [-1,1]")
   {{{
     # M: Model
     population <- declare_population(
@@ -43,22 +46,22 @@ simple_two_arm_designer <- function(N = 100,
       u_0 = rnorm(N),
       u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
     
-    potential_outcomes <- declare_potential_outcomes(
+    pos <- declare_potential_outcomes(
       Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
           Z     * (u_1*treatment_sd + treatment_mean))
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
-    # D: Data
+    # D: Data Strategy
     assignment <- declare_assignment(prob = prob)
     
-    # A: Analysis
+    # A: Answer Strategy
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
-    reveal    <- declare_reveal()
+    reveal_Y    <- declare_reveal()
     
     # Design
-    simple_two_arm_design <- population + potential_outcomes + estimand + assignment + reveal + estimator
+    simple_two_arm_design <- population + pos + estimand + assignment + reveal_Y + estimator
   }}}
   
   attr(simple_two_arm_design, "code") <- 

@@ -2,59 +2,56 @@
 % Please edit documentation in R/block_cluster_two_arm_designer.R
 \name{block_cluster_two_arm_designer}
 \alias{block_cluster_two_arm_designer}
-\title{Create a two arm design with blocks and clusters}
+\title{Create a two-arm design with blocks and clusters}
 \usage{
-block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
-  N_i_in_cluster = 1, sd_block = 0.2, sd_cluster = 0.2,
+block_cluster_two_arm_designer(N_blocks = 20, N_clusters_in_block = 100,
+  N_i_in_cluster = 20, sd_block = 0.2, sd_cluster = 0.2,
   sd_i_0 = sqrt(max(0, 1 - sd_block^2 - sd_cluster^2)), sd_i_1 = sd_i_0,
   prob = 0.5, control_mean = 0, ate = 1, treatment_mean = control_mean +
   ate, rho = 1)
 }
 \arguments{
-\item{N_blocks}{Number of blocks, defaults to 1.}
+\item{N_blocks}{An integer. Number of blocks.}
 
-\item{N_clusters_in_block}{Number of clusters in each block.}
+\item{N_clusters_in_block}{An integer. Number of clusters in each block.}
 
-\item{N_i_in_cluster}{Individuals per cluster: defaults to 1.}
+\item{N_i_in_cluster}{An integer. Individuals per cluster.}
 
-\item{sd_block}{Standard deviation of block level shocks.}
+\item{sd_block}{A number. Standard deviation of block level shocks.}
 
-\item{sd_cluster}{Standard deviation of cluster level shock.}
+\item{sd_cluster}{A number. Standard deviation of cluster level shock.}
 
-\item{sd_i_0}{Standard deviation of individual level shock in control.}
+\item{sd_i_0}{A number. Standard deviation of individual level shock in control.}
 
-\item{sd_i_1}{Standard deviation of individual level shock in treatment.}
+\item{sd_i_1}{A number. Standard deviation of individual level shock in treatment.}
 
-\item{prob}{Treatment assignment probability.}
+\item{prob}{A number in [0,1]. Treatment assignment probability.}
 
-\item{control_mean}{Average outcome in control.}
+\item{control_mean}{A number. Average outcome in control.}
 
-\item{ate}{Average treatment effect.}
+\item{ate}{A number. Average treatment effect. Alternative to specifying \code{treatment_mean}.}
 
-\item{treatment_mean}{Average outcome in treatment.}
+\item{treatment_mean}{A number. Average outcome in treatment. Overrides \code{ate} if both specified.}
 
-\item{rho}{Correlation in individual shock to Y(1) and Y(0)}
+\item{rho}{A number in [0,1]. Correlation in individual shock between potential outcomes for treatment and control.}
 }
 \value{
-A function that returns a design.
+A block cluster two-arm design.
 }
 \description{
-This designer builds a design with blocks and clusters. Normal shocks can be specified at the 
-individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
-level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1. 
-Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
-or by specifying an \code{ate}.
+Builds a two-arm design with blocks and clusters.
 }
 \details{
-Key limitations: The designer assumes constant treatment effects 
-and no covariance between potential outcomes.
+Units are assigned to treatment using complete block cluster random assignment. Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
+or by specifying an \code{ate}. Estimation uses differences in means accounting for blocks and clusters.
 
-Note: Default arguments produce a design without blocks and clusters and
-with N determined by \code{N_cluster_in_block}. Units are assigned to treatment using complete block cluster random assignment. 
-Analysis uses differences in means accounting for blocks and clusters.
+Normal shocks can be specified at the individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
+level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1.
+
+Key limitations: The designer assumes constant treatment effects and no covariance between potential outcomes.
 }
 \examples{
-# To make a design using default arguments:
+# Generate a design using default arguments:
 block_cluster_two_arm_design <- block_cluster_two_arm_designer()
 
 

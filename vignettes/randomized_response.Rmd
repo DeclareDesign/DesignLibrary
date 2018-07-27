@@ -20,7 +20,7 @@ library(knitr)
 
 Randomized response is a tool used in survey research aimed at increasing subject privacy and mitigate potential bias, particularly when our inquiries of interest pertain sensitive or controversial behavior or beliefs. For example, researchers may be interested in measuring participation in violence, engagement in illicit activities, or support for the opposition in authoritarian contexts.
 
-Let us consider a specific type of randomized response design in which respondents are asked to use a randomization device, such as a die, whose outcome is unobserved to the enumerator. Respondents are then asked to answer "Yes" if the die shows numbers "1", "2", "3", or "4" and to answer truthfully if the die shows "5", or "6." This is aimed at increasing the privacy of respondent's and ellicit them to indeed respond truthfully.
+Let us consider a specific type of randomized response design in which respondents are asked to use a randomization device, such as a die, whose outcome is unobserved to the enumerator. Respondents are then asked to answer "Yes" if the die shows numbers "1", "2", "3", or "4" and to answer truthfully if the die shows "5", or "6." This is aimed at increasing the privacy of respondents and elliciting truthful responses.
 
 Say, for example, we are interested in measuring the rate of intimate partner violence (IPV) in a given locality. Our design compares estimates from direct questions and questions using the randomized response principle.
 
