@@ -131,7 +131,7 @@ pred <- function(expr, depth=3) {
 #' @return clean code 
 clean_code <- function(code) {
   out <- strsplit(code, "\n")
-  out <- gsub("\\{|\\}", "", out)
+  out <- out[-1]
   out <- gsub("#", " \n #", out)
   out
 }
