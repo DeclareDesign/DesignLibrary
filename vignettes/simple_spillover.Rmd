@@ -89,7 +89,6 @@ The sign of the bias term is perhaps more surprising. The idea that positive spi
 In R, you can generate a simple_spillover design using the template function `simple_spillover_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

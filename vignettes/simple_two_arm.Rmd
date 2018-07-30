@@ -60,7 +60,6 @@ kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
 In R, you can generate a simple two arm design using the template function `simple_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 

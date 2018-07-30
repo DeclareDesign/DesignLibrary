@@ -88,7 +88,6 @@ Diagnosis reveals that the efficiency is greatest when variance comes from block
 In R, you can generate a block_cluster_two_arm design using the template function `block_cluster_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
 
 ```{r, eval=FALSE}
-devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 library(DesignLibrary)
 ```
 
