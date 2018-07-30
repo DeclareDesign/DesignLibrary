@@ -53,7 +53,7 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 # This is the core function for grabbing code when using the {{{ }}} approach:
 
-construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
+construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL, rlang = FALSE){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
@@ -72,6 +72,23 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   indentation <- paste0("^", paste(indentation, collapse=""))
   
   code <- sub(indentation, "", txt)
+  
+  if(rlang){
+    rewrite <- data.frame(start = grep("quo", code, fixed = TRUE),
+                          end = grep("^\\s*)", code))
+    
+    step_name <- unlist(lapply(strsplit(code[rewrite$start], split = " <-"), function(l) l[1]))
+    for(l in seq_along(rewrite$start)){
+      code[rewrite$start[l]:rewrite$end[l]] <- paste0(step_name[l], " <- ",
+                                                      rlang::quo_text(get(step_name[l], envir = parent.frame())))
+    }
+    
+    code <- code[!duplicated(code)]
+    
+    eval_line <- grep("rlang::eval_tidy", code)
+    code[eval_line] <- unlist(lapply(eval_line, function(l){
+      paste0(unlist(strsplit(code[l], "rlang::eval_tidy|\\(|\\)", perl = TRUE)), collapse = "")}))
+  }
   
   # Get names of arguments   
   arg_names <- names(args[-1])
@@ -111,7 +128,7 @@ return_args <- function(args, fixes){
   # Format
   sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
 }
-  
+
 # These functions find triple braces when there is no source code 
 find_triple_bracket <- function(f){
   clean <- function(ch, n=length(ch)-1) ch[2:n]
