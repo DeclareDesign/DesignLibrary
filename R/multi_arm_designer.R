@@ -40,6 +40,7 @@ multi_arm_designer <- function(
   sds = rep(1, m_arms),
   fixed = NULL
 ){
+  Y_Z_T1 <- NULL
   # Housekeeping
   if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
   if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
