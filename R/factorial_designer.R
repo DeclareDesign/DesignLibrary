@@ -141,7 +141,7 @@ factorial_designer <- function(
     
     estimator <- rlang::quo(
       declare_estimator(
-        handler = tidy_estimator(rlang::eval_bare(estimator_function)),
+        handler = tidy_estimator(rlang::eval_bare(estimator_function)), #remove `rlang::eval_bare` call when running this code
         estimand = !!term_string)
     )
     
