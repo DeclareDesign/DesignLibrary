@@ -9,6 +9,7 @@ for(designer in designers){
   
   the_designer <- get(x = designer)
   has_shiny <- !is.null(attributes(the_designer)$shiny_arguments)
+  
   designer_args <- formals(the_designer)
   designer_attr <- attributes(the_designer)
   one_design <- the_designer()
@@ -27,10 +28,12 @@ for(designer in designers){
       expect_true("design" %in% class(one_design))
     })
   
+  diag_out <- diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)
+  
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
-    code = {
-      expect_is(diagnose_design(one_design,sims = 5,bootstrap_sims = F)$diagnosands,"data.frame")
+     code = {
+      expect_is(  diag_out$diagnosands_df, "data.frame" )
     })
   
   testthat::test_that(

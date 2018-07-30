@@ -26,13 +26,13 @@ Depends:
     fabricatr (>= 0.4.0),
     estimatr (>= 0.10.0)
 Imports:
-    devtools
-Suggests: rmarkdown, 
-    knitr,
+    devtools,
+    rlang, methods
+Suggests: knitr,
     testthat, 
     systemfit
 Enhances:
   Matching
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
-Additional_Repositories: http://r.declaredesign.org
+Additional_Repositories: http://r.declaredesign.org]

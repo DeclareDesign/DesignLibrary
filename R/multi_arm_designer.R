@@ -11,9 +11,10 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
 #' @concept multi-trial
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr rlang
 #' @export
 #' @examples
+#' 
 #' # To make a design using default arguments:
 #'  \dontrun{
 #' design <- multi_arm_designer()
@@ -36,61 +37,72 @@ multi_arm_designer <- function(
   N = 30, 
   m_arms = 3, 
   means = rep(0, m_arms),
-  sds = rep(1, m_arms)
+  sds = rep(1, m_arms),
+  fixed = NULL
 ){
   # Housekeeping
   if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
   if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
   if(any(sds<=0)) stop("`sds' should be positive.")
   
-  # Create list for substitution
-  conds = paste0("T", 1:m_arms)
-  
+  # Create helper vars to be used in desing
 
+
+  conds <- paste0("T", 1:m_arms)
   
-  f_Y = formula(paste0(
+  us <- sapply(1:m_arms, function(x) rlang::quos(rnorm(N, 0, !!x)))
+  names(us) <-  paste0("u_", 1:m_arms)
+  
+  
+  pop <- rlang::expr(declare_population(N = N, !!!us))
+  
+  f_Y <- formula(paste0(
     "Y ~ ", paste0("(", means, " + u_", 1:m_arms, ")*( Z == 'T", 1:m_arms, "')", collapse = " + "))
   )
+    
+  vars <- paste0("Y_Z_T", 2:m_arms)
+  vars <- sapply(1:(m_arms - 1), function(x){ rlang::quos(mean((!!rlang::sym(vars[x] )))) })
+  names(vars) <-paste0("ZT" , 2:m_arms)
   
-  # Design code with arguments in list substituted
+  mand  <- rlang::expr(declare_estimand('(Intercept)' = mean(Y_Z_T1), !!!vars ,  term = TRUE))
+
+
+  {{{   
+
+    
+       # Model
+       population <-  rlang::eval_bare(pop)
+    
+       potential_outcomes <- declare_potential_outcomes(formula = !!f_Y, conditions = !!conds)
+        
+       # Inquiry 
+       estimand  <-  rlang::eval_bare(mand)
+       
+       # Design
+       assignment <-  declare_assignment(num_arms = m_arms)
+    
+       reveal <-  declare_reveal()
   
-    us <- sapply(1:m_arms, function(x) rlang::quos(rnorm(!!N, 0, !!x)))
-    names(us) <- c("u_1", "u_2", "u_3")
-  
-    
-    vars <- paste0("Y_Z_T", 2:m_arms)
-    
-    vars <- sapply(1:(m_arms - 1), function(x){ 
-      rlang::quos(mean((!!rlang::sym(vars[x] ))))   })
-    names(vars) <-paste0("ZT" , 2:m_arms)
-    
-    estimand <-  rlang::expr(declare_estimand('(Intercept)' = mean(Y_Z_T1), !!!vars ,  term = TRUE))  
-    
-    pop <-  rlang::expr(declare_population(N = !!N, !!!us))
-    
-    
-design_code <-  exprs( 
-    population <- !!pop,
-    
-    potential_outcomes <- declare_potential_outcomes(formula = !!f_Y, conditions = conds),
- 
-    estimand <- !!estimand,
-    
-    assignment <- declare_assignment(num_arms = m_arms),
-    
-    reveal <- declare_reveal(),
-    
-    estimator <- declare_estimator( Y ~ Z , model = lm_robust, term = TRUE),
-    
-    multi_arm_design <- population + potential_outcomes + assignment + reveal + estimand +  estimator
+       # Answer
+       estimator <-  declare_estimator( Y ~ Z , model = lm_robust, term = TRUE)
    
-)
-lapply(design_code, function(step) eval_bare(step))
+       multi_arm_design <- population + potential_outcomes + assignment + reveal + estimand +  estimator
 
-    attr( multi_arm_design, "code") <- 
-      construct_design_code( multi_arm_design, match.call.defaults())
+  }}}
+  
 
-
+   design_code <-
+      construct_design_code( multi_arm_designer, match.call.defaults())
+   
+   # Code
+   design_code <- design_code[6:length(design_code)]
+    
+   # Rlang funcions to be evaluated -- manual!
+   design_code <- gsub("rlang::eval_bare\\(pop\\)", rlang::quo_text(pop), design_code)
+   design_code <- gsub("rlang::eval_bare\\(mand\\)", rlang::quo_text(mand), design_code)
+   design_code <- gsub("!!f_Y", deparse(f_Y, width.cutoff = 500), design_code)
+   design_code <- gsub("!!conds", deparse(conds, width.cutoff = 500), design_code)
+  attr( multi_arm_design, "code") <-   design_code 
     
   #  Add  code plus argments as attributes
 
