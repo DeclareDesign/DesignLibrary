@@ -42,12 +42,11 @@ multi_arm_designer <- function(
 ){
   Y_Z_T1 <- NULL
   # Housekeeping
-  if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
   if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
+  if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
   if(any(sds<=0)) stop("`sds' should be positive.")
   
   # Create helper vars to be used in desing
-
 
   conds <- paste0("T", 1:m_arms)
   
