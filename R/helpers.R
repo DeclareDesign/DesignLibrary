@@ -78,6 +78,7 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
                           end = grep("^\\s*)", code))
     
     step_name <- unlist(lapply(strsplit(code[rewrite$start], split = " <-"), function(l) l[1]))
+    step_name <- trimws(step_name, which = "both")
     for(l in seq_along(rewrite$start)){
       code[rewrite$start[l]:rewrite$end[l]] <- paste0(step_name[l], " <- ",
                                                       rlang::quo_text(get(step_name[l], envir = parent.frame())))
