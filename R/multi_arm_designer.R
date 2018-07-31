@@ -46,19 +46,17 @@ multi_arm_designer <- function(
   if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
   if(any(sds<=0)) stop("`sds' should be positive.")
   
-  # Create helper vars to be used in desing
+  # Create helper vars to be used in design
 
   conds <- paste0("T", 1:m_arms)
   
   us <- sapply(1:m_arms, function(x) rlang::quos(rnorm(N, 0, !!x)))
   names(us) <-  paste0("u_", 1:m_arms)
   
-  
   pop <- rlang::expr(declare_population(N = N, !!!us))
   
   f_Y <- formula(paste0(
-    "Y ~ ", paste0("(", means, " + u_", 1:m_arms, ")*( Z == 'T", 1:m_arms, "')", collapse = " + "))
-  )
+    "Y ~ ", paste0("(", means, " + u_", 1:m_arms, ")*( Z == 'T", 1:m_arms, "')", collapse = " + ")))
     
   vars <- paste0("Y_Z_T", 2:m_arms)
   vars <- sapply(1:(m_arms - 1), function(x){ rlang::quos(mean((!!rlang::sym(vars[x] )))) })
@@ -94,10 +92,8 @@ multi_arm_designer <- function(
    design_code <-
       construct_design_code( multi_arm_designer, match.call.defaults())
    
-   # Code
-   design_code <- design_code[6:length(design_code)]
     
-   # Rlang funcions to be evaluated -- manual!
+   # Rlang funcions to be evaluated !
    design_code <- gsub("rlang::eval_bare\\(pop\\)", rlang::quo_text(pop), design_code)
    design_code <- gsub("rlang::eval_bare\\(mand\\)", rlang::quo_text(mand), design_code)
    design_code <- gsub("!!f_Y", deparse(f_Y, width.cutoff = 500), design_code)
