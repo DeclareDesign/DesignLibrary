@@ -5,16 +5,18 @@
 \title{Create a m_arms design}
 \usage{
 multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
-  sds = rep(1, m_arms), fixed = NULL)
+  sds = rep(1, m_arms), conds = 1:m_arms, fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{m_arms}{An integer. Number of treatment arms.}
+\item{m_arms}{An integer. Number of t arms.}
 
-\item{means}{A vector of size \code{m_arms}.  Average outcome in each treatment arm.}
+\item{means}{A vector of size \code{m_arms}.  Average outcome in each t arm.}
 
-\item{sds}{A double. Standard deviation for all treatment arms.}
+\item{sds}{A double. Standard deviation for all t arms.}
+
+\item{conds}{A vector of strings. Treatment names .}
 
 \item{fixed}{A list. List of arguments to be fixed in design.}
 }

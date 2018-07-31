@@ -6,6 +6,7 @@
 #' @param m_arms An integer. Number of t arms.
 #' @param means A vector of size \code{m_arms}.  Average outcome in each t arm.
 #' @param sds A double. Standard deviation for all t arms.
+#' @param conds A vector of size \code{m_arms}. Treatment names . 
 #' @param fixed A list. List of arguments to be fixed in design. 
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -45,7 +46,7 @@ multi_arm_designer <- function(
   # Housekeeping
   sds2 <- sds; means2 <- means; N2 <- N
   if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
-  if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
+  if(length(means) != m_arms || length(sds) != m_arms || length(conds) != m_arms) stop("`means', `sds` and `conds' arguments must be the of length m_arms .")
   if(any(sds<=0)) stop("`sds' should be positive.")
   if(!"sds" %in% names(fixed))  sds2 <-  sapply(1:m_arms,function(i) expr(sds[!!i])) 
   if(!"means" %in% names(fixed)){  means2 <-  sapply(1:m_arms,function(i) expr(means[!!i])) }
@@ -62,7 +63,9 @@ multi_arm_designer <- function(
   
   f_Y <- formula(paste0(
     "Y ~ ", paste0("(", means2," + u_", 1:m_arms, ")*( t == '", conds, "')", collapse = " + ")))
-    
+  
+  pos <- rlang::expr(declare_potential_outcomes(formula = !!f_Y, conditions = as.factor(conds), assignment_variables = "t"))
+  
   vars <- paste0("Y_t_", 2:m_arms)
   vars <- sapply(1:(m_arms - 1), function(x){ rlang::quos(mean((!!rlang::sym(vars[x] )))) })
   names(vars) <-paste0("t" , 2:m_arms)
@@ -74,7 +77,7 @@ multi_arm_designer <- function(
        # Model
        population <-  rlang::eval_bare(pop)
     
-       potential_outcomes <- declare_potential_outcomes(formula = !!f_Y, conditions = as.factor(conds), assignment_variables = "t")
+       potential_outcomes <-  rlang::eval_bare(pos)
         
        # Inquiry 
        estimand  <-  rlang::eval_bare(mand)
@@ -99,8 +102,8 @@ multi_arm_designer <- function(
    # Rlang funcions to be evaluated !
    design_code <- gsub("rlang::eval_bare\\(pop\\)", rlang::quo_text(pop), design_code)
    design_code <- gsub("rlang::eval_bare\\(mand\\)", rlang::quo_text(mand), design_code)
-   design_code <- gsub("!!f_Y", deparse(f_Y, width.cutoff = 500), design_code)
-   design_code <- gsub("!!conds", deparse(conds, width.cutoff = 500), design_code)
+   design_code <- gsub("rlang::eval_bare\\(pos\\)", rlang::quo_text(pos), design_code)
+
    
    #  Add  code plus argments as attributes
    attr( multi_arm_design, "code") <-   design_code 
