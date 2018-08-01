@@ -1,4 +1,6 @@
+#' Create a design with multiple experimental arms
 #'
+#' This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
 #'
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of Z arms.
@@ -27,97 +29,153 @@
 #'                                           means = 1:4))
 #'
 
-multi_arm_designer <- function(
-  N = 30, 
-  m_arms = 3, 
-  means = rep(0, m_arms),
-  sds = rep(1, m_arms),
-  conds = 1:m_arms,
-  fixed = NULL
-){
-  Y_treatment_1 <- NULL
-  treatment <- NULL
+multi_arm_designer <- function(N = 30,
+                               m_arms = 3,
+                               means = rep(0, m_arms),
+                               sds = rep(1, m_arms),
+                               conditions = 1:m_arms,
+                               fixed = NULL) {
   # Housekeeping
-  sds2 <- sds; means2 <- means; N2 <- N
-  if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
-  if(length(means) != m_arms || length(sds) != m_arms || length(conds) != m_arms) stop("`means', `sds` and `conds' arguments must be the of length m_arms .")
-  if(any(sds<=0)) stop("`sds' should be positive.")
-  if(!"sds" %in% names(fixed))  sds2 <-  sapply(1:m_arms,function(i) expr(sds[!!i])) 
-  if(!"means" %in% names(fixed)){  means2 <-  sapply(1:m_arms,function(i) expr(means[!!i])) }
-  if(!"N" %in% names(fixed))  N2 <- expr(N)
-
- 
-
+  Y_Z_1 <- Z <- NULL
+  sds_ <- sds 
+  means_ <- means
+  N_ <- N
+  if (m_arms <= 1 || round(m_arms) != m_arms)
+    stop("m_arms should be an integer greater than one.")
+  if (length(means) != m_arms ||
+      length(sds) != m_arms ||
+      length(conditions) != m_arms)
+    stop("means, sds and conditions arguments must be of length m_arms.")
+  if (any(sds <= 0)) stop("sds should be positive.")
+  if (!"sds" %in% names(fixed)) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
+  if (!"means" %in% names(fixed)) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
+  if (!"N" %in% names(fixed)) N_ <- expr(N)
+  
   # Create helper vars to be used in design
-
-  us <- sapply(1:m_arms, function(x) rlang::quos(rnorm(!!N2, 0, !!!sds2[x])))
-  names(us) <-  paste0("u_", 1:m_arms)
+  errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!sds_[x])))
+  error_names <- paste0("u_", 1:m_arms)
+  names(errors) <- error_names
+  population_expr <- expr(declare_population(N = !!N_, !!!errors))
   
-  pop <- rlang::expr(declare_population(N = !!N2, !!!us))
+  conditions <- as.character(conditions)
   
-  f_Y <- formula(paste0(
-    "Y ~ ", paste0("(", means2," + u_", 1:m_arms, ")*( treatment == '", conds, "')", collapse = " + ")))
+  f_Y <- formula(
+    paste0("Y ~ ",paste0(
+      "(", means_, " + ", error_names,
+      ")*( Z == '", conditions, "')",
+      collapse = " + ")))
   
-  pos <- rlang::expr(declare_potential_outcomes(formula = !!f_Y, conditions = as.factor(conds), assignment_variables = "treatment"))
+  potential_outcomes_expr <-
+    expr(
+      declare_potential_outcomes(
+        formula = !!f_Y,
+        conditions = conditions,
+        assignment_variables = Z
+      )
+    )
+  assignment_expr <-
+    expr(
+      declare_assignment(
+        num_arms = !!m_arms,
+        conditions = conditions,
+        assignment_variable = Z
+      )
+    )
   
-  Z <- rlang::expr(declare_assignment(num_arms = !!m_arms, conditions = as.factor(conds), assignment_variable = "treatment"))
+  # Get all unique pairings of potential outcomes
+  all_pairs <- expand.grid(condition1 = conditions,
+                           condition2 = conditions)
+  all_pairs <- all_pairs[all_pairs[, 1] != all_pairs[, 2], ]
+  all_pairs <- t(apply(all_pairs, 1, sort))
+  all_pairs <- unique(all_pairs)
+  all_pairs <- as.data.frame(all_pairs)
+  all_po_pairs <- t(apply(
+    X = all_pairs,
+    MARGIN = 1,
+    FUN = function(x) paste0("Y_Z_", x)
+  ))
+  estimand_names <- paste0("ate_",all_po_pairs[,1],"_",all_po_pairs[,2])
+  estimand_list <- mapply(
+    FUN = function(x, y){
+      quos(mean(!!sym(x) - !!sym(y)))},
+    x = all_po_pairs[,1],
+    y = all_po_pairs[,2])
+  names(estimand_list) <- estimand_names
+  estimand_expr <- expr(declare_estimands(!!!estimand_list))
   
-  vars <- paste0("Y_treatment_", 2:m_arms)
-  vars <- sapply(1:(m_arms - 1), function(x){ rlang::quos(mean((!!rlang::sym(vars[x] )))) })
-  names(vars) <-paste0("treatment" , 2:m_arms)
+  estimators <- mapply(
+    FUN = function(x,y){
+      expr(difference_in_means(formula = Y ~ Z, 
+                               data = data, 
+                               condition1 = !!x, 
+                               condition2 = !!y))
+    },
+    x = as.character(all_pairs[,1]),
+    y = as.character(all_pairs[,2])
+  )
+  names(estimators) <- estimand_names
+  estimator_expr <- expr(declare_estimator(
+    handler = function(data){
+      estimates <- rbind.data.frame(!!!estimators)
+      estimates$estimator_label <- "DIM"
+      estimates$estimand_label <- rownames(estimates)
+      estimates$estimate <- estimates$statistic
+      estimates$term <- NULL
+      return(estimates)
+    }))
   
-  mand  <- rlang::expr(declare_estimand('(Intercept)' = mean(Y_treatment_1), !!!vars ,  term = TRUE))
- 
-
-  {{{   
-
-       # Model
-       population <-  rlang::eval_bare(pop)
+  
+  {{{
+    # Model
+    population <- eval_bare(population_expr)
     
-       potential_outcomes <-  rlang::eval_bare(pos)
-        
-       # Inquiry 
-       estimand  <-  rlang::eval_bare(mand)
-       
-       # Design
-       assignment <-  rlang::eval_bare(Z)
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
-       reveal <-  declare_reveal(assignment_variables	= treatment)
-  
-       # Answer
-       estimator <-  declare_estimator( Y ~ treatment , model = lm_robust, term = TRUE)
-   
-       multi_arm_design <- population + potential_outcomes + assignment + reveal + estimand +  estimator
-
+    # Inquiry
+    estimand  <- eval_bare(estimand_expr)
+    
+    # Design
+    assignment <- eval_bare(assignment_expr)
+    
+    reveal <-  declare_reveal(assignment_variables = Z)
+    
+    # Answer
+    estimator <- eval_bare(estimator_expr)
+    
+    
+    multi_arm_design <-
+      population + potential_outcomes + assignment + reveal + estimand +  estimator
+    
   }}}
   
-
-   design_code <-
-      construct_design_code( multi_arm_designer, match.call.defaults(), arguments_as_values = TRUE, exclude_args = c("m_arms", fixed, "fixed"))
-   
-    
-   # Rlang funcions to be evaluated ! - will change it
-   design_code <- gsub("rlang::eval_bare\\(pop\\)", rlang::quo_text(pop), design_code)
-   design_code <- gsub("rlang::eval_bare\\(mand\\)", rlang::quo_text(mand), design_code)
-   design_code <- gsub("rlang::eval_bare\\(pos\\)", rlang::quo_text(pos), design_code)
-   design_code <- gsub("rlang::eval_bare\\(Z\\)", rlang::quo_text(Z), design_code)
-   
-   # Change
-   
-   
-   #  Add  code plus argments as attributes
-   attr( multi_arm_design, "code") <-   design_code 
-    
-
+  
+  design_code <-
+    construct_design_code(
+      multi_arm_designer,
+      match.call.defaults(),
+      arguments_as_values = TRUE,
+      exclude_args = c("m_arms", fixed, "fixed")
+    )
+  
+  design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
+  design_code <- gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
+  design_code <- gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
+  
+  #  Add  code plus argments as attributes
+  attr(multi_arm_design, "code") <- design_code
+  
+  
   # Return design
-  return( multi_arm_design)
+  return(multi_arm_design)
 }
 
-attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50)) 
+attr(multi_arm_designer, "shiny_arguments") <-
+  list(N = c(10, 20, 50))
 
-attr( multi_arm_designer, "tips") <-
-  list(
-    N = "Sample Size"
-  )
-
-
+attr(multi_arm_designer, "tips") <-
+  list(N = "Sample Size")
