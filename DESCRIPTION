@@ -27,7 +27,7 @@ Depends:
     estimatr (>= 0.10.0)
 Imports:
     devtools,
-    rlang, methods
+    rlang
 Suggests: knitr,
     testthat, 
     systemfit
