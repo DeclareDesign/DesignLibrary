@@ -1,38 +1,31 @@
-#' Create a m_arms design
 #'
-#' This designer creates an \code{m_arms} arm design with equal assignment probabilities accross arms.
 #'
 #' @param N An integer. Sample size.
-#' @param m_arms An integer. Number of t arms.
-#' @param means A vector of size \code{m_arms}.  Average outcome in each treatment arm.
-#' @param sds A double. Standard deviation for all t arms.
-#' @param conds A vector of size \code{m_arms}. Treatment names . 
-#' @param fixed A list. List of arguments to be fixed in design. 
+#' @param m_arms An integer. Number of Z arms.
+#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each Z arm.
+#' @param sds A positive numeric vector of length \code{m_arms}. Standard deviations for each of the Z arms.
+#' @param conditions A character vector of length \code{m_arms}. The names of each Z arm.
+#' @param fixed A named list. Arguments to be fixed in design.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
-#' @concept experiment 
-#' @concept multi-trial
+#' @concept experiment
+#' @concept multiarm trial
 #' @import DeclareDesign stats utils fabricatr estimatr randomizr rlang
 #' @export
 #' @examples
-#' 
+#'
 #' # To make a design using default arguments:
-#'  \dontrun{
 #' design <- multi_arm_designer()
-#' 
-#' 
+#'
+#'
 #' # A design with different mean and sd in each arm
 #' design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
-#' 
-# A design with fixed sds and means. N is the sole modifiable argument. 
-#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, 
-#'                              fixed = list(m_arms = 4, sds = rep(1, 4), 
-#'                                           means = 1:4))
-#' 
-#' 
-#' If 'means' or 'sds' are defined in fixed list the same definition has to be  
 #'
-#' }
+# A design with fixed sds and means. N is the sole modifiable argument.
+#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
+#'                              fixed = list(m_arms = 4, sds = rep(1, 4),
+#'                                           means = 1:4))
+#'
 
 multi_arm_designer <- function(
   N = 30, 
