@@ -1,4 +1,6 @@
+
 context(desc = "Testing that designers in the library work as they should")
+
 
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
@@ -32,7 +34,7 @@ for(designer in designers){
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
      code = {
-      expect_is( diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
+      expect_is( DeclareDesign::diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
     })
   
   testthat::test_that(

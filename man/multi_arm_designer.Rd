@@ -12,11 +12,11 @@ multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
 
 \item{m_arms}{An integer. Number of t arms.}
 
-\item{means}{A vector of size \code{m_arms}.  Average outcome in each t arm.}
+\item{means}{A vector of size \code{m_arms}.  Average outcome in each treatment arm.}
 
 \item{sds}{A double. Standard deviation for all t arms.}
 
-\item{conds}{A vector of strings. Treatment names .}
+\item{conds}{A vector of size \code{m_arms}. Treatment names .}
 
 \item{fixed}{A list. List of arguments to be fixed in design.}
 }

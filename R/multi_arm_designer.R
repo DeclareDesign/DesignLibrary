@@ -4,7 +4,7 @@
 #'
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of t arms.
-#' @param means A vector of size \code{m_arms}.  Average outcome in each t arm.
+#' @param means A vector of size \code{m_arms}.  Average outcome in each treatment arm.
 #' @param sds A double. Standard deviation for all t arms.
 #' @param conds A vector of size \code{m_arms}. Treatment names . 
 #' @param fixed A list. List of arguments to be fixed in design. 
@@ -42,7 +42,8 @@ multi_arm_designer <- function(
   conds = 1:m_arms,
   fixed = NULL
 ){
-  Y_t_1 <- NULL
+  Y_treatment_1 <- NULL
+  treatment <- NULL
   # Housekeeping
   sds2 <- sds; means2 <- means; N2 <- N
   if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
@@ -62,15 +63,18 @@ multi_arm_designer <- function(
   pop <- rlang::expr(declare_population(N = !!N2, !!!us))
   
   f_Y <- formula(paste0(
-    "Y ~ ", paste0("(", means2," + u_", 1:m_arms, ")*( t == '", conds, "')", collapse = " + ")))
+    "Y ~ ", paste0("(", means2," + u_", 1:m_arms, ")*( treatment == '", conds, "')", collapse = " + ")))
   
-  pos <- rlang::expr(declare_potential_outcomes(formula = !!f_Y, conditions = as.factor(conds), assignment_variables = "t"))
+  pos <- rlang::expr(declare_potential_outcomes(formula = !!f_Y, conditions = as.factor(conds), assignment_variables = "treatment"))
   
-  vars <- paste0("Y_t_", 2:m_arms)
+  Z <- rlang::expr(declare_assignment(num_arms = !!m_arms, conditions = as.factor(conds), assignment_variable = "treatment"))
+  
+  vars <- paste0("Y_treatment_", 2:m_arms)
   vars <- sapply(1:(m_arms - 1), function(x){ rlang::quos(mean((!!rlang::sym(vars[x] )))) })
-  names(vars) <-paste0("t" , 2:m_arms)
+  names(vars) <-paste0("treatment" , 2:m_arms)
   
-  mand  <- rlang::expr(declare_estimand('(Intercept)' = mean(Y_t_1), !!!vars ,  term = TRUE))
+  mand  <- rlang::expr(declare_estimand('(Intercept)' = mean(Y_treatment_1), !!!vars ,  term = TRUE))
+ 
 
   {{{   
 
@@ -83,12 +87,12 @@ multi_arm_designer <- function(
        estimand  <-  rlang::eval_bare(mand)
        
        # Design
-       assignment <-  declare_assignment(num_arms = m_arms, conditions = as.factor(conds), assignment_variable = "t")
+       assignment <-  rlang::eval_bare(Z)
     
-       reveal <-  declare_reveal(assignment_variables	= t)
+       reveal <-  declare_reveal(assignment_variables	= treatment)
   
        # Answer
-       estimator <-  declare_estimator( Y ~ t , model = lm_robust, term = TRUE)
+       estimator <-  declare_estimator( Y ~ treatment , model = lm_robust, term = TRUE)
    
        multi_arm_design <- population + potential_outcomes + assignment + reveal + estimand +  estimator
 
@@ -96,14 +100,17 @@ multi_arm_designer <- function(
   
 
    design_code <-
-      construct_design_code( multi_arm_designer, match.call.defaults())
+      construct_design_code( multi_arm_designer, match.call.defaults(), arguments_as_values = TRUE, exclude_args = c("m_arms", fixed, "fixed"))
    
     
-   # Rlang funcions to be evaluated !
+   # Rlang funcions to be evaluated ! - will change it
    design_code <- gsub("rlang::eval_bare\\(pop\\)", rlang::quo_text(pop), design_code)
    design_code <- gsub("rlang::eval_bare\\(mand\\)", rlang::quo_text(mand), design_code)
    design_code <- gsub("rlang::eval_bare\\(pos\\)", rlang::quo_text(pos), design_code)
-
+   design_code <- gsub("rlang::eval_bare\\(Z\\)", rlang::quo_text(Z), design_code)
+   
+   # Change
+   
    
    #  Add  code plus argments as attributes
    attr( multi_arm_design, "code") <-   design_code 

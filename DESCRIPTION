@@ -30,7 +30,8 @@ Imports:
     rlang, methods
 Suggests: knitr,
     testthat, 
-    systemfit
+    systemfit,
+    ggplot2
 Enhances:
   Matching
 RoxygenNote: 6.0.1
