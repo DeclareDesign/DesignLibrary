@@ -34,6 +34,6 @@ Suggests: knitr,
     ggplot2
 Enhances:
   Matching
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 Additional_Repositories: http://r.declaredesign.org]

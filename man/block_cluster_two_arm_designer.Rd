@@ -4,11 +4,11 @@
 \alias{block_cluster_two_arm_designer}
 \title{Create a two-arm design with blocks and clusters}
 \usage{
-block_cluster_two_arm_designer(N_blocks = 20, N_clusters_in_block = 100,
-  N_i_in_cluster = 20, sd_block = 0.2, sd_cluster = 0.2,
-  sd_i_0 = sqrt(max(0, 1 - sd_block^2 - sd_cluster^2)), sd_i_1 = sd_i_0,
-  prob = 0.5, control_mean = 0, ate = 1, treatment_mean = control_mean +
-  ate, rho = 1)
+block_cluster_two_arm_designer(N_blocks = 20,
+  N_clusters_in_block = 100, N_i_in_cluster = 20, sd_block = 0.2,
+  sd_cluster = 0.2, sd_i_0 = sqrt(max(0, 1 - sd_block^2 -
+  sd_cluster^2)), sd_i_1 = sd_i_0, prob = 0.5, control_mean = 0,
+  ate = 1, treatment_mean = control_mean + ate, rho = 1)
 }
 \arguments{
 \item{N_blocks}{An integer. Number of blocks.}
@@ -59,8 +59,5 @@ block_cluster_two_arm_design <- block_cluster_two_arm_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-blocking
-}
+\concept{blocking}
+\concept{experiment}

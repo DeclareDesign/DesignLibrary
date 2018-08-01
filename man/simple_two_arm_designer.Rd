@@ -43,6 +43,4 @@ simple_two_arm_design <- simple_two_arm_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-}
+\concept{experiment}

@@ -56,6 +56,4 @@ diagnose_design(redesign(two_arm_attrition_design, b_R = 0:1, rho = .2))
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-post-treatment
-}
+\concept{post-treatment}
