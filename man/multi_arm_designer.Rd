@@ -16,7 +16,7 @@ multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
 
 \item{sds}{A double. Standard deviation for all t arms.}
 
-\item{conds}{A vector of size \code{m_arms}. Treatment names .}
+\item{conds}{A vector of strings. Treatment names .}
 
 \item{fixed}{A list. List of arguments to be fixed in design.}
 }

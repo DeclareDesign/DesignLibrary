@@ -9,12 +9,11 @@ for(designer in designers){
   
   the_designer <- get(x = designer)
   has_shiny <- !is.null(attributes(the_designer)$shiny_arguments)
+  
   designer_args <- formals(the_designer)
   designer_attr <- attributes(the_designer)
   one_design <- the_designer()
   design_attr <- attributes(one_design)
-
-  
   
   testthat::test_that(
     desc = paste0("designs returned by ", designer," should have a code attribute"),
@@ -31,10 +30,10 @@ for(designer in designers){
 
   
   testthat::test_that(
-   desc = paste0(designer,"'s default design runs."),
-     code = { 
-      expect_is(diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
-   })
+    desc = paste0(designer,"'s default design runs."),
+     code = {
+      expect_is( diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
+    })
   
   testthat::test_that(
     desc = paste0(designer, " should return designs that have code as a character string in attributes"),
