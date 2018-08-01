@@ -82,10 +82,7 @@ factorial_designer <- function(
   if(is.null(fixed)) fixed <- ""
   if(!"sds"   %in% fixed)  sds_ <- sapply(1:length(sds), function(i) rlang::expr(sds[!!i])) 
   if(!"means" %in% fixed)  means_ <- sapply(1:length(means), function(i) rlang::expr(means[!!i])) 
-  if(!"probs" %in% fixed)  probs_ <- sapply(1:length(probs), function(i) rlang::expr(probs[!!i])) 
   if(!"N"     %in% fixed)  N_ <- rlang::expr(N)
-  if(!"k"     %in% fixed)  k_ <- rlang::expr(k)
-  
 
   # population --------------------------------------------------------------
   
@@ -177,7 +174,8 @@ factorial_designer <- function(
   
   attr(factorial_design, "code") <- construct_design_code(factorial_designer,
                                                           match.call.defaults(),
-                                                          rlang = TRUE)
+                                                          rlang = TRUE, 
+                                                          exclude_args = c("k", "probs", fixed))
   return(factorial_design)
   
 }
