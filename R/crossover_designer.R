@@ -1,7 +1,7 @@
 #' Create a crossover design
 #'
 #' This designer produces designs that have two treatments, A and B, 
-#' with each corresponding to their own outcomes, YA and YB. 
+#' each with a corresponding outcomes of interest, YA and YB. 
 #' The basic premise of the design is that treatment A does not affect outcome YB, 
 #' and that treatment B does not affect outome YA. Using the crossover parameter
 #' researchers can assess robustness of the design to violations of this assumption.
@@ -21,11 +21,10 @@
 #' # Generate a crossover design using default arguments:
 #' crossover_design <- crossover_designer()
 #'
-
 crossover_designer <- function(N = 100,
                                a = .5,
                                b = .5,
-                               crossover = .1, 
+                               crossover = .2, 
                                rho = .2) 
 {
   u_a <- u_b <- YA <- Z <- YB <- YA_Z_T2 <- YA_Z_T1 <- NULL
@@ -38,48 +37,38 @@ crossover_designer <- function(N = 100,
       u_a = rnorm(N),
       u_b = rnorm(n = N, mean = rho * u_a, sd = sqrt(1 - rho^2))
     )
-    potential_outcomes_A <- declare_potential_outcomes(
-      YA_Z_T1 = u_a,
-      YA_Z_T2 = a + u_a,
-      YA_Z_T3 = u_a + crossover * (b + u_b),
-      YA_Z_T4 = a + u_a + crossover * (b + u_b)
+    potentials_A <- declare_potential_outcomes(
+      YA ~ u_a + a*A + B* crossover * (b + u_b), conditions = list(A = 0:1, B = 0:1)
     )
-    potential_outcomes_B <- declare_potential_outcomes(
-      YB_Z_T1 = u_b,
-      YB_Z_T2 = u_b + crossover * (a + u_a),
-      YB_Z_T3 = b + u_b,
-      YB_Z_T4 = b + u_b + crossover * (a + u_a)
+    potentials_B <- declare_potential_outcomes(
+      YB ~ u_b + b*B + A* crossover * (a + u_a), conditions = list(A = 0:1, B = 0:1)
     )
-    
-    reveal_YA <- declare_reveal(YA, Z) 
-    reveal_YB <-   declare_reveal(YB, Z) 
-    
+
     # I: Inquiry
-    estimand <- declare_estimand(a = mean(YA_Z_T2 - YA_Z_T1))
+    estimand <- declare_estimand(a = mean(YA_A_1_B_0 - YA_A_0_B_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(num_arms = 4)
-    get_AB <- declare_step(
-      A = as.numeric(Z %in% c("T2", "T4")),
-      B = as.numeric(Z %in% c("T3", "T4")),
-      handler = fabricate)
+    assignment_A <- declare_assignment(assignment_variable = "A")
+    assignment_B <- declare_assignment(assignment_variable = "B", blocks = A)
+    reveal_YA    <- declare_reveal(YA, assignment_variables = c("A", "B")) 
+    reveal_YB    <- declare_reveal(YB, assignment_variables = c("A", "B")) 
     
+
     # A: Answer Strategy
-    estimator_direct <- declare_estimator(YA ~ A,
-                                          model = lm_robust,
-                                          term = "A",
-                                          estimand = estimand,
-                                          label = "Direct estimator")
-    estimator_sat <- declare_estimator(YA ~ A + B,
+    estimator_dir <- declare_estimator(YA ~ A,
                                        model = lm_robust,
-                                       term = "A",
+                                       estimand = estimand,
+                                       label = "Direct estimator")
+    estimator_sat <- declare_estimator(YA ~ A,
+                                       model = lm_lin,
+                                       covariates = ~B,
                                        estimand = estimand,
                                        label = "Saturated estimator")
     
     # Design
-    crossover_design <- population + potential_outcomes_A + potential_outcomes_B +
-      estimand + assignment + get_AB + reveal_YA + reveal_YB +
-      estimator_direct + estimator_sat 
+    crossover_design <- population + potentials_A + potentials_B +
+      estimand + assignment_A + assignment_B + reveal_YA  + reveal_YB +
+      estimator_dir + estimator_sat 
   }}}
   attr(crossover_design, "code") <- 
     construct_design_code(crossover_designer, match.call.defaults())
@@ -106,10 +95,3 @@ treatment on other outcome equal to <code>b</code>.
 Proportion of <code>b</code> that crosses over onto main outcome of interest is equal to <code>crossover</code>. 
 Outcomes correlated by <code>rho</code>.
 "
-
-
-
-
-
-
-
