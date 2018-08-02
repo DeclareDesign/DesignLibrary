@@ -1,12 +1,14 @@
 #' Create a pretest-posttest design
 #'
 #' Produces designs in which an outcome Y is observed pre- and post-treatment.
-#' It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes
-#' and for at random missingness in the observation of post-treatment outcomes. 
+#' The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
+#' and for at-random missingness in the observation of post-treatment outcomes. 
 #'
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect.
-#' @param rho A number in [0,1]. Correlation in outcomes between pre- and post-test.
+#' @param sd_1 Non negative number. Standard deviation of period 1 shocks.
+#' @param sd_2 Non negative number. Standard deviation of period 2 shocks.
+#' @param rho A number in [-1,1]. Correlation in outcomes between pre- and post-test.
 #' @param attrition_rate A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.
 #' @return A pretest-posttest design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -21,37 +23,42 @@
 #'
 pretest_posttest_designer <- function(N = 100,
                                       ate = .25,
+                                      sd_1 = 1,
+                                      sd_2 = 1,
                                       rho = .5,
                                       attrition_rate = .1)
 {
   u_t1 <- Y_t2_Z_1 <- Y_t2_Z_0 <- Z <- R <- Y_t1 <- Y_t2 <- NULL
-  if(rho < 0 | rho > 1) stop("'rho' must be a value from 0 to 1")
+  if(rho < -1 | rho > 1) stop("'rho' must be a value from -1 to 1")
   if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
   {{{
     # M: Model
     population <- declare_population(
-      N = N,
-      u_t1 = rnorm(N),
-      u_t2 = rnorm(N, u_t1 * rho, sqrt(1 - rho^2)),
-      u_i = rnorm(N, 0, sqrt(rho))
+      N    = N,
+      u_t1 = rnorm(N)*sd_1,
+      u_t2 = rnorm(N, rho * u_t1, sqrt(1 - rho^2))*sd_2,
+      Y_t1 = u_t1
     )
-    pos_t1 <- declare_potential_outcomes(Y_t1 ~ u_i + u_t1)
-    pos_t2 <- declare_potential_outcomes(Y_t2 ~ ate * Z + u_i + u_t2)
+
+    pos_t2 <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(m = round(N / 2), assignment_variable = Z)
-    report <- declare_assignment(m = round(N * (1 - attrition_rate)),
-                                 assignment_variable = R)
+    assignment <- declare_assignment()
+    report     <- declare_assignment(m = round(N * (1 - attrition_rate)),
+                                    assignment_variable = R)
+    reveal_t2 <- declare_reveal(Y_t2) 
+    manipulation <- declare_step(difference = (Y_t2 - Y_t1), handler = fabricate)  
     
     # A: Answer Strategy
-    pretest_lhs <- declare_estimator((Y_t2 - Y_t1) ~ Z,
-                                     model = lm_robust,
-                                     estimand = estimand,
-                                     subset = R == 1,
-                                     label = "Change score"
+    pretest_lhs <- declare_estimator(
+      difference ~ Z,
+      model = lm_robust,
+      estimand = estimand,
+      subset = R == 1,
+      label = "Change score"
     )
     pretest_rhs <- declare_estimator(
       Y_t2 ~ Z + Y_t1,
@@ -67,17 +74,9 @@ pretest_posttest_designer <- function(N = 100,
       label = "Posttest only"
     )
     # Design
-    pretest_posttest_design <- population +
-      pos_t1 +
-      pos_t2 +
-      estimand +
-      assignment +
-      report +
-      declare_reveal(Y_t1) +
-      declare_reveal(Y_t2) +
-      pretest_lhs +
-      pretest_rhs +
-      posttest_only
+    pretest_posttest_design <- population + pos_t2 + estimand + 
+      assignment + reveal_t2 + report + manipulation +
+      pretest_lhs + pretest_rhs + posttest_only
   }}}
   
   attr(pretest_posttest_design, "code") <- 
@@ -102,13 +101,4 @@ attr(pretest_posttest_designer, "description") <- "
     and correlation between pre- and post-test outcomes equal to <code>rho</code>. The proportion of pre-test respondents  
    missing at random from  the post-test follow-up can be set using <code>attrition_rate</code>.
 "
-
-
-
-
-
-
-
-
-
 
