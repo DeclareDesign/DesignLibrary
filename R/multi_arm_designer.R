@@ -110,8 +110,8 @@ multi_arm_designer <- function(N = 30,
                                condition1 = !!x, 
                                condition2 = !!y))
     },
-    x = as.character(all_pairs[,1]),
-    y = as.character(all_pairs[,2])
+    x = as.character(all_pairs[,2]),
+    y = as.character(all_pairs[,1])
   )
   names(estimators) <- estimand_names
   estimator_expr <- expr(declare_estimator(
@@ -119,7 +119,7 @@ multi_arm_designer <- function(N = 30,
       estimates <- rbind.data.frame(!!!estimators)
       estimates$estimator_label <- "DIM"
       estimates$estimand_label <- rownames(estimates)
-      estimates$estimate <- estimates$statistic
+      estimates$estimate <- estimates$coefficients
       estimates$term <- NULL
       return(estimates)
     }))
