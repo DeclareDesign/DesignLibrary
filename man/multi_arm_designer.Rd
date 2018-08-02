@@ -10,13 +10,13 @@ multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{m_arms}{An integer. Number of Z arms.}
+\item{m_arms}{An integer. Number of arms.}
 
-\item{means}{A numeric vector of length \code{m_arms}.  Average outcome in each Z arm.}
+\item{means}{A numeric vector of length \code{m_arms}.  Average outcome in each arm.}
 
-\item{sds}{A positive numeric vector of length \code{m_arms}. Standard deviations for each of the Z arms.}
+\item{sds}{A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.}
 
-\item{conditions}{A character vector of length \code{m_arms}. The names of each Z arm.}
+\item{conditions}{A character vector of length \code{m_arms}. The names of each arm.}
 
 \item{fixed}{A named list. Arguments to be fixed in design.}
 }

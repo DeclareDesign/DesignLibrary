@@ -3,10 +3,10 @@
 #' This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
 #'
 #' @param N An integer. Sample size.
-#' @param m_arms An integer. Number of Z arms.
-#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each Z arm.
-#' @param sds A positive numeric vector of length \code{m_arms}. Standard deviations for each of the Z arms.
-#' @param conditions A character vector of length \code{m_arms}. The names of each Z arm.
+#' @param m_arms An integer. Number of arms.
+#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
+#' @param sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.
+#' @param conditions A character vector of length \code{m_arms}. The names of each arm.
 #' @param fixed A named list. Arguments to be fixed in design.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
