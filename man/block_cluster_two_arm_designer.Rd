@@ -4,36 +4,36 @@
 \alias{block_cluster_two_arm_designer}
 \title{Create a two-arm design with blocks and clusters}
 \usage{
-block_cluster_two_arm_designer(N_blocks = 20,
-  N_clusters_in_block = 100, N_i_in_cluster = 20, sd_block = 0.2,
-  sd_cluster = 0.2, sd_i_0 = sqrt(max(0, 1 - sd_block^2 -
-  sd_cluster^2)), sd_i_1 = sd_i_0, prob = 0.5, control_mean = 0,
-  ate = 1, treatment_mean = control_mean + ate, rho = 1)
+block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
+  N_i_in_cluster = 1, sd_block = 0.5, sd_cluster = 0.5,
+  sd_i_0 = sqrt(max(0, 1 - sd_block^2 - sd_cluster^2)),
+  sd_i_1 = sd_i_0, rho = 1, prob = 0.5, control_mean = 0,
+  ate = 0, treatment_mean = control_mean + ate)
 }
 \arguments{
-\item{N_blocks}{An integer. Number of blocks.}
+\item{N_blocks}{An integer. Number of blocks. Defaults to 1 for no blocks.}
 
-\item{N_clusters_in_block}{An integer. Number of clusters in each block.}
+\item{N_clusters_in_block}{An integer. Number of clusters in each block. This is the total \code{N} when \code{N_blocks} and \code{N_i_in_cluster} are at default values.}
 
-\item{N_i_in_cluster}{An integer. Individuals per cluster.}
+\item{N_i_in_cluster}{An integer. Individuals per cluster. Defaults to 1 for no clusters.}
 
-\item{sd_block}{A number. Standard deviation of block level shocks.}
+\item{sd_block}{A non negative number. Standard deviation of block level shocks.}
 
-\item{sd_cluster}{A number. Standard deviation of cluster level shock.}
+\item{sd_cluster}{A non negative number. Standard deviation of cluster level shock.}
 
-\item{sd_i_0}{A number. Standard deviation of individual level shock in control.}
+\item{sd_i_0}{A non negative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.}
 
-\item{sd_i_1}{A number. Standard deviation of individual level shock in treatment.}
+\item{sd_i_1}{A non negative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.}
+
+\item{rho}{A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.}
 
 \item{prob}{A number in [0,1]. Treatment assignment probability.}
 
 \item{control_mean}{A number. Average outcome in control.}
 
-\item{ate}{A number. Average treatment effect. Alternative to specifying \code{treatment_mean}.}
+\item{ate}{A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that ate is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only.) only.}
 
-\item{treatment_mean}{A number. Average outcome in treatment. Overrides \code{ate} if both specified.}
-
-\item{rho}{A number in [0,1]. Correlation in individual shock between potential outcomes for treatment and control.}
+\item{treatment_mean}{A number. Average outcome in treatment. Note: if \code{treatment_mean} is not provided then it is calculated from \code{ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used.}
 }
 \value{
 A block cluster two-arm design.
@@ -45,10 +45,12 @@ Builds a two-arm design with blocks and clusters.
 Units are assigned to treatment using complete block cluster random assignment. Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 or by specifying an \code{ate}. Estimation uses differences in means accounting for blocks and clusters.
 
+Total N is given by \code{N_blocks*N_clusters_in_block*N_i_in_cluster} 
+
 Normal shocks can be specified at the individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
 level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1.
 
-Key limitations: The designer assumes constant treatment effects and no covariance between potential outcomes.
+Key limitations: The designer assumes covariance between potential outcomes at individual level only.
 }
 \examples{
 # Generate a design using default arguments:
