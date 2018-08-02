@@ -126,23 +126,23 @@ multi_arm_designer <- function(N = 30,
   
   
   {{{
-    # Model
+    # M: Model
     population <- eval_bare(population_expr)
     
     potential_outcomes <- eval_bare(potential_outcomes_expr)
     
-    # Inquiry
+    # I: Inquiry
     estimand  <- eval_bare(estimand_expr)
     
-    # Design
+    # D: Data Strategy
     assignment <- eval_bare(assignment_expr)
     
     reveal <-  declare_reveal(assignment_variables = Z)
     
-    # Answer
+    # A: Answer Strategy
     estimator <- eval_bare(estimator_expr)
     
-    
+    # Design
     multi_arm_design <-
       population + potential_outcomes + assignment + reveal + estimand +  estimator
     
