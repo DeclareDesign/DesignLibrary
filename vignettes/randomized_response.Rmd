@@ -60,7 +60,7 @@ Our diagnosis of the design indicates that randomized response yields an unbiase
 
 ## Using the Randomized Response Designer
 
-In R, you can generate a randomized response design using the template function `randomized_response_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+In R, you can generate a randomized response design using the template function `randomized_response_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
 
 ```{r, eval=FALSE}
 library(DesignLibrary)

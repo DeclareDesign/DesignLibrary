@@ -116,7 +116,7 @@ Finally, from the figure, we can see how poorly the average effect at the thresh
 
 ## Using the Regression Discontinuity Designer
 
-In R, you can generate a regression_discontinuity design using the template function `regression_discontinuity_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+In R, you can generate a regression_discontinuity design using the template function `regression_discontinuity_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
 
 ```{r, eval=FALSE}
 library(DesignLibrary)
