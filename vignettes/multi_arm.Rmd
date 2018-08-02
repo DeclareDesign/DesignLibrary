@@ -32,7 +32,7 @@ In settings of multiple treatment arms, we could do a number of pairwise compari
 - **A**nswer strategy: We fit a linear regression model with individual indicators for each of the treatments as covariates. The average treatment effect is equal to the regression coefficients, which are computed by subtracting the mean of the comparison group from the mean of each treatment group.
 
 
-```{r, code = get_design_code(multi_arm_designer( means = c(0.5, 1, 2)), eval=TRUE}
+```{r, code = get_design_code(multi_arm_designer( means = c(0.5, 1, 2))), eval=TRUE}
 ```
 
 ```{r}
