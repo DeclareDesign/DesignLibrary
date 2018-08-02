@@ -31,7 +31,6 @@ factorial_designer <- function(
   means = seq(0:.5, length.out = 2^k),
   sds = rep(.1, 2^k),
   probs = rep(.5, k),
-  compare_with = NULL,
   outcome_name = "Y",
   treatment_names = NULL,
   fixed = NULL
@@ -46,7 +45,7 @@ factorial_designer <- function(
   if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
   # pre-objects -------------------------------------------------------------
-  
+
   #names of conditions
   if(is.null(treatment_names)) treatment_names <- paste0("T", 1:k)
   cond_list <- rep(list(c(0,1)),k)
@@ -56,6 +55,7 @@ factorial_designer <- function(
   # assignment strings
   a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x], "_1"), paste0(treatment_names[x], "_0")))
   assignment_string <- sapply(1:2^k, function(r) paste0(a[r,], collapse = "_"))
+  # assignment_string <- sapply(1:2^k, function(r) paste0(cond_grid[r,], collapse = ""))
   
   # regression term strings
   b <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x]), "-"))
@@ -69,11 +69,6 @@ factorial_designer <- function(
   }), 1, prod)
   
   cond_row <- lapply(1:k, function(x) which(cond_grid[,x]==1))
-  # cond <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x], "==1"), paste0(treatment_names[x], "==0")))
-  # cond_logical <- sapply(1:2^k, function(r) paste0(cond[r,], collapse = " & "))
-  
-  if(is.null(compare_with)) compare_with <- assignment_string[1]
-  
 
   # fixed argument ----------------------------------------------------------
   
@@ -84,6 +79,7 @@ factorial_designer <- function(
   if(!"means" %in% fixed)  means_ <- sapply(1:length(means), function(i) rlang::expr(means[!!i])) 
   if(!"N"     %in% fixed)  N_ <- rlang::expr(N)
 
+
   # population --------------------------------------------------------------
   
   # potential outcomes ------------------------------------------------------
@@ -93,8 +89,6 @@ factorial_designer <- function(
   names_pos <- paste0(outcome_name, "_", assignment_string)
   names(potouts) <- names_pos
   
-  # pos <- rlang::expr(declare_potential_outcomes(rlang::UQS(potouts), assignment_variables = !!treatment_names))
-  
   # assignment --------------------------------------------------------------
   assignment_given_factor <- sapply(1:length(cond_row), function(i) rlang::quos(as.numeric(Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
@@ -102,9 +96,40 @@ factorial_designer <- function(
   # reveal outcomes ---------------------------------------------------------
   
   # estimands ---------------------------------------------------------------
-  Y_compare_with <- paste0(outcome_name, "_", compare_with)
-  estimand_expr <- sapply(1:length(term_string), function(i) rlang::expr(mean(!!rlang::sym(names_pos[i]) - !!rlang::sym(Y_compare_with))))
-  names(estimand_expr) <- term_string
+  
+  perm <- function(v) {
+    sapply(1:length(v), function(x) {
+      rep( rep(1:v[x], each=prod(v[x:length(v)]) / v[x]),
+           length.out=prod(v))
+    } ) - 1
+  }
+  
+  interaction  <- function(k, tnames = treatment_names) {
+    if(k < 2) stop("k > 1 please")
+    conditions <- perm(rep(2,k))
+    combs <- paste0("Y_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
+    signs <- (1 - 2*(k%%2))*( 1- 2*apply(conditions, 1, sum) %% 2)
+    
+    allsigns <- sapply(1:((nrow(conditions)-1)), function(j) {
+      others <- t(t(conditions) * (1-conditions[j,])) # Values of xx in YxxXX given XX
+      selection <- apply(others, 1, sum)%% 2 # Set of YxxXX combinations in which sum(xx) is odd given XX
+      selection <- 2*selection - 1  # keep odds, reverse evens
+      if(sum(1-conditions[j,]) %% 2 == 0)  selection <- -selection
+      signs*selection * .5^(k-sum(conditions[j,])) # modify signs and weight 
+    })
+    
+    out <- data.frame(combs,conditions,  allsigns, signs)
+    
+    # if(is.null(tnames)) tnames <- 1:k
+    names(out) <-  c("PO", tnames, "Control", 
+                     apply(conditions  ==1, 1, function(r) paste0(ifelse(sum(r)==1, "coef_", "int_"), paste(tnames[r], collapse = "_")))[-1])
+    return(out)
+  }
+  
+  d <- interaction(k)
+  estimand_operations <- apply(d[,(k+2):ncol(d)], 2, function(col) paste(col, "*", d$PO, collapse = " + ")) 
+  estimand_expr <- sapply(1:2^k, function(i) rlang::expr(mean(!!parse_expr(estimand_operations[i]))))
+  names(estimand_expr) <-  names(estimand_operations)
   
   # estimators --------------------------------------------------------------
   estimator_formula <- formula(paste0(outcome_name, " ~ ", paste(treatment_names, collapse = "*")))
@@ -112,7 +137,7 @@ factorial_designer <- function(
   # design code -------------------------------------------------------------
   
   {{{
-
+    
     # M: Model
     population <- rlang::quo(
       declare_population(!!N_)
@@ -126,9 +151,11 @@ factorial_designer <- function(
       declare_reveal(outcome_variables = !!outcome_name, assignment_variables = !!treatment_names)
     )
     
+    # relabel_pos <- declare_step(fabricate, )
+    
     # I: Inquiry
     estimand <- rlang::quo(
-      declare_estimand(rlang::UQS(estimand_expr))
+      declare_estimand(rlang::UQS(estimand_expr), label = "ATE")
     )
     
     # D: Data Strategy
@@ -143,18 +170,8 @@ factorial_designer <- function(
     # A: Answer Strategy
     estimator_function <- rlang::quo(
       function(data){
-        mod = lm_robust(formula = !!estimator_formula, data = data, weights = 1/(data$Z_cond_prob))
-        # mod = lm_robust(formula = Y ~ T1*T2, data = data, weights = 1/(data$Z_cond_prob))
-        df = data.frame(predict(mod, newdata=!!expand.grid(cond_list), se.fit = TRUE, weights = 1/prob_each, interval = "confidence"))
-        #calculate differences in fitted values
-        comparison = which(!!assignment_string == !!compare_with)
-        df_estimator = data.frame(term = !!term_string,
-                                  estimate = df$fit.fit - df$fit.fit[comparison],
-                                  std.error = sqrt((1/prob_each)*df$se.fit^2 + (1/prob_each[comparison])* df$se.fit[comparison]^2))
-        df_estimator$conf.low = with(df_estimator, estimate-1.96*std.error)
-        df_estimator$conf.high = with(df_estimator, estimate+1.96*std.error)
-        df_estimator$df = mod$df
-        df_estimator
+        data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
+        tidy.lm_robust(lm_robust(formula = !!estimator_formula, data = data, weights = 1/(data$Z_cond_prob)))
       }
     )
     
@@ -162,7 +179,7 @@ factorial_designer <- function(
       declare_estimator(
         #remove `rlang::eval_bare` call when running this code
         handler = tidy_estimator(rlang::eval_bare(estimator_function)),
-        estimand = !!term_string)
+        estimand = "ATE")
     )
     
     # Design
@@ -175,7 +192,7 @@ factorial_designer <- function(
   attr(factorial_design, "code") <- construct_design_code(factorial_designer,
                                                           match.call.defaults(),
                                                           rlang = TRUE, 
-                                                          exclude_args = c("k", "probs", fixed))
+                                                          exclude_args = c("k", "probs", "fixed", fixed))
   return(factorial_design)
   
 }
