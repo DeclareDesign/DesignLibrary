@@ -32,8 +32,5 @@ mediation_analysis_design <- mediation_analysis_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-mediation
-}
+\concept{experiment}
+\concept{mediation}

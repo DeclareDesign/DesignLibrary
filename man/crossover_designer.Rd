@@ -36,8 +36,5 @@ crossover_design <- crossover_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-multiarm
-}
+\concept{experiment}
+\concept{multiarm}

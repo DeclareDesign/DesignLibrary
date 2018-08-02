@@ -31,8 +31,6 @@
 #'
 #' @examples
 #' design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
-#' get_estimates(design)
-#' get_design_code(design)
 #' 
 #' # A design biased for the specified estimands:
 #' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)

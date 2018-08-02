@@ -1,4 +1,6 @@
+
 context(desc = "Testing that designers in the library work as they should")
+
 
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
@@ -9,6 +11,7 @@ for(designer in designers){
   
   the_designer <- get(x = designer)
   has_shiny <- !is.null(attributes(the_designer)$shiny_arguments)
+  
   designer_args <- formals(the_designer)
   designer_attr <- attributes(the_designer)
   one_design <- the_designer()
@@ -26,11 +29,12 @@ for(designer in designers){
     code = {
       expect_true("design" %in% class(one_design))
     })
+
   
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
-    code = {
-      expect_is(diagnose_design(one_design,sims = 5,bootstrap_sims = F)$diagnosands,"data.frame")
+     code = {
+      expect_is( DeclareDesign::diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
     })
   
   testthat::test_that(
@@ -119,6 +123,14 @@ test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
             expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
             expect_error(cluster_sampling_designer(n_subjects_per_cluster = 30,N_subjects_per_cluster = 10))
+          })
+
+
+test_that(desc = "multi_arm_designer errors when it should",
+          code = {
+            expect_error(multi_arm_designer(means = rep(1,2),m_arms = 10))
+            expect_error(multi_arm_designer(m_arms = .5,means = 2))
+            expect_error(multi_arm_designer(sds = c(-10,-10),means = c(2,2), m_arms = 2))
           })
 
 

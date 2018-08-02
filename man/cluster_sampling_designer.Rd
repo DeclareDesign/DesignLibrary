@@ -4,8 +4,9 @@
 \alias{cluster_sampling_designer}
 \title{Create a design for cluster random sampling}
 \usage{
-cluster_sampling_designer(n_clusters = 100, n_subjects_per_cluster = 10,
-  icc = 0.2, N_clusters = 1000, N_subjects_per_cluster = 50)
+cluster_sampling_designer(n_clusters = 100,
+  n_subjects_per_cluster = 10, icc = 0.2, N_clusters = 1000,
+  N_subjects_per_cluster = 50)
 }
 \arguments{
 \item{n_clusters}{An integer. Number of clusters to sample.}
@@ -36,10 +37,6 @@ cluster_sampling_design <- cluster_sampling_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-clusters
-
-observational
-
-measurement
-}
+\concept{clusters}
+\concept{measurement}
+\concept{observational}

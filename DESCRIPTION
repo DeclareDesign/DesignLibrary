@@ -6,8 +6,8 @@ Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c
              person("Clara", "Bicalho", email = "clarabmcorreia@gmail.com", role = c("aut")),
              person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut", "cre")),
              person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
-             person("Macartan", "Humphreys", email = "macartan@gmail.com", role = c("aut")),
              person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")),
+             person("Macartan", "Humphreys", email = "macartan@gmail.com", role = c("aut")),
              person("Lily", "Medina", email = "lilymiru@gmail.com", role = c("aut")))
 Description: This is a library of functions that return designs built 
     using the package DeclareDesign. In one line of code users can specify 
@@ -26,12 +26,14 @@ Depends:
     fabricatr (>= 0.4.0),
     estimatr (>= 0.10.0)
 Imports:
-    devtools
+    devtools,
+    rlang, methods
 Suggests: knitr,
     testthat, 
-    systemfit
+    systemfit,
+    ggplot2
 Enhances:
   Matching
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
-Additional_Repositories: http://r.declaredesign.org
+Additional_Repositories: http://r.declaredesign.org]

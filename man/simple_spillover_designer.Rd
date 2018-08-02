@@ -38,8 +38,5 @@ simple_spillover_design <- simple_spillover_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-spillovers
-}
+\concept{experiment}
+\concept{spillovers}

@@ -32,10 +32,6 @@ pretest_posttest_design <- pretest_posttest_designer()
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-difference-in-differences
-
-baseline
-}
+\concept{baseline}
+\concept{difference-in-differences}
+\concept{experiment}
