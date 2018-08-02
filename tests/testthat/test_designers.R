@@ -5,8 +5,6 @@ context(desc = "Testing that designers in the library work as they should")
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
 
-# designers <- designers[-which(designers == "multi_arm_designer")]
-
 for(designer in designers){
   
   the_designer <- get(x = designer)
@@ -60,6 +58,7 @@ for(designer in designers){
   if(has_shiny){
     
     shiny_arguments <- designer_attr$shiny_arguments
+    shiny_tips <- designer_attr$tips
     
     testthat::test_that(
       desc = paste0("Any shiny_arguments in the attributes of ",designer," should all be in the its formals."),
@@ -69,7 +68,13 @@ for(designer in designers){
         ) 
       }
     )
-    
+    testthat::test_that(
+      desc = paste0("Any shiny_arguments in the attributes of ",designer," have associated tips."),
+      code = {
+        expect_length(setdiff(names(shiny_arguments),names(shiny_tips)),0)
+        expect_length(setdiff(names(shiny_tips),names(shiny_arguments)),0)
+      }
+    )
   }
 }
 

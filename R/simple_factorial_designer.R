@@ -127,13 +127,19 @@ simple_factorial_designer <- function(N = 100,
 }
 
 
-attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64), w_A = c(0, .5), mean_A0B1 = 0:1, mean_A1B0 = 0:1, mean_A1B1 = -1:3) 
+attr(simple_factorial_designer, "shiny_arguments") <- list(
+  N = c(16, 32, 64), w_A = c(0, .5), 
+  mean_A0B1 = 0:1, 
+  mean_A1B0 = 0:1, 
+  mean_A1B1 = -1:3) 
 
 attr(simple_factorial_designer, "tips") <-
   list(
     N = "Sample size",
     w_A = "Weight on B=1 condition for effect of A estimand",
-    mean_A0B1 = "Mean outcome for A=0, B=1"
+    mean_A1B0 = "Mean outcome for A=1, B=0",
+    mean_A0B1 = "Mean outcome for A=0, B=1",
+    mean_A1B1 = "Mean outcome for A=1, B=1"
   )
 
 attr(simple_factorial_designer, "description") <- "
