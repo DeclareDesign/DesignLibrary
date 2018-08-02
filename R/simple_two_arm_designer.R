@@ -55,10 +55,11 @@ simple_two_arm_designer <- function(N = 100,
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = prob)
+    reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
-    reveal_Y    <- declare_reveal()
+    
     
     # Design
     simple_two_arm_design <- population + pos + estimand + assignment + reveal_Y + estimator

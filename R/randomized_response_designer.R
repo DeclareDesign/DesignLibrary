@@ -37,7 +37,7 @@ randomized_response_designer <- function(N = 1000,
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    pos <- declare_potential_outcomes(
+    potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
@@ -50,6 +50,7 @@ randomized_response_designer <- function(N = 1000,
       prob = prob_forced_yes,
       conditions = c("Truth","Yes")
     )
+    reveal_yz <- declare_reveal(Y, Z)
     
     # A: Answer Strategy
     estimator_randomized_response <- declare_estimator(
@@ -71,9 +72,9 @@ randomized_response_designer <- function(N = 1000,
     # Design
     randomized_response_design <- population +
       assignment +
-      pos +
+      potential_outcomes +
       estimand +
-      declare_reveal(Y, Z) +
+      reveal_yz +
       estimator_randomized_response +
       estimator_direct_question
     

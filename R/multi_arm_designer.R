@@ -25,8 +25,8 @@
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-#'                              fixed = list(m_arms = 4, sds = rep(1, 4),
-#'                                           means = 1:4))
+#'                              fixed = c("m_arms" , "sds" ,
+#'                                           "means" ))
 #'
 
 multi_arm_designer <- function(N = 30,
@@ -47,9 +47,9 @@ multi_arm_designer <- function(N = 30,
       length(conditions) != m_arms)
     stop("means, sds and conditions arguments must be of length m_arms.")
   if (any(sds <= 0)) stop("sds should be positive.")
-  if (!"sds" %in% names(fixed)) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
-  if (!"means" %in% names(fixed)) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
-  if (!"N" %in% names(fixed)) N_ <- expr(N)
+  if (!"sds" %in% fixed) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
+  if (!"means" %in% fixed) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
+  if (!"N" %in% fixed) N_ <- expr(N)
   
   # Create helper vars to be used in design
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!sds_[x])))
@@ -126,23 +126,23 @@ multi_arm_designer <- function(N = 30,
   
   
   {{{
-    # Model
+    # M: Model
     population <- eval_bare(population_expr)
     
     potential_outcomes <- eval_bare(potential_outcomes_expr)
     
-    # Inquiry
+    # I: Inquiry
     estimand  <- eval_bare(estimand_expr)
     
-    # Design
+    # D: Data Strategy
     assignment <- eval_bare(assignment_expr)
     
     reveal <-  declare_reveal(assignment_variables = Z)
     
-    # Answer
+    # A: Answer Strategy
     estimator <- eval_bare(estimator_expr)
     
-    
+    # Design
     multi_arm_design <-
       population + potential_outcomes + assignment + reveal + estimand +  estimator
     

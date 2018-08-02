@@ -45,6 +45,8 @@ pretest_posttest_designer <- function(N = 100,
     assignment <- declare_assignment(m = round(N / 2), assignment_variable = Z)
     report <- declare_assignment(m = round(N * (1 - attrition_rate)),
                                  assignment_variable = R)
+    reveal_t1 <- declare_reveal(Y_t1) 
+    reveal_t2 <- declare_reveal(Y_t2) 
     
     # A: Answer Strategy
     pretest_lhs <- declare_estimator((Y_t2 - Y_t1) ~ Z,
@@ -73,8 +75,8 @@ pretest_posttest_designer <- function(N = 100,
       estimand +
       assignment +
       report +
-      declare_reveal(Y_t1) +
-      declare_reveal(Y_t2) +
+      reveal_t1 +
+      reveal_t2 +
       pretest_lhs +
       pretest_rhs +
       posttest_only
