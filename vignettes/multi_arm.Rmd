@@ -40,7 +40,7 @@ diagnosis <- diagnose_design(multi_arm_design)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,-c(1, 12)], digits = 2)
 ```
 
 The diagnosis of our design indicates that the regression provides unbiased estimates of  the average treatment effect (ATE) in each arm. These estimates, however, are not so precise;  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the time.
