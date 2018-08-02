@@ -88,8 +88,8 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
     estimator <- declare_estimator(
       Y ~ Z,
       estimand = estimand,
-      model = difference_in_means,
-      blocks = blocks,
+      model = lm_robust,
+      fixed_effects = ~ blocks,
       clusters = clusters
     )
     
