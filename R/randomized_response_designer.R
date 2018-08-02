@@ -53,14 +53,14 @@ randomized_response_designer <- function(N = 1000,
       handler = tidy_estimator(
         function(data) with(
           data,
-          data.frame(est = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
+          data.frame(estimate = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
       estimand = estimand,
       label = "Forced Randomized Response"
     )
     estimator_direct_question <- declare_estimator(
       handler = tidy_estimator(function(data) with(
         data,
-        data.frame(est = mean(direct_answer)))),
+        data.frame(estimate = mean(direct_answer)))),
       estimand = estimand,
       label = "Direct Question"
     )
@@ -73,6 +73,13 @@ randomized_response_designer <- function(N = 1000,
       declare_reveal(Y, Z) +
       estimator_randomized_response +
       estimator_direct_question
+    
+    randomized_response_design <- set_diagnosands(
+      design = randomized_response_design,
+      diagnosands = declare_diagnosands(
+        select = bias
+      ))
+    
   }}}
   attr(randomized_response_design, "code") <- 
     construct_design_code(randomized_response_designer, match.call.defaults())
