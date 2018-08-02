@@ -25,8 +25,7 @@
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-#'                              fixed = list(m_arms = 4, sds = rep(1, 4),
-#'                                           means = 1:4))
+#'                              fixed = c("means", "sds")))
 #'
 
 multi_arm_designer <- function(N = 30,
