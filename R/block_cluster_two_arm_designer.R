@@ -36,7 +36,6 @@
 #' 
 #'
 
-
 block_cluster_two_arm_designer <- function(N_blocks = 20,
                                            N_clusters_in_block = 100,
                                            N_i_in_cluster = 20,
@@ -50,12 +49,12 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
                                            treatment_mean = control_mean + ate,
                                            rho = 1){  
   N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
-  if(sd_block<0) stop("sd_block must be non-negative")
-  if(sd_cluster<0) stop("sd_cluster must be non-negative")
-  if(sd_i_0<0) stop("sd_i_0 must be non-negative")
-  if(sd_i_1<0) stop("sd_i_1 must be non-negative")
-  if(prob<0 || prob>1) stop("prob must be in [0,1]")
-  if(rho<0 || rho>1) stop("prob must be in [0,1]")
+  if(sd_block < 0) stop("sd_block must be non-negative")
+  if(sd_cluster < 0) stop("sd_cluster must be non-negative")
+  if(sd_i_0 < 0) stop("sd_i_0 must be non-negative")
+  if(sd_i_1 < 0) stop("sd_i_1 must be non-negative")
+  if(prob< 0 || prob > 1) stop("prob must be in [0,1]")
+  if(rho< 0 || rho > 1) stop("prob must be in [0,1]")
   {{{    
     # M: Model
     population <- declare_population(
@@ -75,6 +74,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
     pos <- declare_potential_outcomes(
       Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
         Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
+    reveal <- declare_reveal()
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -88,14 +88,14 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
     estimator <- declare_estimator(
       Y ~ Z,
       estimand = estimand,
-      model = difference_in_means,
-      blocks = blocks,
+      model = lm_robust,
+      fixed_effects = ~ blocks,
       clusters = clusters
     )
     
     # Design
     block_cluster_two_arm_design <-  population + pos + estimand + assignment + 
-      declare_reveal() + estimator
+      reveal + estimator
   }}}
   
   attr(block_cluster_two_arm_design, "code") <- 

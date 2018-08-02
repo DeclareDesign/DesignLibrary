@@ -42,9 +42,9 @@ Say, for example, we are interested in measuring the rate of intimate partner vi
 
 ```{r}
 diagnosis <- diagnose_design(randomized_response_design,
-                             diagnosands = declare_diagnosands(bias = mean(est - estimand),
-                                                               rmse = sqrt(mean((est - estimand)^2)),
-                                                               mean_estimate = mean(est),
+                             diagnosands = declare_diagnosands(bias = mean(estimate - estimand),
+                                                               rmse = sqrt(mean((estimate - estimand)^2)),
+                                                               mean_estimate = mean(estimate),
                                                                mean_estimand = mean(estimand),
                                                                keep_defaults = FALSE))
 ```
@@ -60,7 +60,7 @@ Our diagnosis of the design indicates that randomized response yields an unbiase
 
 ## Using the Randomized Response Designer
 
-In R, you can generate a randomized response design using the template function `randomized_response_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+In R, you can generate a randomized response design using the template function `randomized_response_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
 
 ```{r, eval=FALSE}
 library(DesignLibrary)

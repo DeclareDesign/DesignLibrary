@@ -16,7 +16,7 @@ crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.1,
 
 \item{crossover}{A number. Size of crossover effect.}
 
-\item{rho}{A number in [0,1]. Correlation in errors of outcomes A and B.}
+\item{rho}{A number in [-1,1]. Correlation in errors of outcomes A and B.}
 }
 \value{
 A crossover design.

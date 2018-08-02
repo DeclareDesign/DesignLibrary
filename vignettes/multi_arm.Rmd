@@ -47,7 +47,7 @@ The diagnosis of our design indicates that the regression provides unbiased esti
 
 ## Using the  Multi-Arm Designer
 
-In R, you can generate a multi-arm design using the template function `multi_arm_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
+In R, you can generate a multi-arm design using the template function `multi_arm_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
   
 ```{r, eval=FALSE}
 library(DesignLibrary)

@@ -10,7 +10,7 @@
 #' @param a A number. Treatment effect of interest.
 #' @param b A number. Treatment effect of crossed randomization.
 #' @param crossover A number. Size of crossover effect.
-#' @param rho A number in [0,1]. Correlation in errors of outcomes A and B.
+#' @param rho A number in [-1,1]. Correlation in errors of outcomes A and B.
 #' @return A crossover design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -29,6 +29,8 @@ crossover_designer <- function(N = 100,
                                rho = .2) 
 {
   u_a <- u_b <- YA <- Z <- YB <- YA_Z_T2 <- YA_Z_T1 <- NULL
+  if(rho < -1 || rho > 1) stop("rho must be in [-1,1]")
+  if(N < 2) stop("N must be at least 2")
   {{{
     # M: Model
     population <- declare_population(
