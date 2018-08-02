@@ -36,7 +36,7 @@ In settings of multiple treatment arms, we could do a number of pairwise compari
 ```
 
 ```{r}
-diagnosis <- diagnose_design(multi_arm_design, sims = 100)
+diagnosis <- diagnose_design(multi_arm_design)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}
