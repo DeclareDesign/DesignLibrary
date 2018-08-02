@@ -74,7 +74,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
     pos <- declare_potential_outcomes(
       Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
         Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
-    reveal <- declare_reveal()
+    
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -83,6 +83,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 20,
     assignment <- declare_assignment(prob = prob,
                                      blocks = blocks,
                                      clusters = clusters)
+    reveal <- declare_reveal()
     
     # A: Answer Strategy
     estimator <- declare_estimator(

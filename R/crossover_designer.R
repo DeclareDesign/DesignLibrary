@@ -51,8 +51,7 @@ crossover_designer <- function(N = 100,
       YB_Z_T4 = b + u_b + crossover * (a + u_a)
     )
     
-    reveal_YA <- declare_reveal(YA, Z) 
-    reveal_YB <-   declare_reveal(YB, Z) 
+    
     
     # I: Inquiry
     estimand <- declare_estimand(a = mean(YA_Z_T2 - YA_Z_T1))
@@ -63,6 +62,9 @@ crossover_designer <- function(N = 100,
       A = as.numeric(Z %in% c("T2", "T4")),
       B = as.numeric(Z %in% c("T3", "T4")),
       handler = fabricate)
+    
+    reveal_YA <- declare_reveal(YA, Z) 
+    reveal_YB <- declare_reveal(YB, Z) 
     
     # A: Answer Strategy
     estimator_direct <- declare_estimator(YA ~ A,
