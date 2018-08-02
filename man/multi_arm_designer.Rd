@@ -36,8 +36,8 @@ design <- multi_arm_designer()
 design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
 
 design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-                             fixed = list(m_arms = 4, sds = rep(1, 4),
-                                          means = 1:4))
+                             fixed = c("m_arms" , "sds" ,
+                                          "means" ))
 
 }
 \author{
