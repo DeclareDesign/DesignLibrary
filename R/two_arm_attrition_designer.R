@@ -57,8 +57,8 @@ two_arm_attrition_designer <- function(N = 100,
                                        u_R = rnorm(N), 
                                        u_Y = rnorm(N, mean = rho * u_R, 
                                                    sd = sqrt(1 - rho^2)))
-    pos_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
-    pos_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
+    potentials_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
+    potentials_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
     
     # I: Inquiry
     estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
@@ -83,7 +83,7 @@ two_arm_attrition_designer <- function(N = 100,
                         estimand = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
-    two_arm_attrition_design <- population + pos_R +  pos_Y +
+    two_arm_attrition_design <- population + potentials_R +  potentials_Y +
       assignment  + reveal + observed +
       estimand_1  + estimand_2  + estimand_3 +
       estimator_1 + estimator_2 + estimator_3

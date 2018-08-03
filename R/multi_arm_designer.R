@@ -3,11 +3,11 @@
 #' This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
 #'
 #' @param N An integer. Sample size.
-#' @param m_arms An integer. Number of Z arms.
-#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each Z arm.
-#' @param sds A positive numeric vector of length \code{m_arms}. Standard deviations for each of the Z arms.
-#' @param conditions A character vector of length \code{m_arms}. The names of each Z arm.
-#' @param fixed A named list. Arguments to be fixed in design.
+#' @param m_arms An integer. Number of arms.
+#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
+#' @param sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.
+#' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces. 
+#' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{m_arms} and \code{conditions} are always fixed.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -25,8 +25,7 @@
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-#'                              fixed = list(m_arms = 4, sds = rep(1, 4),
-#'                                           means = 1:4))
+#'                              fixed = c("means", "sds"))
 #'
 
 multi_arm_designer <- function(N = 30,
@@ -46,10 +45,10 @@ multi_arm_designer <- function(N = 30,
       length(sds) != m_arms ||
       length(conditions) != m_arms)
     stop("means, sds and conditions arguments must be of length m_arms.")
-  if (any(sds <= 0)) stop("sds should be positive.")
-  if (!"sds" %in% names(fixed)) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
-  if (!"means" %in% names(fixed)) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
-  if (!"N" %in% names(fixed)) N_ <- expr(N)
+  if (any(sds <= 0)) stop("sds should be nonnegative")
+  if (!"sds" %in% fixed) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
+  if (!"means" %in% fixed) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
+  if (!"N" %in% fixed) N_ <- expr(N)
   
   # Create helper vars to be used in design
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!sds_[x])))
@@ -69,7 +68,7 @@ multi_arm_designer <- function(N = 30,
     expr(
       declare_potential_outcomes(
         formula = !!f_Y,
-        conditions = conditions,
+        conditions = !!conditions,
         assignment_variables = Z
       )
     )
@@ -77,7 +76,7 @@ multi_arm_designer <- function(N = 30,
     expr(
       declare_assignment(
         num_arms = !!m_arms,
-        conditions = conditions,
+        conditions = !!conditions,
         assignment_variable = Z
       )
     )
@@ -126,25 +125,25 @@ multi_arm_designer <- function(N = 30,
   
   
   {{{
-    # Model
+    # M: Model
     population <- eval_bare(population_expr)
     
-    potential_outcomes <- eval_bare(potential_outcomes_expr)
+    potentials <- eval_bare(potential_outcomes_expr)
     
-    # Inquiry
+    # I: Inquiry
     estimand  <- eval_bare(estimand_expr)
     
-    # Design
+    # D: Data Strategy
     assignment <- eval_bare(assignment_expr)
     
-    reveal <-  declare_reveal(assignment_variables = Z)
+    reveal_Y <-  declare_reveal(assignment_variables = Z)
     
-    # Answer
+    # A: Answer Strategy
     estimator <- eval_bare(estimator_expr)
     
-    
+    # Design
     multi_arm_design <-
-      population + potential_outcomes + assignment + reveal + estimand +  estimator
+      population + potentials + assignment + reveal_Y + estimand +  estimator
     
   }}}
   
@@ -154,7 +153,7 @@ multi_arm_designer <- function(N = 30,
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = c("m_arms", fixed, "fixed")
+      exclude_args = c("m_arms", fixed, "fixed", "conditions")
     )
   
   design_code <-

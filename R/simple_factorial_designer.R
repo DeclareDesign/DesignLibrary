@@ -75,7 +75,7 @@ simple_factorial_designer <- function(N = 100,
     # M: Model
     population <- declare_population(N)
     
-    pos <- declare_potential_outcomes(
+    potentials <- declare_potential_outcomes(
       Y_A_0_B_0 = mean_A0B0 + rnorm(N, sd = outcome_sds[1]),  
       Y_A_0_B_1 = mean_A0B1 + rnorm(N, sd = outcome_sds[2]),  
       Y_A_1_B_0 = mean_A1B0 + rnorm(N, sd = outcome_sds[3]),
@@ -112,7 +112,7 @@ simple_factorial_designer <- function(N = 100,
                                      label = "Interaction")
     
     # Design
-    simple_factorial_design <- population + pos + 
+    simple_factorial_design <- population + potentials + 
       estimand_1 + estimand_2 + estimand_3 +
       assign_A + assign_B + reveal_Y + 
       estimator_1 + estimator_2

@@ -3,18 +3,18 @@ Type: Package
 Title: Library of Research Designs
 Version: 0.1.0
 Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut")),
-             person("Clara", "Bicalho", email = "clarabmcorreia@gmail.com", role = c("aut")),
              person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut", "cre")),
              person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
-             person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")),
              person("Macartan", "Humphreys", email = "macartan@gmail.com", role = c("aut")),
+             person("Clara", "Bicalho", email = "clarabmcorreia@gmail.com", role = c("aut")),
+             person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")),
              person("Lily", "Medina", email = "lilymiru@gmail.com", role = c("aut")))
 Description: This is a library of functions that return designs built 
-    using the package DeclareDesign. In one line of code users can specify 
+    using the package DeclareDesign. In one line of code, users can specify 
     the parameters of individual designs and diagnose their properties.
     The designers can also be used to compare performance of a given design
     across a range of combinations of parameters, such as effect size, sample
-    size, assignment probabilities and more.
+    size, and assignment probabilities.
 URL: https://declaredesign.org/library/, https://github.com/DeclareDesign/DesignLibrary
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -31,7 +31,8 @@ Imports:
 Suggests: knitr,
     testthat, 
     systemfit,
-    ggplot2
+    ggplot2,
+    broom
 Enhances:
   Matching
 RoxygenNote: 6.1.0

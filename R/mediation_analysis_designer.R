@@ -1,12 +1,15 @@
 #' Create a design for mediation analysis
 #'
-#' A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
+#' A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) (given Z=0) 
+#' as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
+#' Note this model is not guaranteed to be unbiased despire randomization of Z because of possible violations of sequential ignorability.
 #'
 #' @param N An integer. Size of sample.
-#' @param a A number. Effect of treatment (Z) on mediatior (M).
-#' @param b A number. Effect of mediatior (M) on outcome (Y).
-#' @param d A number. Direct effect of treatment (Z) on outcome (Y).
-#' @param rho A number in [0,1]. Correlation of between mediator (M) and outcome (Y) error terms.
+#' @param a A number. Parameter governing effect of treatment (Z) on mediatior (M).
+#' @param b A number. Effect of mediatior (M) on outcome (Y) when Z=0.
+#' @param c A number. Interaction between mediatior (M) and (Z) for outcome (Y).
+#' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
+#' @param rho A number in [0,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
 #' @return A mediation analysis design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -15,15 +18,15 @@
 #' @export
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
-#' mediation_analysis_design <- mediation_analysis_designer()
+#' mediation_analysis_design_1 <- mediation_analysis_designer()
+#' # A design with bias due to violation of sequential ignorability:
+#' mediation_analysis_design_2 <- mediation_analysis_designer(rho = .5)
 #'
-mediation_analysis_designer <- function(N = 100,
-                                        a = .5,
-                                        b = .5,
-                                        d = .5,
-                                        rho = .2)
+mediation_analysis_designer <- function(N = 100, 
+                                        a = .5, b = .5, c = 0, d = .5, 
+                                        rho = 0)
 {
-  e1 <- M <- Z <- Y <- NULL
+  e1 <- M_Z_1 <-M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  NULL
   if(rho < -1 | rho > 1) stop("rho must be in [-1, 1]")
   {{{
     # M: Model
@@ -32,50 +35,41 @@ mediation_analysis_designer <- function(N = 100,
       e1 = rnorm(N),
       e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
     )
-    pos_M <-
-      declare_potential_outcomes(M ~ a * Z + e1)
-    pos_Y <-
-      declare_potential_outcomes(Y ~ d * Z + b * M + e2)
-    reveal_M <- declare_reveal(M, Z)
-    reveal_Y <- declare_reveal(Y, Z) 
-    
+    potentials_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
+    potentials_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
+                                               conditions = list(M = 0:1, Z = 0:1))
+
     # I: Inquiry
-    estimand_a <- declare_estimand(a = a)
-    estimand_b <- declare_estimand(b = b)
-    estimand_d <- declare_estimand(d = d)
-    
-    # D: Data strategy
+    estimands <- declare_estimands(FirstStage = mean(M_Z_1 - M_Z_0), 
+                                   Indirect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
+                                   Indirect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
+                                   Direct_0   = mean(Y_M_0_Z_1 - Y_M_0_Z_0),
+                                   Direct_1   = mean(Y_M_1_Z_1 - Y_M_1_Z_0))
+
+    # D: Data strategy 1
     assignment <- declare_assignment(prob = 0.5)
+    reveal_M   <- declare_reveal(M, Z)
+    reveal_Y   <- declare_reveal(Y, assignment_variable = c("M","Z"))
     
     # A: Answer Strategy
     mediator_regression <- declare_estimator(
       M ~ Z,
       model = lm_robust,
-      term = "Z",
-      estimand = estimand_a,
+      estimand = "FirstStage",
       label = "Mediator regression"
     )
     outcome_regression <- declare_estimator(
-      Y ~ Z + M,
+      Y ~ M*Z,
       model = lm_robust,
       term = c("M","Z"),
-      estimand = c(estimand_b,estimand_d),
+      estimand = c("Indirect_0", "Direct_0"),
       label = "Outcome regression"
     )
     
     # Design
-    mediation_analysis_design <-
-      population +
-      pos_M +
-      assignment +
-      reveal_M +
-      pos_Y +
-      estimand_a +
-      estimand_b +
-      estimand_d +
-      reveal_Y +
-      mediator_regression +
-      outcome_regression
+    mediation_analysis_design <- population + potentials_M + potentials_Y +
+      estimands + assignment + reveal_M + reveal_Y + 
+      mediator_regression + outcome_regression
   }}}
   attr(mediation_analysis_design, "code") <- 
     construct_design_code(mediation_analysis_designer, match.call.defaults())
@@ -99,9 +93,10 @@ attr(mediation_analysis_designer,"tips") <- c(
 )
 attr(mediation_analysis_designer,"description") <- "
 <p> A mediation analysis design, with sample of size <code>N</code>, 
-    effect of treatment (Z) on mediator (M) equal to <code>a</code>, 
-    effect of mediator (M) on outcome (Y) equal to <code>b</code>, 
-    and direct effect of treatment (Z) on outcome (Y) equal to <code>d</code>. 
+    effect of treatment (Z) on mediator (M) governed by <code>a</code>, 
+    effect of mediator (M) on outcome (Y) (when Z = 0) equal to <code>b</code>, 
+    and direct effect of treatment (Z) on outcome (Y) (when M = 0) equal to <code>d</code>. 
+    Possible interaction between M and Z for Y given by c.
 <p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>.
 "
 

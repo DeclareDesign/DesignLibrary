@@ -4,7 +4,7 @@
 \alias{crossover_designer}
 \title{Create a crossover design}
 \usage{
-crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.1,
+crossover_designer(N = 100, a = 0.5, b = 0.5, crossover = 0.2,
   rho = 0.2)
 }
 \arguments{
@@ -23,7 +23,7 @@ A crossover design.
 }
 \description{
 This designer produces designs that have two treatments, A and B, 
-with each corresponding to their own outcomes, YA and YB. 
+each with a corresponding outcomes of interest, YA and YB. 
 The basic premise of the design is that treatment A does not affect outcome YB, 
 and that treatment B does not affect outome YA. Using the crossover parameter
 researchers can assess robustness of the design to violations of this assumption.

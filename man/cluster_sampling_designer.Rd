@@ -4,20 +4,20 @@
 \alias{cluster_sampling_designer}
 \title{Create a design for cluster random sampling}
 \usage{
-cluster_sampling_designer(n_clusters = 100,
-  n_subjects_per_cluster = 10, icc = 0.2, N_clusters = 1000,
-  N_subjects_per_cluster = 50)
+cluster_sampling_designer(N_clusters = 1000,
+  N_subjects_per_cluster = 50, n_clusters = 100,
+  n_subjects_per_cluster = 10, icc = 0.2)
 }
 \arguments{
+\item{N_clusters}{An integer. Total number of clusters in the population.}
+
+\item{N_subjects_per_cluster}{An integer of vector of integers of length \code{N_clusters}. Total number of subjects per cluster in the population.}
+
 \item{n_clusters}{An integer. Number of clusters to sample.}
 
 \item{n_subjects_per_cluster}{An integer. Number of subjects to sample per cluster.}
 
 \item{icc}{A number in [0,1]. Intra-cluster Correlation Coefficient (ICC).}
-
-\item{N_clusters}{An integer. Total number of clusters in the population.}
-
-\item{N_subjects_per_cluster}{An integer. Total number of subjects per cluster in the population.}
 }
 \value{
 A cluster sampling design.
@@ -26,13 +26,15 @@ A cluster sampling design.
 Builds a cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
 }
 \details{
-Key limitations: Samples are taken from a fixed population of 1000 clusters with 50 subjects per cluster. The design also assumes equal-sized clusters with equal probability of selecting each cluster and each individual within clusters.
+Key limitations: The design assumes clusters draw with equal probability (rather than, for example, proportionate to size).
 }
 \examples{
 # To make a design using default arguments:
 cluster_sampling_design <- cluster_sampling_designer()
-
-
+# A design with varying cluster size
+cluster_sampling_design <- cluster_sampling_designer(
+  N_clusters = 10, N_subjects_per_cluster = 3:12, 
+  n_clusters = 5,  n_subjects_per_cluster = 2)
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
