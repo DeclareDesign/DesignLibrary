@@ -16,6 +16,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
 #' @export
+#' @import rlang
 #' @examples
 #' # A factorial design using default arguments
 #' factorial_design <- factorial_designer()
@@ -27,7 +28,7 @@
 
 factorial_designer <- function(
   N = 500,
-  k = 2,
+  k = 3,
   means = seq(0:.5, length.out = 2^k),
   sds = rep(.1, 2^k),
   probs = rep(.5, k),
@@ -122,13 +123,13 @@ factorial_designer <- function(
     
     # if(is.null(tnames)) tnames <- 1:k
     names(out) <-  c("PO", tnames, "Control", 
-                     apply(conditions  ==1, 1, function(r) paste0(ifelse(sum(r)==1, "coef_", "int_"), paste(tnames[r], collapse = "_")))[-1])
+                     apply(conditions  ==1, 1, function(r) paste0("coef_", paste(tnames[r], collapse = ":")))[-1])
     return(out)
   }
   
   d <- interaction(k)
   estimand_operations <- apply(d[,(k+2):ncol(d)], 2, function(col) paste(col, "*", d$PO, collapse = " + ")) 
-  estimand_expr <- sapply(1:2^k, function(i) rlang::expr(mean(!!parse_expr(estimand_operations[i]))))
+  estimand_expr <- sapply(1:2^k, function(i) rlang::expr(mean(!!rlang::parse_expr(estimand_operations[i]))))
   names(estimand_expr) <-  names(estimand_operations)
   
   # estimators --------------------------------------------------------------
@@ -143,15 +144,13 @@ factorial_designer <- function(
       declare_population(!!N_)
     )
     
-    pos <- rlang::quo(
+    potentials <- rlang::quo(
       declare_potential_outcomes(!!!(potouts))
     )
     
     reveal_Y <- rlang::quo(
       declare_reveal(outcome_variables = !!outcome_name, assignment_variables = !!treatment_names)
     )
-    
-    # relabel_pos <- declare_step(fabricate, )
     
     # I: Inquiry
     estimand <- rlang::quo(
@@ -171,19 +170,22 @@ factorial_designer <- function(
     estimator_function <- rlang::quo(
       function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
-        tidy.lm_robust(lm_robust(formula = !!estimator_formula, data = data, weights = 1/(data$Z_cond_prob)))
-      }
+        estimate_df <- tidy.lm_robust(lm_robust(formula = !!estimator_formula, data = data, weights = 1/(data$Z_cond_prob)))
+        # estimate_df$estimate_term <- estimate_df$term
+        estimate_df$estimand_label <- paste0("coef_", estimate_df$term)
+        estimate_df$estimand_label[estimate_df$estimand_label == "coef_(Intercept)"] <- "Control"
+        estimate_df
+        }
     )
     
     estimator <- rlang::quo(
       declare_estimator(
         #remove `rlang::eval_bare` call when running this code
-        handler = tidy_estimator(rlang::eval_bare(estimator_function)),
-        estimand = "ATE")
+        handler = tidy_estimator(rlang::eval_bare(estimator_function)))
     )
     
     # Design
-    factorial_design <- rlang::eval_tidy(population) + rlang::eval_tidy(pos) + 
+    factorial_design <- rlang::eval_tidy(population) + rlang::eval_tidy(potentials) + 
       rlang::eval_tidy(assignment_factors) + rlang::eval_tidy(assignment) +
       rlang::eval_tidy(reveal_Y) + rlang::eval_tidy(estimand) + rlang::eval_tidy(estimator)
     
