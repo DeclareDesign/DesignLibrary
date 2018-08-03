@@ -2,56 +2,46 @@
 % Please edit documentation in R/multi_arm_designer.R
 \name{multi_arm_designer}
 \alias{multi_arm_designer}
-\title{Create a m_arms design}
+\title{Create a design with multiple experimental arms}
 \usage{
 multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
-  sds = rep(1, m_arms), fixed = NULL)
+  sds = rep(1, m_arms), conditions = 1:m_arms, fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{m_arms}{An integer. Number of treatment arms.}
+\item{m_arms}{An integer. Number of Z arms.}
 
-\item{means}{A vector of size \code{m_arms}.  Average outcome in each treatment arm.}
+\item{means}{A numeric vector of length \code{m_arms}.  Average outcome in each Z arm.}
 
-\item{sds}{A double. Standard deviation for all treatment arms.}
+\item{sds}{A positive numeric vector of length \code{m_arms}. Standard deviations for each of the Z arms.}
 
-\item{fixed}{A list. List of arguments to be fixed in design.}
+\item{conditions}{A character vector of length \code{m_arms}. The names of each Z arm.}
+
+\item{fixed}{A named list. Arguments to be fixed in design.}
 }
 \value{
 A function that returns a design.
 }
 \description{
-This designer creates an \code{m_arms} arm design with equal assignment probabilities accross arms.
+This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
 }
 \examples{
+
 # To make a design using default arguments:
- \dontrun{
 design <- multi_arm_designer()
-get_estimates(design)
 
 
 # A design with different mean and sd in each arm
 design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
-diagnose_design(design)
 
-design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, 
-                             fixed = list(m_arms = 4, sds = rep(1, 4), 
+design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
+                             fixed = list(m_arms = 4, sds = rep(1, 4),
                                           means = 1:4))
-cat(get_design_code(design), sep = '\\n')
-diagnose_design(design)
 
-If 'means' or 'sds' are defined in fixed list the same definition has to be  
-given in the arguments list.
-multi_arm_designer(N = 20, fixed = list(means = 1:3))
-multi_arm_designer(N = 20, fixed = list(sds = 1:3))
-}
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-multi-trial
-}
+\concept{experiment}
+\concept{multiarm trial}

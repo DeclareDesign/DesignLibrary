@@ -33,17 +33,19 @@ simple_spillover_designer <- function(N_groups = 80,
                                       gamma = 2)
 {
   N <- n <- G <- zeros <- Z <- NULL
+  if(sd < 0) stop("sd must be non-negative")
+  if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be greater than 1")
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 
-                              i = add_level(N = n, zeros = 0, ones =1))
+                              i = add_level(N = n, zeros = 0, ones = 1))
     
     dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd
     
     # I: Inquiry
     estimand <- declare_estimand(Treat_1 = mean(
       sapply(1:length(G), function(i) {
-        Z_i <- (1:length(G))==i
+        Z_i <- (1:length(G)) == i
         dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
     ), label = "estimand")
     

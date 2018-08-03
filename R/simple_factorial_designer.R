@@ -31,8 +31,6 @@
 #'
 #' @examples
 #' design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
-#' get_estimates(design)
-#' get_design_code(design)
 #' 
 #' # A design biased for the specified estimands:
 #' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
@@ -105,11 +103,13 @@ simple_factorial_designer <- function(N = 100,
     estimator_1 <- declare_estimator(Y ~ A + B,
                                      model = lm_robust,
                                      term = c("A", "B"),
-                                     estimand = c("ate_A", "ate_B"), label = "No_Interaction")
+                                     estimand = c("ate_A", "ate_B"), 
+                                     label = "No_Interaction")
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
                                      model = lm_robust,
                                      term = "A:B", 
-                                     estimand = "interaction", label = "Interaction")
+                                     estimand = "interaction", 
+                                     label = "Interaction")
     
     # Design
     simple_factorial_design <- population + pos + 
@@ -129,13 +129,19 @@ simple_factorial_designer <- function(N = 100,
 }
 
 
-attr(simple_factorial_designer, "shiny_arguments") <- list(N = c(16, 32, 64), w_A = c(0, .5), mean_A0B1 = 0:1, mean_A1B0 = 0:1, mean_A1B1 = -1:3) 
+attr(simple_factorial_designer, "shiny_arguments") <- list(
+  N = c(16, 32, 64), w_A = c(0, .5), 
+  mean_A0B1 = 0:1, 
+  mean_A1B0 = 0:1, 
+  mean_A1B1 = -1:3) 
 
 attr(simple_factorial_designer, "tips") <-
   list(
     N = "Sample size",
     w_A = "Weight on B=1 condition for effect of A estimand",
-    mean_A0B1 = "Mean outcome for A=0, B=1"
+    mean_A1B0 = "Mean outcome for A=1, B=0",
+    mean_A0B1 = "Mean outcome for A=0, B=1",
+    mean_A1B1 = "Mean outcome for A=1, B=1"
   )
 
 attr(simple_factorial_designer, "description") <- "

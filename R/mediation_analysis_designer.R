@@ -17,8 +17,6 @@
 #' # Generate a mediation analysis design using default arguments:
 #' mediation_analysis_design <- mediation_analysis_designer()
 #'
-
-
 mediation_analysis_designer <- function(N = 100,
                                         a = .5,
                                         b = .5,

@@ -1,123 +1,186 @@
-#' Create a m_arms design
+#' Create a design with multiple experimental arms
 #'
-#' This designer creates an \code{m_arms} arm design with equal assignment probabilities accross arms.
+#' This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
 #'
 #' @param N An integer. Sample size.
-#' @param m_arms An integer. Number of treatment arms.
-#' @param means A vector of size \code{m_arms}.  Average outcome in each treatment arm.
-#' @param sds A double. Standard deviation for all treatment arms.
-#' @param fixed A list. List of arguments to be fixed in design.
+#' @param m_arms An integer. Number of Z arms.
+#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each Z arm.
+#' @param sds A positive numeric vector of length \code{m_arms}. Standard deviations for each of the Z arms.
+#' @param conditions A character vector of length \code{m_arms}. The names of each Z arm.
+#' @param fixed A named list. Arguments to be fixed in design.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
-#' @concept experiment 
-#' @concept multi-trial
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @concept experiment
+#' @concept multiarm trial
+#' @import DeclareDesign stats utils fabricatr estimatr randomizr rlang
 #' @export
 #' @examples
+#'
 #' # To make a design using default arguments:
-#'  \dontrun{
 #' design <- multi_arm_designer()
-#' get_estimates(design)
-#' 
-#' 
+#'
+#'
 #' # A design with different mean and sd in each arm
 #' design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
-#' diagnose_design(design)
-#' 
-# A design with fixed sds and means. N is the sole modifiable argument. 
-#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4, 
-#'                              fixed = list(m_arms = 4, sds = rep(1, 4), 
+#'
+# A design with fixed sds and means. N is the sole modifiable argument.
+#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
+#'                              fixed = list(m_arms = 4, sds = rep(1, 4),
 #'                                           means = 1:4))
-#' cat(get_design_code(design), sep = '\n')
-#' diagnose_design(design)
-#' 
-#' If 'means' or 'sds' are defined in fixed list the same definition has to be  
-#' given in the arguments list.
-#' multi_arm_designer(N = 20, fixed = list(means = 1:3))
-#' multi_arm_designer(N = 20, fixed = list(sds = 1:3))
-#' }
+#'
 
-multi_arm_designer <- function(
-  N = 30, 
-  m_arms = 3, 
-  means = rep(0, m_arms),
-  sds = rep(1, m_arms),
-  fixed = NULL
-){
+multi_arm_designer <- function(N = 30,
+                               m_arms = 3,
+                               means = rep(0, m_arms),
+                               sds = rep(1, m_arms),
+                               conditions = 1:m_arms,
+                               fixed = NULL) {
   # Housekeeping
-  if("means" %in% names(fixed)) if(!identical(means, fixed$means)) stop(paste("Conflicting definitions of 'means' in argument list (possibly the default)--(", paste(means, collapse = ","), ")--and in the fixed list--(", paste(fixed$means, collapse = ","), "). If 'means' is defined in fixed list the same definition has to be  given in the arguments list."))
-  if("sds" %in% names(fixed)) if(!identical(sds, fixed$sds)) stop(paste("Conflicting definitions of 'sds' in argument list (possibly the default)--(", paste(sds, collapse = ","), ")--and in the fixed list--(", paste(fixed$sds, collapse = ","), "). If 'sds' is defined in fixed list the same definition has to be  given in the arguments list."))
-  if(length(means) != m_arms || length(sds) != m_arms) stop("`means' and `sds` arguments must be the of length m_arms .")
-  if(m_arms <= 1 || round(m_arms)!=m_arms) stop("`m_arms' should be an integer greater than one.")
-  if(any(sds<=0)) stop("`sds' should be positive.")
+  Y_Z_1 <- Z <- NULL
+  sds_ <- sds 
+  means_ <- means
+  N_ <- N
+  if (m_arms <= 1 || round(m_arms) != m_arms)
+    stop("m_arms should be an integer greater than one.")
+  if (length(means) != m_arms ||
+      length(sds) != m_arms ||
+      length(conditions) != m_arms)
+    stop("means, sds and conditions arguments must be of length m_arms.")
+  if (any(sds <= 0)) stop("sds should be positive.")
+  if (!"sds" %in% names(fixed)) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
+  if (!"means" %in% names(fixed)) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
+  if (!"N" %in% names(fixed)) N_ <- expr(N)
   
-  # Create list for substitution
-  conds = paste0("T", 1:m_arms)
+  # Create helper vars to be used in design
+  errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!sds_[x])))
+  error_names <- paste0("u_", 1:m_arms)
+  names(errors) <- error_names
+  population_expr <- expr(declare_population(N = !!N_, !!!errors))
   
-  U <- paste0(" population <- declare_population(N = N, ",  
-              paste0("u_", 1:m_arms, " = rnorm(n = N, sd = ",  sds, ")", collapse = ", "), ")")
+  conditions <- as.character(conditions)
   
+  f_Y <- formula(
+    paste0("Y ~ ",paste0(
+      "(", means_, " + ", error_names,
+      ")*( Z == '", conditions, "')",
+      collapse = " + ")))
   
-  f_Y = formula(paste0(
-    "Y ~ ", paste0("(", means, " + u_", 1:m_arms, ")*( Z == 'T", 1:m_arms, "')", collapse = " + "))
+  potential_outcomes_expr <-
+    expr(
+      declare_potential_outcomes(
+        formula = !!f_Y,
+        conditions = conditions,
+        assignment_variables = Z
+      )
+    )
+  assignment_expr <-
+    expr(
+      declare_assignment(
+        num_arms = !!m_arms,
+        conditions = conditions,
+        assignment_variable = Z
+      )
+    )
+  
+  # Get all unique pairings of potential outcomes
+  all_pairs <- expand.grid(condition1 = conditions,
+                           condition2 = conditions)
+  all_pairs <- all_pairs[all_pairs[, 1] != all_pairs[, 2], ]
+  all_pairs <- t(apply(all_pairs, 1, sort))
+  all_pairs <- unique(all_pairs)
+  all_pairs <- as.data.frame(all_pairs)
+  all_po_pairs <- t(apply(
+    X = all_pairs,
+    MARGIN = 1,
+    FUN = function(x) paste0("Y_Z_", x)
+  ))
+  estimand_names <- paste0("ate_",all_po_pairs[,1],"_",all_po_pairs[,2])
+  estimand_list <- mapply(
+    FUN = function(x, y){
+      quos(mean(!!sym(x) - !!sym(y)))},
+    x = all_po_pairs[,1],
+    y = all_po_pairs[,2])
+  names(estimand_list) <- estimand_names
+  estimand_expr <- expr(declare_estimands(!!!estimand_list))
+  
+  estimators <- mapply(
+    FUN = function(x,y){
+      expr(difference_in_means(formula = Y ~ Z, 
+                               data = data, 
+                               condition1 = !!x, 
+                               condition2 = !!y))
+    },
+    x = as.character(all_pairs[,2]),
+    y = as.character(all_pairs[,1])
   )
+  names(estimators) <- estimand_names
+  estimator_expr <- expr(declare_estimator(
+    handler = function(data){
+      estimates <- rbind.data.frame(!!!estimators)
+      estimates$estimator_label <- "DIM"
+      estimates$estimand_label <- rownames(estimates)
+      estimates$estimate <- estimates$coefficients
+      estimates$term <- NULL
+      return(estimates)
+    }))
   
   
-  Q <- paste0(" estimand <- declare_estimand('(Intercept)' = mean(Y_Z_T1), ",
-              paste0("T_", 2:m_arms, " = mean(Y_Z_T", 2:m_arms, " - Y_Z_T1)", collapse = ", "), ", term = TRUE)")
+  {{{
+    # Model
+    population <- eval_bare(population_expr)
+    
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
+    
+    # Inquiry
+    estimand  <- eval_bare(estimand_expr)
+    
+    # Design
+    assignment <- eval_bare(assignment_expr)
+    
+    reveal <-  declare_reveal(assignment_variables = Z)
+    
+    # Answer
+    estimator <- eval_bare(estimator_expr)
+    
+    
+    multi_arm_design <-
+      population + potential_outcomes + assignment + reveal + estimand +  estimator
+    
+  }}}
   
-  T_m <- paste0("get_T <- declare_step(", paste0(
-    "T_",  2:m_arms, " =  as.numeric(Z == 'T", 2:m_arms, "')", collapse = ", "), ", handler = fabricate)")
-  
-  f_YT <- formula(paste0("Y ~ ", paste0("T_", 2:m_arms, collapse = " + ") ))
-  
-  fixes <- list(conds = conds, f_Y = f_Y, U = U, Q = Q, T_m = T_m,  f_YT =   f_YT )
-  
-  fixes <- c(fixes, fixed)
-  
-  # Design code with arguments in list substituted
-  design_code <-  substitute({
-    
-    "# M: Model"
-    U
-    potential_outcomes <- declare_potential_outcomes(formula = f_Y, conditions = conds)
-    
-    "# I: Inquiry"
-    Q
-    
-    "# D: Data"
-    assignment <- declare_assignment(num_arms = m_arms)
-    T_m
-    
-    reveal <- declare_reveal()
-    
-    "# A: Answer" 
-    estimator <- declare_estimator(formula =  f_YT , model = lm_robust, term = TRUE)
-    
-    
-    "# Design"
-    multi_arm_design <- population + potential_outcomes + assignment + get_T + reveal + estimand +  estimator
-    
-  }, fixes)
-  
+<<<<<<< HEAD
   # Run the design code and create the design
   design_code <- clean_code(paste(design_code))
+=======
+>>>>>>> master
   
-  eval(parse(text = (design_code)))
+  design_code <-
+    construct_design_code(
+      multi_arm_designer,
+      match.call.defaults(),
+      arguments_as_values = TRUE,
+      exclude_args = c("m_arms", fixed, "fixed")
+    )
+  
+  design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
+  design_code <- gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
+  design_code <- gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
   
   #  Add  code plus argments as attributes
-  attr( multi_arm_design, "code") <- 
-    paste0(c(return_args(match.call.defaults(), fixes), design_code))
+  attr(multi_arm_design, "code") <- design_code
+  
   
   # Return design
-  return( multi_arm_design)
+  return(multi_arm_design)
 }
 
-attr( multi_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50)) 
+attr(multi_arm_designer, "shiny_arguments") <-
+  list(N = c(10, 20, 50))
 
-attr( multi_arm_designer, "tips") <-
-  list(
-    N = "Sample Size"
-  )
-
-
+attr(multi_arm_designer, "tips") <-
+  list(N = "Sample Size")
