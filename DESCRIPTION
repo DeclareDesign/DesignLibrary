@@ -31,7 +31,8 @@ Imports:
 Suggests: knitr,
     testthat, 
     systemfit,
-    ggplot2
+    ggplot2,
+    broom
 Enhances:
   Matching
 RoxygenNote: 6.1.0
