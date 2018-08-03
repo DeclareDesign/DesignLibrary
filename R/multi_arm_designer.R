@@ -85,7 +85,7 @@ multi_arm_designer <- function(N = 30,
   all_pairs <- expand.grid(condition1 = conditions,
                            condition2 = conditions)
   all_pairs <- all_pairs[all_pairs[, 1] != all_pairs[, 2], ]
-  all_pairs <- t(apply(all_pairs, 1, sort))
+  all_pairs <- t(apply(all_pairs, 1, sort, decreasing = T))
   all_pairs <- unique(all_pairs)
   all_pairs <- as.data.frame(all_pairs)
   all_po_pairs <- t(apply(
