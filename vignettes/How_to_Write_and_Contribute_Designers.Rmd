@@ -30,8 +30,9 @@ At a bare minimum, your designer must:
   - take design parameters as arguments and return designs created with `DeclareDesign`
   - return designs that [have the code that generated them as an attribute][Including Code in Design Attributes]
   - be [well-documented][How to Document your Designer]
+  - pass all of the tests and checks in the `DesignLibrary` package
   
-Optionally, if you want your designer to work with [our online shiny inspector](https://shiny.DeclareDesign.org) then you will need to [add the following attributes to your designer][Including Code in Design Attributes]:
+Optionally, if you want your designer to work with [our online shiny inspector](https://eos.wzb.eu/ipi/DDinspector/) then you will need to [add the following attributes to your designer][Including Code in Design Attributes]:
   
   - `shiny_arguments` - the parameters the shiny app should be able to show diagnoses for 
   
@@ -82,7 +83,7 @@ We've devised an easy way to include code in design objects returned by a design
 
 ## Our method for adding code
 
-One easy way to add code to the designs that your designer returns is to use our triple braces method. Any checks (such as those that look to see whether `prob` is between 0 and 1) come before the opening triple braces, `{{{`. Then, all the code needed to build the design, including the `declare_design()` call, goes between the triple braces:
+One easy way to add code to the designs that your designer returns is to use our triple braces method. Any checks (such as those that look to see whether `prob` is between 0 and 1) come before the opening triple braces, `{{{`. Then, all the code needed to build the design goes between the triple braces:
 
 ```{r, eval=FALSE}
 {{{ 
