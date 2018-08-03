@@ -148,11 +148,6 @@ multi_arm_designer <- function(N = 30,
     
   }}}
   
-<<<<<<< HEAD
-  # Run the design code and create the design
-  design_code <- clean_code(paste(design_code))
-=======
->>>>>>> master
   
   design_code <-
     construct_design_code(
