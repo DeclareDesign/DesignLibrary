@@ -7,7 +7,6 @@
 #' @param means A numeric vector of length \code{2^k}. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
 #' @param sds A numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
 #' @param probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
-#' @param compare_with A character string indicating which condition the estimands are being compared against. Default set to pure control condition. See `Details` for format requirements. 
 #' @return A factorial design.
 #' @details 
 #' 
@@ -18,6 +17,7 @@
 #' @export
 #' @import rlang
 #' @examples
+#' 
 #' # A factorial design using default arguments
 #' factorial_design <- factorial_designer()
 #' 
@@ -193,7 +193,8 @@ factorial_designer <- function(
   
   attr(factorial_design, "code") <- construct_design_code(factorial_designer,
                                                           match.call.defaults(),
-                                                          rlang = TRUE, 
+                                                          rlang = TRUE,
+                                                          arguments_as_values = TRUE,
                                                           exclude_args = c("k", "probs", "fixed", fixed))
   return(factorial_design)
   
