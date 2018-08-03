@@ -4,7 +4,7 @@
 \alias{mediation_analysis_designer}
 \title{Create a design for mediation analysis}
 \usage{
-mediation_analysis_designer(N = 100, a = 0.5, b = 0.5, c = 0,
+mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
   d = 0.5, rho = 0)
 }
 \arguments{
@@ -30,9 +30,14 @@ Note this model is not guaranteed to be unbiased despire randomization of Z beca
 }
 \examples{
 # Generate a mediation analysis design using default arguments:
-mediation_analysis_design_1 <- mediation_analysis_designer()
-# A design with bias due to violation of sequential ignorability:
-mediation_analysis_design_2 <- mediation_analysis_designer(rho = .5)
+mediation_1 <- mediation_analysis_designer()
+get_estimands(mediation_1)
+diagnose_design(mediation_1, sims = 1000)
+
+# A design with a violation of sequential ignorability and heterogeneous effects:
+mediation_2 <- mediation_analysis_designer(a = 1, rho = .5, c = 1, d = .75)
+get_estimands(mediation_2)
+diagnose_design(mediation_2, sims = 1000)
 
 }
 \author{
