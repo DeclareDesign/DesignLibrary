@@ -19,8 +19,10 @@
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
 #' mediation_analysis_design_1 <- mediation_analysis_designer()
+#' get_estimands(mediation_analysis_design_1)
 #' # A design with bias due to violation of sequential ignorability:
 #' mediation_analysis_design_2 <- mediation_analysis_designer(rho = .5)
+#' get_estimands(mediation_analysis_design_2)
 #'
 mediation_analysis_designer <- function(N = 100, 
                                         a = .5, b = .5, c = 0, d = .5, 
@@ -38,13 +40,21 @@ mediation_analysis_designer <- function(N = 100,
     potentials_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
     potentials_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
                                                conditions = list(M = 0:1, Z = 0:1))
-
+    pots_Y_nat_0 <- declare_potential_outcomes(
+                      Y_nat0_Y_Z_0 = b * M_Z_0 + e2,
+                      Y_nat0_Y_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
+    pots_Y_nat_1 <- declare_potential_outcomes(
+                      Y_nat1_Y_Z_0 = b * M_Z_1 + e2,
+                      Y_nat1_Y_Z_1 = d + b * M_Z_1 + c * M_Z_0 + e2)
+    
     # I: Inquiry
     estimands <- declare_estimands(FirstStage = mean(M_Z_1 - M_Z_0), 
                                    Indirect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
                                    Indirect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
-                                   Direct_0   = mean(Y_M_0_Z_1 - Y_M_0_Z_0),
-                                   Direct_1   = mean(Y_M_1_Z_1 - Y_M_1_Z_0))
+                                   Controlled_Direct_0  = mean(Y_M_0_Z_1 - Y_M_0_Z_0),
+                                   Controlled_Direct_1  = mean(Y_M_1_Z_1 - Y_M_1_Z_0),
+                                   Natural_Direct_0 = mean(Y_nat0_Y_Z_1 - Y_nat0_Y_Z_0),
+                                   Natural_Direct_1 = mean(Y_nat1_Y_Z_1 - Y_nat1_Y_Z_0))
 
     # D: Data strategy 1
     assignment <- declare_assignment(prob = 0.5)
@@ -62,7 +72,7 @@ mediation_analysis_designer <- function(N = 100,
       Y ~ M*Z,
       model = lm_robust,
       term = c("M","Z"),
-      estimand = c("Indirect_0", "Direct_0"),
+      estimand = c("Indirect_0", "Controlled_Direct_0"),
       label = "Outcome regression"
     )
     
