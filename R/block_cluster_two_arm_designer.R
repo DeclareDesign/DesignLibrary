@@ -17,10 +17,10 @@
 #' @param N_blocks An integer. Number of blocks. Defaults to 1 for no blocks. 
 #' @param N_clusters_in_block An integer. Number of clusters in each block. This is the total \code{N} when \code{N_blocks} and \code{N_i_in_cluster} are at default values. 
 #' @param N_i_in_cluster An integer. Individuals per cluster. Defaults to 1 for no clusters.
-#' @param sd_block A non negative number. Standard deviation of block level shocks.
-#' @param sd_cluster A non negative number. Standard deviation of cluster level shock.
-#' @param sd_i_0 A non negative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.
-#' @param sd_i_1 A non negative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.
+#' @param sd_block A nonnegative number. Standard deviation of block level shocks.
+#' @param sd_cluster A nonnegative number. Standard deviation of cluster level shock.
+#' @param sd_i_0 A nonnegative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.
+#' @param sd_i_1 A nonnegative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.
 #' @param rho A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.
 #' @param prob A number in [0,1]. Treatment assignment probability.
 #' @param control_mean A number. Average outcome in control.
@@ -52,10 +52,10 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
                                            treatment_mean = control_mean + ate
                                            ){  
   N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
-  if(sd_block < 0) stop("sd_block must be non-negative")
-  if(sd_cluster < 0) stop("sd_cluster must be non-negative")
-  if(sd_i_0 < 0) stop("sd_i_0 must be non-negative")
-  if(sd_i_1 < 0) stop("sd_i_1 must be non-negative")
+  if(sd_block < 0) stop("sd_block must be nonnegative")
+  if(sd_cluster < 0) stop("sd_cluster must be nonnegative")
+  if(sd_i_0 < 0) stop("sd_i_0 must be nonnegative")
+  if(sd_i_1 < 0) stop("sd_i_1 must be nonnegative")
   if(prob< 0 || prob > 1) stop("prob must be in [0,1]")
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   {{{    
@@ -74,7 +74,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
         u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
     )
     
-    pos <- declare_potential_outcomes(
+    potentials <- declare_potential_outcomes(
       Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
           Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
     
@@ -95,7 +95,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
     )
     
     # Design
-    block_cluster_two_arm_design <-  population + pos + estimand + assignment + 
+    block_cluster_two_arm_design <-  population + potentials + estimand + assignment + 
                                      reveal + estimator
   }}}
   

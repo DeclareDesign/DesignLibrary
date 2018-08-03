@@ -46,7 +46,7 @@ multi_arm_designer <- function(N = 30,
       length(sds) != m_arms ||
       length(conditions) != m_arms)
     stop("means, sds and conditions arguments must be of length m_arms.")
-  if (any(sds <= 0)) stop("sds should be positive.")
+  if (any(sds <= 0)) stop("sds should be nonnegative")
   if (!"sds" %in% names(fixed)) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
   if (!"means" %in% names(fixed)) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
   if (!"N" %in% names(fixed)) N_ <- expr(N)
@@ -129,7 +129,7 @@ multi_arm_designer <- function(N = 30,
     # Model
     population <- eval_bare(population_expr)
     
-    potential_outcomes <- eval_bare(potential_outcomes_expr)
+    potentials <- eval_bare(potential_outcomes_expr)
     
     # Inquiry
     estimand  <- eval_bare(estimand_expr)
@@ -137,14 +137,14 @@ multi_arm_designer <- function(N = 30,
     # Design
     assignment <- eval_bare(assignment_expr)
     
-    reveal <-  declare_reveal(assignment_variables = Z)
+    reveal_Y <-  declare_reveal(assignment_variables = Z)
     
     # Answer
     estimator <- eval_bare(estimator_expr)
     
     
     multi_arm_design <-
-      population + potential_outcomes + assignment + reveal + estimand +  estimator
+      population + potentials + assignment + reveal_Y + estimand +  estimator
     
   }}}
   
