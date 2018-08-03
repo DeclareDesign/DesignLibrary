@@ -17,13 +17,13 @@ block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
 
 \item{N_i_in_cluster}{An integer. Individuals per cluster. Defaults to 1 for no clusters.}
 
-\item{sd_block}{A non negative number. Standard deviation of block level shocks.}
+\item{sd_block}{A nonnegative number. Standard deviation of block level shocks.}
 
-\item{sd_cluster}{A non negative number. Standard deviation of cluster level shock.}
+\item{sd_cluster}{A nonnegative number. Standard deviation of cluster level shock.}
 
-\item{sd_i_0}{A non negative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.}
+\item{sd_i_0}{A nonnegative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.}
 
-\item{sd_i_1}{A non negative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.}
+\item{sd_i_1}{A nonnegative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.}
 
 \item{rho}{A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.}
 

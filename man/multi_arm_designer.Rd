@@ -16,9 +16,9 @@ multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
 
 \item{sds}{A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.}
 
-\item{conditions}{A character vector of length \code{m_arms}. The names of each arm.}
+\item{conditions}{A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces.}
 
-\item{fixed}{A named list. Arguments to be fixed in design.}
+\item{fixed}{A character vector. Names of arguments to be fixed in design. By default \code{m_arms} and \code{conditions} are always fixed.}
 }
 \value{
 A function that returns a design.
@@ -36,8 +36,7 @@ design <- multi_arm_designer()
 design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
 
 design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-                             fixed = list(m_arms = 4, sds = rep(1, 4),
-                                          means = 1:4))
+                             fixed = c("means", "sds"))
 
 }
 \author{

@@ -7,7 +7,7 @@
 #' @param means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
 #' @param sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.
 #' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces. 
-#' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{m_arms} is always fixed.
+#' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{m_arms} and \code{conditions} are always fixed.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -68,7 +68,7 @@ multi_arm_designer <- function(N = 30,
     expr(
       declare_potential_outcomes(
         formula = !!f_Y,
-        conditions = conditions,
+        conditions = !!conditions,
         assignment_variables = Z
       )
     )
@@ -76,7 +76,7 @@ multi_arm_designer <- function(N = 30,
     expr(
       declare_assignment(
         num_arms = !!m_arms,
-        conditions = conditions,
+        conditions = !!conditions,
         assignment_variable = Z
       )
     )
@@ -153,7 +153,7 @@ multi_arm_designer <- function(N = 30,
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = c("m_arms", fixed, "fixed")
+      exclude_args = c("m_arms", fixed, "fixed", "conditions")
     )
   
   design_code <-

@@ -27,7 +27,8 @@ crossover_designer <- function(N = 100,
                                crossover = .2, 
                                rho = .2) 
 {
-  u_a <- u_b <- YA <- Z <- YB <- YA_Z_T2 <- YA_Z_T1 <- NULL
+  A <- YA_A_1_B_0 <- YA_A_0_B_0 <- u_a <- u_b <- YA <- Z <- YB <- YA_Z_T2 <- YA_Z_T1 <- NULL 
+  
   if(rho < -1 || rho > 1) stop("rho must be in [-1,1]")
   if(N < 2) stop("N must be at least 2")
   {{{
