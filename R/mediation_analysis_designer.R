@@ -20,19 +20,24 @@
 #' # Generate a mediation analysis design using default arguments:
 #' mediation_1 <- mediation_analysis_designer()
 #' get_estimands(mediation_1)
+#' \dontrun{
 #' diagnose_design(mediation_1, sims = 1000)
+#' }
 #' 
 #' # A design with a violation of sequential ignorability and heterogeneous effects:
 #' mediation_2 <- mediation_analysis_designer(a = 1, rho = .5, c = 1, d = .75)
 #' get_estimands(mediation_2)
+#' \dontrun{
 #' diagnose_design(mediation_2, sims = 1000)
+#' }
 #'
-mediation_analysis_designer <- function(N = 200, 
-                                        a = 1, b = .4, c = 0, d = .5, 
-                                        rho = 0)
+mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0)
 {
-  e1 <- M_Z_1 <-M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  
-    Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  NULL
+  e1 <- M_Z_1 <- M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  
+    Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  e2 <- 
+    Y_nat0_Z_1 <- Y_nat0_Z_0 <- Y_nat1_Z_1 <- Y_nat1_Z_0 <- 
+    Y_nat0 <- Y_nat1 <- NULL
+  
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
   {{{
     # M: Model
@@ -45,23 +50,23 @@ mediation_analysis_designer <- function(N = 200,
     potentials_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
                                                conditions = list(M = 0:1, Z = 0:1))
     pots_Y_nat_0 <- declare_potential_outcomes(
-                      Y_nat0_Z_0 =     b * M_Z_0             + e2,
-                      Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
+      Y_nat0_Z_0 =     b * M_Z_0             + e2,
+      Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
     pots_Y_nat_1 <- declare_potential_outcomes(
-                      Y_nat1_Z_0 =     b * M_Z_1             + e2,
-                      Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
+      Y_nat1_Z_0 =     b * M_Z_1             + e2,
+      Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
     
     # I: Inquiry
     estimands <- declare_estimands(
-         FirstStage          = mean(M_Z_1      - M_Z_0), 
-         Indirect_0          = mean(Y_M_1_Z_0  - Y_M_0_Z_0),
-         Indirect_1          = mean(Y_M_1_Z_1  - Y_M_0_Z_1),
-         Controlled_Direct_0 = mean(Y_M_0_Z_1  - Y_M_0_Z_0),
-         Controlled_Direct_1 = mean(Y_M_1_Z_1  - Y_M_1_Z_0),
-         Natural_Direct_0    = mean(Y_nat0_Z_1 - Y_nat0_Z_0),
-         Natural_Direct_1    = mean(Y_nat1_Z_1 - Y_nat1_Z_0)
-         )
-
+      FirstStage          = mean(M_Z_1      - M_Z_0), 
+      Indirect_0          = mean(Y_M_1_Z_0  - Y_M_0_Z_0),
+      Indirect_1          = mean(Y_M_1_Z_1  - Y_M_0_Z_1),
+      Controlled_Direct_0 = mean(Y_M_0_Z_1  - Y_M_0_Z_0),
+      Controlled_Direct_1 = mean(Y_M_1_Z_1  - Y_M_1_Z_0),
+      Natural_Direct_0    = mean(Y_nat0_Z_1 - Y_nat0_Z_0),
+      Natural_Direct_1    = mean(Y_nat1_Z_1 - Y_nat1_Z_0)
+    )
+    
     # D: Data strategy 
     assignment   <- declare_assignment()
     reveal_M     <- declare_reveal(M, Z)
@@ -69,32 +74,32 @@ mediation_analysis_designer <- function(N = 200,
     reveal_nat0  <- declare_reveal(Y_nat0)
     reveal_nat1  <- declare_reveal(Y_nat1)
     manipulation <- declare_step(Not_M = 1-M, handler = fabricate)
-      
+    
     # A: Answer Strategy
     mediator_regression <- declare_estimator(
       M ~ Z,
       model = lm_robust,
       estimand = "FirstStage",
-      label = "Stage 1"
-    )
+      label = "Stage 1")
     stage2_1 <- declare_estimator(
-      Y ~ Z*M,
+      Y ~ Z * M,
       model = lm_robust,
       term = c("M"),
       estimand = c("Indirect_0"),
       label = "Stage 2"
     )
-
+    
+    
     stage2_2 <- declare_estimator(
-      Y ~ Z*M,
+      Y ~ Z * M,
       model = lm_robust,
       term = c("Z"),
       estimand = c("Controlled_Direct_0", "Natural_Direct_0"),
       label = "Direct_0"
     )
-
+    
     stage2_3 <- declare_estimator(
-      Y ~ Z*Not_M,
+      Y ~ Z * Not_M,
       model = lm_robust,
       term = c("Z"),
       estimand = c("Controlled_Direct_1", "Natural_Direct_1"),
