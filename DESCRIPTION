@@ -10,7 +10,7 @@ Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c
              person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")),
              person("Lily", "Medina", email = "lilymiru@gmail.com", role = c("aut")))
 Description: This is a library of functions that return designs built 
-    using the package DeclareDesign. In one line of code, users can specify 
+    using the package 'DeclareDesign'. In one line of code, users can specify 
     the parameters of individual designs and diagnose their properties.
     The designers can also be used to compare performance of a given design
     across a range of combinations of parameters, such as effect size, sample
@@ -27,14 +27,16 @@ Depends:
     estimatr (>= 0.10.0)
 Imports:
     devtools,
-    rlang, methods
+    rlang, 
+    methods
 Suggests: knitr,
     testthat, 
     systemfit,
     ggplot2,
-    broom
+    broom,
+    rmarkdown
 Enhances:
   Matching
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr
-Additional_Repositories: http://r.declaredesign.org]
+

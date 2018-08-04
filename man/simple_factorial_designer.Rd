@@ -13,9 +13,9 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{prob_A}{A number in [0,1]. Probability of assigment to treatment A.}
+\item{prob_A}{A number in [0,1]. Probability of assignment to treatment A.}
 
-\item{prob_B}{A number in [0,1]. Probability of assigment to treatment B.}
+\item{prob_B}{A number in [0,1]. Probability of assignment to treatment B.}
 
 \item{w_A}{A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.}
 
@@ -37,7 +37,7 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 A two-by-two factorial design.
 }
 \description{
-Builds a two-by-two factorial design in which asignments to each factor are independent of each other.
+Builds a two-by-two factorial design in which assignments to each factor are independent of each other.
 }
 \details{
 Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.

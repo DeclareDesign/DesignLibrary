@@ -1,6 +1,6 @@
 #' Create a simple factorial design
 #'
-#' Builds a two-by-two factorial design in which asignments to each factor are independent of each other.
+#' Builds a two-by-two factorial design in which assignments to each factor are independent of each other.
 #' 
 #' @details
 #' Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
@@ -13,8 +13,8 @@
 #' See \code{\link{multi_arm_designer}} for a factorial design with non independent assignments.
 #' 
 #' @param N An integer. Size of sample.
-#' @param prob_A A number in [0,1]. Probability of assigment to treatment A.
-#' @param prob_B A number in [0,1]. Probability of assigment to treatment B.
+#' @param prob_A A number in [0,1]. Probability of assignment to treatment A.
+#' @param prob_B A number in [0,1]. Probability of assignment to treatment B.
 #' @param w_A A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.
 #' @param w_B A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.
 #' @param outcome_means A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.
