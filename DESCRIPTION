@@ -27,12 +27,14 @@ Depends:
     estimatr (>= 0.10.0)
 Imports:
     devtools,
-    rlang, methods
+    rlang, 
+    methods
 Suggests: knitr,
     testthat, 
     systemfit,
     ggplot2,
-    broom
+    broom,
+    rmarkdown
 Enhances:
   Matching
 RoxygenNote: 6.1.0
