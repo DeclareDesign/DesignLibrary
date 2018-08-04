@@ -2,14 +2,14 @@
 #'
 #' A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) (given Z=0) 
 #' as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
-#' Note this model is not guaranteed to be unbiased despire randomization of Z because of possible violations of sequential ignorability.
+#' Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
 #'
 #' @param N An integer. Size of sample.
 #' @param a A number. Parameter governing effect of treatment (Z) on mediatior (M).
 #' @param b A number. Effect of mediatior (M) on outcome (Y) when Z=0.
 #' @param c A number. Interaction between mediatior (M) and (Z) for outcome (Y).
 #' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
-#' @param rho A number in [0,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
+#' @param rho A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
 #' @return A mediation analysis design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -31,8 +31,9 @@ mediation_analysis_designer <- function(N = 200,
                                         a = 1, b = .4, c = 0, d = .5, 
                                         rho = 0)
 {
-  e1 <- M_Z_1 <-M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  NULL
-  if(rho < -1 | rho > 1) stop("rho must be in [-1, 1]")
+  e1 <- M_Z_1 <-M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  
+    Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  NULL
+  if(abs(rho) > 1) stop("rho must be in [-1, 1]")
   {{{
     # M: Model
     population <- declare_population(
@@ -61,7 +62,7 @@ mediation_analysis_designer <- function(N = 200,
          Natural_Direct_1    = mean(Y_nat1_Z_1 - Y_nat1_Z_0)
          )
 
-    # D: Data strategy 1
+    # D: Data strategy 
     assignment   <- declare_assignment()
     reveal_M     <- declare_reveal(M, Z)
     reveal_Y     <- declare_reveal(Y, assignment_variable = c("M","Z"))
