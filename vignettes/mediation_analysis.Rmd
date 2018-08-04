@@ -80,7 +80,7 @@ diagnosis <- diagnose_design(designs)
 kable(reshape_diagnosis(diagnosis)[,-1], digits = 2)
 ```
 
-Our diagnosis indicates that when the error terms are not correlated, the direct and indirect effects can be estimated without bias.In contrast, when $\rho$ equals zero, the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects of $Z$ on $Y$.
+Our diagnosis indicates that when the error terms are not correlated, the direct and indirect effects can be estimated without bias.In contrast, when $\rho$ does not equal zero, the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects of $Z$ on $Y$.
 
 Unfortunately, the assumption of no correlation is not always guaranteed since $M$ is not assigned at random and might be correlated with $Y$.
 
