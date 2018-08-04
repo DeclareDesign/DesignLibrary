@@ -10,11 +10,11 @@ mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{a}{A number. Parameter governing effect of treatment (Z) on mediatior (M).}
+\item{a}{A number. Parameter governing effect of treatment (Z) on mediator (M).}
 
-\item{b}{A number. Effect of mediatior (M) on outcome (Y) when Z=0.}
+\item{b}{A number. Effect of mediator (M) on outcome (Y) when Z=0.}
 
-\item{c}{A number. Interaction between mediatior (M) and (Z) for outcome (Y).}
+\item{c}{A number. Interaction between mediator (M) and (Z) for outcome (Y).}
 
 \item{d}{A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.}
 

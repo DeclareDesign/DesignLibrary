@@ -5,9 +5,9 @@
 #' Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
 #'
 #' @param N An integer. Size of sample.
-#' @param a A number. Parameter governing effect of treatment (Z) on mediatior (M).
-#' @param b A number. Effect of mediatior (M) on outcome (Y) when Z=0.
-#' @param c A number. Interaction between mediatior (M) and (Z) for outcome (Y).
+#' @param a A number. Parameter governing effect of treatment (Z) on mediator (M).
+#' @param b A number. Effect of mediator (M) on outcome (Y) when Z=0.
+#' @param c A number. Interaction between mediator (M) and (Z) for outcome (Y).
 #' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
 #' @param rho A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
 #' @return A mediation analysis design.
@@ -129,7 +129,7 @@ attr(mediation_analysis_designer,"shiny_arguments") <- list(
 attr(mediation_analysis_designer,"tips") <- c(
   N = "Size of sample",
   a = "Effect of treatment (Z) on mediator (M)",
-  b = "Effect of mediatior (M) on outcome (Y)",
+  b = "Effect of mediator (M) on outcome (Y)",
   d = "Direct effect of treatment (Z) on outcome (Y)",
   rho = "Correlation of mediator (M) and outcome (Y) error terms"
 )

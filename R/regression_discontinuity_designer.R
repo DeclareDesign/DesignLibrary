@@ -1,6 +1,6 @@
 #' Create a regression discontinuity design
 #'
-#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
 #'
 #' @param N An integer. Size of population to sample from.
 #' @param tau A number. Difference in potential outcomes functions at the threshold.

@@ -24,14 +24,14 @@ By randomly assigning units to treatment we can determine whether a treatment af
 For this analysis we assume that the average treatment effect (ATE) of $Z$ on $Y$ is nonzero.  Our main interest lies in decomposing the ATE into *direct* and *indirect effects*.  The indirect effect is channeled from the treatment $Z$ to the outcome $Y$ through a mediator $M$ and the direct effect runs directly from $Z$ to $Y$.
 
 
-Identifyng causal mechanisms is not a simple task. It involves complex potential outcomes (more on this below) and a mediating variable that is generally not assigned at random  and is not a pre-treatment covariate (since it's affected by the treatment). Researchers often use regression based approaches to identify causal mechanisms but these rely on assumptions that sometimes can't be met.
+Identifying causal mechanisms is not a simple task. It involves complex potential outcomes (more on this below) and a mediating variable that is generally not assigned at random  and is not a pre-treatment covariate (since it's affected by the treatment). Researchers often use regression based approaches to identify causal mechanisms but these rely on assumptions that sometimes can't be met.
 
 We define below a mediation analysis design.
 
 ## Design Declaration
 
 - **M**odel:  
-We specify a population of size $N$. Individuals from this population have two potential outcomes related to the mediatior.
+We specify a population of size $N$. Individuals from this population have two potential outcomes related to the mediator.
 
 * $M_i(Z_i=0):$ The value for the mediator $M$ when the unit $i$ is in the control group, and
 * $M_i(Z_i=1):$ the value for the mediator $M$ when the unit $i$ is treated.
@@ -52,9 +52,9 @@ And two complex potential outcomes.
 
 Thus the data generating process we specify defines $Y$ as a function of $M$ and $Z$ and $M$ as a function of $Z$.
   
-- **I**nquiry: We are interested in the average effects of the treatment on the mediatior, $M$, the direct average effects of the treatment on $Y$ and the effects $Z$ that run through $M$.
+- **I**nquiry: We are interested in the average effects of the treatment on the mediator, $M$, the direct average effects of the treatment on $Y$ and the effects $Z$ that run through $M$.
 
-- **D**ata strategy:  We use assign units to treatment using complete random assigment.
+- **D**ata strategy:  We use assign units to treatment using complete random assignment.
 
 - **A**nswer strategy:  First, we regress $M$ on $Z$. Then we regress $Y$ on $M$ and $Z$. Our estimators are the coefficient of regressors.
 

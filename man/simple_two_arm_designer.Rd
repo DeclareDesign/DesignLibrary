@@ -11,7 +11,7 @@ simple_two_arm_designer(N = 100, prob = 0.5, control_mean = 0,
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{prob}{A number in [0,1]. Probability of assigment to treatment.}
+\item{prob}{A number in [0,1]. Probability of assignment to treatment.}
 
 \item{control_mean}{A number. Average outcome in control.}
 

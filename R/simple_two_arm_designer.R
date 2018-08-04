@@ -8,7 +8,7 @@
 #' Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' 
 #' @param N An integer. Sample size.
-#' @param prob A number in [0,1]. Probability of assigment to treatment.
+#' @param prob A number in [0,1]. Probability of assignment to treatment.
 #' @param control_mean A number. Average outcome in control.
 #' @param control_sd A positive number. Standard deviation in control.
 #' @param ate A number. Average treatment effect.
