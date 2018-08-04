@@ -128,7 +128,7 @@ attr(mediation_analysis_designer,"shiny_arguments") <- list(
 )
 attr(mediation_analysis_designer,"tips") <- c(
   N = "Size of sample",
-  a = "Effect of treatment (Z) on mediatior (M)",
+  a = "Effect of treatment (Z) on mediator (M)",
   b = "Effect of mediatior (M) on outcome (Y)",
   d = "Direct effect of treatment (Z) on outcome (Y)",
   rho = "Correlation of mediator (M) and outcome (Y) error terms"
