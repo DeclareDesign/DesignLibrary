@@ -7,10 +7,13 @@
 #' @param means A numeric vector of length \code{2^k}. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
 #' @param sds A numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
 #' @param probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
+#' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the funtion \code{c()} as in \code{outcome_name = c("War")}.
+#' @param treatment_names A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.
 #' @return A factorial design.
 #' @details 
 #' 
-#' \code{factorial_designer} creates a factorial design with \code{2^k} treatment combinations resulting from \code{k} factors, each with two conditions each (\code{c(0,1)}). The order of the scalar arguments \code{means} and \code{sds} must follow the one returned by \code{expand.grid(rep(list(c(0,1)), k))}, where each of the columns is a treatment.
+#' \code{factorial_designer} creates a factorial design with \code{2^k} treatment combinations resulting from \code{k} factors, each with two conditions each (\code{c(0,1)}). The order of the scalar arguments \code{means} and \code{sds} must follow the one returned by \code{expand.grid(rep(list(c(0,1)), k))}, where each of the columns is a treatment. Estimands are defined for each combination of treatment assignment as the weighted difference of differences of potential outcomes. For example, in a design with \eqn{k = 3} factors, the average treatment effect of A, (ATE_A), our estimand of interest is given by: \deqn{ATE_A = 1/4*(Y_{111} - Y_{011}) + 1/4*(Y_{101} - Y_{001}) + 1/4*(Y_{110} - Y_{010}) + 1/4*(Y_{100} - Y_{000})}, the ATE of both A and B (ATE_AB) as: \deqn{ATE_AB = 1/2*[(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] + 1/2*[(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]} and the ATE of the interaction of all treatments (ATE_ABC) as: \deqn{ATE_ABC = [(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] - [(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]}, where \eqn{Y_{100}} is short for the expected outcome of Y when A is 1 and B and C are 0 (or \eqn{E[Y | A = 1, B = 0, C = 0]}).
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
@@ -21,7 +24,7 @@
 #' # A factorial design using default arguments
 #' factorial_design <- factorial_designer()
 #' 
-#' # A 2 x 2 x 2 factorial design with unequal probabilities of assignment
+#' # A 2 x 2 x 2 factorial design with unequal probabilities of assignment to each treatment condition.
 #' # to each treatment
 #' factorial_design2 <- factorial_designer(k = 3, probs = c(1/2, 1/4, 1/4))
 #'
@@ -91,7 +94,8 @@ factorial_designer <- function(
   names(potouts) <- names_pos
   
   # assignment --------------------------------------------------------------
-  assignment_given_factor <- sapply(1:length(cond_row), function(i) rlang::quos(as.numeric(Z %in% !!cond_row[[i]])))
+  Z <- rlang::sym("Z")
+  assignment_given_factor <- sapply(1:length(cond_row), function(i) rlang::quos(as.numeric(!!Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
   
   # reveal outcomes ---------------------------------------------------------
@@ -170,8 +174,8 @@ factorial_designer <- function(
     estimator_function <- rlang::quo(
       function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
-        estimate_df <- tidy.lm_robust(lm_robust(formula = !!estimator_formula, data = data, weights = 1/(data$Z_cond_prob)))
-        # estimate_df$estimate_term <- estimate_df$term
+        mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/data$Z_cond_prob)
+        estimate_df <- tidy.lm_robust(mod)
         estimate_df$estimand_label <- paste0("coef_", estimate_df$term)
         estimate_df$estimand_label[estimate_df$estimand_label == "coef_(Intercept)"] <- "Control"
         estimate_df
@@ -195,7 +199,7 @@ factorial_designer <- function(
                                                           match.call.defaults(),
                                                           rlang = TRUE,
                                                           arguments_as_values = TRUE,
-                                                          exclude_args = c("k", "probs", "outcome_name", fixed, "fixed"))
+                                                          exclude_args = c("k", "probs", "outcome_name", "treatment_names", fixed, "fixed"))
   return(factorial_design)
   
 }
