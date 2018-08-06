@@ -168,7 +168,16 @@ test_that(desc = "multi_arm_designer errors when it should",
             expect_error(multi_arm_designer(sds = c(-10,-10),means = c(2,2), m_arms = 2))
           })
 
-
+test_that(desc = "factorial_designer errors when it should",
+          code = {
+            expect_error(factorial_designer(means = 1, k = 2))
+            expect_error(factorial_designer(sds = 1, k = 2))
+            expect_error(factorial_designer(probs = .5, k = 2))
+            expect_error(factorial_designer(k = .5))
+            expect_error(factorial_designer(k = 2.5))
+            expect_error(factorial_designer(sds = c(-1,-1), k = 2))
+            expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
+          })
 
 
 
