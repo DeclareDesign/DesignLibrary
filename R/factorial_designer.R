@@ -44,7 +44,7 @@ factorial_designer <- function(
   
   if(length(means) != 2^k || length(sds) != 2^k) stop("`means' and `sds` arguments must be the same as length of 2^(k).")
   if(length(probs) != k) stop("`probs` must be the same as length of k.")
-  if(k <= 0 || !rlang::is_integerish(k)) stop("`k' should be a positive integer.")
+  if(k < 2 || !rlang::is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(sds<=0)) stop("`sds' should be positive.")
   if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
@@ -59,8 +59,7 @@ factorial_designer <- function(
   # assignment strings
   a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x], "_1"), paste0(treatment_names[x], "_0")))
   assignment_string <- sapply(1:2^k, function(r) paste0(a[r,], collapse = "_"))
-  # assignment_string <- sapply(1:2^k, function(r) paste0(cond_grid[r,], collapse = ""))
-  
+
   # regression term strings
   b <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x]), "-"))
   term_string <- sapply(1:2^k, function(r) paste0(b[r,], collapse = ":"))
@@ -110,7 +109,6 @@ factorial_designer <- function(
   }
   
   interaction  <- function(k, tnames = treatment_names, yname = outcome_name) {
-    if(k < 2) stop("k > 1 please")
     conditions <- perm(rep(2,k))
     combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
     signs <- (1 - 2*(k%%2))*( 1- 2*apply(conditions, 1, sum) %% 2)
