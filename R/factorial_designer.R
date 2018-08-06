@@ -32,8 +32,8 @@
 factorial_designer <- function(
   N = 500,
   k = 3,
-  means = seq(0:.5, length.out = 2^k),
-  sds = rep(.1, 2^k),
+  means = rep(0, 2^k),
+  sds = rep(1, 2^k),
   probs = rep(.5, k),
   outcome_name = c("Y"),
   treatment_names = NULL,
