@@ -57,8 +57,10 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
+    from_src <- FALSE
     txt <- find_triple_bracket(designer)
   }else{
+    from_src <- TRUE
     open <- grep("[{]{3}", txt)
     close <- grep("[}]{3}", txt)
     
@@ -74,8 +76,13 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   code <- sub(indentation, "", txt)
   
   if(rlang){
-    rewrite <- data.frame(start = grep("quo", code, fixed = TRUE),
-                          end = grep("^\\s*)", code))
+    rewrite <- data.frame(start = grep("quo", code, fixed = TRUE))
+                          
+    if(from_src){
+      rewrite$end <- grep("^\\s*)", code)
+    }else{
+      rewrite$end <- grep("){2}$|\\})$", code)  
+    }
     
     step_name <- unlist(lapply(strsplit(code[rewrite$start], split = " <-"), function(l) l[1]))
     step_name <- trimws(step_name, which = "both")
