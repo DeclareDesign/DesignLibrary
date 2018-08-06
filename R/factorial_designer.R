@@ -32,7 +32,7 @@ factorial_designer <- function(
   means = seq(0:.5, length.out = 2^k),
   sds = rep(.1, 2^k),
   probs = rep(.5, k),
-  outcome_name = "Y",
+  outcome_name = c("Y"),
   treatment_names = NULL,
   fixed = NULL
 ){
@@ -46,7 +46,7 @@ factorial_designer <- function(
   if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
   # pre-objects -------------------------------------------------------------
-
+  
   #names of conditions
   if(is.null(treatment_names)) treatment_names <- paste0("T", 1:k)
   cond_list <- rep(list(c(0,1)),k)
@@ -70,7 +70,7 @@ factorial_designer <- function(
   }), 1, prod)
   
   cond_row <- lapply(1:k, function(x) which(cond_grid[,x]==1))
-
+  
   # fixed argument ----------------------------------------------------------
   
   sds_ <- sds; means_ <- means; probs_ <- probs; N_ <- N; k_ <- k 
@@ -79,8 +79,8 @@ factorial_designer <- function(
   if(!"sds"   %in% fixed)  sds_ <- sapply(1:length(sds), function(i) rlang::expr(sds[!!i])) 
   if(!"means" %in% fixed)  means_ <- sapply(1:length(means), function(i) rlang::expr(means[!!i])) 
   if(!"N"     %in% fixed)  N_ <- rlang::expr(N)
-
-
+  
+  
   # population --------------------------------------------------------------
   
   # potential outcomes ------------------------------------------------------
@@ -105,10 +105,10 @@ factorial_designer <- function(
     } ) - 1
   }
   
-  interaction  <- function(k, tnames = treatment_names) {
+  interaction  <- function(k, tnames = treatment_names, yname = outcome_name) {
     if(k < 2) stop("k > 1 please")
     conditions <- perm(rep(2,k))
-    combs <- paste0("Y_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
+    combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
     signs <- (1 - 2*(k%%2))*( 1- 2*apply(conditions, 1, sum) %% 2)
     
     allsigns <- sapply(1:((nrow(conditions)-1)), function(j) {
@@ -175,12 +175,12 @@ factorial_designer <- function(
         estimate_df$estimand_label <- paste0("coef_", estimate_df$term)
         estimate_df$estimand_label[estimate_df$estimand_label == "coef_(Intercept)"] <- "Control"
         estimate_df
-        }
+      }
     )
     
+    #remove `rlang::eval_bare` call when running code below
     estimator <- rlang::quo(
       declare_estimator(
-        #remove `rlang::eval_bare` call when running this code
         handler = tidy_estimator(rlang::eval_bare(estimator_function)))
     )
     
@@ -195,7 +195,7 @@ factorial_designer <- function(
                                                           match.call.defaults(),
                                                           rlang = TRUE,
                                                           arguments_as_values = TRUE,
-                                                          exclude_args = c("k", "probs", "fixed", fixed))
+                                                          exclude_args = c("k", "probs", "outcome_name", fixed, "fixed"))
   return(factorial_design)
   
 }
