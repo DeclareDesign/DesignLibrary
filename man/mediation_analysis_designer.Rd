@@ -4,29 +4,44 @@
 \alias{mediation_analysis_designer}
 \title{Create a design for mediation analysis}
 \usage{
-mediation_analysis_designer(N = 100, a = 0.5, b = 0.5, d = 0.5,
-  rho = 0.2)
+mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
+  d = 0.5, rho = 0)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{a}{A number. Effect of treatment (Z) on mediatior (M).}
+\item{a}{A number. Parameter governing effect of treatment (Z) on mediator (M).}
 
-\item{b}{A number. Effect of mediatior (M) on outcome (Y).}
+\item{b}{A number. Effect of mediator (M) on outcome (Y) when Z=0.}
 
-\item{d}{A number. Direct effect of treatment (Z) on outcome (Y).}
+\item{c}{A number. Interaction between mediator (M) and (Z) for outcome (Y).}
 
-\item{rho}{A number in [0,1]. Correlation of between mediator (M) and outcome (Y) error terms.}
+\item{d}{A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.}
+
+\item{rho}{A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.}
 }
 \value{
 A mediation analysis design.
 }
 \description{
-A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) as well as direct effect of treatment (Z) on outcome (Y).
+A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) (given Z=0) 
+as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
+Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
 }
 \examples{
 # Generate a mediation analysis design using default arguments:
-mediation_analysis_design <- mediation_analysis_designer()
+mediation_1 <- mediation_analysis_designer()
+get_estimands(mediation_1)
+\dontrun{
+diagnose_design(mediation_1, sims = 1000)
+}
+
+# A design with a violation of sequential ignorability and heterogeneous effects:
+mediation_2 <- mediation_analysis_designer(a = 1, rho = .5, c = 1, d = .75)
+get_estimands(mediation_2)
+\dontrun{
+diagnose_design(mediation_2, sims = 1000)
+}
 
 }
 \author{

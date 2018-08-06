@@ -8,7 +8,7 @@
 #' Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
 #' 
 #' @param N An integer. Sample size.
-#' @param prob A number in [0,1]. Probability of assigment to treatment.
+#' @param prob A number in [0,1]. Probability of assignment to treatment.
 #' @param control_mean A number. Average outcome in control.
 #' @param control_sd A positive number. Standard deviation in control.
 #' @param ate A number. Average treatment effect.
@@ -46,7 +46,7 @@ simple_two_arm_designer <- function(N = 100,
       u_0 = rnorm(N),
       u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
     
-    pos <- declare_potential_outcomes(
+    potentials <- declare_potential_outcomes(
       Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
           Z     * (u_1*treatment_sd + treatment_mean))
     
@@ -61,7 +61,7 @@ simple_two_arm_designer <- function(N = 100,
     reveal_Y    <- declare_reveal()
     
     # Design
-    simple_two_arm_design <- population + pos + estimand + assignment + reveal_Y + estimator
+    simple_two_arm_design <- population + potentials + estimand + assignment + reveal_Y + estimator
   }}}
   
   attr(simple_two_arm_design, "code") <- 

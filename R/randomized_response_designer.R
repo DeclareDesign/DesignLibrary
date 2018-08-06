@@ -26,9 +26,9 @@ randomized_response_designer <- function(N = 1000,
                                          withholding_rate = .5
 ){
   sensitive_trait <- withholder <- Y <- Z <- bias <- NULL
-  if(prob_forced_yes < 0 || prob_forced_yes > 1)stop("prob_forced_yes must be in [0,1]")
-  if(prevalence_rate < 0 || prevalence_rate > 1)stop("prevalence_rate must be in [0,1]")
-  if(withholding_rate < 0 || withholding_rate > 1)stop("withholding_rate must be in [0,1]")
+  if(prob_forced_yes < 0 || prob_forced_yes > 1)   stop("prob_forced_yes must be in [0,1]")
+  if(prevalence_rate < 0 || prevalence_rate > 1)   stop("prevalence_rate must be in [0,1]")
+  if(withholding_rate < 0 || withholding_rate > 1) stop("withholding_rate must be in [0,1]")
   {{{
     # M: Model
     population <- declare_population(
@@ -37,13 +37,13 @@ randomized_response_designer <- function(N = 1000,
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    pos <- declare_potential_outcomes(
+    potentials <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
     
     # I: Inquiry
-    estimand <- declare_estimand(true_rate = prevalence_rate)
+    estimand <- declare_estimand(true_rate = mean(sensitive_trait))
     
     # D: Data Strategy
     assignment <- declare_assignment(
@@ -69,19 +69,14 @@ randomized_response_designer <- function(N = 1000,
     )
     
     # Design
-    randomized_response_design <- population +
-      assignment +
-      pos +
-      estimand +
-      declare_reveal(Y, Z) +
-      estimator_randomized_response +
-      estimator_direct_question
+    randomized_response_design <- population + assignment + potentials +
+      estimand + declare_reveal(Y, Z) +
+      estimator_randomized_response + estimator_direct_question
     
     randomized_response_design <- set_diagnosands(
       design = randomized_response_design,
-      diagnosands = declare_diagnosands(
-        select = bias
-      ))
+      diagnosands = declare_diagnosands(select = bias)
+      )
     
   }}}
   attr(randomized_response_design, "code") <- 

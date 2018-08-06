@@ -17,24 +17,24 @@ library(DesignLibrary)
 library(knitr)
 ```
 
+Block cluster designs involve units that are grouped into clusters which are in turn grouped into blocks. 
 
-Cluster randomization is a research design in which subjects are grouped into clusters and assigned as a group to either treatment or control. When the clusters are of equal size the difference-in-means estimator yields  unbiased but imprecise estimates, especially when individuals are very similar within clusters and share characteristics that can potentially influence outcomes. Despite their drawbacks, cluster designs are sometimes unavoidable. For instance, imagine that we want to evaluate the effects of radio advertisements on donations to aid relief campaigns. It is, of course, impossible to target such advertising to a single individual, and the treatment must instead be assigned at a higher level; for instance at the city level.
+The clusters are assigned as a group to either treatment or control. When the clusters are of equal size the difference-in-means estimator yields unbiased but possibly imprecise estimates, especially when individuals are very similar within clusters and share characteristics that can potentially influence outcomes. 
 
-In block random assignment the population is sorted into separate blocks or "bins" -- sometimes according to  pre-treatment covariates --, and treatment is randomized independently within each block. In a clustered and blocked design with two arms, for example, entire clusters are assigned to either treatment or control conditions, separately within each block.
+In addition (optionally) clusters are assigned within blocks. Ideally clusters within a block are similar. For instance blocks might be formed on the basis of pre-treatment covariates. Treatment is then assigned *within* each block.  Two main objectives can be achieved with block randomization: first, we can reduce sampling variability when individuals that belong to a specific block have similar potential outcomes. Secondly, we can ensure that certain characteristics that we care about are present at a particular rate in our treatment and control samples. For instance, policymakers might be interested in having an equal number of women and men in treatment and control. By defining one block as men and another as women and conducting the randomization separately for each gender, we can ensure that exactly half of the men and half of the women are treated.
 
-Two main objectives can be achieved with block randomization: first, we can reduce sampling variability when individuals that belong to a specific block have similar potential outcomes. Secondly, we can ensure that certain characteristics that we care about are present at a particular rate in our treatment and control samples. For instance, policymakers might be interested in having an equal number of women and men in treatment and control. By defining one block as men and another as women and conducting the randomization separately for each gender, we can ensure that exactly half of the men and half of the women are treated.
+As a rule of thumb having blocks improves precision but having clusters weakens precision. Despite their drawbacks, cluster designs are sometimes unavoidable. For instance, imagine that we want to evaluate the effects of radio advertisements on donations to aid relief campaigns. It is, of course, impossible to target such advertising to a single individual, and the treatment must instead be assigned at a higher level; for instance at the city level.
 
-Looking back to our radio ad example, imagine that policymakers specify that four cities within each region should be treated and four assigned to control. This means that in the control and treatment groups there will be individuals from all regions, but only from a few cities within each region. We declare this design below.
 
 ## Design Declaration
 
-- **M**odel:  We specify a population partitioned into $N\_blocks = 2$ regions. Each region has $N\_clusters\_in\_block = 4$ cities and within each city there are $N\_in\_cluster = 5$ individuals.  Our potential outcomes are the amount donated to aid relief campaigns per subject under the treatment ($Y_i(Z=1)$) and under control ($Y_i(Z=0)$). The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. 
+- **M**odel:  We specify a population partitioned into `N\_blocks` (regions, say). Each region has `N\_clusters\_in\_block` clusters (cities, say)  and within each city there are `N\_in\_cluster` individuals.  The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. 
   
 - **I**nquiry: We are interested in the average difference in individuals' treatment and control outcomes. Formally, $E[Y_i(Z = 1) - Y_i(Z = 0)]$.
 
-- **D**ata strategy:  The units of randomization are cities (clusters). Cities are blocked by region so that we ensure that $4$ cities from each region are included in control and $4$ in treatment. All individuals belonging to the same city are either treated or assigned to control.
+- **D**ata strategy:  The units of randomization are cities (clusters). Cities are blocked by region so that we ensure that equal numbers of cities from each region are included in control and in treatment. All individuals belonging to the same city are either treated or assigned to control.
 
-- **A**nswer strategy: We estimate the average treatment effect using the difference-in-means estimator.
+- **A**nswer strategy: We estimate the average treatment effect using a linear model that accounts for block structure and clusters.
 
 In code:
 
@@ -44,33 +44,27 @@ In code:
 
 ## Diagnosis
 
-To better illustrate how different sources of variance differentially affect our power, we compare three designs. Each of them features a design with 50 blocks featuring two clusters each, with 10 individuals per clustre. In each design the effect size is .25 and the standard deviation in the outcome is 1. In the first, all of the variance derives from differences between individuals, in the second it derives from differences between clusters, and in the third it derives from variance between blocks.  
+To better illustrate how different sources of variance differentially affect our power, we compare three designs. Each of them features a design with 50 blocks featuring two clusters each, with 10 individuals per cluster. In each design the effect size is .25 and the standard deviation in the outcome is 1 (when possible the designer defaults to a variance for the individual shock such that total variance =1). In the first, all of the variance derives from differences between individuals, in the second it derives from differences between clusters, and in the third it derives from variance between blocks.  
 
 ```{r,eval = TRUE}
 individual_var <- block_cluster_two_arm_designer(N_blocks = 50, 
                                                  N_clusters_in_block = 2, 
                                                  N_i_in_cluster = 10, 
                                                  sd_block = 0,
-                                                 sd_i_0 = 1.01,
-                                                 sd_i_1 = 1.01,
                                                  sd_cluster = 0,
                                                  ate = .25)
-cluster_var <- block_cluster_two_arm_designer(N_blocks = 50, 
-                                              N_clusters_in_block = 2,
-                                              N_i_in_cluster = 10, 
-                                              sd_block = 0,
-                                              sd_i_0 = .01,
-                                              sd_i_1 = .01,
-                                              sd_cluster = 1,
-                                              ate = .25)
-block_var <- block_cluster_two_arm_designer(N_blocks = 50, 
-                                            N_clusters_in_block = 2,
-                                            N_i_in_cluster = 10, 
-                                            sd_block = 1,
-                                            sd_i_0 = .01,
-                                            sd_i_1 = .01,
-                                            sd_cluster = 0,
-                                            ate = .25)
+cluster_var   <- block_cluster_two_arm_designer(N_blocks = 50, 
+                                                 N_clusters_in_block = 2,
+                                                 N_i_in_cluster = 10, 
+                                                 sd_block = 0,
+                                                 sd_cluster = .99,
+                                                 ate = .25)
+block_var     <- block_cluster_two_arm_designer(N_blocks = 50, 
+                                                 N_clusters_in_block = 2,
+                                                 N_i_in_cluster = 10, 
+                                                 sd_block = .99,
+                                                 sd_cluster = 0,
+                                                 ate = .25)
 diagnosis <- diagnose_design(individual_var, cluster_var, block_var)
 ```
 

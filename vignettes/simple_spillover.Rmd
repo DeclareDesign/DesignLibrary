@@ -42,14 +42,14 @@ We  declare this design like this:
 
 - **M**odel: 
     
-    Our model of the world specifies a population of units each of which is a member of a group (`n_groups` of size `group_size` each). The key assumption of this spilover design is that if any member of group, is treated then all units receive some equal benefit (with marginal gains possibly increasing or decreasing in the numbers treated). Specifically, letting $G[i]$ denote the group of which $i$ is a member,  we assume:
+    Our model of the world specifies a population of units each of which is a member of a group (`n_groups` of size `group_size` each). The key assumption of this spillover design is that if any member of group, is treated then all units receive some equal benefit (with marginal gains possibly increasing or decreasing in the numbers treated). Specifically, letting $G[i]$ denote the group of which $i$ is a member,  we assume:
     
 $$Y_i = \left(\frac{1}{n_{G[i]}} \sum_{j\in G[i]}Z_j \right)^\gamma + \epsilon_i$$
         
 
 - **I**nquiry: 
     
-    The estimand of interest is the average, across all individuals, of the difference between the sitation in which that individual only is treated and one in which no individuals are treated. 
+    The estimand of interest is the average, across all individuals, of the difference between the situation in which that individual only is treated and one in which no individuals are treated. 
 
 - **D**ata strategy: 
     

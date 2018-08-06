@@ -1,6 +1,6 @@
 #' Create a regression discontinuity design
 #'
-#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cuttoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
 #'
 #' @param N An integer. Size of population to sample from.
 #' @param tau A number. Difference in potential outcomes functions at the threshold.
@@ -38,7 +38,7 @@ regression_discontinuity_designer <- function(
       X = runif(N,0,1) - cutoff,
       noise = rnorm(N,0,.1),
       Z = 1 * (X > 0))
-    pos <- declare_potential_outcomes(
+    potentials <- declare_potential_outcomes(
       Y_Z_0 = control(X) + noise,
       Y_Z_1 = treatment(X) + noise)
     reveal_Y <- declare_reveal(Y)
@@ -59,7 +59,7 @@ regression_discontinuity_designer <- function(
     
     # Design
     regression_discontinuity_design <- 
-      population + pos + estimand + reveal_Y + sampling + estimator
+      population + potentials + estimand + reveal_Y + sampling + estimator
   }}}
   
   attr(regression_discontinuity_design, "code") <- 

@@ -1,6 +1,6 @@
 #' Create a simple factorial design
 #'
-#' Builds a two-by-two factorial design in which asignments to each factor are independent of each other.
+#' Builds a two-by-two factorial design in which assignments to each factor are independent of each other.
 #' 
 #' @details
 #' Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
@@ -13,8 +13,8 @@
 #' See \code{\link{multi_arm_designer}} for a factorial design with non independent assignments.
 #' 
 #' @param N An integer. Size of sample.
-#' @param prob_A A number in [0,1]. Probability of assigment to treatment A.
-#' @param prob_B A number in [0,1]. Probability of assigment to treatment B.
+#' @param prob_A A number in [0,1]. Probability of assignment to treatment A.
+#' @param prob_B A number in [0,1]. Probability of assignment to treatment B.
 #' @param w_A A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.
 #' @param w_B A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.
 #' @param outcome_means A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.
@@ -75,7 +75,7 @@ simple_factorial_designer <- function(N = 100,
     # M: Model
     population <- declare_population(N)
     
-    pos <- declare_potential_outcomes(
+    potentials <- declare_potential_outcomes(
       Y_A_0_B_0 = mean_A0B0 + rnorm(N, sd = outcome_sds[1]),  
       Y_A_0_B_1 = mean_A0B1 + rnorm(N, sd = outcome_sds[2]),  
       Y_A_1_B_0 = mean_A1B0 + rnorm(N, sd = outcome_sds[3]),
@@ -112,7 +112,7 @@ simple_factorial_designer <- function(N = 100,
                                      label = "Interaction")
     
     # Design
-    simple_factorial_design <- population + pos + 
+    simple_factorial_design <- population + potentials + 
       estimand_1 + estimand_2 + estimand_3 +
       assign_A + assign_B + reveal_Y + 
       estimator_1 + estimator_2

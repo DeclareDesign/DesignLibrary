@@ -17,16 +17,18 @@ library(ggplot2)
 library(knitr)
 ```
 
-Researchers often cannot randomly sample at the individual level because it may, among other reasons, be too costly or logistically impractical. Instead, they may choose to randomly sample households, political precincts, or any group of individuals in order to draw inferences about the population.
+Researchers often cannot randomly sample at the individual level because it may, among other reasons, be too costly or logistically impractical. Instead, they may choose to randomly sample households, political precincts, or any group of individuals in order to draw inferences about the population. This strategy may be cheaper and simpler but may also introduce risks of less precise estimates.
 
 <!-- Include reference to simple random sampling vignette below -->
-In *Simple Random Sampling*, we discused the example of estimating the average political ideology in Portola, California. Consider instead we are interested in the average party ideology in the entire state of California. Due to costs, we need to restrain survey to a limited number of counties. Using cluster sampling, we randomly sample counties within the state, and within each selected county, randomly sample individuals to survey.
+<!-- In *Simple Random Sampling*, we discused the example of estimating the average political ideology in Portola, California. Consider instead  -->
 
-Assuming enough variation in the outcome of interest, random cluster assignment yields unbiased but imprecise estimates.^[We assume clusters are the same size. Other designs might include different-sized clusters, but we do not discuss these cases here.] By sampling clusters, we select groups of individuals who may share common attributes. Unlike simple random sampling, we need to take into account this intra-cluster correlation in our estimation of the standard error.^[The intra-cluster correlation coefficient (ICC) can be calculated directly and is a feature of this design.] The higher the degree of within-cluster similarity, the more variance we observe in cluster-level averages and the more imprecise are our estimates.^[In ordinary least square (OLS) models, we assume errors are independent (error terms between individual observations are uncorrelated with each other) and homoskedastic (the size of errors is homogeneous across individuals). In reality, this is often not the case with cluster sampling.] We address this by considering cluster-robust standard errors in our answer strategy below.
+Say we are interested in the average party ideology in the entire state of California. Using cluster sampling, we randomly sample counties within the state, and within each selected county, randomly sample individuals to survey.
+
+Assuming enough variation in the outcome of interest, random cluster assignment yields unbiased but imprecise estimates. By sampling clusters, we select groups of individuals who may share common attributes. Unlike simple random sampling, we need to take  account of this intra-cluster correlation in our estimation of the standard error.^[The intra-cluster correlation coefficient (ICC) can be calculated directly and is a feature of this design.] The higher the degree of within-cluster similarity, the more variance we observe in cluster-level averages and the more imprecise are our estimates.^[In ordinary least square (OLS) models, we assume errors are independent (error terms between individual observations are uncorrelated with each other) and homoskedastic (the size of errors is homogeneous across individuals). In reality, this is often not the case with cluster sampling.] We address this by considering cluster-robust standard errors in our answer strategy below.
 
 ## Design Declaration
 
-- **M**odel: We specify the variable of interest $Y$ (political ideology) as a discrete scale ranging from 1 (most liberal) to 7 (most conservative). We do not define a functional model since we are interested in the population mean of $Y$. The model also includes information about the number of sampled clusters and the number of individuals per cluster.
+- **M**odel: We specify the variable of interest $Y$ (political ideology, say) as a discrete variable ranging from 1 (most liberal) to 7 (most conservative). We do not define a functional model since we are interested in the population mean of $Y$. The model also includes information about the number of sampled clusters and the number of individuals per cluster.
 
 - **I**nquiry: Our estimand is the population mean of political identification $Y$. Because we employed random sampling, we can expect the value of the sample mean ($\widehat{\overline{y}}$) to approximate the true population parameter ($\widehat{\overline{Y}}$).
 
@@ -50,9 +52,20 @@ diagnosis <- diagnose_design(cluster_sampling_design)
 kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 ```
 
-And also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors.
+To appreciate the role of clustering better we also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors. TO do this we first add an additional estimator to the design that does not take account of clusters. 
+
+```{r plot setup, echo=TRUE, warning=FALSE}
+
+new_design <- cluster_sampling_design + declare_estimator(Y ~ 1,
+                                        model = lm_robust,
+                                        estimand = estimand,
+                                        label = "Naive Standard Errors")
+diagnosis <- diagnose_design(new_design)
+```
 
 ```{r plot, echo=FALSE, warning=FALSE}
+
+
 sims <- diagnosis$simulations
 
 dd_theme <-
@@ -72,7 +85,7 @@ dd_theme <-
   sims$covered <- factor(1 + (sims$conf.low < sims$estimand & sims$estimand < sims$conf.high), 1:2, labels = c("Estimand not covered by confidence interval", "Estimand covered by confidence interval"))
   sims$estimator_label <- as.factor(sims$estimator_label)
   sims$estimator_label <- factor(sims$estimator_label, levels = rev(levels(sims$estimator_label)))
-  sims$estimand_label <- as.factor(sims$estimand_label)
+  sims$estimand_label  <- as.factor(sims$estimand_label)
   
   ggplot(sims, aes(x=estimate)) +
     geom_errorbar(aes(ymin=conf.low, ymax=conf.high, color=covered), alpha=.4) +
@@ -93,7 +106,7 @@ dd_theme <-
   
 ```
 
-The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The blue lines in the graph demonstrate the estimates from simulations which contain our estimand. As our table and graphs show, the share of these simulations over the total number of simulations, also known as coverage, is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both speficications.
+The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The blue lines in the graph demonstrate the estimates from simulations which contain our estimand. As our table and graphs show, the share of these simulations over the total number of simulations, also known as coverage, is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both specifications.
 
 ## Using the Cluster Sampling Designer
 

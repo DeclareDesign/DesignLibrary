@@ -4,15 +4,19 @@
 \alias{pretest_posttest_designer}
 \title{Create a pretest-posttest design}
 \usage{
-pretest_posttest_designer(N = 100, ate = 0.25, rho = 0.5,
-  attrition_rate = 0.1)
+pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
+  rho = 0.5, attrition_rate = 0.1)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
 
 \item{ate}{A number. Average treatment effect.}
 
-\item{rho}{A number in [0,1]. Correlation in outcomes between pre- and post-test.}
+\item{sd_1}{Non negative number. Standard deviation of period 1 shocks.}
+
+\item{sd_2}{Non negative number. Standard deviation of period 2 shocks.}
+
+\item{rho}{A number in [-1,1]. Correlation in outcomes between pre- and post-test.}
 
 \item{attrition_rate}{A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.}
 }
@@ -21,8 +25,8 @@ A pretest-posttest design.
 }
 \description{
 Produces designs in which an outcome Y is observed pre- and post-treatment.
-It allows for individual post-treatment outcomes to be correlated to pre-treatment outcomes
-and for at random missingness in the observation of post-treatment outcomes.
+The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
+and for at-random missingness in the observation of post-treatment outcomes.
 }
 \examples{
 # Generate a pre-test post-test design using default arguments:
