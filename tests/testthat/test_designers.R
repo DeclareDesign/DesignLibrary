@@ -173,8 +173,9 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(means = 1, k = 2))
             expect_error(factorial_designer(sds = 1, k = 2))
             expect_error(factorial_designer(probs = .5, k = 2))
+            expect_error(factorial_designer(probs = .5, k = 1))
             expect_error(factorial_designer(k = .5))
-            expect_error(factorial_designer(sds = c(-1,-1), k = 2))
+            expect_error(factorial_designer(sds = c(-1,-1,-1,-1), k = 2))
             expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
           })
 
