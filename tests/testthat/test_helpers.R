@@ -50,9 +50,14 @@ test_that(desc = "construct_design_code works as it should when using rlang func
                 t1 <- rlang::quo(
                   paste0(!!letters[1])
                 )
+                t2 <- rlang::quo(
+                  function(){
+                  paste0(!!letters[1])
+                }
+                )
               }}}
             }
-            expect_is(DesignLibrary:::construct_design_code(designer = function(x) {{{x}}}, args = c("x"),arguments_as_values = F,exclude_args = NULL),"character")
+            expect_is(DesignLibrary:::construct_design_code(designer = test_function, args = c("x"),arguments_as_values = F,exclude_args = NULL, rlang=TRUE),"character")
           }) 
 
 test_that(desc = "match.call.defaults has all cases tested",
