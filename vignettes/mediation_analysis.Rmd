@@ -1,0 +1,110 @@
+---
+title: "Mediation Analysis Design"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+nocite: |
+  @Gerber2012
+  @imai2011
+designer: "mediation_analysis_designer.Rd"
+vignette: >
+  %\VignetteIndexEntry{Mediation Analysis Design}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DesignLibrary)
+library(knitr)
+```
+
+By randomly assigning units to treatment we can determine whether a treatment affects an outcome but not *why* or *how* it might affect it. Identifying causal mechanisms, which is arguably one of the most useful findings in science, requires a treatment with nonzero effects and the specification of one mediator.  
+
+
+For this analysis we assume that the average treatment effect (ATE) of $Z$ on $Y$ is nonzero.  Our main interest lies in decomposing the ATE into *direct* and *indirect effects*.  The indirect effect is channeled from the treatment $Z$ to the outcome $Y$ through a mediator $M$ and the direct effect runs directly from $Z$ to $Y$.
+
+
+Identifying causal mechanisms is not a simple task. It involves complex potential outcomes (more on this below) and a mediating variable that is generally not assigned at random  and is not a pre-treatment covariate (since it's affected by the treatment). Researchers often use regression based approaches to identify causal mechanisms but these rely on assumptions that sometimes can't be met.
+
+We define below a mediation analysis design.
+
+## Design Declaration
+
+- **M**odel:  
+We specify a population of size $N$. Individuals from this population have two potential outcomes related to the mediator.
+
+* $M_i(Z_i=0):$ The value for the mediator $M$ when the unit $i$ is in the control group, and
+* $M_i(Z_i=1):$ the value for the mediator $M$ when the unit $i$ is treated.
+
+Additionally, individuals have four potential outcomes related to $Y$.
+
+Two potential outcomes that can be observed under treatment or control conditions.
+
+* $Y_i(Z_i=0 , M_i(Z_i=0)):$  the outcome of interest given that the unit  $i$ is in the control group and the mediator that would be observed if the unit $i$ is in the control group, and
+
+* $Y_i(Z_i=1 , M_i(Z_i=1)):$ the outcome of interest given that the unit  $i$ is in the treatment group and the mediator that would be observed when the unit  $i$ is in the control group.
+
+And two complex potential outcomes.
+
+* $Y_i(Z_i=1 , M_i(Z_i=0)):$ the outcome of interest given that unit $i$ is treated and the value of the mediator that would be observed in the control condition.
+
+* $Y_i(Z_i=0 , M_i(Z_i=1)):$ the outcome of interest given that unit $i$ remains untreated and the value of the mediator that would be observed in the treatment condition
+
+Thus the data generating process we specify defines $Y$ as a function of $M$ and $Z$ and $M$ as a function of $Z$.
+  
+- **I**nquiry: We are interested in the average effects of the treatment on the mediator, $M$, the direct average effects of the treatment on $Y$ and the effects $Z$ that run through $M$.
+
+- **D**ata strategy:  We use assign units to treatment using complete random assignment.
+
+- **A**nswer strategy:  First, we regress $M$ on $Z$. Then we regress $Y$ on $M$ and $Z$. Our estimators are the coefficient of regressors.
+
+In code:
+
+
+```{r, code = get_design_code( mediation_analysis_designer()), eval=TRUE}
+
+```
+
+## Diagnosis
+
+Let us diagnose two versions of this design: one in which the correlation between the error term of the mediator regression and one of the outcome regression ($\rho$) is greater than zero, and another in which $\rho$ equals zero.
+
+
+```{r,eval = TRUE}
+designs <- expand_design(mediation_analysis_designer, rho = c(0,.5))
+diagnosis <- diagnose_design(designs)
+```
+
+
+```{r,eval = TRUE, echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[,-1], digits = 2)
+```
+
+Our diagnosis indicates that when the error terms are not correlated, the direct and indirect effects can be estimated without bias.In contrast, when $\rho$ does not equal zero, the regression underestimates the effect of the mediator on $Y$ and overstates the direct effects of $Z$ on $Y$.
+
+Unfortunately, the assumption of no correlation is not always guaranteed since $M$ is not assigned at random and might be correlated with $Y$.
+
+## Using the Mediation Analysis Designer
+
+In R, you can generate a mediation_analysis design using the template function `mediation_analysis_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
+
+```{r, eval=FALSE}
+library(DesignLibrary)
+```
+
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_mediation_analysis_design` with `N`, `a`, `b`, `d` and `rho` set to 500, .2, .4, .2, and .15, respectively, by running the lines below.
+
+```{r, eval=FALSE}
+mediation_analysis_design <- mediation_analysis_designer(
+  N = 500, a = .2, b = .4, d = .2, rho = .15)
+```
+
+You can see more details on the `mediation_analysis_designer()` function and its arguments by running the following line of code:
+
+```{r, eval=FALSE}
+??mediation_analysis_designer
+```
+
+## Further Reading
+
+
