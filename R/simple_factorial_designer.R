@@ -96,7 +96,7 @@ simple_factorial_designer <- function(N = 100,
     
     # Factorial assignments
     assign_A <- declare_assignment(prob = prob_A, assignment_variable = A)
-    assign_B <- declare_assignment(prob = prob_B, assignment_variable = B)
+    assign_B <- declare_assignment(prob = prob_B, assignment_variable = B, blocks = A)
     reveal_Y   <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
     
     # A: Answer Strategy
