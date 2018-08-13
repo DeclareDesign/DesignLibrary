@@ -4,7 +4,7 @@
 #'
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.
-#' @param means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
+#' @param outcome_means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
 #' @param sd A nonnegative scalar. Standard deviations for shock for each unit (common across arms).
 #' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for additional shock for each unit for each of the arms.
 #' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces. 
@@ -22,11 +22,11 @@
 #'
 #'
 #' # A design with different mean and sd in each arm
-#' design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
+#' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
-#' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-#'                              fixed = c("means", "outcome_sds"))
+#' design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
+#'                              fixed = c("outcome_means", "outcome_sds"))
 #'
 
 multi_arm_designer <- function(N = 30,
