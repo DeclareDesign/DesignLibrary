@@ -5,7 +5,8 @@
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.
 #' @param means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
-#' @param sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.
+#' @param sd A nonnegative scalar. Standard deviations for shock for each unit (common across arms).
+#' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for additional shock for each unit for each of the arms.
 #' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces. 
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{m_arms} and \code{conditions} are always fixed.
 #' @return A function that returns a design.
@@ -25,44 +26,46 @@
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-#'                              fixed = c("means", "sds"))
+#'                              fixed = c("means", "outcome_sds"))
 #'
 
 multi_arm_designer <- function(N = 30,
                                m_arms = 3,
-                               means = rep(0, m_arms),
-                               sds = rep(1, m_arms),
+                               outcome_means = rep(0, m_arms),
+                               sd = 1,
+                               outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
                                fixed = NULL) {
   # Housekeeping
   Y_Z_1 <- Z <- NULL
-  sds_ <- sds 
-  means_ <- means
+  outcome_sds_ <- outcome_sds 
+  outcome_means_ <- outcome_means
   N_ <- N
   if (m_arms <= 1 || round(m_arms) != m_arms)
     stop("m_arms should be an integer greater than one.")
-  if (length(means) != m_arms ||
-      length(sds) != m_arms ||
+  if (length(outcome_means) != m_arms ||
+      length(outcome_sds) != m_arms ||
       length(conditions) != m_arms)
-    stop("means, sds and conditions arguments must be of length m_arms.")
-  if (any(sds <= 0)) stop("sds should be nonnegative")
-  if (!"sds" %in% fixed) sds_ <-  sapply(1:m_arms, function(i) expr(sds[!!i]))
-  if (!"means" %in% fixed) means_ <-  sapply(1:m_arms, function(i) expr(means[!!i]))
+    stop("outcome_means, outcome_sds and conditions arguments must be of length m_arms.")
+  if (sd < 0) stop("sd should be nonnegative")
+  if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
+  if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
+  if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
   if (!"N" %in% fixed) N_ <- expr(N)
   
   # Create helper vars to be used in design
-  errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!sds_[x])))
+  errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
   error_names <- paste0("u_", 1:m_arms)
   names(errors) <- error_names
-  population_expr <- expr(declare_population(N = !!N_, !!!errors))
+  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*sd))
   
   conditions <- as.character(conditions)
   
   f_Y <- formula(
     paste0("Y ~ ",paste0(
-      "(", means_, " + ", error_names,
+      "(", outcome_means_, " + ", error_names,
       ")*( Z == '", conditions, "')",
-      collapse = " + ")))
+      collapse = " + "), "+ u"))
   
   potential_outcomes_expr <-
     expr(
