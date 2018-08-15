@@ -4,9 +4,9 @@
 \alias{multi_arm_designer}
 \title{Create a design with multiple experimental arms}
 \usage{
-multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0, m_arms),
-  sd = 1, outcome_sds = rep(0, m_arms), conditions = 1:m_arms,
-  fixed = NULL)
+multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
+  m_arms), sd = 1, outcome_sds = rep(0, m_arms),
+  conditions = 1:m_arms, fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -45,8 +45,5 @@ design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-
-multiarm trial
-}
+\concept{experiment}
+\concept{multiarm trial}

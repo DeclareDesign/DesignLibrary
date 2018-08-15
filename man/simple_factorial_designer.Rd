@@ -79,6 +79,4 @@ diagnose_design(designs)
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment factorial
-}
+\concept{experiment factorial}
