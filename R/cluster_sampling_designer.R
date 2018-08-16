@@ -33,7 +33,7 @@ cluster_sampling_designer <- function(N_clusters = 1000,
 ){
   N <- cluster <- latent <- Y <- u_a <- NULL
   if(n_clusters > N_clusters) stop(paste0("n_clusters sampled must be smaller than the total number of ", N_clusters, " clusters."))
-  if(n_subjects_per_cluster > min(N_subjects_per_cluster)) stop(paste0("n_subjects_per_cluster must be smaller than the maximum of ", N_subjects_per_cluster, " subjects per cluster."))
+  if(n_subjects_per_cluster > min(N_subjects_per_cluster)) stop(paste0("n_subjects_per_cluster must be smaller than or equal to the minimum of ", N_subjects_per_cluster, " subjects per cluster."))
   {{{
     # M: Model
     fixed_pop <-

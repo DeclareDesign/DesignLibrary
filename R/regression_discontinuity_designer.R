@@ -6,7 +6,7 @@
 #' @param tau A number. Difference in potential outcomes functions at the threshold.
 #' @param cutoff A number in (0,1). Threshold on running variable beyond which units are treated.
 #' @param bandwidth A number. Bandwidth around threshold from which to include units.
-#' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
+#' @param poly_order A number greater or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.
 #' @return A regression discontinuity design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
@@ -25,8 +25,8 @@ regression_discontinuity_designer <- function(
   poly_order = 4
 ){
   X <- noise <- Y <- NULL
-  if(! (cutoff < 1 & cutoff > 0)) stop("cutoff must be in (0,1)")
-  if(poly_order < 1) stop("poly_order must be greater than 0.")
+  if(! (cutoff < 1 & cutoff > 0)) stop("cutoff must be in (0,1).")
+  if(poly_order < 1) stop("poly_order must be at least 1.")
   {{{
     # M: Model
     control <- function(X) {
