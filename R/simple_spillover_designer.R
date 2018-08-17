@@ -11,6 +11,8 @@
 #' 
 #' The default estimand is the average difference across subjects between no one treated and only that subject treated.  
 #' 
+#' See \href{https://declaredesign.org/library/articles/simple_spillover.html}{vignette online}.
+#' 
 #' @param N_groups An integer. Number of groups.
 #' @param N_i_group Number of units in each group. Can be scalar or vector of length \code{N_groups}.
 #' @param sd A number. Standard deviation of individual level shock.

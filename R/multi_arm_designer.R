@@ -1,7 +1,11 @@
 #' Create a design with multiple experimental arms
 #'
 #' This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
-#'
+#' 
+#' @details 
+#' 
+#' See \href{https://declaredesign.org/library/articles/multi_arm.html}{vignette online}.
+#' 
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.
 #' @param outcome_means A numeric vector of length \code{m_arms}.  Average outcome in each arm.

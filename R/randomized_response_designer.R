@@ -5,6 +5,8 @@
 #' @details 
 #' \code{randomized_response_designer} employs a specific variation of randomized response designs in which respondents are required to report a fixed answer to the sensitive question with a given probability (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 #' 
+#' See \href{https://declaredesign.org/library/articles/randomized_response.html}{vignette online}.
+#' 
 #' @param N An integer. Size of sample.
 #' @param prob_forced_yes A number. Probability of a forced yes.
 #' @param prevalence_rate A number. Probability that individual has the sensitive trait.

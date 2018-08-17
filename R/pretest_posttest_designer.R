@@ -3,7 +3,10 @@
 #' Produces designs in which an outcome Y is observed pre- and post-treatment.
 #' The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
 #' and for at-random missingness in the observation of post-treatment outcomes. 
-#'
+#' @details 
+#' 
+#' See \href{https://declaredesign.org/library/articles/pretest_posttest.html}{vignette online}.
+#' 
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect.
 #' @param sd_1 Non negative number. Standard deviation of period 1 shocks.

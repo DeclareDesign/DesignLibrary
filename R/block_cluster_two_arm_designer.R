@@ -14,6 +14,8 @@
 #' 
 #' Key limitations: The designer assumes covariance between potential outcomes at individual level only.
 #' 
+#' See \href{https://declaredesign.org/library/articles/block_cluster_two_arm.html}{vignette online}.
+#' 
 #' @param N_blocks An integer. Number of blocks. Defaults to 1 for no blocks. 
 #' @param N_clusters_in_block An integer. Number of clusters in each block. This is the total \code{N} when \code{N_blocks} and \code{N_i_in_cluster} are at default values. 
 #' @param N_i_in_cluster An integer. Individuals per cluster. Defaults to 1 for no clusters.

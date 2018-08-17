@@ -3,7 +3,11 @@
 #' A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) (given Z=0) 
 #' as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
 #' Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
-#'
+#' 
+#' @details 
+#' 
+#' See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vignette online}.
+#' 
 #' @param N An integer. Size of sample.
 #' @param a A number. Parameter governing effect of treatment (Z) on mediator (M).
 #' @param b A number. Effect of mediator (M) on outcome (Y) when Z=0.

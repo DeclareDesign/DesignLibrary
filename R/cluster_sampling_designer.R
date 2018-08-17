@@ -5,6 +5,8 @@
 #' @details 
 #' Key limitations: The design assumes clusters draw with equal probability (rather than, for example, proportionate to size).
 #' 
+#' See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
+#' 
 #' @param N_clusters An integer. Total number of clusters in the population.
 #' @param N_subjects_per_cluster An integer of vector of integers of length \code{N_clusters}. Total number of subjects per cluster in the population.
 #' @param n_clusters An integer. Number of clusters to sample.
