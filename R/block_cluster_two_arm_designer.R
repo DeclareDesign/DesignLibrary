@@ -24,7 +24,7 @@
 #' @param sd_i_0 A nonnegative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.
 #' @param sd_i_1 A nonnegative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.
 #' @param rho A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.
-#' @param prob A number in [0,1]. Treatment assignment probability.
+#' @param prob A number in (0,1). Treatment assignment probability.
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
 #' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated from \code{ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
@@ -58,7 +58,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
   if(sd_cluster < 0) stop("sd_cluster must be nonnegative")
   if(sd_i_0 < 0) stop("sd_i_0 must be nonnegative")
   if(sd_i_1 < 0) stop("sd_i_1 must be nonnegative")
-  if(prob< 0 || prob > 1) stop("prob must be in [0,1]")
+  if(prob<= 0 || prob >= 1) stop("prob must be in (0,1)")
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   {{{    
     # M: Model

@@ -27,7 +27,7 @@ block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
 
 \item{rho}{A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.}
 
-\item{prob}{A number in [0,1]. Treatment assignment probability.}
+\item{prob}{A number in (0,1). Treatment assignment probability.}
 
 \item{control_mean}{A number. Average outcome in control.}
 
