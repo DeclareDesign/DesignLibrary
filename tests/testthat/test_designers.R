@@ -27,11 +27,11 @@ for(designer in designers){
     code = {
       expect_true("design" %in% class(one_design))
     })
-
+  
   
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
-     code = {
+    code = {
       expect_is( DeclareDesign::diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
     })
   
@@ -88,7 +88,8 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_1 = -1))
             expect_error(block_cluster_two_arm_designer(prob = 10))
-                               })
+            expect_error(block_cluster_two_arm_designer(rho = 10))
+          })
 
 test_that(desc = "simple_factorial_designer errors when it should",
           code = {
@@ -99,14 +100,14 @@ test_that(desc = "simple_factorial_designer errors when it should",
             expect_error(simple_factorial_designer(prob_A = 3))
             expect_error(simple_factorial_designer(prob_B = -1))
             expect_error(simple_factorial_designer(prob_B = 3))
-                               })
+          })
 
 test_that(desc = "simple_two_arm_designer errors when it should",
           code = {
             expect_error(simple_two_arm_designer(control_sd = -1))
             expect_error(simple_two_arm_designer(prob = 10))
             expect_error(simple_two_arm_designer(rho = 10))
-                               })
+          })
 
 test_that(desc = "mediation_analysis_designer errors when it should",
           code = {
@@ -132,11 +133,6 @@ test_that(desc = "randomized_response_designer errors when it should",
             expect_error(randomized_response_designer(withholding_rate = -10))
           })
 
-test_that(desc = "block_cluster_two_arm_designer errors when it should",
-          code = {
-            expect_error(block_cluster_two_arm_designer(rho = 10))
-          })
-
 test_that(desc = "crossover_designer errors when it should",
           code = {
             expect_error(crossover_designer(rho = 10))
@@ -156,8 +152,8 @@ test_that(desc = "pretest_posttest_designer errors when it should",
 
 test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
-            expect_error(cluster_sampling_designer(n_clusters = 10, N_clusters = 1))
-            expect_error(cluster_sampling_designer(n_i_in_cluster = 30, N_i_in_cluster = 10))
+            expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
+            expect_error(cluster_sampling_designer(n_i_in_cluster = 30,N_i_in_cluster = 10))
           })
 
 
@@ -170,6 +166,389 @@ test_that(desc = "multi_arm_designer errors when it should",
           })
 
 
+# Tests over possible parameter ranges ------------------------------------
 
+#good
+test_that(desc = "block_cluster_two_arm_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(block_cluster_two_arm_designer)
+            
+            # Define param space for each argument
+            arguments$N_blocks <- c(1,10)
+            arguments$N_clusters_in_block <- c(1,101)
+            arguments$N_i_in_cluster <- c(1,101)
+            arguments$sd_block <- c(0,.2)
+            arguments$sd_cluster <- c(0,.2)
+            arguments$sd_i_0 <- c(0,.2)
+            arguments$sd_i_1 <- c(0,.2)
+            arguments$rho <- c(-1,0,.5,1)
+            arguments$prob <- c(0,.5,1)
+            arguments$control_mean <- c(-1, 0, 1)
+            arguments$ate <- c(NA, -1, 0, 1)
+            arguments$treatment_mean <- c(-1, 0, 1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Restrict indices for designs with mismatching arguments
+            expand_indices <- expand_indices[expand_indices$ate == 1 | (expand_indices$ate != 1 & expand_indices$treatment_mean == 1),]
+            
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Correct list when argument overrides another
+            argument_list <- lapply(argument_list, function(x){
+              if(!is.na(x$ate)) x["treatment_mean"] <- NULL
+              return(x)
+            })
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(block_cluster_two_arm_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)){expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+
+
+test_that(desc = "simple_factorial_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(simple_factorial_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1,1000)
+            arguments$prob_A <- c(0, .5, 1)
+            arguments$prob_B <- c(0, .5, 1)
+            arguments$w_A <- c(0, .5, 1)
+            arguments$w_B <- c(0, .5, 1)
+            arguments$outcome_means <- list(NULL, c(0,0,0,0), c(1,1,1,1))
+            arguments$mean_A0B0 <- c(-1, 0, 1)
+            arguments$mean_A0B1 <- c(-1, 0, 1)
+            arguments$mean_A1B0 <- c(-1, 0, 1)
+            arguments$mean_A1B1 <- c(-1, 0, 1)
+            arguments$sd <- c(0, 1)
+            arguments$outcome_sds <- list(c(0,0,0,0), c(1,1,1,1))
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Restrict indices for designs with mismatching arguments
+            expand_indices <- expand_indices[expand_indices$outcome_means == 1 | (expand_indices$outcome_means != 1 & expand_indices$mean_A0B0 == 1 & expand_indices$mean_A1B0 == 1 & expand_indices$mean_A0B1 == 1
+                                                                                  & expand_indices$mean_A1B1 == 1),]
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[[`, arguments, indices))
+            
+            # Correct list when argument overrides another
+            argument_list <- lapply(argument_list, function(x){
+              if(!is.null(x$outcome_means)) x[c("mean_A0B0", "mean_A0B1", "mean_A1B0", "mean_A1B1")] <- NULL
+              return(x)
+            })
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(simple_factorial_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+#good
+test_that(desc = "simple_two_arm_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(simple_two_arm_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1,50,1000)
+            arguments$prob <- c(0,.5,1)
+            arguments$control_mean <- c(0,1)
+            arguments$control_sd <- c(0,1)
+            arguments$ate <- c(0,1)
+            arguments$treatment_mean <- c(0,1)
+            arguments$treatment_sd <- c(0,1)
+            arguments$rho <- c(0,.5,1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(simple_two_arm_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+#good
+test_that(desc = "mediation_analysis_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(mediation_analysis_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1,10,10001)
+            arguments$a <- c(-1,0,1)
+            arguments$b <- c(-1,0,1)
+            arguments$c <- c(-1,0,1)
+            arguments$d <- c(-1,0,1)
+            arguments$rho <- c(-1,0,1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(mediation_analysis_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+
+#good
+test_that(desc = "simple_spillover_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(simple_spillover_designer)
+            
+            # Define param space for each argument
+            arguments$N_groups <- c(1,10,1000)
+            arguments$N_i_group <- c(1, 1000)
+            arguments$sd <- c(0, .5, 1)
+            arguments$gamma <- c(-1,0,1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(simple_spillover_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+#good
+test_that(desc = "regression_discontinuity_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(regression_discontinuity_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1,10,1000)
+            arguments$tau <- c(-1, 0, .5, 1)
+            arguments$cutoff <- c(0.01, .5, 0.99)
+            arguments$bandwidth <- c(-1, -.5, 0, .5, 1)
+            arguments$poly_order <- c(1,2,10)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(regression_discontinuity_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+#good
+test_that(desc = "randomized_response_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(randomized_response_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1,50,1000)
+            arguments$prob_forced_yes <- c(0, .5, 1)
+            arguments$prevalence_rate <- c(0, .5, 1)
+            arguments$withholding_rate <- c(0, .5, 1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(randomized_response_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+
+#good
+test_that(desc = "two_arm_attrition_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(two_arm_attrition_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1, 50, 1000)
+            arguments$a_R <- c(-1, 0, 1)
+            arguments$b_R <- c(-1, 0, 1)
+            arguments$a_Y <- c(-1, 0, 1)
+            arguments$b_Y <- c(-1, 0, 1)
+            arguments$rho <- c(0, .5, 1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(two_arm_attrition_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+          })
+
+test_that(desc = "pretest_posttest_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(pretest_posttest_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1, 50, 1000)
+            arguments$ate <- c(-1, 0, 1)
+            arguments$sd_1 <- c(0, 1)
+            arguments$sd_2 <- c(0, 1)
+            arguments$rho <- c(-1, 0, 1)
+            arguments$attrition_rate <- c(0, .5, 1)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(pretest_posttest_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+
+# good but ICC cannot be 0 or 1
+test_that(desc = "cluster_sampling_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(cluster_sampling_designer)
+            
+            # Define param space for each argument
+            arguments$N_clusters <- c(1, 50, 1001)
+            arguments$N_i_in_cluster <- c(1, 50, 1001)
+            arguments$n_clusters <- c(1, 50, 1000)
+            arguments$n_i_in_cluster <-c(1, 50, 1001)
+            arguments$icc <- c(1/100, .5, 99/100)
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Restrict indices for designs with mismatching arguments
+            expand_indices <- expand_indices[expand_indices$n_clusters <= expand_indices$N_clusters & 
+                                               expand_indices$n_i_in_cluster <= expand_indices$N_i_in_cluster,]
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(cluster_sampling_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
+
+#good
+test_that(desc = "multi_arm_designer does not break over a combination of possible parameters",
+          code = {
+            # Get default args
+            arguments <- formals(multi_arm_designer)
+            
+            # Define param space for each argument
+            arguments$N <- c(1, 50, 1000)
+            arguments$m_arms <- c(2, 5)
+            arguments$outcome_means <- list(c(0, 0), c(1, 1), c(0, 0, 0, 0, 0), c(1, 1, 1, 1, 1))
+            arguments$sd <- c(0, .5, 1)
+            arguments$outcome_sds <- list(c(0, 0), c(1, 1), c(0, 0, 0, 0, 0), c(1, 1, 1, 1, 1))
+            arguments$conditions <- NULL
+            arguments$fixed <- NULL
+            
+            # Get indices for expanding out parameter space
+            argument_lengths <- sapply(arguments,length)
+            indices <- lapply(argument_lengths, function(x) 1:x)
+            # Get indices for every combination of parameters
+            expand_indices <- do.call(expand.grid, indices)
+            # Restrict indices for designs with mismatching arguments
+            expand_indices <- expand_indices[expand_indices$m_arms == 1 & expand_indices$outcome_means %in% c(1:2) & expand_indices$outcome_sds %in% c(1:2) |
+                                               expand_indices$m_arms == 2 & expand_indices$outcome_means %in% c(3:4) & expand_indices$outcome_sds %in% c(3:4),]
+            
+            # Create lists of arguments by grabbing parameters that correspond to indices
+            argument_list <- apply(expand_indices,1,function(indices) Map(`[[`, arguments, indices))
+            
+            # Try to declare every design for every param combination using the designer
+            # expect_error(code, NA) means you expect the code to run
+            # This might be better as a loop that prints the argument_list so you know
+            # where it is breaking
+            errors <- c()
+            for(i in 1:length(argument_list)){
+              design <- tryCatch(do.call(multi_arm_designer, args = argument_list[[i]]), error=function(e) 9999999)
+              if(identical(design, 9999999)){errors <- c(errors, i); print(paste0("error at ", i))}
+              if(!identical(design, 9999999)) {expect_error(design, NA); print(i)}
+            }
+            expect_identical(errors, NULL)
+          })
 
 
