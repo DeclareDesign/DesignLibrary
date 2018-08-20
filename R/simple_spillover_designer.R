@@ -71,3 +71,23 @@ simple_spillover_designer <- function(N_groups = 80,
   simple_spillover_design
 }
 
+attr(simple_spillover_designer, "shiny_arguments") <- list(
+  N_groups = c(50, 100, 500),
+  N_i_group = c(10, 50, 100),
+  sd = c(0, .5, 1),
+  gamma = c(-2, 2)
+)
+
+attr(simple_spillover_designer, "tips") <-
+  list(
+    N_groups = "Number of groups",
+    N_i_group = "Number of units in each group",
+    sd = "Standard deviation of individual-level shock",
+    gamma = "Parameter that controls whether spillovers within groups substitute or complement each other"
+  )
+
+attr(simple_spillover_designer, "description") <- "
+<p> Builds a design with <code>N_groups</code> groups each containing 
+<code>N_i_group</code> individuals. Potential outcomes exhibit spillovers: if 
+any individual in a group receives treatment, the effect is spread equally among 
+members of the group."
