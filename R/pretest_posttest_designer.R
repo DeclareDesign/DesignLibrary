@@ -9,8 +9,8 @@
 #' 
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect.
-#' @param sd_1 Non negative number. Standard deviation of period 1 shocks.
-#' @param sd_2 Non negative number. Standard deviation of period 2 shocks.
+#' @param sd_1 Nonnegative number. Standard deviation of period 1 shocks.
+#' @param sd_2 Nonnegative number. Standard deviation of period 2 shocks.
 #' @param rho A number in [-1,1]. Correlation in outcomes between pre- and post-test.
 #' @param attrition_rate A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.
 #' @return A pretest-posttest design.

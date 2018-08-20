@@ -6,8 +6,8 @@
 #' 
 #' @details
 #' 
-#' Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
-#' For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
+#' Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for every $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
+#' For \code{gamma}>1 (<1) for every $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
 #' 
 #' The default estimand is the average difference across subjects between no one treated and only that subject treated.  
 #' 
@@ -15,8 +15,8 @@
 #' 
 #' @param N_groups An integer. Number of groups.
 #' @param N_i_group Number of units in each group. Can be scalar or vector of length \code{N_groups}.
-#' @param sd A number. Standard deviation of individual level shock.
-#' @param gamma A number. Parameter that controls whether spillovers within groups substitute or complement each other.
+#' @param sd A nonnegative number. Standard deviation of individual-level shock.
+#' @param gamma A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.
 #' @return A simple spillover design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -35,8 +35,8 @@ simple_spillover_designer <- function(N_groups = 80,
                                       gamma = 2)
 {
   N <- n <- G <- zeros <- Z <- NULL
-  if(sd < 0) stop("sd must be non-negative")
-  if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be greater than 1")
+  if(sd < 0) stop("sd must be nonnegative")
+  if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 

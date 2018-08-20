@@ -49,7 +49,7 @@ cluster_sampling_designer <- function(N_clusters = 1000,
       )()
     
     population <- declare_population(data = fixed_pop)
-
+    
     # I: Inquiry
     estimand <- declare_estimand(mean(Y), label = "Ybar")
     
@@ -88,8 +88,9 @@ attr(cluster_sampling_designer, "shiny_arguments") <- list(
   icc = c(0.2, seq(0.002, .999, by = 0.2))
 )
 attr(cluster_sampling_designer, "description") <- "
-<p> A cluster sampling design that samples <code>n_clusters</code> clusters each comprising 
-    <code>n_i_in_cluster</code> units. The population comprises <code>N_clusters</code> with <code>N_i_in_cluster</code> units each. Outcomes within clusters have ICC approximately equal to 
-    <code>ICC</code>. 
+<p> A cluster sampling design that samples <code>n_clusters</code> clusters each
+comprising  <code>n_i_in_cluster</code> units. The population comprises 
+<code>N_clusters</code> with <code>N_i_in_cluster</code> units each. Outcomes 
+within clusters have ICC approximately equal to <code>ICC</code>. 
 "
 

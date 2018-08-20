@@ -7,12 +7,12 @@
 #' Units are assigned to treatment using complete block cluster random assignment. Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 #' or by specifying an \code{ate}. Estimation uses differences in means accounting for blocks and clusters.
 #' 
-#' Total N is given by \code{N_blocks*N_clusters_in_block*N_i_in_cluster} 
+#' Total N is given by \code{N_blocks*N_clusters_in_block*N_i_in_cluster}.
 #' 
 #' Normal shocks can be specified at the individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
 #' level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1.
 #' 
-#' Key limitations: The designer assumes covariance between potential outcomes at individual level only.
+#' Key limitations: The designer assumes covariance between potential outcomes at the individual level only.
 #' 
 #' See \href{https://declaredesign.org/library/articles/block_cluster_two_arm.html}{vignette online}.
 #' 
@@ -27,7 +27,7 @@
 #' @param prob A number in (0,1). Treatment assignment probability.
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
-#' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated from \code{ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
+#' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
 #' @return A block cluster two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
@@ -52,7 +52,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
                                            control_mean = 0,
                                            ate = 0,
                                            treatment_mean = control_mean + ate
-                                           ){  
+){  
   N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
   if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
      any(!rlang::is_integerish(N_blocks), 
@@ -82,7 +82,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
     
     potentials <- declare_potential_outcomes(
       Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
-          Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
+        Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -102,7 +102,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
     
     # Design
     block_cluster_two_arm_design <-  population + potentials + estimand + assignment + 
-                                     reveal + estimator
+      reveal + estimator
   }}}
   
   attr(block_cluster_two_arm_design, "code") <- 
