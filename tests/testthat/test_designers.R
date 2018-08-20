@@ -156,8 +156,8 @@ test_that(desc = "pretest_posttest_designer errors when it should",
 
 test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
-            expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
-            expect_error(cluster_sampling_designer(n_subjects_per_cluster = 30,N_subjects_per_cluster = 10))
+            expect_error(cluster_sampling_designer(n_clusters = 10, N_clusters = 1))
+            expect_error(cluster_sampling_designer(n_i_in_cluster = 30, N_i_in_cluster = 10))
           })
 
 
