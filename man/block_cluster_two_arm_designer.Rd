@@ -31,9 +31,9 @@ block_cluster_two_arm_designer(N_blocks = 1, N_clusters_in_block = 100,
 
 \item{control_mean}{A number. Average outcome in control.}
 
-\item{ate}{A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that ate is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only.) only.}
+\item{ate}{A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).}
 
-\item{treatment_mean}{A number. Average outcome in treatment. Note: if \code{treatment_mean} is not provided then it is calculated from \code{ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used.}
+\item{treatment_mean}{A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated from \code{ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used.}
 }
 \value{
 A block cluster two-arm design.
@@ -51,6 +51,8 @@ Normal shocks can be specified at the individual, cluster, and block levels. If 
 level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1.
 
 Key limitations: The designer assumes covariance between potential outcomes at individual level only.
+
+See \href{https://declaredesign.org/library/articles/block_cluster_two_arm.html}{vignette online}.
 }
 \examples{
 # Generate a design using default arguments:

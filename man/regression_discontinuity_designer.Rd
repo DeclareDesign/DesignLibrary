@@ -16,13 +16,16 @@ regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
 
 \item{bandwidth}{A number. Bandwidth around threshold from which to include units.}
 
-\item{poly_order}{An integer. Order of the polynomial regression used to estimate the jump at the cutoff.}
+\item{poly_order}{A number greater or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.}
 }
 \value{
 A regression discontinuity design.
 }
 \description{
 Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+}
+\details{
+See \href{https://declaredesign.org/library/articles/regression_discontinuity.html}{vignette online}.
 }
 \examples{
 # Generate a regression discontinuity design using default arguments:

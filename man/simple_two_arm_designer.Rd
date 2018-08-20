@@ -35,6 +35,8 @@ or by specifying an \code{ate}.
 }
 \details{
 Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+
+See \href{https://declaredesign.org/library/articles/simple_two_arm.html}{vignette online}.
 }
 \examples{
 #Generate a simple two-arm design using default arguments

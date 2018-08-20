@@ -29,6 +29,9 @@ A function that returns a design.
 \description{
 This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
 }
+\details{
+See \href{https://declaredesign.org/library/articles/multi_arm.html}{vignette online}.
+}
 \examples{
 
 # To make a design using default arguments:

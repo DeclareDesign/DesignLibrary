@@ -4,20 +4,19 @@
 \alias{cluster_sampling_designer}
 \title{Create a design for cluster random sampling}
 \usage{
-cluster_sampling_designer(N_clusters = 1000,
-  N_subjects_per_cluster = 50, n_clusters = 100,
-  n_subjects_per_cluster = 10, icc = 0.2)
+cluster_sampling_designer(N_clusters = 1000, N_i_in_cluster = 50,
+  n_clusters = 100, n_i_in_cluster = 10, icc = 0.2)
 }
 \arguments{
 \item{N_clusters}{An integer. Total number of clusters in the population.}
 
-\item{N_subjects_per_cluster}{An integer of vector of integers of length \code{N_clusters}. Total number of subjects per cluster in the population.}
-
 \item{n_clusters}{An integer. Number of clusters to sample.}
 
-\item{n_subjects_per_cluster}{An integer. Number of subjects to sample per cluster.}
-
 \item{icc}{A number in [0,1]. Intra-cluster Correlation Coefficient (ICC).}
+
+\item{N_subjects_per_cluster}{An integer of vector of integers of length \code{N_clusters}. Total number of subjects per cluster in the population.}
+
+\item{n_subjects_per_cluster}{An integer. Number of subjects to sample per cluster.}
 }
 \value{
 A cluster sampling design.
@@ -27,6 +26,8 @@ Builds a cluster sampling design of a population with \code{N_clusters} containi
 }
 \details{
 Key limitations: The design assumes clusters draw with equal probability (rather than, for example, proportionate to size).
+
+See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
 }
 \examples{
 # To make a design using default arguments:
