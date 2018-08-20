@@ -28,9 +28,9 @@
 #'   n_clusters = 5,  n_subjects_per_cluster = 2)
 
 cluster_sampling_designer <- function(N_clusters = 1000,
-                                      N_i_in_cluster = 50,
+                                      N_subjects_per_cluster = 50,
                                       n_clusters = 100,
-                                      n_i_in_cluster = 10,
+                                      n_subjects_per_cluster = 10,
                                       icc = 0.2
 ){
   N <- cluster <- latent <- Y <- u_a <- NULL
