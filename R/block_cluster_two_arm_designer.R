@@ -54,6 +54,10 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
                                            treatment_mean = control_mean + ate
                                            ){  
   N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
+  if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
+     any(!rlang::is_integerish(N_blocks), 
+         !rlang::is_integerish(N_clusters_in_block), 
+         !rlang::is_integerish(N_i_in_cluster))) stop("N_* arguments must be positive integers")
   if(sd_block < 0) stop("sd_block must be nonnegative")
   if(sd_cluster < 0) stop("sd_cluster must be nonnegative")
   if(sd_i_0 < 0) stop("sd_i_0 must be nonnegative")

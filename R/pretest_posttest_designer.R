@@ -32,8 +32,9 @@ pretest_posttest_designer <- function(N = 100,
                                       attrition_rate = .1)
 {
   u_t1 <- Y_t2_Z_1 <- Y_t2_Z_0 <- Z <- R <- Y_t1 <- Y_t2 <- NULL
-  if(rho < -1 | rho > 1) stop("'rho' must be a value from -1 to 1")
-  if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
+  if(rho < -1 || rho > 1) stop("'rho' must be a value in [-1, 1]")
+  if(any(sd_1 < 0, sd_2 < 0)) stop("'sd_1' and 'sd_2' must be nonnegative")
+  if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be in [0,1]")
   {{{
     # M: Model
     population <- declare_population(

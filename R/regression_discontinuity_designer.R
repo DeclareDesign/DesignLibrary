@@ -27,7 +27,7 @@ regression_discontinuity_designer <- function(
   poly_order = 4
 ){
   X <- noise <- Y <- NULL
-  if(! (cutoff < 1 & cutoff > 0)) stop("cutoff must be in (0,1).")
+  if(cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0,1).")
   if(poly_order < 1) stop("poly_order must be at least 1.")
   {{{
     # M: Model
