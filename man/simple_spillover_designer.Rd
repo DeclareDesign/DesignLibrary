@@ -12,9 +12,9 @@ simple_spillover_designer(N_groups = 80, N_i_group = 3, sd = 0.2,
 
 \item{N_i_group}{Number of units in each group. Can be scalar or vector of length \code{N_groups}.}
 
-\item{sd}{A number. Standard deviation of individual level shock.}
+\item{sd}{A nonnegative number. Standard deviation of individual-level shock.}
 
-\item{gamma}{A number. Parameter that controls whether spillovers within groups substitute or complement each other.}
+\item{gamma}{A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.}
 }
 \value{
 A simple spillover design.
@@ -25,8 +25,8 @@ Potential outcomes exhibit spillovers: if any individual in a group receives tre
 the effect is spread equally among members of the group.
 }
 \details{
-Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
-For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
+Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for every $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
+For \code{gamma}>1 (<1) for every $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
 
 The default estimand is the average difference across subjects between no one treated and only that subject treated.  
 

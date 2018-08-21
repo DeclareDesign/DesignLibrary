@@ -14,9 +14,9 @@ regression_discontinuity_designer(N = 1000, tau = 0.15, cutoff = 0.5,
 
 \item{cutoff}{A number in (0,1). Threshold on running variable beyond which units are treated.}
 
-\item{bandwidth}{A number. Bandwidth around threshold from which to include units.}
+\item{bandwidth}{A number. The value of the bandwidth on both sides of the threshold from which to include units.}
 
-\item{poly_order}{A number greater or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.}
+\item{poly_order}{A number greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.}
 }
 \value{
 A regression discontinuity design.

@@ -31,10 +31,10 @@ A simple two-arm design.
 \description{
 Builds a design with one treatment and one control arm.
 Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
-or by specifying an \code{ate}.
+or by specifying a \code{control_mean} and \code{ate}.
 }
 \details{
-Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+Units are assigned to treatment using complete random assignment. Potential outcomes are normally distributed according to the mean and sd arguments.
 
 See \href{https://declaredesign.org/library/articles/simple_two_arm.html}{vignette online}.
 }

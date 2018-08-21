@@ -12,9 +12,9 @@ pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
 
 \item{ate}{A number. Average treatment effect.}
 
-\item{sd_1}{Non negative number. Standard deviation of period 1 shocks.}
+\item{sd_1}{Nonnegative number. Standard deviation of period 1 shocks.}
 
-\item{sd_2}{Non negative number. Standard deviation of period 2 shocks.}
+\item{sd_2}{Nonnegative number. Standard deviation of period 2 shocks.}
 
 \item{rho}{A number in [-1,1]. Correlation in outcomes between pre- and post-test.}
 

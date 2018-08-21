@@ -24,7 +24,7 @@ two_arm_attrition_designer(N = 100, a_R = 0, b_R = 1, a_Y = 0,
 A post-treatment design.
 }
 \description{
-Creates a two arm design with application for when estimand of interest is conditional on a post treatment outcome 
+Creates a two-arm design with application for when estimand of interest is conditional on a post-treatment outcome 
 (the effect on Y given R) or data is conditionally observed (Y given R). See `Details` for more information on the data generating process.
 }
 \details{
