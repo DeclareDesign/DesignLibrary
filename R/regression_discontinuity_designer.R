@@ -50,7 +50,7 @@ regression_discontinuity_designer <- function(
     
     # D: Data Strategy
     sampling <- declare_sampling(handler = function(data){
-      subset(data,(X > 0 - asb(bandwidth)) & X < 0 + asb(bandwidth))})
+      subset(data,(X > 0 - abs(bandwidth)) & X < 0 + abs(bandwidth))})
     
     # A: Answer Strategy 
     estimator <- declare_estimator(
