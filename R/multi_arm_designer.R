@@ -187,4 +187,4 @@ attr(multi_arm_designer, "tips") <-
   list(N = "Sample size")
 
 attr(multi_arm_designer,"description") <- "
-<p> A design with \code{m_arms} experimental arms, each assigned with equal probability."
+<p> A design with <code>m_arms</code> experimental arms, each assigned with equal probability."
