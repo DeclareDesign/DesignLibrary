@@ -100,7 +100,7 @@ multi_arm_designer <- function(N = 30,
     MARGIN = 1,
     FUN = function(x) paste0("Y_Z_", x)
   ))
-  estimand_names <- paste0("ate_",all_po_pairs[,1],"_",all_po_pairs[,2])
+  estimand_names <- paste0("ate_Y_",all_pairs[,1],"_",all_pairs[,2])
   estimand_list <- mapply(
     FUN = function(x, y){
       quos(mean(!!sym(x) - !!sym(y)))},
