@@ -10,7 +10,7 @@
 #' @param N_blocks An integer. Number of blocks. Defaults to 1 for no blocks. 
 #' @param N_clusters_in_block An integer. Total number of clusters in the population.
 #' @param N_i_in_cluster An integer of vector of integers of length \code{N_clusters_in_block}. Total number of subjects per cluster in the population.
-#' @param N_clusters_in_block An integer. Number of clusters to sample.
+#' @param n_clusters_in_block An integer. Number of clusters to sample.
 #' @param n_i_in_cluster An integer. Number of subjects to sample per cluster.
 #' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
 #' @return A cluster sampling design.

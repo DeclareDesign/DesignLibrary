@@ -15,11 +15,11 @@ cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
 
 \item{N_i_in_cluster}{An integer of vector of integers of length \code{N_clusters_in_block}. Total number of subjects per cluster in the population.}
 
+\item{n_clusters_in_block}{An integer. Number of clusters to sample.}
+
 \item{n_i_in_cluster}{An integer. Number of subjects to sample per cluster.}
 
 \item{icc}{A number in [0,1]. Intra-cluster Correlation Coefficient (ICC).}
-
-\item{N_clusters_in_block}{An integer. Number of clusters to sample.}
 }
 \value{
 A cluster sampling design.
