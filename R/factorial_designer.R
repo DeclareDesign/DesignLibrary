@@ -58,7 +58,8 @@ factorial_designer <- function(
   cond_grid <- expand.grid(cond_list)
   
   # assignment strings
-  a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x], "_1"), paste0(treatment_names[x], "_0")))
+  # a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x], "_1"), paste0(treatment_names[x], "_0")))
+  a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, "1", "0"))
   assignment_string <- sapply(1:2^k, function(r) paste0(a[r,], collapse = "_"))
 
   # regression term strings
@@ -104,6 +105,18 @@ factorial_designer <- function(
   assignment_expr2 <- rlang::expr(declare_step(fabricate, !!!assignment_given_factor))
   
   # reveal outcomes ---------------------------------------------------------
+  reveal_expr <- rlang::expr(declare_reveal(
+    handler = function(data){
+      potential_cols <- mapply(paste, data[, !!treatment_names, drop = FALSE], sep = "_", SIMPLIFY = FALSE)
+      potential_cols <- do.call(paste, c(!!outcome_name, potential_cols, sep = "_"))
+      upoc <- unique(potential_cols)
+    
+      df <- data[, upoc, drop = FALSE]
+      R <- seq_len(nrow(df))
+      C <- match(potential_cols, colnames(df))
+      data[,!!outcome_name] <- df[cbind(R, C)]
+      data
+    }))
   
   # estimands ---------------------------------------------------------------
   perm <- function(v) {
@@ -115,7 +128,8 @@ factorial_designer <- function(
   
   interaction  <- function(k, tnames = treatment_names, yname = outcome_name) {
     conditions <- perm(rep(2,k))
-    combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
+    # combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
+    combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(x, collapse = "_")))
     signs <- (1 - 2*(k%%2))*( 1- 2*apply(conditions, 1, sum) %% 2)
     
     allsigns <- sapply(1:((nrow(conditions)-1)), function(j) {
