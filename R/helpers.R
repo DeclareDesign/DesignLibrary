@@ -53,14 +53,12 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 # This is the core function for grabbing code when using the {{{ }}} approach:
 
-construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL, rlang = FALSE){
+construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
-    from_src <- FALSE
     txt <- find_triple_bracket(designer)
   }else{
-    from_src <- TRUE
     open <- grep("[{]{3}", txt)
     close <- grep("[}]{3}", txt)
     
@@ -74,29 +72,6 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   indentation <- paste0("^", paste(indentation, collapse=""))
   
   code <- sub(indentation, "", txt)
-  
-  if(rlang){
-    rewrite <- data.frame(start = grep("quo", code, fixed = TRUE))
-                          
-    if(from_src){
-      rewrite$end <- grep("^\\s*)", code)
-    }else{
-      rewrite$end <- grep("){2}$|\\})$", code)  
-    }
-    
-    step_name <- unlist(lapply(strsplit(code[rewrite$start], split = " <-"), function(l) l[1]))
-    step_name <- trimws(step_name, which = "both")
-    for(l in seq_along(rewrite$start)){
-      code[rewrite$start[l]:rewrite$end[l]] <- paste0(step_name[l], " <- ",
-                                                      rlang::quo_text(get(step_name[l], envir = parent.frame())))
-    }
-    
-    code <- code[!duplicated(code)]
-    
-    eval_line <- grep("rlang::eval_tidy", code)
-    code[eval_line] <- unlist(lapply(eval_line, function(l){
-      paste0(unlist(strsplit(code[l], "rlang::eval_tidy|\\(|\\)", perl = TRUE)), collapse = "")}))
-  }
   
   # Get names of arguments   
   arg_names <- names(args[-1])
