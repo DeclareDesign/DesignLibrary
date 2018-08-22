@@ -97,6 +97,21 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   code
 }
 
+#' Generates character string for non-fixed arguments in a designer using substitution approach.
+#' @param args Function arguments.
+#' @param fixes Function arguments that are fixed (i.e., already evaluated in body of function)
+#' 
+return_args <- function(args, fixes){
+  # Get names of arguments   
+  arg_names <- names(args[2:(length(args)-1)])
+  
+  # Exclude any fixed arguments
+  if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
+  
+  # Format
+  sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
+}
+
 # These functions find triple braces when there is no source code 
 find_triple_bracket <- function(f){
   clean <- function(ch, n=length(ch)-1) ch[2:n]
@@ -111,28 +126,12 @@ pred <- function(expr, depth=3) {
   )
 }
 
-
-# Internal functions for substitute approach ------------------------------
-
-# This function gets names of arguments and excludes any fixed ones 
-return_args <- function(args, fixes){
-  # Get names of arguments   
-  arg_names <- names(args[2:(length(args)-1)])
-  
-  # Exclude any fixed arguments
-  if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
-  
-  # Format
-  sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
-}
-
-# This function cleans code comments -- be careful with braces
+#' Clean code for method substitute
+#' @param code A string. Design code
+#' @return clean code 
 clean_code <- function(code) {
-  out <- strsplit(paste(code), '\n')
-  out <- gsub("\\{|\\}", "", out)
+  out <- strsplit(code, "\n")
+  out <- out[-1]
   out <- gsub("#", " \n #", out)
   out
 }
-
-
-

@@ -1,6 +1,7 @@
 design,designer,vignette,keywords,shiny,author,author_url
 block_cluster_two_arm_design,block_cluster_two_arm_designer,block_cluster_two_arm,,block_cluster_two_arm,DeclareDesign,https://declaredesign.org/about/
 cluster_sampling_design,cluster_sampling_designer,cluster_sampling,,cluster_sampling,DeclareDesign,https://declaredesign.org/about/
+factorial_design,factorial_designer,,,,DeclareDesign,https://declaredesign.org/about/
 mediation_analysis_design,mediation_analysis_designer,mediation_analysis,,mediation_analysis,DeclareDesign,https://declaredesign.org/about/
 multi_arm_design,multi_arm_designer,multi_arm,,,DeclareDesign,https://declaredesign.org/about/
 pretest_posttest_design,pretest_posttest_designer,pretest_posttest,,pretest_posttest,DeclareDesign,https://declaredesign.org/about/
