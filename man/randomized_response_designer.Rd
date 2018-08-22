@@ -10,11 +10,11 @@ randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{prob_forced_yes}{A number. Probability of a forced yes.}
+\item{prob_forced_yes}{A number in [0,1]. Probability of a forced yes.}
 
-\item{prevalence_rate}{A number. Probability that individual has the sensitive trait.}
+\item{prevalence_rate}{A number in [0,1]. Probability that individual has the sensitive trait.}
 
-\item{withholding_rate}{A number. Probability that an individual with the sensitive trait hides it.}
+\item{withholding_rate}{A number in [0,1]. Probability that an individual with the sensitive trait hides it.}
 }
 \value{
 A randomized response design.
@@ -24,6 +24,8 @@ Produces a (forced) randomized response design that measures the share of indivi
 }
 \details{
 \code{randomized_response_designer} employs a specific variation of randomized response designs in which respondents are required to report a fixed answer to the sensitive question with a given probability (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
+
+See \href{https://declaredesign.org/library/articles/randomized_response.html}{vignette online}.
 }
 \examples{
 # Generate a randomized response design using default arguments:

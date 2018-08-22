@@ -1,6 +1,6 @@
 #' Create design with risk of attrition or post treatment conditioning
 #'
-#' Creates a two arm design with application for when estimand of interest is conditional on a post treatment outcome 
+#' Creates a two-arm design with application for when estimand of interest is conditional on a post-treatment outcome 
 #' (the effect on Y given R) or data is conditionally observed (Y given R). See `Details` for more information on the data generating process.
 #' 
 #' @details 
