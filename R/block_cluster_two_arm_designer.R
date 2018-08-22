@@ -7,12 +7,14 @@
 #' Units are assigned to treatment using complete block cluster random assignment. Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 #' or by specifying an \code{ate}. Estimation uses differences in means accounting for blocks and clusters.
 #' 
-#' Total N is given by \code{N_blocks*N_clusters_in_block*N_i_in_cluster} 
+#' Total N is given by \code{N_blocks*N_clusters_in_block*N_i_in_cluster}.
 #' 
 #' Normal shocks can be specified at the individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
 #' level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1.
 #' 
-#' Key limitations: The designer assumes covariance between potential outcomes at individual level only.
+#' Key limitations: The designer assumes covariance between potential outcomes at the individual level only.
+#' 
+#' See \href{https://declaredesign.org/library/articles/block_cluster_two_arm.html}{vignette online}.
 #' 
 #' @param N_blocks An integer. Number of blocks. Defaults to 1 for no blocks. 
 #' @param N_clusters_in_block An integer. Number of clusters in each block. This is the total \code{N} when \code{N_blocks} and \code{N_i_in_cluster} are at default values. 
@@ -22,10 +24,10 @@
 #' @param sd_i_0 A nonnegative number. Standard deviation of individual level shock in control. For small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = 1.
 #' @param sd_i_1 A nonnegative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.
 #' @param rho A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.
-#' @param prob A number in [0,1]. Treatment assignment probability.
+#' @param prob A number in (0,1). Treatment assignment probability.
 #' @param control_mean A number. Average outcome in control.
-#' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that ate is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only.) only.
-#' @param treatment_mean A number. Average outcome in treatment. Note: if \code{treatment_mean} is not provided then it is calculated from \code{ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
+#' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
+#' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
 #' @return A block cluster two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
@@ -50,13 +52,17 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
                                            control_mean = 0,
                                            ate = 0,
                                            treatment_mean = control_mean + ate
-                                           ){  
+){  
   N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
+  if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
+     any(!rlang::is_integerish(N_blocks), 
+         !rlang::is_integerish(N_clusters_in_block), 
+         !rlang::is_integerish(N_i_in_cluster))) stop("N_* arguments must be positive integers")
   if(sd_block < 0) stop("sd_block must be nonnegative")
   if(sd_cluster < 0) stop("sd_cluster must be nonnegative")
   if(sd_i_0 < 0) stop("sd_i_0 must be nonnegative")
   if(sd_i_1 < 0) stop("sd_i_1 must be nonnegative")
-  if(prob< 0 || prob > 1) stop("prob must be in [0,1]")
+  if(prob<= 0 || prob >= 1) stop("prob must be in (0,1)")
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   {{{    
     # M: Model
@@ -76,7 +82,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
     
     potentials <- declare_potential_outcomes(
       Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
-          Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
+        Z *       (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -96,7 +102,7 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
     
     # Design
     block_cluster_two_arm_design <-  population + potentials + estimand + assignment + 
-                                     reveal + estimator
+      reveal + estimator
   }}}
   
   attr(block_cluster_two_arm_design, "code") <- 

@@ -3,11 +3,14 @@
 #' Produces designs in which an outcome Y is observed pre- and post-treatment.
 #' The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
 #' and for at-random missingness in the observation of post-treatment outcomes. 
-#'
+#' @details 
+#' 
+#' See \href{https://declaredesign.org/library/articles/pretest_posttest.html}{vignette online}.
+#' 
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect.
-#' @param sd_1 Non negative number. Standard deviation of period 1 shocks.
-#' @param sd_2 Non negative number. Standard deviation of period 2 shocks.
+#' @param sd_1 Nonnegative number. Standard deviation of period 1 shocks.
+#' @param sd_2 Nonnegative number. Standard deviation of period 2 shocks.
 #' @param rho A number in [-1,1]. Correlation in outcomes between pre- and post-test.
 #' @param attrition_rate A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.
 #' @return A pretest-posttest design.
@@ -29,8 +32,9 @@ pretest_posttest_designer <- function(N = 100,
                                       attrition_rate = .1)
 {
   u_t1 <- Y_t2_Z_1 <- Y_t2_Z_0 <- Z <- R <- Y_t1 <- Y_t2 <- NULL
-  if(rho < -1 | rho > 1) stop("'rho' must be a value from -1 to 1")
-  if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be a value from 0 to 1")
+  if(rho < -1 || rho > 1) stop("'rho' must be a value in [-1, 1]")
+  if(any(sd_1 < 0, sd_2 < 0)) stop("'sd_1' and 'sd_2' must be nonnegative")
+  if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be in [0,1]")
   {{{
     # M: Model
     population <- declare_population(

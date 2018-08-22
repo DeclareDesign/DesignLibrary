@@ -83,6 +83,7 @@ for(designer in designers){
 
 test_that(desc = "block_cluster_two_arm_designer errors when it should",
           code = {
+            expect_error(block_cluster_two_arm_designer(N_blocks = -2))
             expect_error(block_cluster_two_arm_designer(sd_block = -1))
             expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
@@ -152,12 +153,14 @@ test_that(desc = "pretest_posttest_designer errors when it should",
           code = {
             expect_error(pretest_posttest_designer(rho = 10))
             expect_error(pretest_posttest_designer(attrition_rate = 10))
+            expect_error(pretest_posttest_designer(sd_1 = -1))
           })
 
 test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
-            expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
-            expect_error(cluster_sampling_designer(n_subjects_per_cluster = 30,N_subjects_per_cluster = 10))
+            expect_error(cluster_sampling_designer(n_clusters = 10, N_clusters = 1))
+            expect_error(cluster_sampling_designer(n_i_in_cluster = 30, N_i_in_cluster = 10))
+            expect_error(cluster_sampling_designer(icc = 2))
           })
 
 

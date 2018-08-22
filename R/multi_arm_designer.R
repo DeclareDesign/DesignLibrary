@@ -1,14 +1,18 @@
 #' Create a design with multiple experimental arms
 #'
-#' This designer creates a design \code{m_arms} experimental arms, each assigned with equal probabilities.
-#'
+#' Creates a design with \code{m_arms} experimental arms, each assigned with equal probability.
+#' 
+#' @details 
+#' 
+#' See \href{https://declaredesign.org/library/articles/multi_arm.html}{vignette online}.
+#' 
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.
 #' @param outcome_means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
-#' @param sd A nonnegative scalar. Standard deviations for shock for each unit (common across arms).
-#' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for additional shock for each unit for each of the arms.
-#' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces. 
-#' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{m_arms} and \code{conditions} are always fixed.
+#' @param sd A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
+#' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.
+#' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces). 
+#' @param fixed A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -22,7 +26,7 @@
 #'
 #'
 #' # A design with different mean and sd in each arm
-#' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
+#' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
@@ -96,7 +100,7 @@ multi_arm_designer <- function(N = 30,
     MARGIN = 1,
     FUN = function(x) paste0("Y_Z_", x)
   ))
-  estimand_names <- paste0("ate_",all_po_pairs[,1],"_",all_po_pairs[,2])
+  estimand_names <- paste0("ate_Y_",all_pairs[,1],"_",all_pairs[,2])
   estimand_list <- mapply(
     FUN = function(x, y){
       quos(mean(!!sym(x) - !!sym(y)))},
@@ -180,4 +184,7 @@ attr(multi_arm_designer, "shiny_arguments") <-
   list(N = c(10, 20, 50))
 
 attr(multi_arm_designer, "tips") <-
-  list(N = "Sample Size")
+  list(N = "Sample size")
+
+attr(multi_arm_designer,"description") <- "
+<p> A design with <code>m_arms</code> experimental arms, each assigned with equal probability."

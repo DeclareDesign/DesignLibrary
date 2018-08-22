@@ -4,37 +4,41 @@
 \alias{cluster_sampling_designer}
 \title{Create a design for cluster random sampling}
 \usage{
-cluster_sampling_designer(N_clusters = 1000,
-  N_subjects_per_cluster = 50, n_clusters = 100,
-  n_subjects_per_cluster = 10, icc = 0.2)
+cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
+  N_i_in_cluster = 50, n_clusters_in_block = 100,
+  n_i_in_cluster = 10, icc = 0.2)
 }
 \arguments{
-\item{N_clusters}{An integer. Total number of clusters in the population.}
+\item{N_blocks}{An integer. Number of blocks. Defaults to 1 for no blocks.}
 
-\item{N_subjects_per_cluster}{An integer of vector of integers of length \code{N_clusters}. Total number of subjects per cluster in the population.}
+\item{N_clusters_in_block}{An integer. Total number of clusters in the population.}
 
-\item{n_clusters}{An integer. Number of clusters to sample.}
+\item{N_i_in_cluster}{An integer of vector of integers of length \code{N_clusters_in_block}. Total number of subjects per cluster in the population.}
 
-\item{n_subjects_per_cluster}{An integer. Number of subjects to sample per cluster.}
+\item{n_i_in_cluster}{An integer. Number of subjects to sample per cluster.}
 
 \item{icc}{A number in [0,1]. Intra-cluster Correlation Coefficient (ICC).}
+
+\item{N_clusters_in_block}{An integer. Number of clusters to sample.}
 }
 \value{
 A cluster sampling design.
 }
 \description{
-Builds a cluster sampling design of a population with \code{N_clusters} containing \code{N_subjects_per_cluster}. Estimations sample \code{n_clusters} each comprising \code{n_subjects_per_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
+Builds a cluster sampling design of a population with \code{N_blocks}, \code{N_clusters_in_block} containing \code{N_i_in_cluster}. Estimations sample \code{N_clusters_in_block} each comprising \code{n_i_in_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
 }
 \details{
 Key limitations: The design assumes clusters draw with equal probability (rather than, for example, proportionate to size).
+
+See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
 }
 \examples{
 # To make a design using default arguments:
 cluster_sampling_design <- cluster_sampling_designer()
 # A design with varying cluster size
 cluster_sampling_design <- cluster_sampling_designer(
-  N_clusters = 10, N_subjects_per_cluster = 3:12, 
-  n_clusters = 5,  n_subjects_per_cluster = 2)
+  N_clusters_in_block = 10, N_i_in_cluster = 3:12, 
+  n_clusters_in_block = 5,  n_i_in_cluster = 2)
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
