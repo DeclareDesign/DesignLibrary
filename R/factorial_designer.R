@@ -157,16 +157,6 @@ factorial_designer <- function(
   
   # estimators --------------------------------------------------------------
   estimator_formula <- formula(paste0(outcome_name, " ~ ", paste(treatment_names, collapse = "*")))
-  # estimator_expr <- rlang::expr(
-  #   function(data){
-  #     data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
-  #     mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/data$Z_cond_prob)
-  #     estimate_df <- tidy.lm_robust(mod)
-  #     estimate_df$estimand_label <- paste0("coef_", estimate_df$term)
-  #     estimate_df$estimand_label[estimate_df$estimand_label == "coef_(Intercept)"] <- "Control"
-  #     estimate_df
-  #   }
-  # )
   
   estimator_expr <- rlang::expr(
     declare_estimator(
