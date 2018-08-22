@@ -4,17 +4,20 @@
 \alias{multi_arm_designer}
 \title{Create a design with multiple experimental arms}
 \usage{
-multi_arm_designer(N = 30, m_arms = 3, means = rep(0, m_arms),
-  sds = rep(1, m_arms), conditions = 1:m_arms, fixed = NULL)
+multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
+  m_arms), sd = 1, outcome_sds = rep(0, m_arms),
+  conditions = 1:m_arms, fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
 
 \item{m_arms}{An integer. Number of arms.}
 
-\item{means}{A numeric vector of length \code{m_arms}.  Average outcome in each arm.}
+\item{outcome_means}{A numeric vector of length \code{m_arms}.  Average outcome in each arm.}
 
-\item{sds}{A nonnegative numeric vector of length \code{m_arms}. Standard deviations for each of the arms.}
+\item{sd}{A nonnegative scalar. Standard deviations for shock for each unit (common across arms).}
+
+\item{outcome_sds}{A nonnegative numeric vector of length \code{m_arms}. Standard deviations for additional shock for each unit for each of the arms.}
 
 \item{conditions}{A vector of length \code{m_arms}. The names of each arm. It can be numeric or a character without blank spaces.}
 
@@ -33,10 +36,10 @@ design <- multi_arm_designer()
 
 
 # A design with different mean and sd in each arm
-design <- multi_arm_designer(means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
+design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), sd =  c(1, 0.1, 0.5))
 
-design <- multi_arm_designer(N = 80, m_arms = 4, means = 1:4,
-                             fixed = c("means", "sds"))
+design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
+                             fixed = c("outcome_means", "outcome_sds"))
 
 }
 \author{

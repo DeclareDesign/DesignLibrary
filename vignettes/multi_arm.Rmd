@@ -32,7 +32,7 @@ In settings of multiple treatment arms, we could do a number of pairwise compari
 - **A**nswer strategy: We fit a linear regression model with individual indicators for each of the treatments as covariates. The average treatment effect is equal to the regression coefficients, which are computed by subtracting the mean of the comparison group from the mean of each treatment group.
 
 
-```{r, code = get_design_code(multi_arm_designer( means = c(0.5, 1, 2))), eval=TRUE}
+```{r, code = get_design_code(multi_arm_designer(outcome_means = c(0.5, 1, 2))), eval=TRUE}
 ```
 
 ```{r}
@@ -53,10 +53,10 @@ In R, you can generate a multi-arm design using the template function `multi_arm
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we can create a design called `my_multi_arm_design` where `N`, `m_arms`, and `means` set to 80, 4, and `c(-0.2, 0.2, 0.1, 0)`, respectively, and other parameters use default values. To do so, we run the lines below.
+We can then create specific designs by defining values for each argument. For example, we can create a design called `my_multi_arm_design` where `N`, `m_arms`, and `outcome_means` set to 80, 4, and `c(-0.2, 0.2, 0.1)`, respectively, and other parameters use default values. To do so, we run the lines below.
 
 ```{r, eval=FALSE}
-my_multi_arm_design <- multi_arm_designer(N = 80, m_arms = 4, means = c(-0.2, 0.2, 0.1, 0))
+my_multi_arm_design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = c(-0.2, 0.2, 0.1))
 ```
 
 You can see more details on the `multi_arm_designer()` function, its arguments, and default values, by running the following line of code:

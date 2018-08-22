@@ -22,7 +22,8 @@
 #' @param mean_A0B1 A number. Mean outcome in A=0, B=1 condition.
 #' @param mean_A1B0 A number. Mean outcome in A=1, B=0 condition.
 #' @param mean_A1B1 A number. Mean outcome in A=1, B=1 condition.
-#' @param outcome_sds A non-negative 4-vector.  Standard deviation in each condition, in order AB = 00, 01, 10, 11.
+#' @param sd A nonnegative scalar. Standard deviations for shock for each unit (common across arms).
+#' @param outcome_sds A non-negative 4-vector.Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment factorial
@@ -63,23 +64,24 @@ simple_factorial_designer <- function(N = 100,
                                       mean_A0B1 = outcome_means[2],
                                       mean_A1B0 = outcome_means[3],
                                       mean_A1B1 = outcome_means[4],
-                                      outcome_sds = rep(1,4)
+                                      sd = 1,
+                                      outcome_sds = rep(0,4)
 ){
   Y_A_0_B_0 <- Y_A_0_B_1 <- Y_A_1_B_0 <- Y_A_1_B_1 <- A <- B <- Y <- NULL
   if((w_A < 0) || (w_B < 0) || (w_A > 1) || (w_B > 1)) stop("w_A and w_B must be in 0,1")
-  if(max(outcome_sds < 0) )      stop("sd must be non-negative")
+  if(max(c(sd, outcome_sds) < 0) )      stop("sd must be non-negative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob_ arguments must be non-negative")
   if(max(c(prob_A, prob_B) > 1))  stop("prob_ arguments must not exceed 1")
   {{{
     
     # M: Model
-    population <- declare_population(N)
+    population <- declare_population(N, u = rnorm(N, sd=sd))
     
     potentials <- declare_potential_outcomes(
-      Y_A_0_B_0 = mean_A0B0 + rnorm(N, sd = outcome_sds[1]),  
-      Y_A_0_B_1 = mean_A0B1 + rnorm(N, sd = outcome_sds[2]),  
-      Y_A_1_B_0 = mean_A1B0 + rnorm(N, sd = outcome_sds[3]),
-      Y_A_1_B_1 = mean_A1B1 + rnorm(N, sd = outcome_sds[4]))
+      Y_A_0_B_0 = mean_A0B0 + u + rnorm(N, sd = outcome_sds[1]),  
+      Y_A_0_B_1 = mean_A0B1 + u + rnorm(N, sd = outcome_sds[2]),  
+      Y_A_1_B_0 = mean_A1B0 + u + rnorm(N, sd = outcome_sds[3]),
+      Y_A_1_B_1 = mean_A1B1 + u + rnorm(N, sd = outcome_sds[4]))
     
     
     # I: Inquiry
@@ -97,7 +99,7 @@ simple_factorial_designer <- function(N = 100,
     # Factorial assignments
     assign_A <- declare_assignment(prob = prob_A, assignment_variable = A)
     assign_B <- declare_assignment(prob = prob_B, assignment_variable = B, blocks = A)
-    reveal_Y   <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
+    reveal_Y <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(Y ~ A + B,

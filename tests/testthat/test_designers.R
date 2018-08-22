@@ -163,9 +163,10 @@ test_that(desc = "cluster_sampling_designer errors when it should",
 
 test_that(desc = "multi_arm_designer errors when it should",
           code = {
-            expect_error(multi_arm_designer(means = rep(1,2),m_arms = 10))
-            expect_error(multi_arm_designer(m_arms = .5,means = 2))
-            expect_error(multi_arm_designer(sds = c(-10,-10),means = c(2,2), m_arms = 2))
+            expect_error(multi_arm_designer(outcome_means = rep(1,2), m_arms = 10))
+            expect_error(multi_arm_designer(m_arms = .5,outcome_means = 2))
+            expect_error(multi_arm_designer(outcome_sds = c(-10,-10),outcome_means = c(2,2), m_arms = 2))
+            expect_error(multi_arm_designer(sd = -1))
           })
 
 test_that(desc = "factorial_designer errors when it should",
