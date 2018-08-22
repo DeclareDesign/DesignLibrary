@@ -53,7 +53,6 @@ block_cluster_two_arm_designer <- function(N_blocks = 1,
                                            ate = 0,
                                            treatment_mean = control_mean + ate
 ){  
-  N <- u_0 <- Y_Z_1 <- Y_Z_0 <- blocks <- clusters <- NULL
   if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
      any(!rlang::is_integerish(N_blocks), 
          !rlang::is_integerish(N_clusters_in_block), 
