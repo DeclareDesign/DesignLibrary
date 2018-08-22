@@ -76,15 +76,16 @@ factorial_designer <- function(
   
   # fixed argument ----------------------------------------------------------
   
-  sds_ <- sds; means_ <- means; probs_ <- probs; N_ <- N; k_ <- k 
+  outcome_sds_ <- outcome_sds; means_ <- outcome_means; probs_ <- probs; N_ <- N; k_ <- k 
   
   if(is.null(fixed)) fixed <- ""
-  if(!"sds"   %in% fixed)  sds_ <- sapply(1:length(sds), function(i) rlang::expr(sds[!!i])) 
-  if(!"means" %in% fixed)  means_ <- sapply(1:length(means), function(i) rlang::expr(means[!!i])) 
+  if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) rlang::expr(outcome_sds[!!i])) 
+  if(!"outcome_means" %in% fixed)  outcome_means_ <- sapply(1:length(outcome_means), function(i) rlang::expr(outcome_means[!!i])) 
   if(!"N"     %in% fixed)  N_ <- rlang::expr(N)
   
   
   # population --------------------------------------------------------------
+  population_expr <- rlang::expr(declare_population(!!N_))
   
   # potential outcomes ------------------------------------------------------
   potouts <- sapply(1:length(outcome_means),
@@ -92,15 +93,19 @@ factorial_designer <- function(
   names_pos <- paste0(outcome_name, "_", assignment_string)
   names(potouts) <- names_pos
   
+  potentials_expr <- rlang::expr(declare_potential_outcomes(!!!(potouts)))
+  
   # assignment --------------------------------------------------------------
   Z <- rlang::sym("Z")
   assignment_given_factor <- sapply(1:length(cond_row), function(i) rlang::quos(as.numeric(!!Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
   
+  assignment_expr1 <- rlang::expr(declare_assignment(conditions = 1:(2^!!k_), prob_each = !!prob_each))
+  assignment_expr2 <- rlang::expr(declare_step(fabricate, !!!assignment_given_factor))
+  
   # reveal outcomes ---------------------------------------------------------
   
   # estimands ---------------------------------------------------------------
-  
   perm <- function(v) {
     sapply(1:length(v), function(x) {
       rep( rep(1:v[x], each=prod(v[x:length(v)]) / v[x]),
@@ -131,73 +136,87 @@ factorial_designer <- function(
   
   d <- interaction(k)
   estimand_operations <- apply(d[,(k+2):ncol(d)], 2, function(col) paste(col, "*", d$PO, collapse = " + ")) 
-  estimand_expr <- sapply(1:2^k, function(i) rlang::expr(mean(!!rlang::parse_expr(estimand_operations[i]))))
-  names(estimand_expr) <-  names(estimand_operations)
+  estimand_preexpr <- sapply(1:2^k, function(i) rlang::expr(mean(!!rlang::parse_expr(estimand_operations[i]))))
+  names(estimand_preexpr) <-  names(estimand_operations)
+  
+  estimand_expr <- rlang::expr(declare_estimand(rlang::UQS(estimand_preexpr), label = "ATE"))
   
   # estimators --------------------------------------------------------------
   estimator_formula <- formula(paste0(outcome_name, " ~ ", paste(treatment_names, collapse = "*")))
+  # estimator_expr <- rlang::expr(
+  #   function(data){
+  #     data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
+  #     mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/data$Z_cond_prob)
+  #     estimate_df <- tidy.lm_robust(mod)
+  #     estimate_df$estimand_label <- paste0("coef_", estimate_df$term)
+  #     estimate_df$estimand_label[estimate_df$estimand_label == "coef_(Intercept)"] <- "Control"
+  #     estimate_df
+  #   }
+  # )
   
-  # design code -------------------------------------------------------------
-  
-  {{{
-    
-    # M: Model
-    population <- rlang::quo(
-      declare_population(!!N_)
-    )
-    
-    potentials <- rlang::quo(
-      declare_potential_outcomes(!!!(potouts))
-    )
-    
-    reveal_Y <- rlang::quo(
-      declare_reveal(outcome_variables = !!outcome_name, assignment_variables = !!treatment_names)
-    )
-    
-    # I: Inquiry
-    estimand <- rlang::quo(
-      declare_estimand(rlang::UQS(estimand_expr), label = "ATE")
-    )
-    
-    # D: Data Strategy
-    assignment_factors <- rlang::quo(
-      declare_assignment(conditions = 1:(2^!!k_), prob_each = !!prob_each)
-    )
-    
-    assignment <- rlang::quo(
-      declare_step(fabricate, !!!assignment_given_factor)
-    )
-    
-    # A: Answer Strategy
-    estimator_function <- rlang::quo(
-      function(data){
+  estimator_expr <- rlang::expr(
+    declare_estimator(
+      handler = tidy_estimator(function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
         mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/data$Z_cond_prob)
         estimate_df <- tidy.lm_robust(mod)
         estimate_df$estimand_label <- paste0("coef_", estimate_df$term)
         estimate_df$estimand_label[estimate_df$estimand_label == "coef_(Intercept)"] <- "Control"
         estimate_df
-      }
-    )
+      })))
+  
+  # design code -------------------------------------------------------------
+  
+  {{{
     
-    #remove `rlang::eval_bare` call when running code below
-    estimator <- rlang::quo(
-      declare_estimator(
-        handler = tidy_estimator(rlang::eval_bare(estimator_function)))
-    )
+    # M: Model
+    population <- eval_bare(population_expr)
+    
+    potentials <- eval_bare(potentials_expr)
+    
+    reveal_Y <- eval_bare(reveal_expr)
+    
+    # I: Inquiry
+    estimand <- eval_bare(estimand_expr)
+    
+    # D: Data Strategy
+    assignment_factors <- eval_bare(assignment_expr1)
+    
+    assignment <- eval_bare(assignment_expr2)
+    
+    # A: Answer Strategy
+    estimator <- eval_bare(estimator_expr)
     
     # Design
-    factorial_design <- rlang::eval_tidy(population) + rlang::eval_tidy(potentials) + 
-      rlang::eval_tidy(assignment_factors) + rlang::eval_tidy(assignment) +
-      rlang::eval_tidy(reveal_Y) + rlang::eval_tidy(estimand) + rlang::eval_tidy(estimator)
+    factorial_design <- population + potentials + assignment_factors + 
+      assignment + reveal_Y + estimand + estimator
     
   }}}
   
-  attr(factorial_design, "code") <- construct_design_code(factorial_designer,
-                                                          match.call.defaults(),
-                                                          rlang = TRUE,
-                                                          arguments_as_values = TRUE,
-                                                          exclude_args = c("k", "probs", "outcome_name", "treatment_names", fixed, "fixed"))
+  design_code <- construct_design_code(factorial_designer,
+                                       match.call.defaults(),
+                                       # rlang = TRUE,
+                                       arguments_as_values = TRUE,
+                                       exclude_args = c("k", "probs", "outcome_name", "treatment_names", fixed, "fixed"))
+  
+  
+  design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(potentials_expr\\)", quo_text(potentials_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(reveal_expr\\)", quo_text(reveal_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
+  design_code <- 
+    gsub("eval_bare\\(assignment_expr1\\)", quo_text(assignment_expr1), design_code)
+  design_code <- 
+    gsub("eval_bare\\(assignment_expr2\\)", quo_text(assignment_expr2), design_code)
+  design_code <- 
+    gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
+  
+  attr(factorial_design, "code") <- design_code
+  
   return(factorial_design)
   
 }
@@ -214,6 +233,7 @@ attr(factorial_designer,"tips") <-
   )
 
 attr(factorial_designer,"description") <- "
-<p> A <code>2^k</code> factorial design with sample size <code>N</code>
-and <code>k</code> treatment factors.
+<p> A <code>2^k</code> factorial designer with <code>k</code> factors assigned with independent
+probabilities. Results in <code>2^k</code> treatment combinations, each with independent,
+normally distributed shocks.
 "
