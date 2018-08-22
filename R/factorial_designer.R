@@ -1,11 +1,11 @@
 #' Create a factorial design
 #'
-#' A \code{2^k} factorial designer.
+#' A \code{2^k} factorial designer with \code{k} factors assigned with independent probabilities. Results in \code{2^k} treatment combinations, each with independent, normally distributed shocks.
 #'
 #' @param N An integer. Size of sample.
 #' @param k An integer. The number of factors in the design.
-#' @param means A numeric vector of length \code{2^k}. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
-#' @param sds A numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
+#' @param outcome_means A numeric vector of length \code{2^k}. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
+#' @param outcome_sds A numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
 #' @param probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
 #' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the funtion \code{c()} as in \code{outcome_name = c("War")}.
 #' @param treatment_names A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.
@@ -13,7 +13,7 @@
 #' @return A factorial design.
 #' @details 
 #' 
-#' \code{factorial_designer} creates a factorial design with \code{2^k} treatment combinations resulting from \code{k} factors, each with two conditions each (\code{c(0,1)}). The order of the scalar arguments \code{means} and \code{sds} must follow the one returned by \code{expand.grid(rep(list(c(0,1)), k))}, where each of the columns is a treatment. Estimands are defined for each combination of treatment assignment as the weighted difference of differences of potential outcomes. For example, in a design with \eqn{k = 3} factors, the average treatment effect of A, (ATE_A), our estimand of interest is given by: \deqn{ATE_A = 1/4*(Y_{111} - Y_{011}) + 1/4*(Y_{101} - Y_{001}) + 1/4*(Y_{110} - Y_{010}) + 1/4*(Y_{100} - Y_{000})}, the ATE of both A and B (ATE_AB) as: \deqn{ATE_AB = 1/2*[(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] + 1/2*[(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]} and the ATE of the interaction of all treatments (ATE_ABC) as: \deqn{ATE_ABC = [(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] - [(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]}, where \eqn{Y_{100}} is short for the expected outcome of Y when A is 1 and B and C are 0 (or \eqn{E[Y | A = 1, B = 0, C = 0]}).
+#' \code{factorial_designer} creates a factorial design with \code{2^k} treatment combinations resulting from \code{k} factors, each with two conditions each (\code{c(0,1)}). The order of the scalar arguments \code{outcome_means} and \code{outcome_sds} must follow the one returned by \code{expand.grid(rep(list(c(0,1)), k))}, where each of the columns is a treatment. Estimands are defined for each combination of treatment assignment as the weighted difference of differences of potential outcomes. For example, in a design with \eqn{k = 3} factors, the average treatment effect of A, (ATE_A), our estimand of interest is given by: \deqn{ATE_A = 1/4*(Y_{111} - Y_{011}) + 1/4*(Y_{101} - Y_{001}) + 1/4*(Y_{110} - Y_{010}) + 1/4*(Y_{100} - Y_{000})}, the ATE of both A and B (ATE_AB) as: \deqn{ATE_AB = 1/2*[(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] + 1/2*[(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]} and the ATE of the interaction of all treatments (ATE_ABC) as: \deqn{ATE_ABC = [(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] - [(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]}, where \eqn{Y_{100}} is short for the expected outcome of Y when A is 1 and B and C are 0 (or \eqn{E[Y | A = 1, B = 0, C = 0]}).
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
@@ -32,8 +32,8 @@
 factorial_designer <- function(
   N = 500,
   k = 3,
-  means = rep(0, 2^k),
-  sds = rep(1, 2^k),
+  outcome_means = rep(0, 2^k),
+  outcome_sds = rep(1, 2^k),
   probs = rep(.5, k),
   outcome_name = c("Y"),
   treatment_names = NULL,
@@ -42,10 +42,11 @@ factorial_designer <- function(
   
   # tests -------------------------------------------------------------------
   
-  if(length(means) != 2^k || length(sds) != 2^k) stop("`means' and `sds` arguments must be the same as length of 2^(k).")
+  if(length(outcome_means) != 2^k || length(outcome_sds) != 2^k) stop("`outcome_means' and `outcome_sds` arguments must be the same as length of 2^(k).")
   if(length(probs) != k) stop("`probs` must be the same as length of k.")
   if(k < 2 || !rlang::is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(sds<=0)) stop("`sds' should be positive.")
+  if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
   # pre-objects -------------------------------------------------------------
@@ -86,9 +87,8 @@ factorial_designer <- function(
   # population --------------------------------------------------------------
   
   # potential outcomes ------------------------------------------------------
-  
-  potouts <- sapply(1:length(means),
-                    function(i) rlang::quos(!!means_[[i]] + rnorm(!!N_, 0, !!sds_[[i]])))
+  potouts <- sapply(1:length(outcome_means),
+                    function(i) rlang::quos(!!outcome_means_[[i]] + rnorm(!!N_, 0, !!outcome_sds_[[i]])))
   names_pos <- paste0(outcome_name, "_", assignment_string)
   names(potouts) <- names_pos
   
