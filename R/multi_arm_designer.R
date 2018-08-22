@@ -40,8 +40,6 @@ multi_arm_designer <- function(N = 30,
                                outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
                                fixed = NULL) {
-  # Housekeeping
-  Y_Z_1 <- Z <- NULL
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
   N_ <- N
