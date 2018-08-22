@@ -29,8 +29,6 @@ foo <- function(x=NULL,y=NULL,z=4, dots=TRUE, ...) {
   match.call.defaults(expand.dots=dots)
 }
 
-foo(4,nugan='hand')
-foo(dots=FALSE,who='ami')
 
 }
 \references{

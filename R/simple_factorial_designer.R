@@ -67,7 +67,6 @@ simple_factorial_designer <- function(N = 100,
                                       sd = 1,
                                       outcome_sds = rep(0,4)
 ){
-  Y_A_0_B_0 <- Y_A_0_B_1 <- Y_A_1_B_0 <- Y_A_1_B_1 <- A <- B <- Y <- u <- NULL
   if((w_A < 0) || (w_B < 0) || (w_A > 1) || (w_B > 1)) stop("w_A and w_B must be in 0,1")
   if(max(c(sd, outcome_sds) < 0) )      stop("sd must be non-negative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob_ arguments must be non-negative")

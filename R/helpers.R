@@ -28,8 +28,6 @@ get_design_code <- function(design) attr(design, "code")
 #'   match.call.defaults(expand.dots=dots)
 #' }
 #' 
-#' foo(4,nugan='hand')
-#' foo(dots=FALSE,who='ami')
 #' 
 
 match.call.defaults <- function(definition = sys.function(sys.parent()),

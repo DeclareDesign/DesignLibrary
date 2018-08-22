@@ -34,7 +34,6 @@ simple_spillover_designer <- function(N_groups = 80,
                                       sd = .2,
                                       gamma = 2)
 {
-  N <- n <- G <- zeros <- Z <- NULL
   if(sd < 0) stop("sd must be nonnegative")
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
