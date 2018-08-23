@@ -1,6 +1,6 @@
 #' Create a pretest-posttest design
 #'
-#' Produces designs in which an outcome Y is observed pre- and post-treatment.
+#' Produces a design in which an outcome Y is observed pre- and post-treatment.
 #' The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
 #' and for at-random missingness in the observation of post-treatment outcomes. 
 #' @details 
@@ -102,6 +102,6 @@ attr(pretest_posttest_designer, "tips") <- c(
 attr(pretest_posttest_designer, "description") <- "
 <p> A pretest-posttest design with sample of size <code>N</code>, average treatment effect of size <code>ate</code>, 
     and correlation between pre- and post-test outcomes equal to <code>rho</code>. The proportion of pre-test respondents  
-   missing at random from  the post-test follow-up can be set using <code>attrition_rate</code>.
+   missing at random from the post-test follow-up can be set using <code>attrition_rate</code>.
 "
 
