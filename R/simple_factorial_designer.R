@@ -146,5 +146,5 @@ attr(simple_factorial_designer, "tips") <-
   )
 
 attr(simple_factorial_designer, "description") <- "
-<p> A 2x2 factorial design of sample size <code>N</code>.
+<p> A 2x2 factorial design of sample size <code>N</code> with independent treatment assignment.
 "

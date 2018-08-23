@@ -163,7 +163,8 @@ test_that(desc = "pretest_posttest_designer errors when it should",
 
 test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
-            expect_error(cluster_sampling_designer(n_clusters = 10, N_clusters = 1))
+            expect_error(cluster_sampling_designer(n_clusters_in_block = 10, 
+                                                   N_clusters_in_block = 1))
             expect_error(cluster_sampling_designer(n_i_in_cluster = 30, N_i_in_cluster = 10))
             expect_error(cluster_sampling_designer(icc = 2))
           })
@@ -187,6 +188,16 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(k = .5))
             expect_error(factorial_designer(outcome_sds = c(-1,-1,-1,-1), k = 2))
             expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
+          })
+
+test_that(desc = "simple_iv_designer errors when it should",
+          code = {
+            expect_error(simple_iv_designer(assignment_probs = -20))
+            expect_error(simple_iv_designer(assignment_probs = 20))
+            expect_error(simple_iv_designer(outcome_sd = -20))
+            expect_error(simple_iv_designer(a = -20))
+            expect_error(simple_iv_designer(b = -20))
+            expect_error(simple_iv_designer(d = -20))
           })
 
 
