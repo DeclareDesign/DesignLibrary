@@ -123,7 +123,12 @@ test_that(desc = "simple_spillover_designer errors when it should",
 test_that(desc = "regression_discontinuity_designer errors when it should",
           code = {
             expect_error(regression_discontinuity_designer(cutoff = -10))
-            expect_error(regression_discontinuity_designer(poly_order = -10))
+            expect_error(regression_discontinuity_designer(poly_reg_order = -10))
+            expect_error(regression_discontinuity_designer(poly_reg_order = -.10))
+            expect_error(regression_discontinuity_designer(poly_reg_order = "hello"))
+            expect_error(regression_discontinuity_designer(control_coefs = NULL))
+            expect_error(regression_discontinuity_designer(treatment_coefs = NULL))
+            expect_error(regression_discontinuity_designer(outcome_sd = -1))
           })
 
 test_that(desc = "randomized_response_designer errors when it should",
