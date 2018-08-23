@@ -37,10 +37,6 @@
 #'
 mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0)
 {
-  e1 <- M_Z_1 <- M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  
-    Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  e2 <- 
-    Y_nat0_Z_1 <- Y_nat0_Z_0 <- Y_nat1_Z_1 <- Y_nat1_Z_0 <- 
-    Y_nat0 <- Y_nat1 <- NULL
   
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
   {{{

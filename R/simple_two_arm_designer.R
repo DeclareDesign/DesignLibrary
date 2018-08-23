@@ -37,7 +37,6 @@ simple_two_arm_designer <- function(N = 100,
                                     treatment_sd = control_sd,
                                     rho = 1
 ){
-  u_0 <- Y_Z_1 <- Y_Z_0 <- NULL
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")

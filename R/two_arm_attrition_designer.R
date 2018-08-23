@@ -49,7 +49,6 @@ two_arm_attrition_designer <- function(N = 100,
                                        b_Y = 1,
                                        rho = 0
 ){
-  u_R <- R_Z_1 <- R_Z_0 <- Y_Z_0 <- Y_Z_1 <- R <- Y <- NULL
   if(rho < 0 || rho > 1) stop("rho must be in [0,1]")
   {{{
     # M: Model
