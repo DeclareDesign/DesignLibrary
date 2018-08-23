@@ -4,16 +4,17 @@
 \alias{simple_iv_designer}
 \title{Create a simple instrumental variables design}
 \usage{
-simple_iv_designer(N = 100, type_prob = c(1/3, 1/3, 1/3, 0),
-  assign_prob = c(0.5, 0.5, 0.5, 0.5), a_Y = 1, b_Y = 0, d_Y = 0,
-  sd_Y = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y, 4), d = rep(d_Y, 4))
+simple_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
+  assignment_probs = c(0.5, 0.5, 0.5, 0.5), a_Y = 1, b_Y = 0,
+  d_Y = 0, sd_Y = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y, 4),
+  d = rep(d_Y, 4))
 }
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{type_prob}{A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier)}
+\item{type_probs}{A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier)}
 
-\item{assign_prob}{A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier)}
+\item{assignment_probs}{A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier)}
 
 \item{a_Y}{A real number. Constant in Y equation. Assumed constant across types. Overridden by a if specified.}
 
@@ -37,38 +38,41 @@ Builds a design with one instrument, one binary explanatory variable, and one ou
 }
 \details{
 A researcher is interested in the effect of binary X on outcome Y.  The relationship is confounded  because units that are more likely to be assigned to X=1 have higher Y outcomes.
-A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for others,  
-and affects Y only through X.
+A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for others, and affects Y only through X.
 }
 \examples{
-# Generate a simple iv design 
-simple_iv_design_1 <- simple_iv_designer(N = 200, b_Y = 1)
-diagnose_design(simple_iv_design_1)
+# Generate a simple iv design: iv identifies late not ate 
+simple_iv_design_1 <- simple_iv_designer(N = 1000, b = c(.1, .2, .3, .4))
+\dontrun{
+diagnose_design(simple_iv_design_1, sims = 2000)
+}
 
 # Generates a simple iv design with violation of monotonicity
-simple_iv_design_2 <- simple_iv_designer(type_prob = c(.1,.1,.6, .2), b_Y = .5)
+simple_iv_design_2 <- simple_iv_designer(type_probs = c(.1,.1,.6, .2), b_Y = .5)
+\dontrun{
 diagnose_design(simple_iv_design_2)
+}
 
 # Generates a simple iv design with violation of exclusion restriction
 simple_iv_design_3 <- simple_iv_designer(d_Y = .5, b_Y = .5)
+\dontrun{
 diagnose_design(simple_iv_design_3)
+}
 
 # Generates a simple iv design with violation of randomization
-simple_iv_design_4 <- simple_iv_designer(N = 1000, assign_prob = c(.2, .3, .7, .5), b_Y = .5)
+simple_iv_design_4 <- simple_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
+\dontrun{
 diagnose_design(simple_iv_design_4)
+}
 
-#' # Generates a simple iv design with violation of first stage
-simple_iv_design_5 <- simple_iv_designer(type_prob = c(.5,.5, 0, 0), b_Y = .5)
+# Generates a simple iv design with violation of first stage
+simple_iv_design_5 <- simple_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
+\dontrun{
 diagnose_design(simple_iv_design_5)
-
-#' # Generates a simple iv design to highlight identification of LATE estimand
-simple_iv_design_6 <- simple_iv_designer(N = 1000, b = c(.1, .2, .3, .4))
-diagnose_design(simple_iv_design_6)
+}
 
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}
 }
-\concept{
-experiment
-}
+\concept{experiment}
