@@ -21,7 +21,6 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # Generate a simple spillover design using default arguments:

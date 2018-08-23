@@ -19,7 +19,6 @@
 #' @return A simple instrumental variables design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #'
 #' @examples

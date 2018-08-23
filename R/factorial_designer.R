@@ -17,8 +17,8 @@
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
+#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare
 #' @export
-#' @import rlang
 #' @examples
 #' 
 #' # A factorial design using default arguments
@@ -45,7 +45,7 @@ factorial_designer <- function(
   if(any(grepl(" ", fixed = TRUE, outcome_name))) stop("Please remove spaces from `outcome_name' strings.")
   if(length(outcome_means) != 2^k || length(outcome_sds) != 2^k) stop("`outcome_means' and `outcome_sds` arguments must be the same as length of 2^(k).")
   if(length(probs) != k) stop("`probs` must be the same as length of k.")
-  if(k < 2 || !rlang::is_integerish(k)) stop("`k' should be a positive integer > 1.")
+  if(k < 2 || !is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(probs <= 0)) stop("`probs' should have positive values only.")
   
@@ -80,32 +80,32 @@ factorial_designer <- function(
   outcome_sds_ <- outcome_sds; means_ <- outcome_means; probs_ <- probs; N_ <- N; k_ <- k 
   
   if(is.null(fixed)) fixed <- ""
-  if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) rlang::expr(outcome_sds[!!i])) 
-  if(!"outcome_means" %in% fixed)  outcome_means_ <- sapply(1:length(outcome_means), function(i) rlang::expr(outcome_means[!!i])) 
-  if(!"N"     %in% fixed)  N_ <- rlang::expr(N)
+  if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) expr(outcome_sds[!!i])) 
+  if(!"outcome_means" %in% fixed)  outcome_means_ <- sapply(1:length(outcome_means), function(i) expr(outcome_means[!!i])) 
+  if(!"N"     %in% fixed)  N_ <- expr(N)
   
   
   # population --------------------------------------------------------------
-  population_expr <- rlang::expr(declare_population(!!N_))
+  population_expr <- expr(declare_population(!!N_))
   
   # potential outcomes ------------------------------------------------------
   potouts <- sapply(1:length(outcome_means),
-                    function(i) rlang::quos(!!outcome_means_[[i]] + rnorm(!!N_, 0, !!outcome_sds_[[i]])))
+                    function(i) quos(!!outcome_means_[[i]] + rnorm(!!N_, 0, !!outcome_sds_[[i]])))
   names_pos <- paste0(outcome_name, "_", assignment_string)
   names(potouts) <- names_pos
   
-  potentials_expr <- rlang::expr(declare_potential_outcomes(!!!(potouts)))
+  potentials_expr <- expr(declare_potential_outcomes(!!!(potouts)))
   
   # assignment --------------------------------------------------------------
-  Z <- rlang::sym("Z")
-  assignment_given_factor <- sapply(1:length(cond_row), function(i) rlang::quos(as.numeric(!!Z %in% !!cond_row[[i]])))
+  Z <- sym("Z")
+  assignment_given_factor <- sapply(1:length(cond_row), function(i) quos(as.numeric(!!Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
   
-  assignment_expr1 <- rlang::expr(declare_assignment(conditions = 1:(2^!!k_), prob_each = !!prob_each))
-  assignment_expr2 <- rlang::expr(declare_step(fabricate, !!!assignment_given_factor))
+  assignment_expr1 <- expr(declare_assignment(conditions = 1:(2^!!k_), prob_each = !!prob_each))
+  assignment_expr2 <- expr(declare_step(fabricate, !!!assignment_given_factor))
   
   # reveal outcomes ---------------------------------------------------------
-  reveal_expr <- rlang::expr(declare_reveal(
+  reveal_expr <- expr(declare_reveal(
     handler = function(data){
       potential_cols <- mapply(paste, data[, !!treatment_names, drop = FALSE], sep = "_", SIMPLIFY = FALSE)
       potential_cols <- do.call(paste, c(!!outcome_name, potential_cols, sep = "_"))
@@ -150,15 +150,15 @@ factorial_designer <- function(
   
   d <- interaction(k)
   estimand_operations <- apply(d[,(k+2):ncol(d)], 2, function(col) paste(col, "*", d$PO, collapse = " + ")) 
-  estimand_preexpr <- sapply(1:2^k, function(i) rlang::expr(mean(!!rlang::parse_expr(estimand_operations[i]))))
+  estimand_preexpr <- sapply(1:2^k, function(i) expr(mean(!!parse_expr(estimand_operations[i]))))
   names(estimand_preexpr) <-  names(estimand_operations)
-  
-  estimand_expr <- rlang::expr(declare_estimand(rlang::UQS(estimand_preexpr), label = "ATE"))
+ 
+  estimand_expr <- expr(declare_estimand(UQS(estimand_preexpr), label = "ATE"))
   
   # estimators --------------------------------------------------------------
   estimator_formula <- formula(paste0(outcome_name, " ~ ", paste(treatment_names, collapse = "*")))
   
-  estimator_expr <- rlang::expr(
+  estimator_expr <- expr(
     declare_estimator(
       handler = tidy_estimator(function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
