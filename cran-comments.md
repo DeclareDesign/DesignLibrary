@@ -5,13 +5,10 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 notes
-
-* This is a new release.
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+0 packages with problems (using `devtools::revdep_check()`)
 
 ---
-  
