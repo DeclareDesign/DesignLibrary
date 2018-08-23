@@ -1,14 +1,17 @@
 #' Create a regression discontinuity design
 #'
-#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
+#' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_reg_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
 #' @details 
 #' See \href{https://declaredesign.org/library/articles/regression_discontinuity.html}{vignette online}.
 #' 
 #' @param N An integer. Size of population to sample from.
 #' @param tau A number. Difference in potential outcomes functions at the threshold.
+#' @param outcome_sd A positive number. The standard deviation of the outcome.
 #' @param cutoff A number in (0,1). Threshold on running variable beyond which units are treated.
 #' @param bandwidth A number. The value of the bandwidth on both sides of the threshold from which to include units.
-#' @param poly_order A number greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.
+#' @param control_coefs A vector of numbers. Coefficients for polynomial regression function that generates control potential outcomes. Order of polynomial is equal to length.
+#' @param treatment_coefs A vector of numbers. Coefficients for polynomial regression function that generates treatment potential outcomes. Order of polynomial is equal to length.
+#' @param poly_reg_order Integer greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.
 #' @return A regression discontinuity design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
@@ -22,22 +25,29 @@
 regression_discontinuity_designer <- function(
   N = 1000,
   tau = .15,
+  outcome_sd = .1,
   cutoff = .5,
   bandwidth = .5,
-  poly_order = 4
+  control_coefs = c(.5,.5),
+  treatment_coefs = c(-5,1),
+  poly_reg_order = 4
 ){
   if(cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0,1).")
-  if(poly_order < 1) stop("poly_order must be at least 1.")
+  if(poly_reg_order < 1) stop("poly_reg_order must be at least 1.")
+  if(!rlang::is_integerish(poly_reg_order)) stop("poly_reg_order must be an integer.")
+  if(length(control_coefs) < 1) stop("control_coefs must be a numeric vector of length > 0.")
+  if(length(treatment_coefs) < 1) stop("treatment_coefs must be a numeric vector of length > 0.")
+  if(outcome_sd < 0) stop("outcome_sd must be positive.")
   {{{
     # M: Model
     control <- function(X) {
-      as.vector(poly(X, 4, raw = T) %*% c(.7, -.8, .5, 1))}
+      as.vector(poly(X, length(control_coefs), raw = T) %*% control_coefs)}
     treatment <- function(X) {
-      as.vector(poly(X, 4, raw = T) %*% c(0, -1.5, .5, .8)) + tau}
+      as.vector(poly(X, length(treatment_coefs), raw = T) %*% treatment_coefs) + tau}
     population <- declare_population(
       N = N,
       X = runif(N,0,1) - cutoff,
-      noise = rnorm(N,0,.1),
+      noise = rnorm(N,0,outcome_sd),
       Z = 1 * (X > 0))
     potentials <- declare_potential_outcomes(
       Y_Z_0 = control(X) + noise,
@@ -53,7 +63,7 @@ regression_discontinuity_designer <- function(
     
     # A: Answer Strategy 
     estimator <- declare_estimator(
-      formula = Y ~ poly(X, poly_order) * Z,
+      formula = Y ~ poly(X, poly_reg_order) * Z,
       model = lm_robust,
       term = "Z",
       estimand = estimand)
@@ -75,7 +85,7 @@ attr(regression_discontinuity_designer,"shiny_arguments") <-
     tau = c(.15, 0, .5, 1),
     cutoff = c(.5,  .25),
     bandwidth = c(.5,  .25),
-    poly_order = c(4, 3, 2, 1)
+    poly_reg_order = c(4, 3, 2, 1)
   )
 
 attr(regression_discontinuity_designer,"tips") <-
@@ -83,13 +93,13 @@ attr(regression_discontinuity_designer,"tips") <-
     tau = "Difference in potential outcomes functions at the threshold",
     cutoff = "Threshold on running variable beyond which units are treated",
     bandwidth = "Bandwidth around threshold from which to include units",
-    poly_order = "Order of the polynomial regression used to estimate the jump at the cutoff"
+    poly_reg_order = "Order of the polynomial regression used to estimate the jump at the cutoff"
   )
 
 attr(regression_discontinuity_designer,"description") <- "
 <p> A regression discontinuity design with sample from population of size <code>N</code>. 
     The average treatment effect local to the cutpoint is equal to <code>tau</code>. 
-<p> Polynomial regression of order <code>poly_order</code> is used to estimate tau, within a bandwidth of size
+<p> Polynomial regression of order <code>poly_reg_order</code> is used to estimate tau, within a bandwidth of size
     <code>bandwidth</code> around the cutoff situated at <code>cutoff</code> on the running variable.
 "
 
