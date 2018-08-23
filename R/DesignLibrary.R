@@ -34,11 +34,8 @@ utils::globalVariables(
     "R_Z_0",
     "R_Z_1",
     "sensitive_trait",
-<<<<<<< HEAD
     "test_results",
-=======
     "type",
->>>>>>> master
     "u",
     "u_0",
     "u_a",

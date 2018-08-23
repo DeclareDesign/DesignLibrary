@@ -190,7 +190,6 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
           })
 
-<<<<<<< HEAD
 test_that(desc = "process_tracing_designer errors when it should",
           code = {
             expect_error(process_tracing_designer(N = -1))
@@ -213,7 +212,6 @@ test_that(desc = "process_tracing_designer errors when it should",
           })
 
 
-=======
 test_that(desc = "simple_iv_designer errors when it should",
           code = {
             expect_error(simple_iv_designer(assignment_probs = -20))
@@ -224,6 +222,5 @@ test_that(desc = "simple_iv_designer errors when it should",
             expect_error(simple_iv_designer(d = -20))
           })
 
->>>>>>> master
 
 
