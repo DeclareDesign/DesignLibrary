@@ -26,10 +26,10 @@ Depends:
     fabricatr (>= 0.4.0),
     estimatr (>= 0.10.0)
 Imports:
-    devtools,
-    rlang, 
-    methods
+    rlang
 Suggests: 
+    methods,
+    devtools,
     knitr,
     testthat, 
     ggplot2,
