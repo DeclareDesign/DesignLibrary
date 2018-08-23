@@ -190,6 +190,28 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
           })
 
+test_that(desc = "process_tracing_designer errors when it should",
+          code = {
+            expect_error(process_tracing_designer(N = -1))
+            expect_error(process_tracing_designer(prob_X = 100))
+            expect_error(process_tracing_designer(process_proportions = 1:5))
+            expect_error(process_tracing_designer(process_proportions = 1:4))
+            expect_error(process_tracing_designer(prior_H = 100))
+            expect_error(process_tracing_designer(p_E1_H = 100))
+            expect_error(process_tracing_designer(p_E1_not_H = 100))
+            expect_error(process_tracing_designer(p_E2_H = 100))
+            expect_error(process_tracing_designer(p_E2_not_H = 100))
+            expect_error(process_tracing_designer(cor_E1E2_H = 100))
+            expect_error(process_tracing_designer(cor_E1E2_not_H = 100))
+            expect_error(process_tracing_designer(p_E1_not_H = .2, p_E2_not_H = .5,
+                                                  cor_E1E2_not_H = 1))
+            expect_error(process_tracing_designer(p_E1_H = .2, p_E2_H = .5,
+                                                  cor_E1E2_H = 1))
+            expect_error(process_tracing_designer(label_E1 = LETTERS[1:10]))
+            expect_error(process_tracing_designer(label_E2 = LETTERS[1:10]))
+          })
+
+
 test_that(desc = "simple_iv_designer errors when it should",
           code = {
             expect_error(simple_iv_designer(assignment_probs = -20))
