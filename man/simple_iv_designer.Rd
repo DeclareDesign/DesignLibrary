@@ -12,26 +12,26 @@ simple_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 \arguments{
 \item{N}{An integer. Sample size.}
 
-\item{type_probs}{A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier)}
+\item{type_probs}{A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier).}
 
-\item{assignment_probs}{A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier)}
+\item{assignment_probs}{A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier).}
 
-\item{a_Y}{A real number. Constant in Y equation. Assumed constant across types. Overridden by a if specified.}
+\item{a_Y}{A real number. Constant in Y equation. Assumed constant across types. Overridden by \code{a} if specified.}
 
-\item{b_Y}{A real number. Effect of X on Y equation. Assumed constant across types. Overridden by b if specified.}
+\item{b_Y}{A real number. Effect of X on Y equation. Assumed constant across types. Overridden by \code{b} if specified.}
 
-\item{d_Y}{A real number. Effect of Z on Y. Assumed constant across types. Overridden by d if specified.}
+\item{d_Y}{A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.}
 
 \item{outcome_sd}{A non negative number. Standard deviation on Y.}
 
-\item{a}{A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier)}
+\item{a}{A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier).}
 
-\item{b}{A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier)}
+\item{b}{A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).}
 
-\item{d}{A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction)}
+\item{d}{A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).}
 }
 \value{
-A simple two-arm design.
+A simple instrumental variables design.
 }
 \description{
 Builds a design with one instrument, one binary explanatory variable, and one outcome.
@@ -44,7 +44,7 @@ A potential instrument Z is examined, which plausibly causes X. The instrument c
 # Generate a simple iv design: iv identifies late not ate 
 simple_iv_design_1 <- simple_iv_designer(N = 1000, b = c(.1, .2, .3, .4))
 \dontrun{
-diagnose_design(simple_iv_design_1, sims = 2000)
+diagnose_design(simple_iv_design_1)
 }
 
 # Generates a simple iv design with violation of monotonicity

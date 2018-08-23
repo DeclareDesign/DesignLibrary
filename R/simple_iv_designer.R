@@ -7,14 +7,14 @@
 #' 
 #' 
 #' @param N An integer. Sample size.
-#' @param type_probs A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier)
-#' @param assignment_probs A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier)
-#' @param a_Y A real number. Constant in Y equation. Assumed constant across types. Overridden by a if specified.
-#' @param a A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier)
-#' @param b_Y A real number. Effect of X on Y equation. Assumed constant across types. Overridden by b if specified. 
-#' @param b A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier)
-#' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by d if specified.
-#' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction)
+#' @param type_probs A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier).
+#' @param assignment_probs A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier).
+#' @param a_Y A real number. Constant in Y equation. Assumed constant across types. Overridden by \code{a} if specified.
+#' @param a A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier).
+#' @param b_Y A real number. Effect of X on Y equation. Assumed constant across types. Overridden by \code{b} if specified. 
+#' @param b A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).
+#' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.
+#' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).
 #' @param outcome_sd A non negative number. Standard deviation on Y.
 #' @return A simple instrumental variables design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -26,7 +26,7 @@
 #' # Generate a simple iv design: iv identifies late not ate 
 #' simple_iv_design_1 <- simple_iv_designer(N = 1000, b = c(.1, .2, .3, .4))
 #' \dontrun{
-#' diagnose_design(simple_iv_design_1, sims = 2000)
+#' diagnose_design(simple_iv_design_1)
 #' }
 #' 
 #' # Generates a simple iv design with violation of monotonicity
