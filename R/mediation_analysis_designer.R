@@ -3,7 +3,11 @@
 #' A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) (given Z=0) 
 #' as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
 #' Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
-#'
+#' 
+#' @details 
+#' 
+#' See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vignette online}.
+#' 
 #' @param N An integer. Size of sample.
 #' @param a A number. Parameter governing effect of treatment (Z) on mediator (M).
 #' @param b A number. Effect of mediator (M) on outcome (Y) when Z=0.
@@ -33,10 +37,6 @@
 #'
 mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0)
 {
-  e1 <- M_Z_1 <- M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  
-    Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  e2 <- 
-    Y_nat0_Z_1 <- Y_nat0_Z_0 <- Y_nat1_Z_1 <- Y_nat1_Z_0 <- 
-    Y_nat0 <- Y_nat1 <- NULL
   
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
   {{{

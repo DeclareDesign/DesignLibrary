@@ -83,6 +83,7 @@ for(designer in designers){
 
 test_that(desc = "block_cluster_two_arm_designer errors when it should",
           code = {
+            expect_error(block_cluster_two_arm_designer(N_blocks = -2))
             expect_error(block_cluster_two_arm_designer(sd_block = -1))
             expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
@@ -152,23 +153,36 @@ test_that(desc = "pretest_posttest_designer errors when it should",
           code = {
             expect_error(pretest_posttest_designer(rho = 10))
             expect_error(pretest_posttest_designer(attrition_rate = 10))
+            expect_error(pretest_posttest_designer(sd_1 = -1))
           })
 
 test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
-            expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
-            expect_error(cluster_sampling_designer(n_subjects_per_cluster = 30,N_subjects_per_cluster = 10))
+            expect_error(cluster_sampling_designer(n_clusters = 10, N_clusters = 1))
+            expect_error(cluster_sampling_designer(n_i_in_cluster = 30, N_i_in_cluster = 10))
+            expect_error(cluster_sampling_designer(icc = 2))
           })
 
 
 test_that(desc = "multi_arm_designer errors when it should",
           code = {
-            expect_error(multi_arm_designer(means = rep(1,2),m_arms = 10))
-            expect_error(multi_arm_designer(m_arms = .5,means = 2))
-            expect_error(multi_arm_designer(sds = c(-10,-10),means = c(2,2), m_arms = 2))
+            expect_error(multi_arm_designer(outcome_means = rep(1,2), m_arms = 10))
+            expect_error(multi_arm_designer(m_arms = .5,outcome_means = 2))
+            expect_error(multi_arm_designer(outcome_sds = c(-10,-10),outcome_means = c(2,2), m_arms = 2))
+            expect_error(multi_arm_designer(sd = -1))
           })
 
-
+test_that(desc = "factorial_designer errors when it should",
+          code = {
+            expect_error(factorial_designer(outcome_name = c("Y ")))
+            expect_error(factorial_designer(outcome_means = 1, k = 2))
+            expect_error(factorial_designer(outcome_sds = 1, k = 2))
+            expect_error(factorial_designer(probs = .5, k = 2))
+            expect_error(factorial_designer(probs = .5, k = 1))
+            expect_error(factorial_designer(k = .5))
+            expect_error(factorial_designer(outcome_sds = c(-1,-1,-1,-1), k = 2))
+            expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
+          })
 
 
 

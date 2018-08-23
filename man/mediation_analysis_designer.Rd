@@ -28,6 +28,9 @@ A mediation analysis design that examines the effect of treatment (Z) on mediato
 as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
 Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
 }
+\details{
+See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vignette online}.
+}
 \examples{
 # Generate a mediation analysis design using default arguments:
 mediation_1 <- mediation_analysis_designer()

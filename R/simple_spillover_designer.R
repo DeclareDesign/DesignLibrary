@@ -6,15 +6,17 @@
 #' 
 #' @details
 #' 
-#' Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for ever $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
-#' For \code{gamma}>1 (<1) for ever $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
+#' Parameter \code{gamma} controls interactions between spillover effects.For \code{gamma}=1 for every $1 given to a member of a group, each member receives $1\code{N_i_group} no matter how many others are already treated.
+#' For \code{gamma}>1 (<1) for every $1 given to a member of a group, each member receives an amount that depends negatively (positively) on the number already treated.  
 #' 
 #' The default estimand is the average difference across subjects between no one treated and only that subject treated.  
 #' 
+#' See \href{https://declaredesign.org/library/articles/simple_spillover.html}{vignette online}.
+#' 
 #' @param N_groups An integer. Number of groups.
 #' @param N_i_group Number of units in each group. Can be scalar or vector of length \code{N_groups}.
-#' @param sd A number. Standard deviation of individual level shock.
-#' @param gamma A number. Parameter that controls whether spillovers within groups substitute or complement each other.
+#' @param sd A nonnegative number. Standard deviation of individual-level shock.
+#' @param gamma A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.
 #' @return A simple spillover design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -32,9 +34,8 @@ simple_spillover_designer <- function(N_groups = 80,
                                       sd = .2,
                                       gamma = 2)
 {
-  N <- n <- G <- zeros <- Z <- NULL
-  if(sd < 0) stop("sd must be non-negative")
-  if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be greater than 1")
+  if(sd < 0) stop("sd must be nonnegative")
+  if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 
@@ -69,3 +70,23 @@ simple_spillover_designer <- function(N_groups = 80,
   simple_spillover_design
 }
 
+attr(simple_spillover_designer, "shiny_arguments") <- list(
+  N_groups = c(50, 100, 500),
+  N_i_group = c(10, 50, 100),
+  sd = c(0, .5, 1),
+  gamma = c(-2, 2)
+)
+
+attr(simple_spillover_designer, "tips") <-
+  list(
+    N_groups = "Number of groups",
+    N_i_group = "Number of units in each group",
+    sd = "Standard deviation of individual-level shock",
+    gamma = "Parameter that controls whether spillovers within groups substitute or complement each other"
+  )
+
+attr(simple_spillover_designer, "description") <- "
+<p> Builds a design with <code>N_groups</code> groups each containing 
+<code>N_i_group</code> individuals. Potential outcomes exhibit spillovers: if 
+any individual in a group receives treatment, the effect is spread equally among 
+members of the group."

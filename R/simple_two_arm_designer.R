@@ -2,10 +2,12 @@
 #'
 #' Builds a design with one treatment and one control arm.
 #' Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
-#' or by specifying an \code{ate}.
+#' or by specifying a \code{control_mean} and \code{ate}.
 #' 
 #' @details 
-#' Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+#' Units are assigned to treatment using complete random assignment. Potential outcomes are normally distributed according to the mean and sd arguments.
+#' 
+#' See \href{https://declaredesign.org/library/articles/simple_two_arm.html}{vignette online}.
 #' 
 #' @param N An integer. Sample size.
 #' @param prob A number in [0,1]. Probability of assignment to treatment.
@@ -35,7 +37,6 @@ simple_two_arm_designer <- function(N = 100,
                                     treatment_sd = control_sd,
                                     rho = 1
 ){
-  u_0 <- Y_Z_1 <- Y_Z_0 <- NULL
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")

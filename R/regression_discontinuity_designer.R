@@ -1,12 +1,14 @@
 #' Create a regression discontinuity design
 #'
 #' Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}).
-#'
+#' @details 
+#' See \href{https://declaredesign.org/library/articles/regression_discontinuity.html}{vignette online}.
+#' 
 #' @param N An integer. Size of population to sample from.
 #' @param tau A number. Difference in potential outcomes functions at the threshold.
 #' @param cutoff A number in (0,1). Threshold on running variable beyond which units are treated.
-#' @param bandwidth A number. Bandwidth around threshold from which to include units.
-#' @param poly_order An integer. Order of the polynomial regression used to estimate the jump at the cutoff.
+#' @param bandwidth A number. The value of the bandwidth on both sides of the threshold from which to include units.
+#' @param poly_order A number greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.
 #' @return A regression discontinuity design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
@@ -24,9 +26,8 @@ regression_discontinuity_designer <- function(
   bandwidth = .5,
   poly_order = 4
 ){
-  X <- noise <- Y <- NULL
-  if(! (cutoff < 1 & cutoff > 0)) stop("cutoff must be in (0,1)")
-  if(poly_order < 1) stop("poly_order must be greater than 0.")
+  if(cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0,1).")
+  if(poly_order < 1) stop("poly_order must be at least 1.")
   {{{
     # M: Model
     control <- function(X) {
@@ -48,7 +49,7 @@ regression_discontinuity_designer <- function(
     
     # D: Data Strategy
     sampling <- declare_sampling(handler = function(data){
-      subset(data,(X > 0 - bandwidth) & X < 0 + bandwidth)})
+      subset(data,(X > 0 - abs(bandwidth)) & X < 0 + abs(bandwidth))})
     
     # A: Answer Strategy 
     estimator <- declare_estimator(

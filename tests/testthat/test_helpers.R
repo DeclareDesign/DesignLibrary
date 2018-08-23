@@ -43,6 +43,17 @@ test_that(desc = "construct_design_code works as it should when source is missin
             expect_error(DesignLibrary:::construct_design_code(designer = test_designer,args = "x"))
           }) 
 
+test_that(desc = "construct_design_code works as it should when using rlang functions and source is missing",
+          code = {
+            test_function <- function(){
+              {{{
+                t1 <- rlang::quo(
+                  paste0(!!letters[1])
+                )
+              }}}
+            }
+            expect_is(DesignLibrary:::construct_design_code(designer = function(x) {{{x}}}, args = c("x"),arguments_as_values = F,exclude_args = NULL),"character")
+          }) 
 
 test_that(desc = "match.call.defaults has all cases tested",
           code = {

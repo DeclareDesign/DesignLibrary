@@ -1,6 +1,6 @@
 #' Create design with risk of attrition or post treatment conditioning
 #'
-#' Creates a two arm design with application for when estimand of interest is conditional on a post treatment outcome 
+#' Creates a two-arm design with application for when estimand of interest is conditional on a post-treatment outcome 
 #' (the effect on Y given R) or data is conditionally observed (Y given R). See `Details` for more information on the data generating process.
 #' 
 #' @details 
@@ -49,7 +49,6 @@ two_arm_attrition_designer <- function(N = 100,
                                        b_Y = 1,
                                        rho = 0
 ){
-  u_R <- R_Z_1 <- R_Z_0 <- Y_Z_0 <- Y_Z_1 <- R <- Y <- NULL
   if(rho < 0 || rho > 1) stop("rho must be in [0,1]")
   {{{
     # M: Model
