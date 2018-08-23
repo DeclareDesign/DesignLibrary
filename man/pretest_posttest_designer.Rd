@@ -24,7 +24,7 @@ pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
 A pretest-posttest design.
 }
 \description{
-Produces designs in which an outcome Y is observed pre- and post-treatment.
+Produces a design in which an outcome Y is observed pre- and post-treatment.
 The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
 and for at-random missingness in the observation of post-treatment outcomes.
 }
