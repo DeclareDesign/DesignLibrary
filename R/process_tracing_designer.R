@@ -211,8 +211,8 @@ attr(process_tracing_designer,"shiny_arguments") <- list(
 )
 attr(process_tracing_designer,"tips") <- c(
   prior_H = "Prior probability that the hypothesis that X causes Y is true.",
-  p_E1_H = "Probability of observing the first piece of evidence given X causes Y.",
-  cor_E1E2_H = "Correlation in first and second piece of evidence given X causes Y."
+  p_E1_H = "Probability of observing the first piece of evidence given X indeed causes Y.",
+  cor_E1E2_H = "Correlation in first and second pieces of evidence given X indeed causes Y."
 )
 attr(process_tracing_designer,"description") <- "A process-tracing design in which two pieces of evidence are sought and used to update about whether X caused Y using Bayes' rule."
 
