@@ -12,12 +12,12 @@ Status](https://coveralls.io/repos/github/DeclareDesign/DesignLibrary/badge.svg?
 version](https://img.shields.io/badge/R%3E%3D-3.4.0-6666ff.svg)](https://cran.r-project.org/)
 [![packageversion](https://img.shields.io/badge/Package%20version-0.1.0.9000-orange.svg?style=flat-square)](commits/master)
 
-**DesignLibrary** provides a library of functions that return designs
-built using the package **DeclareDesign**. In one line of code users can
-specify the parameters of individual designs and diagnose their
-properties. The designers can also be used to compare performance of a
-given design across a range of combinations of parameters, such as
-effect size, sample size, assignment probabilities and more.
+**DesignLibrary** provides simple interface to build designs using the
+package **DeclareDesign**. In one line of code users can specify the
+parameters of individual designs and diagnose their properties. The
+designers can also be used to compare performance of a given design
+across a range of combinations of parameters, such as effect size,
+sample size, assignment probabilities and more.
 
 [Check out the online version of the library
 here](https://declaredesign.org/library/).
