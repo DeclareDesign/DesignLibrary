@@ -17,7 +17,8 @@
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
-#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare
+#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare quo_text
+#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population 
 #' @export
 #' @examples
 #' 

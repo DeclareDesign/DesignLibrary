@@ -17,6 +17,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
+#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare quo_text
 #' @export
 #' @examples
 #'
