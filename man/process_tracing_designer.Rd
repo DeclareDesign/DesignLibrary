@@ -12,9 +12,13 @@ process_tracing_designer(N = 100, prob_X = 0.5,
   label_E2 = "Straw in the Wind")
 }
 \arguments{
+\item{N}{An integer. Size of population of cases from which a single case is selected.}
+
 \item{prob_X}{A number in [0,1]. Probability that X = 1 for a given case (equal throughout population of cases).}
 
 \item{process_proportions}{A vector of numbers in [0,1] that sums to 1. Simplex denoting the proportion of cases in the population in which, respectively: 1) X causes Y; 2) Y occurs regardless of X; 3) X causes the absence of Y; 4) Y is absent regardless.}
+
+\item{prior_H}{A number in [0,1]. Prior probability that X causes Y in a given case in which X and Y are both present.}
 
 \item{p_E1_H}{A number in [0,1]. Probability of observing first piece of evidence given hypothesis that X caused Y is true.}
 
