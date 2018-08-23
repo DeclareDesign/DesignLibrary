@@ -15,8 +15,8 @@
 #' @param b A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier)
 #' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by d if specified.
 #' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction)
-#' @param sd_Y A non negative number. Standard deviation on Y.
-#' @return A simple two-arm design.
+#' @param outcome_sd A non negative number. Standard deviation on Y.
+#' @return A simple instrumental variables design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @import DeclareDesign stats utils fabricatr estimatr randomizr
@@ -53,21 +53,23 @@
 #' diagnose_design(simple_iv_design_5)
 #' }
 #' 
-
-
 simple_iv_designer <- function(N = 100, 
                                type_probs = c(1/3, 1/3, 1/3, 0), 
                                assignment_probs = c(.5, .5, .5, .5), 
                                a_Y = 1,
                                b_Y = 0,
                                d_Y = 0,
-                               sd_Y = 1,
+                               outcome_sd = 1,
                                a = c(1,0,0,0) * a_Y, 
                                b = rep(b_Y, 4), 
                                d = rep(d_Y, 4) 
 ){
-  if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative")
-  if(max(assignment_probs) > 1 ) stop("assignment_probs must be < 1")
+  if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative.")
+  if(max(assignment_probs) > 1 ) stop("assignment_probs must be < 1.")
+  if(outcome_sd < 0) stop("outcome_sd must be positive.")
+  if(length(a) != 4) stop("vector a must be length 4.")
+  if(length(b) != 4) stop("vector b must be length 4.")
+  if(length(d) != 4) stop("vector d must be length 4.")
   {{{
     
     # Model
@@ -76,7 +78,7 @@ simple_iv_designer <- function(N = 100,
       type = sample(1:4, N, replace = TRUE, prob = type_probs),
       type_label = c("Always", "Never", "Complier", "Defier")[type],
       U_Z = runif(N),
-      U_Y = rnorm(N) * sd_Y,
+      U_Y = rnorm(N) * outcome_sd,
       Z = (U_Z < assignment_probs[type]),
       X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z)
     )

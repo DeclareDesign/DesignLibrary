@@ -6,8 +6,8 @@
 \usage{
 simple_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
   assignment_probs = c(0.5, 0.5, 0.5, 0.5), a_Y = 1, b_Y = 0,
-  d_Y = 0, sd_Y = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y, 4),
-  d = rep(d_Y, 4))
+  d_Y = 0, outcome_sd = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y,
+  4), d = rep(d_Y, 4))
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -22,7 +22,7 @@ simple_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 
 \item{d_Y}{A real number. Effect of Z on Y. Assumed constant across types. Overridden by d if specified.}
 
-\item{sd_Y}{A non negative number. Standard deviation on Y.}
+\item{outcome_sd}{A non negative number. Standard deviation on Y.}
 
 \item{a}{A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier)}
 
