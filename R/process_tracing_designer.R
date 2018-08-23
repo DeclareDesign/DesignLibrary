@@ -4,7 +4,7 @@
 #' 
 #' @details
 #' 
-#' This model posits a population of \code{N} cases, each of which does or does not exhibit the presence of some outcome, Y. With probability \code{prob_X}, each case also exhibits the presence or absence of some potential cause, X. The outcome Y can be realized through four distinct causal relations, distributed through the population of cases according to \code{process_proportions}. First, the presence of X might cause Y. Second, the absence of X might cause. Third, Y might be present irrespective of X. Fourth, Y might be absent irrespective of X.
+#' The model posits a population of \code{N} cases, each of which does or does not exhibit the presence of some outcome, Y. With probability \code{prob_X}, each case also exhibits the presence or absence of some potential cause, X. The outcome Y can be realized through four distinct causal relations, distributed through the population of cases according to \code{process_proportions}. First, the presence of X might cause Y. Second, the absence of X might cause Y. Third, Y might be present irrespective of X. Fourth, Y might be absent irrespective of X.
 #' 
 #' Our inquiry is a "cause of effects" question. We wish to know whether a specific case was one in which the presence (absence) of X caused the presence (absence) of Y. 
 #' 
@@ -14,14 +14,14 @@
 #' 
 #' Conditional on H being true (false), the correlation between the two pieces of evidence is given by \code{cor_E1E2_H} (\code{cor_E1E2_not_H}).  
 #' 
-#' The researcher uses Bayes’ rule to update about the probability that X caused Y given the evidence. In other words, they form a posterior inference, Pr(H|E). We specify four answer strategies for forming this inference. The first simply ignores the CPOs and is equivalent to stating a prior belief without doing any causal process tracing. The second conditions inferences only on the first piece of evidence, and the second only on the second piece of evidence. The fourth strategy conditions posterior inferences on both pieces of evidence simultaneously.
+#' The researcher uses Bayes’ rule to update about the probability that X caused Y given the evidence. In other words, they form a posterior inference, Pr(H|E). We specify four answer strategies for forming this inference. The first simply ignores the evidence and is equivalent to stating a prior belief without doing any causal process tracing. The second conditions inferences only on the first piece of evidence, and the third only on the second piece of evidence. The fourth strategy conditions posterior inferences on both pieces of evidence simultaneously.
 #' 
 #' We specify as diagnosands for this design the bias, RMSE, mean(estimand), mean(estimate) and sd(estimate).
 #' 
 #' @param N An integer. Size of population of cases from which a single case is selected.
 #' @param prior_H A number in [0,1]. Prior probability that X causes Y in a given case in which X and Y are both present. 
 #' @param prob_X A number in [0,1]. Probability that X = 1 for a given case (equal throughout population of cases).
-#' @param process_proportions A vector of numbers in [0,1] that sums to 1. Simplex denoting the proportion of cases in the population in which, respectively: 1) X causes Y; 2) Y occurs regardless of X; 3) X causes the absence of Y; 4) Y is absent regardless.
+#' @param process_proportions A vector of numbers in [0,1] that sums to 1. Simplex denoting the proportion of cases in the population in which, respectively: 1) X causes Y; 2) Y occurs regardless of X; 3) X causes the absence of Y; 4) Y is absent regardless of X.
 #' @param p_E1_H A number in [0,1]. Probability of observing first piece of evidence given hypothesis that X caused Y is true. 
 #' @param p_E2_H A number in [0,1]. Probability of observing second piece of evidence given hypothesis that X caused Y is true. 
 #' @param p_E1_not_H A number in [0,1]. Probability of observing first piece of evidence given hypothesis that X caused Y is not true. 
