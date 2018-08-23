@@ -134,13 +134,14 @@ attr(mediation_analysis_designer,"tips") <- c(
   rho = "Correlation of mediator (M) and outcome (Y) error terms"
 )
 attr(mediation_analysis_designer,"description") <- "
-<p> A mediation analysis design, with sample of size <code>N</code>, 
-    effect of treatment (Z) on mediator (M) governed by <code>a</code>, 
-    effect of mediator (M) on outcome (Y) (when Z = 0) equal to <code>b</code>, 
-    and direct effect of treatment (Z) on outcome (Y) (when M = 0) equal to <code>d</code>. 
-    Possible interaction between M and Z for Y given by c.
-<p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>.
-"
+<p> A mediation analysis design with sample size <code>N</code> that examines
+the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on 
+outcome (Y) (given Z=0) as well as direct effect of treatment (Z) on outcome
+(Y) (given M=0).
 
+<p> Analysis is implemented using an interacted regression model.
+
+<p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>
+"
 
 

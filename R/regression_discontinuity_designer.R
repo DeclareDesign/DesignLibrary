@@ -90,7 +90,7 @@ attr(regression_discontinuity_designer,"description") <- "
 <p> A regression discontinuity design with sample from population of size <code>N</code>. 
     The average treatment effect local to the cutpoint is equal to <code>tau</code>. 
 <p> Polynomial regression of order <code>poly_order</code> is used to estimate tau, within a bandwidth of size
-    <code>bandwidth</code> around the cutoff situated at <code>cutoff</code> on the running variable.
+    <code>bandwidth</code> around the <code>cutoff</code> value on the running variable.
 "
 
 

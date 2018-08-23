@@ -86,7 +86,7 @@ attr(simple_spillover_designer, "tips") <-
   )
 
 attr(simple_spillover_designer, "description") <- "
-<p> Builds a design with <code>N_groups</code> groups each containing 
+<p> A spillover design with <code>N_groups</code> groups each containing 
 <code>N_i_group</code> individuals. Potential outcomes exhibit spillovers: if 
 any individual in a group receives treatment, the effect is spread equally among 
 members of the group."

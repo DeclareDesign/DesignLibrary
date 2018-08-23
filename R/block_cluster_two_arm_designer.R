@@ -132,7 +132,7 @@ attr(block_cluster_two_arm_designer, "description") <- "
 <p> A two arm blocked and clustered experiment with <code>N_blocks</code> blocks, 
 each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn contains 
 <code>N_i_in_cluster</code> units. 
-<p> Estimand is the <code>ate</code> average treatment effect.
+<p> Estimand is the average treatment effect (<code>ate</code>).
 "
 
 

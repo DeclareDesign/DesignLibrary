@@ -99,6 +99,7 @@ attr(randomized_response_designer,"shiny_arguments") <-
     withholding_rate = c(.5,seq(.05,.95,.1))
   )
 attr(randomized_response_designer,"description") <- "
-<p> A forced randomized response design that measures the share of individuals with a given trait (whose value is defined by <code>prevalence_trait</code>) in a population of size <code>N</code>. Probability of forced response ('Yes') is given by <code>prob_forced_yes</code>, and rate at which individuals with trait lie is defined by <code>withholding_rate</code>.
+<p> A forced randomized response design that measures the share of individuals 
+with a given trait (<code>prevalence_trait</code>) in a population of size <code>N</code>. Probability of forced response ('Yes') is given by <code>prob_forced_yes</code>, and rate at which individuals with trait lie is defined by <code>withholding_rate</code>.
 "
 
