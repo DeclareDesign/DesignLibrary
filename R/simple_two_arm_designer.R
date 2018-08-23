@@ -20,7 +20,6 @@
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #'
 #' @examples

@@ -16,7 +16,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom rlang is_integerish
 #' @export
 #' @examples
 #' # Generate a regression discontinuity design using default arguments:
@@ -34,7 +34,7 @@ regression_discontinuity_designer <- function(
 ){
   if(cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0,1).")
   if(poly_reg_order < 1) stop("poly_reg_order must be at least 1.")
-  if(!rlang::is_integerish(poly_reg_order)) stop("poly_reg_order must be an integer.")
+  if(!is_integerish(poly_reg_order)) stop("poly_reg_order must be an integer.")
   if(length(control_coefs) < 1) stop("control_coefs must be a numeric vector of length > 0.")
   if(length(treatment_coefs) < 1) stop("treatment_coefs must be a numeric vector of length > 0.")
   if(outcome_sd < 0) stop("outcome_sd must be positive.")

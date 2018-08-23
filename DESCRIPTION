@@ -28,8 +28,6 @@ Depends:
 Imports:
     rlang
 Suggests: 
-    methods,
-    devtools,
     knitr,
     testthat, 
     ggplot2,

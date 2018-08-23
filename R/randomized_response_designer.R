@@ -15,7 +15,6 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept descriptive
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #'
 #' @examples

@@ -18,7 +18,6 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # Generate a pre-test post-test design using default arguments:
