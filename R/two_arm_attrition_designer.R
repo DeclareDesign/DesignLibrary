@@ -96,5 +96,5 @@ two_arm_attrition_designer <- function(N = 100,
 
 attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample", b_R = "How reporting is related to treatment", rho = "Correlation between reporting error term and outcome error term")
 attr(two_arm_attrition_designer, "shiny_arguments") <- list(N = c(100, 500), b_R = 0:2, rho = c(0,1))
-attr(two_arm_attrition_designer, "description") <- "<p> A design in which an outcome (Y) is observed conditional on a post-treatment variable (R).<p>"
+attr(two_arm_attrition_designer, "description") <- "<p> A two arm design in which an outcome (Y) is observed conditional on a post-treatment variable (R)."
 

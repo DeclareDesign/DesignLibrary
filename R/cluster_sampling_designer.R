@@ -91,9 +91,9 @@ attr(cluster_sampling_designer, "shiny_arguments") <- list(
   icc = c(0.2, seq(0.002, .999, by = 0.2))
 )
 attr(cluster_sampling_designer, "description") <- "
-<p> A cluster sampling design that samples <code>n_clusters_in_block</code> clusters each
-comprising  <code>n_i_in_cluster</code> units. The population comprises 
+<p> A cluster sampling design that samples <code>n_clusters_in_block</code> clusters from each block, each
+comprising  <code>n_i_in_cluster</code> units from a population with  <code>N_blocks</code> with
 <code>N_clusters_in_block</code> with <code>N_i_in_cluster</code> units each. Outcomes 
-within clusters have ICC approximately equal to <code>ICC</code>. 
+exhibit ICC approximately equal to <code>ICC</code>. 
 "
 

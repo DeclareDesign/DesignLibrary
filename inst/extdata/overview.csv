@@ -12,3 +12,4 @@ simple_two_arm_design,simple_two_arm_designer,simple_two_arm,,simple_two_arm,Dec
 simple_factorial_design,simple_factorial_designer,,,,DeclareDesign,https://declaredesign.org/about/
 two_arm_attrition_design,two_arm_attrition_designer,,,,DeclareDesign,https://declaredesign.org/about/
 process_tracing_design,process_tracing_designer,,,process_tracing_design,DeclareDesign,https://declaredesign.org/about/
+simple_iv_design,simple_iv_designer,,,simple_iv_design,DeclareDesign,https://declaredesign.org/about/
