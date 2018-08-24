@@ -18,7 +18,10 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #' @examples
 #' # Generate a pre-test post-test design using default arguments:

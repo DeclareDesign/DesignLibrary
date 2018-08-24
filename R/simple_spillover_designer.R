@@ -15,13 +15,16 @@
 #' 
 #' @param N_groups An integer. Number of groups.
 #' @param N_i_group Number of units in each group. Can be scalar or vector of length \code{N_groups}.
-#' @param sd A nonnegative number. Standard deviation of individual-level shock.
+#' @param sd_i A nonnegative number. Standard deviation of individual-level shock.
 #' @param gamma A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.
 #' @return A simple spillover design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_reveal
+#' @importFrom fabricatr fabricate add_level fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #' @examples
 #' # Generate a simple spillover design using default arguments:
@@ -31,17 +34,17 @@
 
 simple_spillover_designer <- function(N_groups = 80, 
                                       N_i_group = 3, 
-                                      sd = .2,
+                                      sd_i = .2,
                                       gamma = 2)
 {
-  if(sd < 0) stop("sd must be nonnegative")
+  if(sd_i < 0) stop("sd_i must be nonnegative")
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 
                               i = add_level(N = n, zeros = 0, ones = 1))
     
-    dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd
+    dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd_i
     
     # I: Inquiry
     estimand <- declare_estimand(Treat_1 = mean(
@@ -73,7 +76,7 @@ simple_spillover_designer <- function(N_groups = 80,
 attr(simple_spillover_designer, "shiny_arguments") <- list(
   N_groups = c(50, 100, 500),
   N_i_group = c(10, 50, 100),
-  sd = c(0, .5, 1),
+  sd_i = c(0, .5, 1),
   gamma = c(-2, 2)
 )
 
@@ -81,7 +84,7 @@ attr(simple_spillover_designer, "tips") <-
   list(
     N_groups = "Number of groups",
     N_i_group = "Number of units in each group",
-    sd = "Standard deviation of individual-level shock",
+    sd_i = "Standard deviation of individual-level shock",
     gamma = "Parameter that controls whether spillovers within groups substitute or complement each other"
   )
 

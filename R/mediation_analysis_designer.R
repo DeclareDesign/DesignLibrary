@@ -18,7 +18,10 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept mediation
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design get_estimands
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #' @examples
 #' # Generate a mediation analysis design using default arguments:

@@ -9,7 +9,7 @@
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.
 #' @param outcome_means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
-#' @param sd A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
+#' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.
 #' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces). 
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.
@@ -17,7 +17,12 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr rlang
+#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy difference_in_means
+#' @importFrom rlang eval_bare expr quo_text quos sym
+#' @importFrom utils data
 #' @export
 #' @examples
 #'
@@ -25,7 +30,7 @@
 #' design <- multi_arm_designer()
 #'
 #'
-#' # A design with different mean and sd in each arm
+#' # A design with different means and standard deviations in each arm
 #' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
@@ -36,7 +41,7 @@
 multi_arm_designer <- function(N = 30,
                                m_arms = 3,
                                outcome_means = rep(0, m_arms),
-                               sd = 1,
+                               sd_i = 1,
                                outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
                                fixed = NULL) {
@@ -49,7 +54,7 @@ multi_arm_designer <- function(N = 30,
       length(outcome_sds) != m_arms ||
       length(conditions) != m_arms)
     stop("outcome_means, outcome_sds and conditions arguments must be of length m_arms.")
-  if (sd < 0) stop("sd should be nonnegative")
+  if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
   if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
   if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
@@ -59,12 +64,12 @@ multi_arm_designer <- function(N = 30,
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
   error_names <- paste0("u_", 1:m_arms)
   names(errors) <- error_names
-  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*sd))
+  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*sd_i))
   
   conditions <- as.character(conditions)
   
   f_Y <- formula(
-    paste0("Y ~ ",paste0(
+    paste0("Y ~ ", paste0(
       "(", outcome_means_, " + ", error_names,
       ")*( Z == '", conditions, "')",
       collapse = " + "), "+ u"))

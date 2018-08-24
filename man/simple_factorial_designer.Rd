@@ -5,10 +5,10 @@
 \title{Create a simple factorial design}
 \usage{
 simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
-  w_A = 0.5, w_B = 0.5, outcome_means = rep(0, 4),
+  weight_A = 0.5, weight_B = 0.5, outcome_means = rep(0, 4),
   mean_A0B0 = outcome_means[1], mean_A0B1 = outcome_means[2],
-  mean_A1B0 = outcome_means[3], mean_A1B1 = outcome_means[4], sd = 1,
-  outcome_sds = rep(0, 4))
+  mean_A1B0 = outcome_means[3], mean_A1B1 = outcome_means[4],
+  sd_i = 1, outcome_sds = rep(0, 4))
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -17,9 +17,9 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 
 \item{prob_B}{A number in [0,1]. Probability of assignment to treatment B.}
 
-\item{w_A}{A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.}
+\item{weight_A}{A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.}
 
-\item{w_B}{A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.}
+\item{weight_B}{A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.}
 
 \item{outcome_means}{A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.}
 
@@ -31,9 +31,9 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 
 \item{mean_A1B1}{A number. Mean outcome in A=1, B=1 condition.}
 
-\item{sd}{A nonnegative scalar. Standard deviations for shock for each unit (common across arms).}
+\item{sd_i}{A nonnegative scalar. Standard deviation of individual-level shock (common across arms).}
 
-\item{outcome_sds}{A non-negative 4-vector.Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.}
+\item{outcome_sds}{A nonnegative vector of length 4. Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.}
 }
 \value{
 A two-by-two factorial design.
@@ -63,7 +63,7 @@ diagnose_design(design)
 # A design with estimands that "match" the assignment:
 design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
                                     prob_A = .8, prob_B = .2, 
-                                    w_A = .8, w_B = .2)
+                                    weight_A = .8, weight_B = .2)
 \dontrun{
 diagnose_design(design)
 }

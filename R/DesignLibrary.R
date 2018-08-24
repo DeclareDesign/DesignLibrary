@@ -6,10 +6,12 @@
 #' 
 #' @name DesignLibrary
 #' 
+#' @importFrom utils globalVariables
+#' 
 #' 
 
 
-utils::globalVariables(
+globalVariables(
   names = c(
     "A",
     "B",
@@ -68,5 +70,7 @@ utils::globalVariables(
     "Y_Z_0",
     "Y_Z_1",
     "Z",
-    "zeros"
-  ))
+    "zeros",
+    "u_Z",
+    "sd"
+    ))

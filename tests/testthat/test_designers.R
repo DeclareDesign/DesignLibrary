@@ -1,7 +1,6 @@
 
 context(desc = "Testing that designers in the library work as they should")
 
-
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
 
@@ -88,13 +87,15 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
             expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_1 = -1))
-            expect_error(block_cluster_two_arm_designer(prob = 10))
-                               })
+            expect_error(block_cluster_two_arm_designer(assignment_prob = 10))
+            expect_error(block_cluster_two_arm_designer(rho = 10))
+            expect_error(block_cluster_two_arm_designer(N = 1, N_i_in_cluster = 10))
+          })
 
 test_that(desc = "simple_factorial_designer errors when it should",
           code = {
-            expect_error(simple_factorial_designer(w_A = 10))
-            expect_error(simple_factorial_designer(w_B = 10))
+            expect_error(simple_factorial_designer(weight_A = 10))
+            expect_error(simple_factorial_designer(weight_B = 10))
             expect_error(simple_factorial_designer(outcome_sds = -1))
             expect_error(simple_factorial_designer(prob_A = -1))
             expect_error(simple_factorial_designer(prob_A = 3))
@@ -105,7 +106,7 @@ test_that(desc = "simple_factorial_designer errors when it should",
 test_that(desc = "simple_two_arm_designer errors when it should",
           code = {
             expect_error(simple_two_arm_designer(control_sd = -1))
-            expect_error(simple_two_arm_designer(prob = 10))
+            expect_error(simple_two_arm_designer(assignment_prob = 10))
             expect_error(simple_two_arm_designer(rho = 10))
                                })
 
@@ -116,7 +117,7 @@ test_that(desc = "mediation_analysis_designer errors when it should",
 
 test_that(desc = "simple_spillover_designer errors when it should",
           code = {
-            expect_error(simple_spillover_designer(sd = -10))
+            expect_error(simple_spillover_designer(sd_i = -10))
             expect_error(simple_spillover_designer(N_i_group = -10))
           })
 
@@ -136,11 +137,6 @@ test_that(desc = "randomized_response_designer errors when it should",
             expect_error(randomized_response_designer(prob_forced_yes = -10))
             expect_error(randomized_response_designer(prevalence_rate = -10))
             expect_error(randomized_response_designer(withholding_rate = -10))
-          })
-
-test_that(desc = "block_cluster_two_arm_designer errors when it should",
-          code = {
-            expect_error(block_cluster_two_arm_designer(rho = 10))
           })
 
 test_that(desc = "crossover_designer errors when it should",
@@ -175,7 +171,7 @@ test_that(desc = "multi_arm_designer errors when it should",
             expect_error(multi_arm_designer(outcome_means = rep(1,2), m_arms = 10))
             expect_error(multi_arm_designer(m_arms = .5,outcome_means = 2))
             expect_error(multi_arm_designer(outcome_sds = c(-10,-10),outcome_means = c(2,2), m_arms = 2))
-            expect_error(multi_arm_designer(sd = -1))
+            expect_error(multi_arm_designer(sd_i = -1))
           })
 
 test_that(desc = "factorial_designer errors when it should",
@@ -183,11 +179,11 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(outcome_name = c("Y ")))
             expect_error(factorial_designer(outcome_means = 1, k = 2))
             expect_error(factorial_designer(outcome_sds = 1, k = 2))
-            expect_error(factorial_designer(probs = .5, k = 2))
-            expect_error(factorial_designer(probs = .5, k = 1))
+            expect_error(factorial_designer(assignment_probs = .5, k = 2))
+            expect_error(factorial_designer(assignment_probs = .5, k = 1))
             expect_error(factorial_designer(k = .5))
             expect_error(factorial_designer(outcome_sds = c(-1,-1,-1,-1), k = 2))
-            expect_error(factorial_designer(probs = c(-.5,.5), k = 2))
+            expect_error(factorial_designer(assignment_probs = c(-.5,.5), k = 2))
           })
 
 test_that(desc = "process_tracing_designer errors when it should",

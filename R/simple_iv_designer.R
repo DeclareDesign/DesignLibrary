@@ -3,12 +3,12 @@
 #' Builds a design with one instrument, one binary explanatory variable, and one outcome.
 #' 
 #' A researcher is interested in the effect of binary X on outcome Y.  The relationship is confounded  because units that are more likely to be assigned to X=1 have higher Y outcomes.
-#' A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for others, and affects Y only through X. 
+#' A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for some, and affects Y only through X. 
 #' 
 #' 
 #' @param N An integer. Sample size.
 #' @param type_probs A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier).
-#' @param assignment_probs A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier).
+#' @param assignment_probs A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier). Under random assignment these are normally identical since complier status is not known to researchers in advance.
 #' @param a_Y A real number. Constant in Y equation. Assumed constant across types. Overridden by \code{a} if specified.
 #' @param a A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier).
 #' @param b_Y A real number. Effect of X on Y equation. Assumed constant across types. Overridden by \code{b} if specified. 
@@ -19,7 +19,11 @@
 #' @return A simple instrumental variables design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy iv_robust lm_robust
+#' @importFrom stats runif
 #' @export
 #'
 #' @examples
@@ -77,14 +81,14 @@ simple_iv_designer <- function(N = 100,
       N = N,
       type = sample(1:4, N, replace = TRUE, prob = type_probs),
       type_label = c("Always", "Never", "Complier", "Defier")[type],
-      U_Z = runif(N),
-      U_Y = rnorm(N) * outcome_sd,
-      Z = (U_Z < assignment_probs[type]),
+      u_Z = runif(N),
+      u_Y = rnorm(N) * outcome_sd,
+      Z = (u_Z < assignment_probs[type]),
       X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z)
     )
     
     potentials <-
-      declare_potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + U_Y,
+      declare_potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + u_Y,
                                  assignment_variables = "X")
     
     reveal <- declare_reveal(outcome_variables = Y,

@@ -7,6 +7,7 @@
 * Cleaned up various inconsistencies in documentation
 * Cleaned up dependencies in DESCRIPTION
 * Cleaner method for handling global variables in DesignLibrary.R
+* Used `importFrom` to fix notes and errors in `check_results_DesignLibrary.html`
 
 # DesignLibrary 0.1.0
 

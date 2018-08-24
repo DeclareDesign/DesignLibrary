@@ -14,7 +14,7 @@ simple_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 
 \item{type_probs}{A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier).}
 
-\item{assignment_probs}{A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier).}
+\item{assignment_probs}{A vector of four numbers in [0,1]. Probability of assignment to encouragement (Z) for each complier type (always-taker, never-taker, complier, defier). Under random assignment these are normally identical since complier status is not known to researchers in advance.}
 
 \item{a_Y}{A real number. Constant in Y equation. Assumed constant across types. Overridden by \code{a} if specified.}
 
@@ -38,7 +38,7 @@ Builds a design with one instrument, one binary explanatory variable, and one ou
 }
 \details{
 A researcher is interested in the effect of binary X on outcome Y.  The relationship is confounded  because units that are more likely to be assigned to X=1 have higher Y outcomes.
-A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for others, and affects Y only through X.
+A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for some, and affects Y only through X.
 }
 \examples{
 # Generate a simple iv design: iv identifies late not ate 
