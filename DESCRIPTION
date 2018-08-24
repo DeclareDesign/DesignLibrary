@@ -28,10 +28,7 @@ Depends:
 Imports:
     rlang
 Suggests: 
-    knitr,
     testthat, 
-    ggplot2,
-    broom,
-    rmarkdown
+    broom
 RoxygenNote: 6.1.0
 
