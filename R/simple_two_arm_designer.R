@@ -56,10 +56,10 @@ simple_two_arm_designer <- function(N = 100,
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = prob)
+    reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
-    reveal_Y    <- declare_reveal()
     
     # Design
     simple_two_arm_design <- population + potentials + estimand + assignment + reveal_Y + estimator
@@ -83,7 +83,7 @@ attr(simple_two_arm_designer, "tips") <-
   )
 
 attr(simple_two_arm_designer, "description") <- "
-<p> A simple two arm design of sample size <code>N</code> and with constant average treatment effect equal to <code>ate</code>.
+<p> A simple two arm design of sample size <code>N</code> and with average treatment effect equal to <code>ate</code>.
 "
 
 
