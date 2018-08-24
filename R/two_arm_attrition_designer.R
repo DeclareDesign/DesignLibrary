@@ -22,6 +22,10 @@
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy 
 #' @export
 #' @examples
 #' # To make a design using default argument (missing completely at random):

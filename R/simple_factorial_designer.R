@@ -27,6 +27,10 @@
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment factorial
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design redesign
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #'
 #' @examples

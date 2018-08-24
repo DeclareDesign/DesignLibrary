@@ -21,6 +21,10 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_reveal
+#' @importFrom fabricatr fabricate add_level fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #' @examples
 #' # Generate a simple spillover design using default arguments:

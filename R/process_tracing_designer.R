@@ -34,6 +34,10 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
+#' @importFrom DeclareDesign declare_diagnosands declare_estimand declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data get_estimands get_estimates set_diagnosands
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra draw_rs 
+#' @importFrom estimatr tidy 
 #' @importFrom rlang is_integerish is_character
 #' @export
 #' @examples

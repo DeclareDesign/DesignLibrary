@@ -11,9 +11,9 @@ cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
 \arguments{
 \item{N_blocks}{An integer. Number of blocks. Defaults to 1 for no blocks.}
 
-\item{N_clusters_in_block}{An integer. Total number of clusters in the population.}
+\item{N_clusters_in_block}{An integer of vector of integers of length \code{N_blocks}. Number of clusters in each block in the population.}
 
-\item{N_i_in_cluster}{An integer of vector of integers of length \code{N_clusters_in_block}. Total number of subjects per cluster in the population.}
+\item{N_i_in_cluster}{An integer or vector of integers of length \code{sum(N_clusters_in_block)}. Number of subjects per cluster in the population.}
 
 \item{n_clusters_in_block}{An integer. Number of clusters to sample.}
 
@@ -25,19 +25,19 @@ cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
 A cluster sampling design.
 }
 \description{
-Builds a cluster sampling design of a population with \code{N_blocks}, \code{N_clusters_in_block} containing \code{N_i_in_cluster}. Estimations sample \code{N_clusters_in_block} each comprising \code{n_i_in_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
+Builds a cluster sampling design for an ordinal outcome variable for a population with \code{N_blocks}, each with \code{N_clusters_in_block} cluster, each containing \code{N_i_in_cluster} units. Estimations sample \code{n_clusters_in_block} each comprising \code{n_i_in_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
 }
 \details{
-Key limitations: The design assumes clusters draw with equal probability (rather than, for example, proportionate to size).
+Key limitations: The design assumes a fixed number of clusters drawn in each block and a fixed number of individuals drawn from each cluster.
 
 See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
 }
 \examples{
 # To make a design using default arguments:
 cluster_sampling_design <- cluster_sampling_designer()
-# A design with varying cluster size
+# A design with varying block size and varying cluster size
 cluster_sampling_design <- cluster_sampling_designer(
-  N_clusters_in_block = 10, N_i_in_cluster = 3:12, 
+  N_blocks = 2, N_clusters_in_block = 6:7, N_i_in_cluster = 3:15, 
   n_clusters_in_block = 5,  n_i_in_cluster = 2)
 }
 \author{

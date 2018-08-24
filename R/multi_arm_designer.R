@@ -17,7 +17,11 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare quo_text
+#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy difference_in_means
+#' @importFrom rlang eval_bare expr quo_text quos sym
 #' @export
 #' @examples
 #'

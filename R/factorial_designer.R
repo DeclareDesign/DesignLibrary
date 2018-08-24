@@ -25,8 +25,11 @@
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
-#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare quo_text
-#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population 
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design tidy_estimator
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust tidy tidy.lm_robust
+#' @importFrom rlang eval_bare expr is_integerish parse_expr quo_text quos sym UQS
 #' @export
 #' @examples
 #' 
