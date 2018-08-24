@@ -4,7 +4,7 @@
 \alias{simple_spillover_designer}
 \title{Create a simple design with spillovers}
 \usage{
-simple_spillover_designer(N_groups = 80, N_i_group = 3, sd = 0.2,
+simple_spillover_designer(N_groups = 80, N_i_group = 3, sd_i = 0.2,
   gamma = 2)
 }
 \arguments{
@@ -12,7 +12,7 @@ simple_spillover_designer(N_groups = 80, N_i_group = 3, sd = 0.2,
 
 \item{N_i_group}{Number of units in each group. Can be scalar or vector of length \code{N_groups}.}
 
-\item{sd}{A nonnegative number. Standard deviation of individual-level shock.}
+\item{sd_i}{A nonnegative number. Standard deviation of individual-level shock.}
 
 \item{gamma}{A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.}
 }

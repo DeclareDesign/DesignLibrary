@@ -25,7 +25,8 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy 
+#' @importFrom estimatr tidy
+#' @importFrom stats rnorm
 #' @export
 #' @examples
 #' # To make a design using default argument (missing completely at random):
@@ -97,7 +98,9 @@ two_arm_attrition_designer <- function(N = 100,
   two_arm_attrition_design
 }
 
-attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample", b_R = "How reporting is related to treatment", rho = "Correlation between reporting error term and outcome error term")
+attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample",
+                                              b_R = "How reporting is related to treatment", 
+                                              rho = "Correlation between reporting error term and outcome error term")
 attr(two_arm_attrition_designer, "shiny_arguments") <- list(N = c(100, 500), b_R = 0:2, rho = c(0,1))
 attr(two_arm_attrition_designer, "description") <- "<p> A two arm design in which an outcome (Y) is observed conditional on a post-treatment variable (R)."
 

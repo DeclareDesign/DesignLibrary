@@ -22,6 +22,7 @@
 #' @importFrom fabricatr fabricate add_level draw_normal_icc draw_ordered
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom estimatr tidy lm_robust
+#' @importFrom stats qnorm
 #' @export
 #' @examples
 #' # To make a design using default arguments:

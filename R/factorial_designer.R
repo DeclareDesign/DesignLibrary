@@ -5,9 +5,9 @@
 #' @param N An integer. Size of sample.
 #' @param k An integer. The number of factors in the design.
 #' @param outcome_means A numeric vector of length \code{2^k}. Means for each of the \code{2^k} treatment combinations. See `Details` for the correct order of values. 
-#' @param sd A non negative number for standard deviation for outcomes. Use \code{sd} if all outcomes have identical standard deviations. Otherwise use \code{outcomes_sds}.
+#' @param sd A nonnegative number. Standard deviation for outcomes when all outcomes have identical standard deviations. For outcome-specific standard deviations use \code{outcomes_sds}.
 #' @param outcome_sds A non negative numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
-#' @param probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
+#' @param assignment_probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
 #' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the funtion \code{c()} as in \code{outcome_name = c("War")}.
 #' @param treatment_names A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.
@@ -30,42 +30,50 @@
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr tidy lm_robust tidy tidy.lm_robust
 #' @importFrom rlang eval_bare expr is_integerish parse_expr quo_text quos sym UQS
+#' @importFrom stats rnorm formula
 #' @export
 #' @examples
 #' 
 #' # A factorial design using default arguments
 #' factorial_design <- factorial_designer()
 #' 
-#' # A 2 x 2 x 2 factorial design with unequal probabilities of assignment to each treatment condition.
-#' # In this case the estimator weights up by the conditional probabilities of assignment.
-#' factorial_design_2 <- factorial_designer(k = 3, probs = c(1/2, 1/4, 1/8), 
+#' # A 2 x 2 x 2 factorial design with unequal probabilities of assignment to 
+#' # each treatment condition. In this case the estimator weights up by the 
+#' # conditional probabilities of assignment.
+#' factorial_design_2 <- factorial_designer(k = 3, 
+#'                                          assignment_probs = c(1/2, 1/4, 1/8), 
 #'                                          outcome_means = c(0,0,0,0,0,0,0,4))
 #' \dontrun{
 #' diagnose_design(factorial_design_2)
 #' }
 #' # Mapping from outcomes to estimands 
-#' # The mapping between the potential outcomes schedule and the estimands of interest 
-#' # is not always easy. To help with intuition consider a 2^3 factorial 
-#' # design. You might like to think of a data generating process as a collection
-#' # of marginal effects and interaction effects mapping from treatments to outcomes. 
+#' # The mapping between the potential outcomes schedule and the estimands of
+#' # interest is not always easy. To help with intuition consider a 2^3 
+#' # factorial design. You might like to think of a data generating process as
+#' # a collection of marginal effects and interaction effects mapping from
+#' # treatments to outcomes. 
 #' # For instance: Y = -.25 + .75*T1 - .25*T2 -.25*T3 + T1*T2*T3
-#' # The vector of implied potential outcome means as a function of conditions  could
-#' # then be generated like this:
-#'  
+#' # The vector of implied potential outcome means as a function of conditions  
+#' # could then be generated like this:
+#' 
 #' T <- expand.grid(rep(list(c(0,1)), 3))
 #' outcome_means =  -.25 + T[,1]*3/4 - T[,2]/4 - T[,3]/4 + T[,1]*T[,2]*T[,3]
-#' outcomes <- cbind(Z, outcome_means)
+#' outcomes <- cbind(T, outcome_means)
 #' colnames(outcomes) <- c("T1", "T2", "T3", "mean")
 #' outcomes
 #' 
-#' # Examination of the outcomes in this table reveals that there is an average outcome of 0 
-#' # (over all conditions), an average effect of treatment T1 of 1,  an average effects for 
-#' #  T2 and T3 of 0,  the two way interactions are .5 (averaged over conditions of the third treatment) and  
-#' # the triple interaction is 1.
-#' #  
-#' # These are exactly the estimands calculated by the designer and returned in diagnosis.
-#' factorial_design_3 <- factorial_designer(k = 3, outcome_means = outcome_means, outcome_sds = rep(.01, 8))
+#' # Examination of the outcomes in this table reveals that there is an 
+#' # average outcome of 0 (over all conditions), an average effect of treatment
+#' # T1 of 1,  an average effects for T2 and T3 of 0,  the two way interactions 
+#' # are .5 (averaged over conditions of the third treatment) and the triple 
+#' # interaction is 1.
+#' # These are exactly the estimands calculated by the designer and returned in 
+#' # diagnosis.
+#' factorial_design_3 <- factorial_designer(k = 3, 
+#'                                          outcome_means = outcome_means,
+#'                                          outcome_sds = rep(.01, 8))
 #' \dontrun{
+#' library(DeclareDesign)
 #' diagnose_design(factorial_design_3, sims = 10)
 #' }
 #' 
@@ -76,7 +84,7 @@ factorial_designer <- function(
   outcome_means = rep(0, 2^k),
   sd = 1, 
   outcome_sds = rep(sd, 2^k),
-  probs = rep(.5, k),
+  assignment_probs = rep(.5, k),
   outcome_name = c("Y"),
   treatment_names = NULL,
   fixed = NULL
@@ -86,10 +94,10 @@ factorial_designer <- function(
   
   if(any(grepl(" ", fixed = TRUE, outcome_name))) stop("Please remove spaces from `outcome_name' strings.")
   if(length(outcome_means) != 2^k || length(outcome_sds) != 2^k) stop("`outcome_means' and `outcome_sds` arguments must be the same as length of 2^(k).")
-  if(length(probs) != k) stop("`probs` must be the same as length of k.")
+  if(length(assignment_probs) != k) stop("`assignment_probs` must be the same as length of k.")
   if(k < 2 || !is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
-  if(any(probs <= 0)) stop("`probs' should have positive values only.")
+  if(any(assignment_probs <= 0)) stop("`assignment_probs' should have positive values only.")
   
   # pre-objects -------------------------------------------------------------
   
@@ -112,14 +120,14 @@ factorial_designer <- function(
   
   # probability each treatment combination
   prob_each <- apply(sapply(1:k, function(k){
-    probs[k] * cond_grid[,k] + (1-probs[k]) * (1-cond_grid[,k])
+    assignment_probs[k] * cond_grid[,k] + (1-assignment_probs[k]) * (1-cond_grid[,k])
   }), 1, prod)
   
   cond_row <- lapply(1:k, function(x) which(cond_grid[,x]==1))
   
   # fixed argument ----------------------------------------------------------
   
-  outcome_sds_ <- outcome_sds; means_ <- outcome_means; probs_ <- probs; N_ <- N; k_ <- k 
+  outcome_sds_ <- outcome_sds; means_ <- outcome_means; assignment_probs_ <- assignment_probs; N_ <- N; k_ <- k 
   
   if(is.null(fixed)) fixed <- ""
   if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) expr(outcome_sds[!!i])) 
@@ -243,7 +251,7 @@ factorial_designer <- function(
                                        match.call.defaults(),
                                        # rlang = TRUE,
                                        arguments_as_values = TRUE,
-                                       exclude_args = c("k", "probs", "outcome_name", "treatment_names", "sd", fixed, "fixed"))
+                                       exclude_args = c("k", "assignment_probs", "outcome_name", "treatment_names", "sd", fixed, "fixed"))
   
   
   design_code <-

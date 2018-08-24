@@ -51,6 +51,13 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 # This is the core function for grabbing code when using the {{{ }}} approach:
 
+#' Generates clean code string that reproduces design
+#' @importFrom utils getSrcref
+#' @param designer Designer function.
+#' @param args Named list of arguments to be passed to designer function.
+#' @param arguments_as_values Logical. Whether to replace argument names for value.
+#' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
+
 construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))

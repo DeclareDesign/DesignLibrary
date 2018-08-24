@@ -9,8 +9,8 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
   N_i_in_cluster = ifelse(is.null(N), 1, round(N/mean(N_blocks *
   N_clusters_in_block))), sd = 1, sd_block = 0.5, sd_cluster = 0.5,
   sd_i_0 = sqrt(max(0, sd^2 - sd_block^2 - sd_cluster^2)),
-  sd_i_1 = sd_i_0, rho = 1, prob = 0.5, control_mean = 0,
-  ate = 0, treatment_mean = control_mean + ate)
+  sd_i_1 = sd_i_0, rho = 1, assignment_prob = 0.5,
+  control_mean = 0, ate = 0, treatment_mean = control_mean + ate)
 }
 \arguments{
 \item{N}{An integer. Total number of units. Usually not specified as \code{N} is determined by \code{N_blocks}, \code{N_clusters_in_block}, and \code{N_i_in_cluster}. If \code{N_blocks}, and  \code{N_clusters_in_block}, and \code{N_i_in_cluster} are specified then \code{N} is overridden. If these are not specified and \code{N} is specified then designer attempts to guess sizes of levels to approximate \code{N}, with preference for a design without blocks or clusters.}
@@ -33,7 +33,7 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
 
 \item{rho}{A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.}
 
-\item{prob}{A number in (0,1). Treatment assignment probability.}
+\item{assignment_prob}{A number in (0,1). Treatment assignment probability.}
 
 \item{control_mean}{A number. Average outcome in control.}
 
@@ -65,10 +65,13 @@ See \href{https://declaredesign.org/library/articles/block_cluster_two_arm.html}
 block_cluster_two_arm_design <- block_cluster_two_arm_designer()
 block_cluster_uneven <- block_cluster_two_arm_designer(
        N_blocks = 3, N_clusters_in_block = 2:4, N_i_in_cluster = 1:9)
-# A design in which number of clusters of cluster size is not specified but N and block size are:        
+# A design in which number of clusters of cluster size is not specified
+# but N and block size are:        
 block_cluster_guess <- block_cluster_two_arm_designer(N = 24, N_blocks = 3)
-# A design in which cluster size is not specified but N and block size are and target N is not met:        
-block_cluster_guess_2 <- block_cluster_two_arm_designer(N = 24, N_blocks = 3, N_clusters_in_block = 3)
+# A design in which cluster size is not specified but N and block size are 
+# and target N is not met returns an error:        
+\dontrun{block_cluster_guess_2 <- block_cluster_two_arm_designer(N = 24,
+N_blocks = 3, N_clusters_in_block = 3)}
 
 }
 \author{

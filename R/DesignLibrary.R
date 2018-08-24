@@ -70,5 +70,7 @@ globalVariables(
     "Y_Z_0",
     "Y_Z_1",
     "Z",
-    "zeros"
-  ))
+    "zeros",
+    "u_Z",
+    "sd"
+    ))

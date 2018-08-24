@@ -37,8 +37,10 @@
 #' @importFrom DeclareDesign declare_diagnosands declare_estimand declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data get_estimands get_estimates set_diagnosands
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
-#' @importFrom estimatr tidy 
+#' @importFrom estimatr tidy
+#' @importFrom stats rbinom
 #' @importFrom rlang is_integerish is_character
+#' @importFrom utils data
 #' @export
 #' @examples
 #' # Generate a process-tracing design using default arguments:
@@ -162,25 +164,25 @@ process_tracing_designer <- function(
     )
     smoking_gun <- declare_estimator(
       handler = bayes_estimator,
-      p_E_H = ifelse(data$E1, p_E1_H, 1 - p_E1_H),
-      p_E_not_H = ifelse(data$E1, p_E1_not_H, 1 - p_E1_not_H),
+      p_E_H = with(data, ifelse(E1, p_E1_H, 1 - p_E1_H)),
+      p_E_not_H = with(data, ifelse(E1, p_E1_not_H, 1 - p_E1_not_H)),
       label = label_E1,
-      result = data$E1
+      result = with(data, E1)
     )
     straw_in_wind <- declare_estimator(
       handler = bayes_estimator,
-      p_E_H = ifelse(data$E2, p_E2_H, 1 - p_E2_H),
-      p_E_not_H = ifelse(data$E2, p_E2_not_H, 1 - p_E2_not_H),
+      p_E_H = with(data, ifelse(E2, p_E2_H, 1 - p_E2_H)),
+      p_E_not_H = with(data, ifelse(E2, p_E2_not_H, 1 - p_E2_not_H)),
       label = label_E2,
-      result = data$E2
+      result = with(data, E2)
     )
     
     joint_test <- declare_estimator(
       handler = bayes_estimator,
-      p_E_H = joint_prob_H[c("00", "01", "10", "11") %in% data$test_results],
-      p_E_not_H = joint_prob_not_H[c("00", "01", "10", "11") %in% data$test_results],
+      p_E_H = joint_prob_H[c("00", "01", "10", "11") %in% data[["test_results"]]],
+      p_E_not_H = joint_prob_not_H[c("00", "01", "10", "11") %in% data[["test_results"]]],
       label = paste(label_E1, "and", label_E2),
-      result = data$test_results
+      result = data[["test_results"]]
     )
     
     # Design

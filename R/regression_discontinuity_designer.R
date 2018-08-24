@@ -21,6 +21,7 @@
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom estimatr tidy lm_robust
 #' @importFrom rlang is_integerish
+#' @importFrom stats poly runif
 #' @export
 #' @examples
 #' # Generate a regression discontinuity design using default arguments:

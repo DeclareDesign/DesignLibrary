@@ -23,6 +23,7 @@
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr tidy iv_robust lm_robust
+#' @importFrom stats runif
 #' @export
 #'
 #' @examples

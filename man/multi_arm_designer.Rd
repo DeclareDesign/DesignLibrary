@@ -5,7 +5,7 @@
 \title{Create a design with multiple experimental arms}
 \usage{
 multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
-  m_arms), sd = 1, outcome_sds = rep(0, m_arms),
+  m_arms), sd_i = 1, outcome_sds = rep(0, m_arms),
   conditions = 1:m_arms, fixed = NULL)
 }
 \arguments{
@@ -15,7 +15,7 @@ multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
 
 \item{outcome_means}{A numeric vector of length \code{m_arms}.  Average outcome in each arm.}
 
-\item{sd}{A nonnegative scalar. Standard deviation of individual-level shock (common across arms).}
+\item{sd_i}{A nonnegative scalar. Standard deviation of individual-level shock (common across arms).}
 
 \item{outcome_sds}{A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.}
 
@@ -38,7 +38,7 @@ See \href{https://declaredesign.org/library/articles/multi_arm.html}{vignette on
 design <- multi_arm_designer()
 
 
-# A design with different mean and sd in each arm
+# A design with different means and standard deviations in each arm
 design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
 
 design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
