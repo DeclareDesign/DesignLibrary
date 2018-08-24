@@ -34,7 +34,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom rlang is_integerish is_character
 #' @export
 #' @examples
 #' # Generate a process-tracing design using default arguments:
@@ -77,7 +77,7 @@ process_tracing_designer <- function(
   label_E1 = "Smoking Gun",
   label_E2 = "Straw in the Wind"
 ){
-  if(!rlang::is_integerish(N) || N < 1) stop("N must be a positive integer.")
+  if(!is_integerish(N) || N < 1) stop("N must be a positive integer.")
   if(prob_X < 0 || prob_X > 1) stop("prob_X must be in [0,1].")
   if(length(process_proportions) != 4) stop("process_proportions must be of length 4.")
   if(sum(process_proportions) != 1 || any(process_proportions < 0) || any(process_proportions> 1)) stop("process_proportions must be a 3-simplex.")
@@ -93,8 +93,8 @@ process_tracing_designer <- function(
     c((1 - p1) * (1 - p2) + r,p2 * (1 - p1) - r, p1 * (1 - p2) - r, p1 * p2 + r)}
   if(min(test_prob(p_E1_H, p_E2_H, cor_E1E2_H)) < 0) stop("Correlation coefficient not compatible with probabilities")
   if(min(test_prob(p_E1_not_H, p_E2_not_H, cor_E1E2_not_H)) < 0) stop("Correlation coefficient not compatible with probabilities")
-  if(!rlang::is_character(label_E1) || length(label_E1) > 1) stop("label_E1 must be a character of length 1.")
-  if(!rlang::is_character(label_E2) || length(label_E2) > 1) stop("label_E2 must be a character of length 1.")
+  if(!is_character(label_E1) || length(label_E1) > 1) stop("label_E1 must be a character of length 1.")
+  if(!is_character(label_E2) || length(label_E2) > 1) stop("label_E2 must be a character of length 1.")
   {{{
     # M: Model
     population <- declare_population(

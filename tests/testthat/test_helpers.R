@@ -1,9 +1,7 @@
 context(desc = "Testing that helpers in the library work as they should")
 
-
-
 testthat::test_that(
-  desc = paste0("functions can be passed to designer and returned by construct_design_code"),
+  desc = "functions can be passed to designer and returned by construct_design_code",
   code = {
     
     test_designer <- function(summary_function,N){

@@ -17,7 +17,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr rlang
+#' @importFrom rlang is_integerish expr quos sym parse_expr UQS eval_bare quo_text
 #' @export
 #' @examples
 #'
@@ -64,7 +64,7 @@ multi_arm_designer <- function(N = 30,
   conditions <- as.character(conditions)
   
   f_Y <- formula(
-    paste0("Y ~ ",paste0(
+    paste0("Y ~ ", paste0(
       "(", outcome_means_, " + ", error_names,
       ")*( Z == '", conditions, "')",
       collapse = " + "), "+ u"))

@@ -18,7 +18,6 @@
 #' @concept clusters
 #' @concept observational
 #' @concept measurement
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
 #' @export
 #' @examples
 #' # To make a design using default arguments:
