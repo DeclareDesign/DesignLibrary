@@ -47,7 +47,7 @@ The model posits a population of \code{N} cases, each of which does or does not 
 
 Our inquiry is a "cause of effects" question. We wish to know whether a specific case was one in which the presence (absence) of X caused the presence (absence) of Y. 
 
-Our data strategy consists of selecting one case at random in which both X and Y are present. As part of the data strategy we seek two pieces of evidence in favor or against the hypothesized causal relationship, H, in which X causes Y. 
+Our data strategy consists of selecting one case at random in which both X and Y are present. As part of the data strategy we seek two pieces of evidence in favor of or against the hypothesized causal relationship, H, in which X causes Y. 
 
 The first (second) piece of evidence is observed with probability \code{p_E1_H} (\code{p_E2_H}) when H is true, and with probability \code{p_E1_not_H} (\code{p_E2_not_H}) when H is false.
 

@@ -21,7 +21,7 @@ factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
 
 \item{assignment_probs}{A numeric vector of length \code{k}. Independent probability of assignment to each treatment.}
 
-\item{outcome_name}{A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the funtion \code{c()} as in \code{outcome_name = c("War")}.}
+\item{outcome_name}{A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("War")}.}
 
 \item{treatment_names}{A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.}
 
@@ -31,14 +31,14 @@ factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
 A factorial design.
 }
 \description{
-A \code{2^k} factorial designer with \code{k} factors assigned with independent probabilities. Results in \code{2^k} treatment combinations, each with independent, normally distributed shocks. Estimands are average effects and average interactions of give conditions, averaged over other conditions. Estimation uses regression of demeaned variables with propernsity weights.
+A \code{2^k} factorial designer with \code{k} factors assigned with independent probabilities. Results in \code{2^k} treatment combinations, each with independent, normally distributed shocks. Estimands are average effects and average interactions of given conditions, averaged over other conditions. Estimation uses regression of demeaned variables with propensity weights.
 }
 \details{
 \code{factorial_designer} creates a factorial design with \code{2^k} treatment combinations resulting from \code{k} factors, each with two conditions each (\code{c(0,1)}). The order of the scalar arguments \code{outcome_means} and \code{outcome_sds} must follow the one returned by \code{expand.grid(rep(list(c(0,1)), k))}, where each of the columns is a treatment. 
 
-Estimands are defined for each combination of treatment assignment as linear combinations of potential outcomes, typically weighted averages of differences. Note that the weighting for the estimand does not reflect assignment to treatment probabilities but rather weights each possible condition equally. 
+Estimands are defined for each combination of treatment assignment as linear combinations of potential outcomes, typically weighted averages of differences. Note that the weighting for the estimand does not reflect treatment assignment probabilities but rather weights each possible condition equally. 
 
-For example, in a design with \eqn{k = 3} factors, the treatment effect of A, (TE_A), averaged over conditions defined by B and C, is given by: \deqn{TE_A = 1/4*(Y_{111} - Y_{011}) + 1/4*(Y_{101} - Y_{001}) + 1/4*(Y_{110} - Y_{010}) + 1/4*(Y_{100} - Y_{000})}. The "average interaction of A and B" ---that is the average effect (for a single unit) of A on the effect of B across conditions defined by C is: \deqn{TE_AB = 1/2*[(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] + 1/2*[(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]}. And the triple interaction---that is, the effect of C on the the effect of B on the effect of A  is: \deqn{TE_ABC = [(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] - [(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})]} where \eqn{Y_{abc}} is short for the potential outcome of Y when A is a,  B is b,  and C is c.
+For example, in a design with \eqn{k = 3} factors, the treatment effect of A, (TE_A), averaged over conditions defined by B and C, is given by: \deqn{TE_A = 1/4*(Y_{111} - Y_{011}) + 1/4*(Y_{101} - Y_{001}) + 1/4*(Y_{110} - Y_{010}) + 1/4*(Y_{100} - Y_{000}).} The "average interaction of A and B" --- that is the average effect (for a single unit) of A on the effect of B across conditions defined by C --- is: \deqn{TE_{AB} = 1/2*[(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] + 1/2*[(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})].} And the triple interaction---that is, the effect of C on the the effect of B on the effect of A  is: \deqn{TE_{ABC} = [(Y_{111} - Y_{011}) - (Y_{101} - Y_{001})] - [(Y_{110} - Y_{010}) - (Y_{100} - Y_{000})],} where \eqn{Y_{abc}} is short for the potential outcome of Y when A is a,  B is b,  and C is c.
 
 Estimates draw from a regression in which all treatments are demeaned and weighted by the inverse probability of being in the condition they are in. 
 Note that in  this demeaned regression the constant captures the average outcome across all conditions --- not the outcome when all units are in the control condition. The coefficient on T1 captures the average effect of T1 across other conditions---not the effect of T1 when other conditions are at 0. And so on.
@@ -63,19 +63,19 @@ diagnose_design(factorial_design_2)
 # factorial design. You might like to think of a data generating process as
 # a collection of marginal effects and interaction effects mapping from
 # treatments to outcomes. 
-# For instance: Y = -.25 + .75*T1 - .25*T2 -.25*T3 + T1*T2*T3
+# For instance: Y = -.25 + .75*X1 - .25*X2 -.25*X3 + X1*X2*X3
 # The vector of implied potential outcome means as a function of conditions  
 # could then be generated like this:
 
-T <- expand.grid(rep(list(c(0,1)), 3))
-outcome_means =  -.25 + T[,1]*3/4 - T[,2]/4 - T[,3]/4 + T[,1]*T[,2]*T[,3]
-outcomes <- cbind(T, outcome_means)
-colnames(outcomes) <- c("T1", "T2", "T3", "mean")
+X <- expand.grid(rep(list(c(0,1)), 3))
+outcome_means =  -.25 + X[,1]*3/4 - X[,2]/4 - X[,3]/4 + X[,1]*X[,2]*X[,3]
+outcomes <- cbind(X, outcome_means)
+colnames(outcomes) <- c("X1", "X2", "X3", "mean")
 outcomes
 
 # Examination of the outcomes in this table reveals that there is an 
 # average outcome of 0 (over all conditions), an average effect of treatment
-# T1 of 1,  an average effects for T2 and T3 of 0,  the two way interactions 
+# X1 of 1,  an average effects for X2 and X3 of 0,  the two way interactions 
 # are .5 (averaged over conditions of the third treatment) and the triple 
 # interaction is 1.
 # These are exactly the estimands calculated by the designer and returned in 
