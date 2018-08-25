@@ -85,6 +85,24 @@ block_cluster_two_arm_designer <- function(N = NULL,
   if(N != design_N) stop(paste0("The design N of ", design_N, " is inconsistent with the user specified N of ", N, 
                                 ". Likely due to integer problems in specified block or cluster sizes. Better to fully specify N for each level and not provide an argument for overal N.")
   )}
+  if(!is.null(N_blocks) & !is.null(N_clusters_in_block) & !is.null(N_i_in_cluster)){
+    if(length(N_i_in_cluster) > 1){
+      if(length(N_clusters_in_block) > 1){
+        if(length(N_clusters_in_block)*N_blocks != length(N_i_in_cluster)){
+          stop(paste0("You specified ",N_blocks," blocks with ",length(N_clusters_in_block)," clusters in them. Therefore N_i_in_cluster should be of length 1 or of length ",length(N_clusters_in_block)*N_blocks))
+        }
+      } else {
+        if(N_clusters_in_block*N_blocks != length(N_i_in_cluster)){
+          stop(paste0("You specified ",N_blocks," blocks with ",N_clusters_in_block," clusters in them. Therefore N_i_in_cluster should be of length 1 or of length ",N_clusters_in_block*N_blocks))
+        }
+      }
+    }
+    if(N_blocks > 1 & length(N_clusters_in_block) > 1){
+      if(N_blocks!= length(N_clusters_in_block)){
+        stop(paste0("You specified a design with ",N_blocks," blocks, but specified N_clusters_in_block for ",length(N_clusters_in_block)," blocks."))
+      }
+    }
+  }
   {{{    
     # M: Model
     population <- declare_population(
@@ -97,13 +115,13 @@ block_cluster_two_arm_designer <- function(N = NULL,
         cluster_size = N_i_in_cluster),
       i = add_level(
         N = N_i_in_cluster,
-        u_0 = rnorm(N),
-        u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
+        u_0 = rnorm(N) * sd_i_0,
+        u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)) * sd_i_1)
     )
     
     potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1 - Z) * (control_mean + u_0*sd_i_0 + u_b + u_c) + 
-        Z * (treatment_mean + u_1*sd_i_1 + u_b + u_c) )
+      Y ~ (1 - Z) * (control_mean + u_0 + u_b + u_c) + 
+        Z * (treatment_mean + u_1 + u_b + u_c) )
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))

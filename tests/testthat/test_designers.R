@@ -26,11 +26,11 @@ for(designer in designers){
     code = {
       expect_true("design" %in% class(one_design))
     })
-
+  
   
   testthat::test_that(
     desc = paste0(designer,"'s default design runs."),
-     code = {
+    code = {
       expect_is( DeclareDesign::diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
     })
   
@@ -90,6 +90,17 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
             expect_error(block_cluster_two_arm_designer(assignment_prob = 10))
             expect_error(block_cluster_two_arm_designer(rho = 10))
             expect_error(block_cluster_two_arm_designer(N = 1, N_i_in_cluster = 10))
+            expect_error(block_cluster_two_arm_designer(
+              N_blocks = 2,
+              N_clusters_in_block = 2,
+              N_i_in_cluster = c(4,6)))
+            expect_error(block_cluster_two_arm_designer(
+              N_blocks = 2,
+              N_clusters_in_block = c(2,2),
+              N_i_in_cluster = c(4,6)))
+            expect_error(block_cluster_two_arm_designer(
+              N_blocks = 4,
+              N_clusters_in_block = c(2,2)))
           })
 
 test_that(desc = "simple_factorial_designer errors when it should",
@@ -101,14 +112,14 @@ test_that(desc = "simple_factorial_designer errors when it should",
             expect_error(simple_factorial_designer(prob_A = 3))
             expect_error(simple_factorial_designer(prob_B = -1))
             expect_error(simple_factorial_designer(prob_B = 3))
-                               })
+          })
 
 test_that(desc = "simple_two_arm_designer errors when it should",
           code = {
             expect_error(simple_two_arm_designer(control_sd = -1))
             expect_error(simple_two_arm_designer(assignment_prob = 10))
             expect_error(simple_two_arm_designer(rho = 10))
-                               })
+          })
 
 test_that(desc = "mediation_analysis_designer errors when it should",
           code = {
