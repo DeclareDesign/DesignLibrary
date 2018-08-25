@@ -12,7 +12,7 @@ mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
 
 \item{a}{A number. Parameter governing effect of treatment (Z) on mediator (M).}
 
-\item{b}{A number. Effect of mediator (M) on outcome (Y) when Z=0.}
+\item{b}{A number. Effect of mediator (M) on outcome (Y) when Z = 0.}
 
 \item{c}{A number. Interaction between mediator (M) and (Z) for outcome (Y).}
 
