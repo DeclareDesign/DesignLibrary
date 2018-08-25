@@ -69,6 +69,7 @@ globalVariables(
     "Y_X_1",
     "Y_Z_0",
     "Y_Z_1",
+    "Z_cond_prob",
     "Z",
     "zeros",
     "u_Z",

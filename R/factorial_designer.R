@@ -212,7 +212,7 @@ factorial_designer <- function(
     declare_estimator(
       handler = tidy_estimator(function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
-        mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/data$Z_cond_prob)
+        mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/Z_cond_prob)
         estimate_df <- tidy.lm_robust(mod)
         estimate_df$estimand_label <- paste0("te_", estimate_df$term)
         estimate_df$estimand_label[estimate_df$estimand_label == "te_(Intercept)"] <- "Overall_average"
