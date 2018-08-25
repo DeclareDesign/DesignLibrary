@@ -46,7 +46,7 @@ pretest_posttest_designer <- function(N = 100,
       Y_t1 = u_t1
     )
 
-    potentials_t2 <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
+    potential_outcomes <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
@@ -80,7 +80,7 @@ pretest_posttest_designer <- function(N = 100,
       label = "Posttest only"
     )
     # Design
-    pretest_posttest_design <- population + potentials_t2 + estimand + 
+    pretest_posttest_design <- population + potential_outcomes + estimand + 
       assignment + reveal_t2 + report + manipulation +
       pretest_lhs + pretest_rhs + posttest_only
   }}}

@@ -87,7 +87,7 @@ simple_iv_designer <- function(N = 100,
       X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z)
     )
     
-    potentials <-
+    potential_outcomes <-
       declare_potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + u_Y,
                                  assignment_variables = "X")
     
@@ -115,7 +115,7 @@ simple_iv_designer <- function(N = 100,
                                      label = "iv_robust")
     
     
-    simple_iv_design <- population + potentials + reveal + 
+    simple_iv_design <- population + potential_outcomes + reveal + 
       estimand + estimator_1 + estimator_2 + estimator_3
     
   }}}

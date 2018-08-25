@@ -51,7 +51,7 @@ simple_two_arm_designer <- function(N = 100,
       u_0 = rnorm(N),
       u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
     
-    potentials <- declare_potential_outcomes(
+    potential_outcomes <- declare_potential_outcomes(
       Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
           Z     * (u_1*treatment_sd + treatment_mean))
     
@@ -66,7 +66,7 @@ simple_two_arm_designer <- function(N = 100,
     estimator <- declare_estimator(Y ~ Z, estimand = estimand)
     
     # Design
-    simple_two_arm_design <- population + potentials + estimand + assignment + reveal_Y + estimator
+    simple_two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator
   }}}
   
   attr(simple_two_arm_design, "code") <- 

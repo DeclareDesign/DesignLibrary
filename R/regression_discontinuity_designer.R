@@ -54,7 +54,7 @@ regression_discontinuity_designer <- function(
       X = runif(N,0,1) - cutoff,
       noise = rnorm(N,0,outcome_sd),
       Z = 1 * (X > 0))
-    potentials <- declare_potential_outcomes(
+    potential_outcomes <- declare_potential_outcomes(
       Y_Z_0 = control(X) + noise,
       Y_Z_1 = treatment(X) + noise)
     reveal_Y <- declare_reveal(Y)
@@ -75,7 +75,7 @@ regression_discontinuity_designer <- function(
     
     # Design
     regression_discontinuity_design <- 
-      population + potentials + estimand + reveal_Y + sampling + estimator
+      population + potential_outcomes + estimand + reveal_Y + sampling + estimator
   }}}
   
   attr(regression_discontinuity_design, "code") <- 

@@ -101,7 +101,6 @@ block_cluster_two_arm_designer <- function(N = NULL,
         u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
     )
     
-    potentials <- declare_potential_outcomes(
       Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
            Z *      (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
     
@@ -122,7 +121,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
     )
     
     # Design
-    block_cluster_two_arm_design <-  population + potentials + estimand + assignment + 
+    block_cluster_two_arm_design <- population + potential_outcomes + estimand + assignment + 
       reveal + estimator
   }}}
   
