@@ -1,19 +1,19 @@
 #' Create a design for cluster random sampling
 #'
-#' Builds a cluster sampling design for an ordinal outcome variable for a population with \code{N_blocks}, each with \code{N_clusters_in_block} cluster, each containing \code{N_i_in_cluster} units. Estimations sample \code{n_clusters_in_block} each comprising \code{n_i_in_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
+#' Builds a cluster sampling design for an ordinal outcome variable for a population with \code{N_blocks} strata, each with \code{N_clusters_in_block} clusters, each of which contains \code{N_i_in_cluster} units. The sampling strategy involves sampling \code{n_clusters_in_block} clusters in each stratum, and then sampling \code{n_i_in_cluster} units in each cluster. Outcomes within clusters have intra-cluster correlation approximately equal to \code{ICC}.
 #'
 #' @details 
-#' Key limitations: The design assumes a fixed number of clusters drawn in each block and a fixed number of individuals drawn from each cluster.
+#' Key limitations: The design assumes a fixed number of clusters drawn in each stratum and a fixed number of individuals drawn from each cluster.
 #' 
 #' See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
 #' 
-#' @param N_blocks An integer. Number of blocks. Defaults to 1 for no blocks. 
-#' @param N_clusters_in_block An integer of vector of integers of length \code{N_blocks}. Number of clusters in each block in the population.
-#' @param N_i_in_cluster An integer or vector of integers of length \code{sum(N_clusters_in_block)}. Number of subjects per cluster in the population.
-#' @param n_clusters_in_block An integer. Number of clusters to sample.
-#' @param n_i_in_cluster An integer. Number of subjects to sample per cluster.
+#' @param N_blocks An integer. Number of blocks (strata). Defaults to 1 for no blocks. 
+#' @param N_clusters_in_block An integer or vector of integers of length \code{N_blocks}. Number of clusters in each block in the population.
+#' @param N_i_in_cluster An integer or vector of integers of length \code{sum(N_clusters_in_block)}. Number of units per cluster sampled.
+#' @param n_clusters_in_block An integer. Number of clusters to sample in each block (stratum).
+#' @param n_i_in_cluster An integer. Number of units to sample in each cluster.
 #' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
-#' @return A cluster sampling design.
+#' @return A stratified cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
 #' @concept observational

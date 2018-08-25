@@ -3,12 +3,12 @@
 #' Builds a two-by-two factorial design in which assignments to each factor are independent of each other.
 #' 
 #' @details
-#' Three types of estimand are declared: weighted averages of the average treatment effects of each treatment over the two conditions of the other treatment and the difference in treatment effects of each over conditions of the other.
-#' 
-#' Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus eg if there are 6 units 
-#' 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
+#' Three types of estimand are declared. First, weighted averages of the average treatment effects of each treatment, given the two conditions of the other treatments. Second and third, the difference in treatment effects of each treatment, given the conditions of the other treatment.
 #' 
 #' Units are assigned to treatment using complete random assignment. Potential outcomes follow a normal distribution.
+#' 
+#' Treatment A is assigned first and then Treatment B within blocks defined by treatment A. Thus, if there are 6 units 
+#' 3 are guaranteed to receive treatment A but the number receiving treatment B is stochastic.
 #' 
 #' See \code{\link{multi_arm_designer}} for a factorial design with non independent assignments.
 #' 

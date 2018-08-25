@@ -51,7 +51,7 @@ Builds a two-arm design with blocks and clusters.
 Units are assigned to treatment using complete block cluster random assignment. Treatment effects can be specified either by providing \code{control_mean} and \code{treatment_mean}
 or by specifying an \code{ate}. Estimation uses differences in means accounting for blocks and clusters.
 
-In the usual case \code{N} is not provided by the user but is determined by \code{N_blocks, N_clusters_in_block, N_i_in_cluster} (when these are integers \code{N} is the product of these three numbers).
+In the usual case \code{N} is not provided by the user but is determined by \code{N_blocks}, \code{N_clusters_in_block}, \code{N_i_in_cluster} (when these are integers \code{N} is the product of these three numbers).
 
 Normal shocks can be specified at the individual, cluster, and block levels. If individual level shocks are not specified and cluster and block 
 level variances sum to less than 1, then individual level shocks are set such that total variance in outcomes equals 1.
