@@ -31,4 +31,4 @@ Suggests:
     testthat, 
     broom
 RoxygenNote: 6.1.0
-
+VignetteBuilder: Knitr
