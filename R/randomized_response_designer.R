@@ -40,7 +40,7 @@ randomized_response_designer <- function(N = 1000,
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    potentials <- declare_potential_outcomes(
+    potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
@@ -72,7 +72,7 @@ randomized_response_designer <- function(N = 1000,
     )
     
     # Design
-    randomized_response_design <- population + assignment + potentials +
+    randomized_response_design <- population + assignment + potential_outcomes +
       estimand + declare_reveal(Y, Z) +
       estimator_randomized_response + estimator_direct_question
     

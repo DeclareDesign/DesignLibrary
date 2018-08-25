@@ -138,7 +138,7 @@ multi_arm_designer <- function(N = 30,
     # M: Model
     population <- eval_bare(population_expr)
     
-    potentials <- eval_bare(potential_outcomes_expr)
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
     # I: Inquiry
     estimand  <- eval_bare(estimand_expr)
@@ -153,7 +153,7 @@ multi_arm_designer <- function(N = 30,
     
     # Design
     multi_arm_design <-
-      population + potentials + assignment + reveal_Y + estimand +  estimator
+      population + potential_outcomes + assignment + reveal_Y + estimand +  estimator
     
   }}}
   

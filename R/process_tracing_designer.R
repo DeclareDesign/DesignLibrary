@@ -146,49 +146,69 @@ process_tracing_designer <- function(
       handler = fabricate)
     
     # A: Answer Strategy
-    bayes_estimator <- function(data, p_H = prior_H, p_E_H, p_E_not_H, 
-                                label, result) {
-      data.frame(
-        posterior_H = p_E_H * p_H / 
-          (p_E_H * p_H + p_E_not_H * (1 - p_H)),
-        estimator_label = label,
-        estimand_label = "did_X_cause_Y",
-        test_results = result
-      )}
-    no_tests <- declare_estimator(
-      handler = bayes_estimator,
-      p_E_H = 1,
-      p_E_not_H = 1,
-      label = "No tests (Prior)",
-      result = TRUE
-    )
-    smoking_gun <- declare_estimator(
-      handler = bayes_estimator,
-      p_E_H = with(data, ifelse(E1, p_E1_H, 1 - p_E1_H)),
-      p_E_not_H = with(data, ifelse(E1, p_E1_not_H, 1 - p_E1_not_H)),
-      label = label_E1,
-      result = with(data, E1)
-    )
-    straw_in_wind <- declare_estimator(
-      handler = bayes_estimator,
-      p_E_H = with(data, ifelse(E2, p_E2_H, 1 - p_E2_H)),
-      p_E_not_H = with(data, ifelse(E2, p_E2_not_H, 1 - p_E2_not_H)),
-      label = label_E2,
-      result = with(data, E2)
-    )
+    bayes_rule <- function(p_H, p_E_H, p_E_not_H) {
+      p_E_H * p_H / (p_E_H * p_H + p_E_not_H * (1 - p_H))}
     
-    joint_test <- declare_estimator(
-      handler = bayes_estimator,
-      p_E_H = joint_prob_H[c("00", "01", "10", "11") %in% data[["test_results"]]],
-      p_E_not_H = joint_prob_not_H[c("00", "01", "10", "11") %in% data[["test_results"]]],
+    prior_only <- function(data){
+      return(with(data,
+                  data.frame(
+                    posterior_H = bayes_rule(p_H = prior_H, p_E_H = 1, p_E_not_H = 1),
+                    result = TRUE)
+      ))}
+    E1_only <- function(data){
+      return(with(data,
+                  data.frame(
+                    posterior_H = bayes_rule(
+                      p_H = prior_H, 
+                      p_E_H = ifelse(E1, p_E1_H, 1 - p_E1_H), 
+                      p_E_not_H = ifelse(E1, p_E1_not_H, 1 - p_E1_not_H)),
+                    result = E1))
+      )}
+    E2_only <- function(data){
+      return(with(data,
+                  data.frame(
+                    posterior_H = bayes_rule(
+                      p_H = prior_H, 
+                      p_E_H = ifelse(E2, p_E2_H, 1 - p_E2_H), 
+                      p_E_not_H = ifelse(E2, p_E2_not_H, 1 - p_E2_not_H)),
+                    result = E2))
+      )}
+    E1_and_E2 <- function(data){
+      return(with(data,
+                  data.frame(
+                    posterior_H = bayes_rule(
+                      p_H = prior_H, 
+                      p_E_H = joint_prob_H[c("00", "01", "10", "11") %in% test_results],
+                      p_E_not_H = joint_prob_not_H[c("00", "01", "10", "11") %in% test_results]),
+                    result = test_results)
+      ))}
+    
+    prior_only_estimator <- declare_estimator(
+      handler = tidy_estimator(prior_only),
+      label = "No tests (Prior)",
+      estimand = estimand
+    )
+    E1_only_estimator <- declare_estimator(
+      handler = tidy_estimator(E1_only),
+      label = label_E1,
+      estimand = estimand
+    )
+    E2_only_estimator <- declare_estimator(
+      handler = tidy_estimator(E2_only),
+      label = label_E2,
+      estimand = estimand
+    )
+    E1_and_E2_estimator <- declare_estimator(
+      handler = tidy_estimator(E1_and_E2),
       label = paste(label_E1, "and", label_E2),
-      result = data[["test_results"]]
+      estimand = estimand
     )
     
     # Design
     process_tracing_design <-
       population + select_case + trace_processes + estimand +
-      no_tests + smoking_gun + straw_in_wind + joint_test
+      prior_only_estimator + E1_only_estimator + E2_only_estimator + 
+      E1_and_E2_estimator
     
     
   }}}

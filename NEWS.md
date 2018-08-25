@@ -4,6 +4,7 @@
 * Added designer for simple instrumental variables designs (`simple_iv_designer()`)
 * Added new arguments to `regression_discontinuity_designer()` to allow for setting variance and shape of potential outcomes functions
 * Added blocking to `cluster_sampling_designer()`
+* Added more flexible ways to specify `N` in `block_cluster_two_arm_designer()`
 * Cleaned up various inconsistencies in documentation
 * Cleaned up dependencies in DESCRIPTION
 * Cleaner method for handling global variables in DesignLibrary.R

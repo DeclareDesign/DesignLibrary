@@ -70,7 +70,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
                                            ate = 0,
                                            treatment_mean = control_mean + ate
 ){  
-
+  
   if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
      any(!is_integerish(N_blocks), 
          !is_integerish(N_clusters_in_block), 
@@ -82,13 +82,31 @@ block_cluster_two_arm_designer <- function(N = NULL,
   if(assignment_prob<= 0 || assignment_prob >= 1) stop("assignment_prob must be in (0,1)")
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   if(!is.null(N)) {design_N <- ifelse(length(N_i_in_cluster)>1, sum(N_i_in_cluster), sum(N_i_in_cluster*N_blocks*N_clusters_in_block))
-                  if(N != design_N) stop(paste0("The design N of ", design_N, " is inconsistent with the user specified N of ", N, 
-                                                  ". Likely due to integer problems in specified block or cluster sizes. Better to fully specify N for each level and not provide an argument for overal N.")
-                                            )}
+  if(N != design_N) stop(paste0("The design N of ", design_N, " is inconsistent with the user specified N of ", N, 
+                                ". Likely due to integer problems in specified block or cluster sizes. Better to fully specify N for each level and not provide an argument for overal N.")
+  )}
+  if(!is.null(N_blocks) & !is.null(N_clusters_in_block) & !is.null(N_i_in_cluster)){
+    if(length(N_i_in_cluster) > 1){
+      if(length(N_clusters_in_block) > 1){
+        if(length(N_clusters_in_block)*N_blocks != length(N_i_in_cluster)){
+          stop(paste0("You specified ",N_blocks," blocks with ",length(N_clusters_in_block)," clusters in them. Therefore N_i_in_cluster should be of length 1 or of length ",length(N_clusters_in_block)*N_blocks))
+        }
+      } else {
+        if(N_clusters_in_block*N_blocks != length(N_i_in_cluster)){
+          stop(paste0("You specified ",N_blocks," blocks with ",N_clusters_in_block," clusters in them. Therefore N_i_in_cluster should be of length 1 or of length ",N_clusters_in_block*N_blocks))
+        }
+      }
+    }
+    if(N_blocks > 1 & length(N_clusters_in_block) > 1){
+      if(N_blocks!= length(N_clusters_in_block)){
+        stop(paste0("You specified a design with ",N_blocks," blocks, but specified N_clusters_in_block for ",length(N_clusters_in_block)," blocks."))
+      }
+    }
+  }
   {{{    
     # M: Model
     population <- declare_population(
-      blocks   = add_level(
+      blocks = add_level(
         N = N_blocks,
         u_b = rnorm(N) * sd_block),
       clusters = add_level(
@@ -96,21 +114,21 @@ block_cluster_two_arm_designer <- function(N = NULL,
         u_c = rnorm(N) * sd_cluster,
         cluster_size = N_i_in_cluster),
       i = add_level(
-        N   = N_i_in_cluster,
-        u_0 = rnorm(N),
-        u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
+        N = N_i_in_cluster,
+        u_0 = rnorm(N) * sd_i_0,
+        u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)) * sd_i_1)
     )
     
-    potentials <- declare_potential_outcomes(
-      Y ~ (1 - Z) * (control_mean    + u_0*sd_i_0 + u_b + u_c) + 
-           Z *      (treatment_mean  + u_1*sd_i_1 + u_b + u_c) )
+    potential_outcomes <- declare_potential_outcomes(
+      Y ~ (1 - Z) * (control_mean + u_0 + u_b + u_c) + 
+        Z * (treatment_mean + u_1 + u_b + u_c) )
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = assignment_prob, blocks = blocks, clusters = clusters)
-    reveal     <- declare_reveal()
+    reveal <- declare_reveal()
     
     # A: Answer Strategy
     estimator <- declare_estimator(
@@ -122,7 +140,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
     )
     
     # Design
-    block_cluster_two_arm_design <-  population + potentials + estimand + assignment + 
+    block_cluster_two_arm_design <- population + potential_outcomes + estimand + assignment + 
       reveal + estimator
   }}}
   

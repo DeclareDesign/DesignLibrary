@@ -144,7 +144,7 @@ factorial_designer <- function(
   names_pos <- paste0(outcome_name, "_", assignment_string)
   names(potouts) <- names_pos
   
-  potentials_expr <- expr(declare_potential_outcomes(!!!(potouts)))
+  potential_outcomes_expr <- expr(declare_potential_outcomes(!!!(potouts)))
   
   # assignment --------------------------------------------------------------
   Z <- sym("Z")
@@ -212,7 +212,7 @@ factorial_designer <- function(
     declare_estimator(
       handler = tidy_estimator(function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
-        mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/data$Z_cond_prob)
+        mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/Z_cond_prob)
         estimate_df <- tidy.lm_robust(mod)
         estimate_df$estimand_label <- paste0("te_", estimate_df$term)
         estimate_df$estimand_label[estimate_df$estimand_label == "te_(Intercept)"] <- "Overall_average"
@@ -226,7 +226,7 @@ factorial_designer <- function(
     # M: Model
     population <- eval_bare(population_expr)
     
-    potentials <- eval_bare(potentials_expr)
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
     reveal_Y <- eval_bare(reveal_expr)
     
@@ -242,7 +242,7 @@ factorial_designer <- function(
     estimator <- eval_bare(estimator_expr)
     
     # Design
-    factorial_design <- population + potentials + assignment_factors + 
+    factorial_design <- population + potential_outcomes + assignment_factors + 
       assignment + reveal_Y + estimand + estimator
     
   }}}
@@ -257,7 +257,7 @@ factorial_designer <- function(
   design_code <-
     gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
   design_code <-
-    gsub("eval_bare\\(potentials_expr\\)", quo_text(potentials_expr), design_code)
+    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
   design_code <-
     gsub("eval_bare\\(reveal_expr\\)", quo_text(reveal_expr), design_code)
   design_code <-
