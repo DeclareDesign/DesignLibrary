@@ -122,11 +122,14 @@ multi_arm_designer <- function(N = 30,
     x = as.character(all_pairs[,2]),
     y = as.character(all_pairs[,1])
   )
+  
+  estimator_labels <- paste0("DIM (Z_", as.character(all_pairs[,1]), " - Z_", as.character(all_pairs[,2]), ")")
+  
   names(estimators) <- estimand_names
   estimator_expr <- expr(declare_estimator(
     handler = function(data){
       estimates <- rbind.data.frame(!!!estimators)
-      estimates$estimator_label <- "DIM"
+      estimates$estimator_label <- !!estimator_labels
       estimates$estimand_label <- rownames(estimates)
       estimates$estimate <- estimates$coefficients
       estimates$term <- NULL
