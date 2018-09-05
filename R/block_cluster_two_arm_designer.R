@@ -83,7 +83,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   if(!is.null(N)) {design_N <- ifelse(length(N_i_in_cluster)>1, sum(N_i_in_cluster), sum(N_i_in_cluster*N_blocks*N_clusters_in_block))
   if(N != design_N) stop(paste0("The design N of ", design_N, " is inconsistent with the user specified N of ", N, 
-                                ". Likely due to integer problems in specified block or cluster sizes. Better to fully specify N for each level and not provide an argument for overal N.")
+                                ". Likely due to integer problems in specified block or cluster sizes or insufficient information. Better to fully specify N for each level and not provide an argument for overall N.")
   )}
   if(!is.null(N_blocks) & !is.null(N_clusters_in_block) & !is.null(N_i_in_cluster)){
     if(length(N_i_in_cluster) > 1){
