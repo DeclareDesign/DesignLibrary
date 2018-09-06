@@ -96,7 +96,7 @@ attr(randomized_response_designer,"tips") <-
 attr(randomized_response_designer,"shiny_arguments") <-
   list(
     N = c(1000, 1500, 2000, 2500),
-    prob_forced_yes = c(.6,seq(.1,.9,.1)),
+    prob_forced_yes = c(.6,seq(.1,.5,.1),seq(.7,.9,.1)),
     prevalence_rate = c(.1,seq(.05,.95,.1)),
     withholding_rate = c(.5,seq(.05,.95,.1))
   )
