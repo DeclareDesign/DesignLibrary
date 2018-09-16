@@ -107,9 +107,9 @@ block_cluster_two_arm_designer <- function(N = NULL,
   if(verbose) print(paste0("The implied ICC in (control) is ", round(1- sd_i_0^2/(sd_i_0^2 + sd_block^2 + sd_cluster^2), 3)))
   if(verbose) print(paste0("The implied ICC in (control) conditional on block is  ", round(1- sd_i_0^2/(sd_i_0^2 + sd_cluster^2), 3)))
   if(verbose & abs(sd^2 - sd_block^2 - sd_cluster^2 - sd_i_0^2)>.0001) print(
-                    paste0("Overall sd is", 
+                    paste0("Overall sd is ", 
                     round((sum(sd_block^2 + sd_cluster^2 + sd_i_0^2))^.5, 3),  
-                    ", which differs from specified sd of", round(sd, 3)))
+                    ", which differs from overall specified sd of ", round(sd, 3)))
     {{{    
     # M: Model
     population <- declare_population(
