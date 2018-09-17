@@ -1,7 +1,6 @@
 
 context(desc = "Testing that designers in the library work as they should")
 
-
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
 
@@ -83,18 +82,31 @@ for(designer in designers){
 
 test_that(desc = "block_cluster_two_arm_designer errors when it should",
           code = {
+            expect_error(block_cluster_two_arm_designer(N_blocks = -2))
             expect_error(block_cluster_two_arm_designer(sd_block = -1))
             expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_1 = -1))
-            expect_error(block_cluster_two_arm_designer(prob = 10))
+            expect_error(block_cluster_two_arm_designer(assignment_prob = 10))
             expect_error(block_cluster_two_arm_designer(rho = 10))
+            expect_error(block_cluster_two_arm_designer(N = 1, N_i_in_cluster = 10))
+            expect_error(block_cluster_two_arm_designer(
+              N_blocks = 2,
+              N_clusters_in_block = 2,
+              N_i_in_cluster = c(4,6)))
+            expect_error(block_cluster_two_arm_designer(
+              N_blocks = 2,
+              N_clusters_in_block = c(2,2),
+              N_i_in_cluster = c(4,6)))
+            expect_error(block_cluster_two_arm_designer(
+              N_blocks = 4,
+              N_clusters_in_block = c(2,2)))
           })
 
 test_that(desc = "simple_factorial_designer errors when it should",
           code = {
-            expect_error(simple_factorial_designer(w_A = 10))
-            expect_error(simple_factorial_designer(w_B = 10))
+            expect_error(simple_factorial_designer(weight_A = 10))
+            expect_error(simple_factorial_designer(weight_B = 10))
             expect_error(simple_factorial_designer(outcome_sds = -1))
             expect_error(simple_factorial_designer(prob_A = -1))
             expect_error(simple_factorial_designer(prob_A = 3))
@@ -105,7 +117,7 @@ test_that(desc = "simple_factorial_designer errors when it should",
 test_that(desc = "simple_two_arm_designer errors when it should",
           code = {
             expect_error(simple_two_arm_designer(control_sd = -1))
-            expect_error(simple_two_arm_designer(prob = 10))
+            expect_error(simple_two_arm_designer(assignment_prob = 10))
             expect_error(simple_two_arm_designer(rho = 10))
           })
 
@@ -116,14 +128,19 @@ test_that(desc = "mediation_analysis_designer errors when it should",
 
 test_that(desc = "simple_spillover_designer errors when it should",
           code = {
-            expect_error(simple_spillover_designer(sd = -10))
+            expect_error(simple_spillover_designer(sd_i = -10))
             expect_error(simple_spillover_designer(N_i_group = -10))
           })
 
 test_that(desc = "regression_discontinuity_designer errors when it should",
           code = {
             expect_error(regression_discontinuity_designer(cutoff = -10))
-            expect_error(regression_discontinuity_designer(poly_order = -10))
+            expect_error(regression_discontinuity_designer(poly_reg_order = -10))
+            expect_error(regression_discontinuity_designer(poly_reg_order = -.10))
+            expect_error(regression_discontinuity_designer(poly_reg_order = "hello"))
+            expect_error(regression_discontinuity_designer(control_coefs = NULL))
+            expect_error(regression_discontinuity_designer(treatment_coefs = NULL))
+            expect_error(regression_discontinuity_designer(outcome_sd = -1))
           })
 
 test_that(desc = "randomized_response_designer errors when it should",
@@ -148,12 +165,15 @@ test_that(desc = "pretest_posttest_designer errors when it should",
           code = {
             expect_error(pretest_posttest_designer(rho = 10))
             expect_error(pretest_posttest_designer(attrition_rate = 10))
+            expect_error(pretest_posttest_designer(sd_1 = -1))
           })
 
 test_that(desc = "cluster_sampling_designer errors when it should",
           code = {
-            expect_error(cluster_sampling_designer(n_clusters = 10,N_clusters = 1))
-            expect_error(cluster_sampling_designer(n_i_in_cluster = 30,N_i_in_cluster = 10))
+            expect_error(cluster_sampling_designer(n_clusters_in_block = 10, 
+                                                  N_clusters_in_block = 1))
+            expect_error(cluster_sampling_designer(n_i_in_cluster = 30, N_i_in_cluster = 10))
+            expect_error(cluster_sampling_designer(icc = 2))
           })
 
 
@@ -162,9 +182,51 @@ test_that(desc = "multi_arm_designer errors when it should",
             expect_error(multi_arm_designer(outcome_means = rep(1,2), m_arms = 10))
             expect_error(multi_arm_designer(m_arms = .5,outcome_means = 2))
             expect_error(multi_arm_designer(outcome_sds = c(-10,-10),outcome_means = c(2,2), m_arms = 2))
-            expect_error(multi_arm_designer(sd = -1))
+            expect_error(multi_arm_designer(sd_i = -1))
           })
 
+test_that(desc = "factorial_designer errors when it should",
+          code = {
+            expect_error(factorial_designer(outcome_name = c("Y ")))
+            expect_error(factorial_designer(outcome_means = 1, k = 2))
+            expect_error(factorial_designer(outcome_sds = 1, k = 2))
+            expect_error(factorial_designer(assignment_probs = .5, k = 2))
+            expect_error(factorial_designer(assignment_probs = .5, k = 1))
+            expect_error(factorial_designer(k = .5))
+            expect_error(factorial_designer(outcome_sds = c(-1,-1,-1,-1), k = 2))
+            expect_error(factorial_designer(assignment_probs = c(-.5,.5), k = 2))
+          })
+
+test_that(desc = "process_tracing_designer errors when it should",
+          code = {
+            expect_error(process_tracing_designer(N = -1))
+            expect_error(process_tracing_designer(prob_X = 100))
+            expect_error(process_tracing_designer(process_proportions = 1:5))
+            expect_error(process_tracing_designer(process_proportions = 1:4))
+            expect_error(process_tracing_designer(prior_H = 100))
+            expect_error(process_tracing_designer(p_E1_H = 100))
+            expect_error(process_tracing_designer(p_E1_not_H = 100))
+            expect_error(process_tracing_designer(p_E2_H = 100))
+            expect_error(process_tracing_designer(p_E2_not_H = 100))
+            expect_error(process_tracing_designer(cor_E1E2_H = 100))
+            expect_error(process_tracing_designer(cor_E1E2_not_H = 100))
+            expect_error(process_tracing_designer(p_E1_not_H = .2, p_E2_not_H = .5,
+                                                  cor_E1E2_not_H = 1))
+            expect_error(process_tracing_designer(p_E1_H = .2, p_E2_H = .5,
+                                                  cor_E1E2_H = 1))
+            expect_error(process_tracing_designer(label_E1 = LETTERS[1:10]))
+            expect_error(process_tracing_designer(label_E2 = LETTERS[1:10]))
+          })
+
+test_that(desc = "simple_iv_designer errors when it should",
+          code = {
+            expect_error(simple_iv_designer(assignment_probs = -20))
+            expect_error(simple_iv_designer(assignment_probs = 20))
+            expect_error(simple_iv_designer(outcome_sd = -20))
+            expect_error(simple_iv_designer(a = -20))
+            expect_error(simple_iv_designer(b = -20))
+            expect_error(simple_iv_designer(d = -20))
+          })
 
 # Tests over possible parameter ranges ------------------------------------
 
@@ -214,7 +276,6 @@ test_that(desc = "block_cluster_two_arm_designer does not break over a combinati
             }
             expect_identical(errors, NULL)
           })
-
 
 test_that(desc = "simple_factorial_designer does not break over a combination of possible parameters",
           code = {
