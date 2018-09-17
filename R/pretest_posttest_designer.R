@@ -1,6 +1,6 @@
 #' Create a pretest-posttest design
 #'
-#' Produces designs in which an outcome Y is observed pre- and post-treatment.
+#' Produces a design in which an outcome Y is observed pre- and post-treatment.
 #' The design allows for individual post-treatment outcomes to be correlated with pre-treatment outcomes
 #' and for at-random missingness in the observation of post-treatment outcomes. 
 #' @details 
@@ -18,7 +18,10 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #' @examples
 #' # Generate a pre-test post-test design using default arguments:
@@ -31,7 +34,6 @@ pretest_posttest_designer <- function(N = 100,
                                       rho = .5,
                                       attrition_rate = .1)
 {
-  u_t1 <- Y_t2_Z_1 <- Y_t2_Z_0 <- Z <- R <- Y_t1 <- Y_t2 <- NULL
   if(rho < -1 || rho > 1) stop("'rho' must be a value in [-1, 1]")
   if(any(sd_1 < 0, sd_2 < 0)) stop("'sd_1' and 'sd_2' must be nonnegative")
   if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be in [0,1]")
@@ -44,7 +46,7 @@ pretest_posttest_designer <- function(N = 100,
       Y_t1 = u_t1
     )
 
-    potentials_t2 <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
+    potential_outcomes <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
@@ -78,7 +80,7 @@ pretest_posttest_designer <- function(N = 100,
       label = "Posttest only"
     )
     # Design
-    pretest_posttest_design <- population + potentials_t2 + estimand + 
+    pretest_posttest_design <- population + potential_outcomes + estimand + 
       assignment + reveal_t2 + report + manipulation +
       pretest_lhs + pretest_rhs + posttest_only
   }}}
@@ -103,6 +105,6 @@ attr(pretest_posttest_designer, "tips") <- c(
 attr(pretest_posttest_designer, "description") <- "
 <p> A pretest-posttest design with sample of size <code>N</code>, average treatment effect of size <code>ate</code>, 
     and correlation between pre- and post-test outcomes equal to <code>rho</code>. The proportion of pre-test respondents  
-   missing at random from  the post-test follow-up can be set using <code>attrition_rate</code>.
+   missing at random from the post-test follow-up can be set using <code>attrition_rate</code>.
 "
 

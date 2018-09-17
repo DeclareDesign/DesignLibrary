@@ -28,8 +28,6 @@ get_design_code <- function(design) attr(design, "code")
 #'   match.call.defaults(expand.dots=dots)
 #' }
 #' 
-#' foo(4,nugan='hand')
-#' foo(dots=FALSE,who='ami')
 #' 
 
 match.call.defaults <- function(definition = sys.function(sys.parent()),
@@ -52,6 +50,13 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 # Internal helpers for {{{ }}} approach -----------------------------------
 
 # This is the core function for grabbing code when using the {{{ }}} approach:
+
+#' Generates clean code string that reproduces design
+#' @importFrom utils getSrcref
+#' @param designer Designer function.
+#' @param args Named list of arguments to be passed to designer function.
+#' @param arguments_as_values Logical. Whether to replace argument names for value.
+#' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
 
 construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
@@ -97,6 +102,21 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   code
 }
 
+#' Generates character string for non-fixed arguments in a designer using substitution approach.
+#' @param args Function arguments.
+#' @param fixes Function arguments that are fixed (i.e., already evaluated in body of function)
+#' 
+return_args <- function(args, fixes){
+  # Get names of arguments   
+  arg_names <- names(args[2:(length(args)-1)])
+  
+  # Exclude any fixed arguments
+  if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
+  
+  # Format
+  sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
+}
+
 # These functions find triple braces when there is no source code 
 find_triple_bracket <- function(f){
   clean <- function(ch, n=length(ch)-1) ch[2:n]
@@ -111,28 +131,12 @@ pred <- function(expr, depth=3) {
   )
 }
 
-
-# Internal functions for substitute approach ------------------------------
-
-# This function gets names of arguments and excludes any fixed ones 
-return_args <- function(args, fixes){
-  # Get names of arguments   
-  arg_names <- names(args[2:(length(args)-1)])
-  
-  # Exclude any fixed arguments
-  if(!is.null(fixes)) arg_names <- arg_names[!(arg_names%in%names(fixes))]
-  
-  # Format
-  sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])))
-}
-
-# This function cleans code comments -- be careful with braces
+#' Clean code for method substitute
+#' @param code A string. Design code
+#' @return clean code 
 clean_code <- function(code) {
-  out <- strsplit(paste(code), '\n')
-  out <- gsub("\\{|\\}", "", out)
+  out <- strsplit(code, "\n")
+  out <- out[-1]
   out <- gsub("#", " \n #", out)
   out
 }
-
-
-

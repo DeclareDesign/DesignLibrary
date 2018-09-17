@@ -10,7 +10,7 @@
 #' 
 #' @param N An integer. Size of sample.
 #' @param a A number. Parameter governing effect of treatment (Z) on mediator (M).
-#' @param b A number. Effect of mediator (M) on outcome (Y) when Z=0.
+#' @param b A number. Effect of mediator (M) on outcome (Y) when Z = 0.
 #' @param c A number. Interaction between mediator (M) and (Z) for outcome (Y).
 #' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
 #' @param rho A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
@@ -18,7 +18,10 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept mediation
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design get_estimands
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy lm_robust
 #' @export
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
@@ -37,10 +40,6 @@
 #'
 mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0)
 {
-  e1 <- M_Z_1 <- M <- Z <- Y <- M_Z_0 <- Y_M_1_Z_0 <-  
-    Y_M_0_Z_0 <- Y_M_1_Z_1 <- Y_M_0_Z_1 <-  e2 <- 
-    Y_nat0_Z_1 <- Y_nat0_Z_0 <- Y_nat1_Z_1 <- Y_nat1_Z_0 <- 
-    Y_nat0 <- Y_nat1 <- NULL
   
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
   {{{
@@ -50,34 +49,34 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       e1 = rnorm(N),
       e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
     )
-    potentials_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
-    potentials_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
-                                               conditions = list(M = 0:1, Z = 0:1))
-    pots_Y_nat_0 <- declare_potential_outcomes(
-      Y_nat0_Z_0 =     b * M_Z_0             + e2,
+    POs_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
+    POs_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
+                                        conditions = list(M = 0:1, Z = 0:1))
+    POs_Y_nat_0 <- declare_potential_outcomes(
+      Y_nat0_Z_0 = b * M_Z_0 + e2,
       Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
-    pots_Y_nat_1 <- declare_potential_outcomes(
-      Y_nat1_Z_0 =     b * M_Z_1             + e2,
+    POs_Y_nat_1 <- declare_potential_outcomes(
+      Y_nat1_Z_0 = b * M_Z_1 + e2,
       Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
     
     # I: Inquiry
     estimands <- declare_estimands(
-      FirstStage          = mean(M_Z_1      - M_Z_0), 
-      Indirect_0          = mean(Y_M_1_Z_0  - Y_M_0_Z_0),
-      Indirect_1          = mean(Y_M_1_Z_1  - Y_M_0_Z_1),
-      Controlled_Direct_0 = mean(Y_M_0_Z_1  - Y_M_0_Z_0),
-      Controlled_Direct_1 = mean(Y_M_1_Z_1  - Y_M_1_Z_0),
-      Natural_Direct_0    = mean(Y_nat0_Z_1 - Y_nat0_Z_0),
-      Natural_Direct_1    = mean(Y_nat1_Z_1 - Y_nat1_Z_0)
+      FirstStage = mean(M_Z_1 - M_Z_0), 
+      Indirect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
+      Indirect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
+      Controlled_Direct_0 = mean(Y_M_0_Z_1 - Y_M_0_Z_0),
+      Controlled_Direct_1 = mean(Y_M_1_Z_1 - Y_M_1_Z_0),
+      Natural_Direct_0 = mean(Y_nat0_Z_1 - Y_nat0_Z_0),
+      Natural_Direct_1 = mean(Y_nat1_Z_1 - Y_nat1_Z_0)
     )
     
     # D: Data strategy 
-    assignment   <- declare_assignment()
-    reveal_M     <- declare_reveal(M, Z)
-    reveal_Y     <- declare_reveal(Y, assignment_variable = c("M","Z"))
-    reveal_nat0  <- declare_reveal(Y_nat0)
-    reveal_nat1  <- declare_reveal(Y_nat1)
-    manipulation <- declare_step(Not_M = 1-M, handler = fabricate)
+    assignment <- declare_assignment()
+    reveal_M <- declare_reveal(M, Z)
+    reveal_Y <- declare_reveal(Y, assignment_variable = c("M","Z"))
+    reveal_nat0 <- declare_reveal(Y_nat0)
+    reveal_nat1 <- declare_reveal(Y_nat1)
+    manipulation <- declare_step(Not_M = 1 - M, handler = fabricate)
     
     # A: Answer Strategy
     mediator_regression <- declare_estimator(
@@ -92,8 +91,6 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       estimand = c("Indirect_0"),
       label = "Stage 2"
     )
-    
-    
     stage2_2 <- declare_estimator(
       Y ~ Z * M,
       model = lm_robust,
@@ -101,7 +98,6 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       estimand = c("Controlled_Direct_0", "Natural_Direct_0"),
       label = "Direct_0"
     )
-    
     stage2_3 <- declare_estimator(
       Y ~ Z * Not_M,
       model = lm_robust,
@@ -109,13 +105,13 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       estimand = c("Controlled_Direct_1", "Natural_Direct_1"),
       label = "Direct_1"
     )
-    
     # Design
     mediation_analysis_design <- population + 
-      potentials_M + potentials_Y + pots_Y_nat_0 + pots_Y_nat_1 +
+      POs_M + POs_Y + POs_Y_nat_0 + POs_Y_nat_1 +
       estimands + assignment + 
       reveal_M + reveal_Y + reveal_nat0 + reveal_nat1 + manipulation +
-      mediator_regression + stage2_1 +  stage2_2 + stage2_3
+      mediator_regression + stage2_1 + stage2_2 + stage2_3
+    
   }}}
   attr(mediation_analysis_design, "code") <- 
     construct_design_code(mediation_analysis_designer, match.call.defaults())
@@ -138,13 +134,14 @@ attr(mediation_analysis_designer,"tips") <- c(
   rho = "Correlation of mediator (M) and outcome (Y) error terms"
 )
 attr(mediation_analysis_designer,"description") <- "
-<p> A mediation analysis design, with sample of size <code>N</code>, 
-    effect of treatment (Z) on mediator (M) governed by <code>a</code>, 
-    effect of mediator (M) on outcome (Y) (when Z = 0) equal to <code>b</code>, 
-    and direct effect of treatment (Z) on outcome (Y) (when M = 0) equal to <code>d</code>. 
-    Possible interaction between M and Z for Y given by c.
-<p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>.
-"
+<p> A mediation analysis design with sample size <code>N</code> that examines
+the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on 
+outcome (Y) (given Z=0) as well as direct effect of treatment (Z) on outcome
+(Y) (given M=0).
 
+<p> Analysis is implemented using an interacted regression model.
+
+<p> Error terms on mediator (M) and outcome (Y) correlated by <code>rho</code>
+"
 
 

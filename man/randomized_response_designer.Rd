@@ -10,11 +10,11 @@ randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{prob_forced_yes}{A number. Probability of a forced yes.}
+\item{prob_forced_yes}{A number in [0,1]. Probability of a forced yes.}
 
-\item{prevalence_rate}{A number. Probability that individual has the sensitive trait.}
+\item{prevalence_rate}{A number in [0,1]. Probability that individual has the sensitive trait.}
 
-\item{withholding_rate}{A number. Probability that an individual with the sensitive trait hides it.}
+\item{withholding_rate}{A number in [0,1]. Probability that an individual with the sensitive trait hides it.}
 }
 \value{
 A randomized response design.
