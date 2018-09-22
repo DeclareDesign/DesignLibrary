@@ -28,7 +28,7 @@ As a rule of thumb having blocks improves precision but having clusters weakens 
 
 ## Design Declaration
 
-- **M**odel:  We specify a population of `N`  units partitioned into `N\_blocks` (regions, say). Each block has `N\_clusters\_in\_block` clusters (cities, say) and within each cluster there are `N\_in\_cluster` individuals.  The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. 
+- **M**odel:  We specify a population of $N$  units partitioned into $N_{blocks}$ (regions, say). Each block has $N_{clusters\_in\_block}$ clusters (cities, say) and within each cluster there are $N_{in\_cluster}$ individuals.  The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance.
   
 - **I**nquiry: We are interested in the average difference in individuals' treatment and control outcomes. Formally, $E[Y_i(Z = 1) - Y_i(Z = 0)]$.
 
