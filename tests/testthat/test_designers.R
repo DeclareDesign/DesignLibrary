@@ -235,6 +235,7 @@ test_that(desc = "block_cluster designer handles reports ICC with verbose = TRUE
           code = {
             expect_output(d <- block_cluster_two_arm_designer(sd = 2))
             expect_silent(d <- block_cluster_two_arm_designer(sd = 2, verbose = FALSE))
+            expect_output(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = TRUE))
             expect_silent(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = FALSE))
           })
 
