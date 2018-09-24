@@ -225,7 +225,7 @@ block_cluster_2x2_factorial_designer <- function(
   attr(block_cluster_2x2_factorial_design, "code") <- 
     construct_design_code(designer = block_cluster_2x2_factorial_designer, 
                           args = match.call.defaults(), 
-                          exclude_args = c("N", "outcome_means"),
+                          exclude_args = c("N", "outcome_means", "verbose", "sd"),
                           arguments_as_values = TRUE)
   
   block_cluster_2x2_factorial_design
