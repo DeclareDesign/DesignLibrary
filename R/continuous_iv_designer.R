@@ -22,12 +22,24 @@ continuous_iv_designer <- function(N = 500,
                                    fixed = NULL
 ){
   
+  if (!"N" %in% fixed) N_ <- expr(N)
+  N_ <- N
   
   potentials_expr <- expr(declare_potential_outcomes(handler = function(data){
     data[,!!treatment_name] = fx(data, data[,!!instrument_name])
     data[,!!outcome_name] = fy(data, data[,!!treatment_name], data[,!!instrument_name])
     data
   }))
+  
+  e <- exprs(N = !!N_,
+             !!instrument_name := rnorm(!!N_))
+
+  population_expr <- expr(declare_population(
+    !!!e,
+    u_Y = rnorm(N)/100 * sd_outcome,
+    u_i = rnorm(N) + sd_i,
+    u_X = rnorm(N) + sd_X
+  ))
   
   estimand_expr <- expr(estimand_fn <- function(data){
     categ <- function(x, breaks = n_steps){
@@ -37,7 +49,7 @@ continuous_iv_designer <- function(N = 500,
     
     catX <- categ(data[,!!treatment_name])
     
-    omegas <- sapply(catX[-1], function(x) mean((x <= data$X)*(data$Z - mean(data$Z))))
+    omegas <- sapply(catX[-1], function(x) mean((x <= data$X)*(data[,instrument_name] - mean(data[,instrument_name]))))
     omega  <- omegas/sum(omegas)
     
     g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i]) - fy(data, catX[i-1]))))
@@ -71,16 +83,10 @@ continuous_iv_designer <- function(N = 500,
   {{{
     
     # Model
-    population <- declare_population(
-      N = N,
-      Z = rnorm(N),
-      u_Y = rnorm(N)/100 * sd_outcome,
-      u_i = rnorm(N) + sd_i,
-      u_X = rnorm(N) + sd_X
-    )
+    population <- eval_bare(population_expr)
     
     fx <- function(data, Z) a_X + b_X*Z + data$u_X + data$u_i
-    fy <- function(data, X, z = 0) a_Y + b_Y*X^c_Y + d_Y*z + data$u_Y + data$u_i
+    fy <- function(data, X, Z = 0) a_Y + b_Y*X^c_Y + d_Y*Z + data$u_Y + data$u_i
     
     potentials <- eval_bare(potentials_expr)
     
