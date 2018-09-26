@@ -49,10 +49,10 @@ continuous_iv_designer <- function(N = 500,
     
     catX <- categ(data[,!!treatment_name])
     
-    omegas <- sapply(catX[-1], function(x) mean((x <= data$X)*(data[,instrument_name] - mean(data[,instrument_name]))))
+    omegas <- sapply(catX[-1], function(x) mean((x <= data$X)*(data[,!!instrument_name] - mean(data[,!!instrument_name]))))
     omega  <- omegas/sum(omegas)
     
-    g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i]) - fy(data, catX[i-1]))))
+    g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i], Z = 0) - fy(data, catX[i-1], Z = 0))))
     late <- sum(g_prime*omega)
     
     z <- data[[!!instrument_name]]
