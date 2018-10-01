@@ -32,10 +32,13 @@ continuous_iv_designer <- function(N = 500,
                                    # f(z) = a_X + b_X*Z + uX + ui
                                    a_X = 0,
                                    b_X = 0,
+                                   gamma = 2,
                                    sd_outcome = 1,
                                    sd_i = 1,
                                    sd_X = 1,
-                                   sd_type = .5,                  # large sd means type heterogeneity: compliers have bigger effects
+                                   sd_X_type = .5,                  # type heterogeneity 
+                                   sd_Y_type = .5,                  # type effect heterogeneity
+                                   rho_XY_type = .5,                # if positive: compliers have bigger effects
                                    n_steps = 10,
                                    outcome_name = c("Y"),
                                    treatment_name = c("X"),
@@ -51,10 +54,10 @@ continuous_iv_designer <- function(N = 500,
 
   population_expr <- expr(declare_population(
     !!!e,
-    u_Y = rnorm(N) * sd_outcome,
-    u_i = rnorm(N) * sd_i,
     u_X = rnorm(N) * sd_X,
-    u_type = rnorm(N, sd = sd_type)
+    u_X_type = rnorm(N, sd = sd_X_type),
+    u_Y = rnorm(N) * sd_outcome,
+    u_Y_type = rnorm(n = N, mean = rho_XY_type * u_X_type, sd = sqrt(1 - rho_XY_type^2))*sd_Y_type
     ))
   
 
@@ -129,8 +132,8 @@ continuous_iv_designer <- function(N = 500,
     # Model
     population <- eval_bare(population_expr)
     
-    fx <- function(data, Z) a_X + (b_X+data$u_type)*Z + data$u_X + data$u_i
-    fy <- function(data, X, Z = 0) a_Y + (b_Y+c_Y*data$u_type)*X + d_Y*Z + data$u_Y + data$u_i 
+    fx <- function(data, Z) a_X + (b_X+data$u_X_type)*Z + data$u_X
+    fy <- function(data, X, Z = 0) a_Y + (b_Y+c_Y*data$u_Y_type)*X^gamma + d_Y*Z + data$u_Y 
     
     potentials <- eval_bare(potentials_expr)
     
