@@ -2,6 +2,7 @@
 
 export(block_cluster_two_arm_designer)
 export(cluster_sampling_designer)
+export(continuous_iv_designer)
 export(factorial_designer)
 export(get_design_code)
 export(match.call.defaults)
