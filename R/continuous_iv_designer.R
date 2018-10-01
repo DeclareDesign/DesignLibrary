@@ -69,20 +69,19 @@ continuous_iv_designer <- function(N = 500,
   estimand_expr <- expr(estimand_fn <- function(data){
 
     categ <- function(x) min(x) + (0:n_steps)*(max(x) - min(x))/n_steps
-  
-    catX  <- categ(data[,!!treatment_name])
     
-    omegas <- sapply(catX[-1], function(x) {
-      mean((x <= data[,!!treatment_name])*(data[,!!instrument_name] - mean(data[,!!instrument_name])))
-     })
-
-    omega  <- omegas/sum(omegas)
-  
     x <- data[,!!treatment_name]
     z <- data[[!!instrument_name]]
+    mu_z <- mean(z)
     
+    catX  <- categ(data[,!!treatment_name])
+    
+    omegas <- sapply(catX[-1], function(xx) mean((xx <= x)*(z - mu_z)) )
+
+    omega  <- omegas/sum(omegas)
+
     g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i], z) - fy(data, catX[i-1], z))))
-    late <- sum(g_prime*omega)
+    late    <- sum(g_prime*omega)
     
     ate <- mean((fy(data, max(x), z) - fy(data, min(x), z))/(max(x) - min(x)))
     first_stage <- mean((fx(data, max(z)) - fx(data, min(z))))/(max(z)-min(z))
@@ -130,8 +129,8 @@ continuous_iv_designer <- function(N = 500,
     
     estimator_3 <- eval_bare(estimator3_expr)
     
-    continuous_iv_design <- population + potentials +
-      estimand + estimator_1 + estimator_2 + estimator_3
+    continuous_iv_design <- population + potentials + estimand + 
+                            estimator_1 + estimator_2 + estimator_3
     
   }}}
   
