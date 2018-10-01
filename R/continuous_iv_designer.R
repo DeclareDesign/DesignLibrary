@@ -68,7 +68,7 @@ continuous_iv_designer <- function(N = 500,
   
   estimand_expr <- expr(estimand_fn <- function(data){
 
-    categ <- function(x, breaks = n_steps) min(x) + (0:breaks)*(max(x) - min(x))/breaks
+    categ <- function(x) min(x) + (0:n_steps)*(max(x) - min(x))/n_steps
   
     catX  <- categ(data[,!!treatment_name])
     
@@ -96,13 +96,13 @@ continuous_iv_designer <- function(N = 500,
   estimator1_expr <- expr(declare_estimator(!!form1,
                                             estimand = c("first_stage"),
                                             model = lm_robust,
-                                            label = "d-i-m"))
+                                            label = "lm_robust_1"))
   
   form2 <- as.formula(paste(outcome_name, instrument_name, sep = " ~ "))
   estimator2_expr <- expr(declare_estimator(!!form2,
                                             estimand = c("LATE", "ATE"),
                                             model = lm_robust,
-                                            label = "lm_robust"))
+                                            label = "lm_robust_2"))
   
   form3 <- as.formula(paste0(outcome_name, " ~ ", treatment_name, " | ", instrument_name))
   estimator3_expr <- expr(declare_estimator(!!form3,
@@ -131,8 +131,7 @@ continuous_iv_designer <- function(N = 500,
     estimator_3 <- eval_bare(estimator3_expr)
     
     continuous_iv_design <- population + potentials +
-      estimand + estimator_1 +
-      estimator_2 + estimator_3
+      estimand + estimator_1 + estimator_2 + estimator_3
     
   }}}
   
