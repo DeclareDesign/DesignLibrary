@@ -142,6 +142,8 @@ continuous_iv_designer <- function(N = 500,
                                        exclude_args = c("outcome_name", "treatment_name", "instrument_name", fixed, "fixed"))
   
   design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)  
+  design_code <-
     gsub("eval_bare\\(potentials_expr\\)", quo_text(potentials_expr), design_code)
   design_code <-
     gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
