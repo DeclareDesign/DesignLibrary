@@ -77,15 +77,14 @@ continuous_iv_designer <- function(N = 500,
      })
 
     omega  <- omegas/sum(omegas)
-    
-    g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i], data[,!!instrument_name]) - fy(data, catX[i-1], data[,!!instrument_name]))))
-
-    late <- sum(g_prime*omega)
-    ate <- mean((fy(data, catX[length(catX)], data[,!!instrument_name]) - fy(data, catX[1], data[,!!instrument_name]))/(catX[length(catX)] - catX[1]))
-    
-    
+  
+    x <- data[,!!treatment_name]
     z <- data[[!!instrument_name]]
     
+    g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i], z) - fy(data, catX[i-1], z))))
+    late <- sum(g_prime*omega)
+    
+    ate <- mean((fy(data, max(x), z) - fy(data, min(x), z))/(max(x) - min(x)))
     first_stage <- mean((fx(data, max(z)) - fx(data, min(z))))/(max(z)-min(z))
 
     data.frame(estimand_label = c("first_stage", "LATE", "ATE"),
