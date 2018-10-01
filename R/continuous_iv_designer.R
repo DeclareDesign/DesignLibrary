@@ -1,7 +1,27 @@
 #' Create a continuous instrumental variables design
-
-library(rlang)
-library(DesignLibrary)
+#'
+#' Builds a design with one continous instrument, one continuous explanatory variable, and one continuous outcome.
+#' 
+#' @param N An integer. Sample size.
+#' @param a_Y A real number. Constant in Y equation.
+#' @param b_Y A real number. Effect of X on Y equation. Assumed constant across types. 
+#' @param c_Y A real number. Order of polynomial on X in Y equation.
+#' @param d_Y A real number. Effect of Z on Y.
+#' @param a_X A real number. Constant in X equation.
+#' @param b_X A real number. Effect of Z on X. 
+#' @param sd_outcome A non negative number. Standard deviation on Y.
+#' @param sd_i A non negative number. Standard deviation of individual-level shock.
+#' @param sd_x A non negative number. Standard deviation on X.
+#' @return A continuous instrumental variables design.
+#' @author \href{https://declaredesign.org/}{DeclareDesign Team}
+#' @concept experiment
+#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr tidy iv_robust lm_robust
+#' @importFrom stats runif
+#' @export
+#' 
 
 continuous_iv_designer <- function(N = 500,
                                    # f(x, z) = a_Y + b_Y*x^c_Y + d_Y*z + uY + ui
@@ -38,7 +58,7 @@ continuous_iv_designer <- function(N = 500,
     !!!e,
     u_Y = rnorm(N)/100 * sd_outcome,
     u_i = rnorm(N) + sd_i,
-    u_X = rnorm(N) + sd_X
+    u_X = rnorm(N)/100 + sd_X
   ))
   
   estimand_expr <- expr(estimand_fn <- function(data){
