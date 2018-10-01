@@ -5,7 +5,7 @@
 #' @param N An integer. Sample size.
 #' @param a_Y A real number. Constant in Y equation.
 #' @param b_Y A real number. Effect of X on Y equation. Assumed constant across types. 
-#' @param c_Y A real number. Order of polynomial on X in Y equation.
+#' @param c_Y A real number. Effect of complier shock on outcomes
 #' @param d_Y A real number. Effect of Z on Y.
 #' @param a_X A real number. Constant in X equation.
 #' @param b_X A real number. Effect of Z on X. 
@@ -27,7 +27,7 @@ continuous_iv_designer <- function(N = 500,
                                    # f(x, z) = a_Y + b_Y*x^c_Y + d_Y*z + uY + ui
                                    a_Y = 0,
                                    b_Y = 0,
-                                   c_Y = 1, 
+                                   c_Y = 0,                       # Marginal effect of complier shock on outcomes   
                                    d_Y = 0,
                                    # f(z) = a_X + b_X*Z + uX + ui
                                    a_X = 0,
@@ -35,6 +35,7 @@ continuous_iv_designer <- function(N = 500,
                                    sd_outcome = 1,
                                    sd_i = 1,
                                    sd_X = 1,
+                                   sd_type = .5,                  # large sd means type heterogeneity: compliers have bigger effects
                                    n_steps = 10,
                                    outcome_name = c("Y"),
                                    treatment_name = c("X"),
@@ -45,6 +46,18 @@ continuous_iv_designer <- function(N = 500,
   if(!"N" %in% fixed) N_ <- expr(N)
   N_ <- N
   
+  
+  e <- exprs(N = !!N_, !!instrument_name := rnorm(!!N_))
+
+  population_expr <- expr(declare_population(
+    !!!e,
+    u_Y = rnorm(N) * sd_outcome,
+    u_i = rnorm(N) * sd_i,
+    u_X = rnorm(N) * sd_X,
+    u_type = rnorm(N, sd = sd_type)
+    ))
+  
+
   potentials_expr <- expr(declare_potential_outcomes(handler = function(data){
     
     # First stage PO function
@@ -54,38 +67,41 @@ continuous_iv_designer <- function(N = 500,
     data[,!!outcome_name] = fy(data, data[,!!treatment_name], data[,!!instrument_name])
     
     data
-    }
-    ))
-  
-  e <- exprs(N = !!N_, !!instrument_name := rnorm(!!N_))
-
-  population_expr <- expr(declare_population(
-    !!!e,
-    u_Y = rnorm(N) * sd_outcome,
-    u_i = rnorm(N) * sd_i,
-    u_X = rnorm(N) * sd_X
-    ))
+  }
+  ))
   
   estimand_expr <- expr(estimand_fn <- function(data){
 
-    categ <- function(x) min(x) + (0:n_steps)*(max(x) - min(x))/n_steps
-    
     x <- data[,!!treatment_name]
     z <- data[[!!instrument_name]]
-    mu_z <- mean(z)
     
-    catX  <- categ(data[,!!treatment_name])
-    
-    omegas <- sapply(catX[-1], function(xx) mean((xx <= x)*(z - mu_z)) )
-
-    omega  <- omegas/sum(omegas)
-
-    g_prime <- sapply(2:length(catX), function(i) mean((fy(data, catX[i], z) - fy(data, catX[i-1], z))))
-    late    <- sum(g_prime*omega)
-    
-    ate <- mean((fy(data, max(x), z) - fy(data, min(x), z))/(max(x) - min(x)))
     first_stage <- mean((fx(data, max(z)) - fx(data, min(z))))/(max(z)-min(z))
+    ate <- mean((fy(data, max(x), z) - fy(data, min(x), z))/(max(x) - min(x)))
+    
+    # LATE
+    categ   <- function(x) min(x) + (0:n_steps)*(max(x) - min(x))/n_steps
+    catZ    <- categ(z)
+    Delta_Z <- catZ[2] - catZ[1] 
+    catX    <- categ(x)
+    Delta_X <- catX[2] - catX[1] 
+    mu_z    <- mean(z)
+    
+    
+    lambdas <- sapply(2:length(catZ), function(i) {
+                 ((mean(fx(data, catZ[i])) - mean(fx(data, catZ[i-1])))/Delta_Z) *
+                 mean((catZ[i] <= z)*(z - mu_z))
+              })
 
+    lambda  <- lambdas/sum(lambdas)
+
+    beta_z <- sapply(2:length(catZ), function(iz){
+                  xx <- fx(data, catZ[iz])
+                  mean((fy(data, xx, z) - fy(data, xx-Delta_X, z))/Delta_X)})
+                
+                      
+    late    <- sum(beta_z*lambda)
+    
+    # Estimands
     data.frame(estimand_label = c("first_stage", "LATE", "ATE"),
                estimand = c(first_stage, late, ate),
                stringsAsFactors = FALSE)
@@ -113,8 +129,8 @@ continuous_iv_designer <- function(N = 500,
     # Model
     population <- eval_bare(population_expr)
     
-    fx <- function(data, Z) a_X + b_X*Z + data$u_X + data$u_i
-    fy <- function(data, X, Z = 0) a_Y + b_Y*X^c_Y + d_Y*Z + data$u_Y + data$u_i
+    fx <- function(data, Z) a_X + (b_X+data$u_type)*Z + data$u_X + data$u_i
+    fy <- function(data, X, Z = 0) a_Y + (b_Y+c_Y*data$u_type)*X + d_Y*Z + data$u_Y + data$u_i 
     
     potentials <- eval_bare(potentials_expr)
     
