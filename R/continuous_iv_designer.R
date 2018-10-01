@@ -149,6 +149,8 @@ continuous_iv_designer <- function(N = 500,
   design_code <-
     gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
   design_code <-
+    gsub("eval_bare\\(estimator1_expr\\)", quo_text(estimator1_expr), design_code)
+  design_code <-
     gsub("eval_bare\\(estimator2_expr\\)", quo_text(estimator2_expr), design_code)
   design_code <-
     gsub("eval_bare\\(estimator3_expr\\)", quo_text(estimator3_expr), design_code)
