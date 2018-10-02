@@ -27,7 +27,6 @@ continuous_iv_designer <- function(N = 500,
                                    # f(x, z) = a_Y + b_Y*x^c_Y + d_Y*z + uY + ui
                                    a_Y = 0,
                                    b_Y = 0,
-                                   c_Y = 0,                       # Marginal effect of complier shock on outcomes   
                                    d_Y = 0,
                                    # f(z) = a_X + b_X*Z + uX + ui
                                    a_X = 0,
@@ -39,6 +38,7 @@ continuous_iv_designer <- function(N = 500,
                                    sd_X_type = .5,                  # type heterogeneity 
                                    sd_Y_type = .5,                  # type effect heterogeneity
                                    rho_XY_type = .5,                # if positive: compliers have bigger effects
+                                   monotonic = TRUE,
                                    n_steps = 10,
                                    outcome_name = c("Y"),
                                    treatment_name = c("X"),
@@ -55,9 +55,10 @@ continuous_iv_designer <- function(N = 500,
   population_expr <- expr(declare_population(
     !!!e,
     u_X = rnorm(N) * sd_X,
-    u_X_type = rnorm(N, sd = sd_X_type),
+    u_X_type = rnorm(N, mean = b_X, sd = sd_X_type),
+    u_X_type = ifelse(monotonic & (u_X_type< 0), 0, u_X_type),
     u_Y = rnorm(N) * sd_outcome,
-    u_Y_type = rnorm(n = N, mean = rho_XY_type * u_X_type, sd = sqrt(1 - rho_XY_type^2))*sd_Y_type
+    u_Y_type = rnorm(n = N, mean = b_Y + rho_XY_type * u_X_type, sd = sqrt(1 - rho_XY_type^2))*sd_Y_type
     ))
   
 
@@ -132,8 +133,8 @@ continuous_iv_designer <- function(N = 500,
     # Model
     population <- eval_bare(population_expr)
     
-    fx <- function(data, Z) a_X + (b_X+data$u_X_type)*Z + data$u_X
-    fy <- function(data, X, Z = 0) a_Y + (b_Y+c_Y*data$u_Y_type)*X^gamma + d_Y*Z + data$u_Y 
+    fx <- function(data, Z)        a_X + data$u_X_type*Z + data$u_X
+    fy <- function(data, X, Z = 0) a_Y + data$u_Y_type*X^gamma + d_Y*Z + data$u_Y 
     
     potentials <- eval_bare(potentials_expr)
     
