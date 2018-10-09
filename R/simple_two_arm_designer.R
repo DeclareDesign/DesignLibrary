@@ -42,7 +42,7 @@ simple_two_arm_designer <- function(N = 100,
                                     treatment_mean = control_mean + ate,
                                     treatment_sd = control_sd,
                                     rho = 1,
-                                    design_name = "simple_two_arm_design",
+                                    design_name = c("simple_two_arm_design"),
                                     fixed = c("design_name")
 ){
   if(control_sd < 0 ) stop("control_sd must be non-negative")
