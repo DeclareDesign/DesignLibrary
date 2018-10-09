@@ -17,6 +17,8 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param treatment_sd  A nonnegative number. Standard deviation in treatment. By default equals \code{control_sd}.
 #' @param rho A number in [-1,1]. Correlation between treatment and control outcomes.
+#' @param design_name A character vector. Name of design. Must be provided without spacing inside the function \code{c()} as in \code{design_name = c("abc_123")}.
+#' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -39,11 +41,23 @@ simple_two_arm_designer <- function(N = 100,
                                     ate = 1,
                                     treatment_mean = control_mean + ate,
                                     treatment_sd = control_sd,
-                                    rho = 1
+                                    rho = 1,
+                                    design_name = "simple_two_arm_design",
+                                    fixed = c("design_name")
 ){
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
+  # if(treatment_mean != control_mean+ate) warning("`treatment_mean` inconsistent with values of `control_mean` and `ate`. Former will override the latter.")
+  
+  definitions <- data.frame(
+    names = c("N", "assignment_prob", "control_mean", "control_sd", 
+      "ate", "treatment_mean", "treatment_sd", "rho", "design_name", "fixed"),
+    class = c("integer", rep("numeric", 7), rep("character", 2)),
+    min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1, NA, NA),
+    max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA, NA)
+  )
+  
   {{{
     # M: Model
     population <- declare_population(
@@ -67,14 +81,21 @@ simple_two_arm_designer <- function(N = 100,
     
     # Design
     simple_two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator
+    
   }}}
   
-  attr(simple_two_arm_design, "code") <- 
+  design_code <- 
     construct_design_code(designer = simple_two_arm_designer, 
                           args = match.call.defaults(), 
-                          exclude_args = "ate",
+                          exclude_args = c("ate", "fixed", fixed),
                           arguments_as_values = TRUE)
   
+  design_code <-
+    gsub("simple_two_arm_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  
+  attr(simple_two_arm_design, "code") <- design_code
+  attr(simple_two_arm_design, "definitions") <- definitions
+    
   simple_two_arm_design
 }
 
