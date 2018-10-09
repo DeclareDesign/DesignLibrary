@@ -44,6 +44,7 @@ continuous_iv_designer <- function(N = 500,
                                    treatment_name = c("X"),
                                    instrument_name = c("Z"),
                                    fixed = NULL
+                                   estimate_LATE = FALSE
 ){
   
   if(!"N" %in% fixed) N_ <- expr(N)
@@ -74,6 +75,7 @@ continuous_iv_designer <- function(N = 500,
   }
   ))
   
+  ifelse(estimate_LATE, estimand_lab <- c("LATE", "ATE"), estimand_lab <- c("ATE"))
   estimand_expr <- expr(estimand_fn <- function(data){
 
     x <- data[,!!treatment_name]
@@ -105,8 +107,10 @@ continuous_iv_designer <- function(N = 500,
                       
     late    <- sum(beta_z*lambda)
     
+    if(!estimate_LATE) late <- NULL
+    
     # Estimands
-    data.frame(estimand_label = c("first_stage", "LATE", "ATE"),
+    data.frame(estimand_label = c("first_stage", !!estimand_lab),
                estimand = c(first_stage, late, ate),
                stringsAsFactors = FALSE)
   })
@@ -119,13 +123,13 @@ continuous_iv_designer <- function(N = 500,
   
   form2 <- as.formula(paste(outcome_name, instrument_name, sep = " ~ "))
   estimator2_expr <- expr(declare_estimator(!!form2,
-                                            estimand = c("LATE", "ATE"),
+                                            estimand = !!estimand_lab,
                                             model = lm_robust,
                                             label = "lm_robust_2"))
   
   form3 <- as.formula(paste0(outcome_name, " ~ ", treatment_name, " | ", instrument_name))
   estimator3_expr <- expr(declare_estimator(!!form3,
-                                            estimand = c("LATE","ATE"),
+                                            estimand = !!estimand_lab,
                                             model = iv_robust,
                                             label = "iv_robust"))
   {{{
