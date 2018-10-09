@@ -43,7 +43,7 @@ continuous_iv_designer <- function(N = 500,
                                    outcome_name = c("Y"),
                                    treatment_name = c("X"),
                                    instrument_name = c("Z"),
-                                   fixed = NULL
+                                   fixed = NULL,
                                    estimate_LATE = FALSE
 ){
   
@@ -51,7 +51,7 @@ continuous_iv_designer <- function(N = 500,
   N_ <- N
   
   
-  e <- exprs(N = !!N_, !!instrument_name := rnorm(!!N_))
+  e <- exprs(N = !!N_, !!instrument_name := rnorm(N_))
 
   population_expr <- expr(declare_population(
     !!!e,
@@ -78,7 +78,7 @@ continuous_iv_designer <- function(N = 500,
   ifelse(estimate_LATE, estimand_lab <- c("LATE", "ATE"), estimand_lab <- c("ATE"))
   estimand_expr <- expr(estimand_fn <- function(data){
 
-    x <- data[,!!treatment_name]
+    x <- data[[!!treatment_name]]
     z <- data[[!!instrument_name]]
     
     first_stage <- mean((fx(data, max(z)) - fx(data, min(z))))/(max(z)-min(z))
@@ -115,6 +115,7 @@ continuous_iv_designer <- function(N = 500,
                stringsAsFactors = FALSE)
   })
 
+  
   form1 <- as.formula(paste(treatment_name, instrument_name, sep = " ~ "))
   estimator1_expr <- expr(declare_estimator(!!form1,
                                             estimand = c("first_stage"),
