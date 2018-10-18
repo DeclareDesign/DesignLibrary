@@ -127,12 +127,12 @@ factorial_designer <- function(
   
   # fixed argument ----------------------------------------------------------
   
-  outcome_sds_ <- outcome_sds; means_ <- outcome_means; assignment_probs_ <- assignment_probs; N_ <- N; k_ <- k 
+  outcome_sds_ <- outcome_sds; outcome_means_ <- outcome_means; assignment_probs_ <- assignment_probs; N_ <- N; k_ <- k 
   
   if(is.null(fixed)) fixed <- ""
   if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) expr(outcome_sds[!!i])) 
   if(!"outcome_means" %in% fixed)  outcome_means_ <- sapply(1:length(outcome_means), function(i) expr(outcome_means[!!i])) 
-  if(!"N"     %in% fixed)  N_ <- expr(N)
+  if(!"N" %in% fixed)  N_ <- expr(N)
   
   
   # population --------------------------------------------------------------
