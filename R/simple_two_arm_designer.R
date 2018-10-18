@@ -76,7 +76,7 @@ simple_two_arm_designer <- function(N = 100,
     declare_population(
       N = !!N_,
       u_0 = rnorm(!!N_),
-      u_1 = rnorm(n = !!N_, mean = !!rho_ * u_0, sd = sqrt(1 - !!rho_^2)))
+      u_1 = rnorm(n = !!N_, mean = !!rho_ * u_0, sd = sqrt(1 - (!!rho_)^2)))
   )
   
   potential_expr <- expr(
