@@ -230,4 +230,12 @@ test_that(desc = "simple_iv_designer errors when it should",
           })
 
 
+# Test `fixed` argument works ---------------------------------------------
+
+test_that(desc = "`fixed` argument works",
+          code = {
+            expect_error(factorial_designer(fixed = names(formals(factorial_designer))), NA)
+            expect_error(multi_arm_designer(fixed = names(formals(multi_arm_designer))), NA)
+          })
+
 
