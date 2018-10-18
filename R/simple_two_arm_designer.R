@@ -58,22 +58,46 @@ simple_two_arm_designer <- function(N = 100,
     max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA, NA)
   )
   
+  N_ <- N; assignment_prob_ <- assignment_prob; control_mean_ <- control_mean
+  control_sd_ <- control_sd; ate_ <- ate; treatment_mean_ <- treatment_mean
+  treatment_sd_ <- treatment_sd; rho_ <- rho
+  
+  if(!"N" %in% fixed)  N_ <- expr(N)
+  if(!"assignment_prob" %in% fixed)  assignment_prob_ <- expr(assignment_prob)
+  if(!"control_mean" %in% fixed)  control_mean_ <- expr(control_mean)
+  if(!"control_sd" %in% fixed)  control_sd_ <- expr(control_sd)
+  if(!"ate" %in% fixed)  ate_ <- expr(ate)
+  if(!"treatment_mean" %in% fixed)  treatment_mean_ <- expr(treatment_mean)
+  if(!"treatment_sd" %in% fixed)  treatment_sd_ <- expr(treatment_sd)
+  if(!"rho" %in% fixed)  rho_ <- expr(rho)
+  
+  population_expr <- expr(
+    declare_population(
+      N = !!N_,
+      u_0 = rnorm(!!N_),
+      u_1 = rnorm(n = !!N_, mean = !!rho_ * u_0, sd = sqrt(1 - !!rho_^2)))
+  )
+  
+  potential_expr <- expr(
+    declare_potential_outcomes(
+    Y ~ (1-Z) * (u_0*!!control_sd_ + !!control_mean_) + 
+      Z     * (u_1*!!treatment_sd_ + !!treatment_mean_))
+    )
+  
+  assignment_expr <- expr(declare_assignment(prob = !!assignment_prob_))
+  
   {{{
     # M: Model
-    population <- declare_population(
-      N = N,
-      u_0 = rnorm(N),
-      u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
+    population <- eval_bare(population_expr)
     
-    potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
-          Z     * (u_1*treatment_sd + treatment_mean))
+    potential_outcomes <- eval_bare(potential_expr)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(prob = assignment_prob)
+    assignment <- eval_bare(assignment_expr)
+    
     reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
@@ -92,6 +116,12 @@ simple_two_arm_designer <- function(N = 100,
   
   design_code <-
     gsub("simple_two_arm_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(potential_expr\\)", quo_text(potential_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
   
   attr(simple_two_arm_design, "code") <- design_code
   attr(simple_two_arm_design, "definitions") <- definitions
