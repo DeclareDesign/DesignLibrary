@@ -30,6 +30,7 @@
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
 #' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
+#' @param verbose Logical. If TRUE, prints intra-cluster correlation implied by design parameters.
 #' @return A block cluster two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
