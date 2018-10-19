@@ -45,7 +45,7 @@ simple_two_arm_designer <- function(N = 100,
                                     design_name = c("simple_two_arm_design"),
                                     fixed = c("design_name")
 ){
-  if(treatment_mean != ate + control_sd) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
+  if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
