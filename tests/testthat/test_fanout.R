@@ -7,5 +7,5 @@ test_that("fan out IDs are correct", {
   
   sx <- simulate_design(design, sims = sims)
   
-  expect_equivalent(apply(sx[,c(15, 16, 17)], 2, max), c(30, 60, 120))
+  expect_equivalent(apply(sx[,c("step_1_draw","step_3_draw","step_6_draw")], 2, max), c(30, 60, 120))
 })
