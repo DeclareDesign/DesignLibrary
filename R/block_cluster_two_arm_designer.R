@@ -23,13 +23,14 @@
 #' @param sd A nonnegative number. Overall standard deviation (combining individual level, cluster level, and block level shocks). Defaults to 1. Overridden if incompatible with other user-specified shocks. 
 #' @param sd_block A nonnegative number. Standard deviation of block level shocks.
 #' @param sd_cluster A nonnegative number. Standard deviation of cluster level shock.
-#' @param sd_i_0 A nonnegative number. Standard deviation of individual level shock in control. For sufficiently small \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = sd.
+#' @param sd_i_0 A nonnegative number. Standard deviation of individual level shock in control. If not specified, and when possible given \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = sd.
 #' @param sd_i_1 A nonnegative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.
 #' @param rho A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.
 #' @param assignment_prob A number in (0,1). Treatment assignment probability.
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
 #' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
+#' @param verbose Logical. If TRUE, prints intra-cluster correlation implied by design parameters.
 #' @return A block cluster two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
@@ -60,15 +61,16 @@ block_cluster_two_arm_designer <- function(N = NULL,
                                            N_clusters_in_block = ifelse(is.null(N), 100, round(N/N_blocks)),
                                            N_i_in_cluster = ifelse(is.null(N), 1, round(N/mean(N_blocks*N_clusters_in_block))),
                                            sd = 1,
-                                           sd_block = .5,
-                                           sd_cluster = .5,
-                                           sd_i_0 = sqrt(max(0, sd^2 - sd_block^2 - sd_cluster^2)),
+                                           sd_block = .5773*sd,
+                                           sd_cluster = max(0, (sd^2 - sd_block^2)/2)^.5,
+                                           sd_i_0 =     max(0,  sd^2 - sd_block^2 - sd_cluster^2)^.5,
                                            sd_i_1 = sd_i_0,
                                            rho = 1,
                                            assignment_prob = .5,
                                            control_mean = 0,
                                            ate = 0,
-                                           treatment_mean = control_mean + ate
+                                           treatment_mean = control_mean + ate,
+                                           verbose = TRUE
 ){  
   
   if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
@@ -84,7 +86,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
   if(!is.null(N)) {design_N <- ifelse(length(N_i_in_cluster)>1, sum(N_i_in_cluster), sum(N_i_in_cluster*N_blocks*N_clusters_in_block))
   if(N != design_N) stop(paste0("The design N of ", design_N, " is inconsistent with the user specified N of ", N, 
                                 ". Likely due to integer problems in specified block or cluster sizes or insufficient information. Better to fully specify N for each level and not provide an argument for overall N.")
-  )}
+    )}
   if(!is.null(N_blocks) & !is.null(N_clusters_in_block) & !is.null(N_i_in_cluster)){
     if(length(N_i_in_cluster) > 1){
       if(length(N_clusters_in_block) > 1){
@@ -103,7 +105,13 @@ block_cluster_two_arm_designer <- function(N = NULL,
       }
     }
   }
-  {{{    
+  if(verbose) print(paste0("The implied ICC in (control) is ", round(1- sd_i_0^2/(sd_i_0^2 + sd_block^2 + sd_cluster^2), 3)))
+  if(verbose) print(paste0("The implied ICC in (control) conditional on block is  ", round(1- sd_i_0^2/(sd_i_0^2 + sd_cluster^2), 3)))
+  if(verbose & abs(sd^2 - sd_block^2 - sd_cluster^2 - sd_i_0^2)>.0001) print(
+                    paste0("Overall sd is ", 
+                    round((sum(sd_block^2 + sd_cluster^2 + sd_i_0^2))^.5, 3),  
+                    ", which differs from overall specified sd of ", round(sd, 3)))
+    {{{    
     # M: Model
     population <- declare_population(
       blocks = add_level(

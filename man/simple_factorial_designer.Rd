@@ -21,7 +21,7 @@ simple_factorial_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 
 \item{weight_B}{A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.}
 
-\item{outcome_means}{A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.}
+\item{outcome_means}{A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, mean_A1B1, if provided.}
 
 \item{mean_A0B0}{A number. Mean outcome in A=0, B=0 condition.}
 

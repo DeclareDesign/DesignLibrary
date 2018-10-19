@@ -17,7 +17,7 @@
 #' @param prob_B A number in [0,1]. Probability of assignment to treatment B.
 #' @param weight_A A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.
 #' @param weight_B A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.
-#' @param outcome_means A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.
+#' @param outcome_means A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, mean_A1B1, if provided.
 #' @param mean_A0B0 A number. Mean outcome in A=0, B=0 condition.
 #' @param mean_A0B1 A number. Mean outcome in A=0, B=1 condition.
 #' @param mean_A1B0 A number. Mean outcome in A=1, B=0 condition.
