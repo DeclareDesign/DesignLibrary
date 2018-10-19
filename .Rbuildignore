@@ -7,3 +7,4 @@ README.Rmd
 ^\.Rproj\.user$
 ^cran-comments\.md$
 vignettes
+^\.github
