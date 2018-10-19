@@ -41,6 +41,8 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
 \item{ate}{A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).}
 
 \item{treatment_mean}{A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used.}
+
+\item{verbose}{Logical. If TRUE, prints intra-cluster correlation implied by design parameters.}
 }
 \value{
 A block cluster two-arm design.
