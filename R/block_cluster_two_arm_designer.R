@@ -26,7 +26,7 @@
 #' @param sd_i_0 A nonnegative number. Standard deviation of individual level shock in control. If not specified, and when possible given \code{sd_block} and \code{sd_cluster}, \code{sd_i_0} defaults to make total variance = sd.
 #' @param sd_i_1 A nonnegative number. Standard deviation of individual level shock in treatment. Defaults to \code{sd_i_0}.
 #' @param rho A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.
-#' @param assignment_prob A number in (0,1). Treatment assignment probability.
+#' @param assignment_probs A number or vector of numbers in (0,1). Treatment assignment probability for each block (specified in order of \code{N_clusters_in_block}). 
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
 #' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
@@ -66,7 +66,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
                                            sd_i_0 =     max(0,  sd^2 - sd_block^2 - sd_cluster^2)^.5,
                                            sd_i_1 = sd_i_0,
                                            rho = 1,
-                                           assignment_prob = .5,
+                                           assignment_probs = .5,
                                            control_mean = 0,
                                            ate = 0,
                                            treatment_mean = control_mean + ate,
@@ -81,7 +81,14 @@ block_cluster_two_arm_designer <- function(N = NULL,
   if(sd_cluster < 0) stop("sd_cluster must be nonnegative")
   if(sd_i_0 < 0) stop("sd_i_0 must be nonnegative")
   if(sd_i_1 < 0) stop("sd_i_1 must be nonnegative")
-  if(assignment_prob<= 0 || assignment_prob >= 1) stop("assignment_prob must be in (0,1)")
+  
+  # Check that assignment_probss is either a scalar or of length N_blocks
+  if(length(assignment_probs) != N_blocks){
+    if(length(assignment_probs) == 1) assignment_probs <- rep(assignment_probs, N_blocks)
+    else stop("assignment_probs must either be a scalar, or of length N_blocks.")
+  }
+  if(any(assignment_probs <= 0 || assignment_probs >= 1)) stop("all assignment_probs must be in (0,1)")
+  
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   if(!is.null(N)) {design_N <- ifelse(length(N_i_in_cluster)>1, sum(N_i_in_cluster), sum(N_i_in_cluster*N_blocks*N_clusters_in_block))
   if(N != design_N) stop(paste0("The design N of ", design_N, " is inconsistent with the user specified N of ", N, 
@@ -135,8 +142,8 @@ block_cluster_two_arm_designer <- function(N = NULL,
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(prob = assignment_prob, blocks = blocks, clusters = clusters)
-    reveal <- declare_reveal()
+    assignment <- declare_assignment(block_prob = assignment_probs, blocks = blocks, clusters = clusters)
+    reveal <- declare_reveal(Y, Z)
     
     # A: Answer Strategy
     estimator <- declare_estimator(

@@ -10,7 +10,7 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
   N_clusters_in_block))), sd = 1, sd_block = 0.5773 * sd,
   sd_cluster = max(0, (sd^2 - sd_block^2)/2)^0.5, sd_i_0 = max(0, sd^2
   - sd_block^2 - sd_cluster^2)^0.5, sd_i_1 = sd_i_0, rho = 1,
-  assignment_prob = 0.5, control_mean = 0, ate = 0,
+  assignment_probs = 0.5, control_mean = 0, ate = 0,
   treatment_mean = control_mean + ate, verbose = TRUE)
 }
 \arguments{
@@ -34,7 +34,7 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
 
 \item{rho}{A number in [-1,1]. Correlation in individual shock between potential outcomes for treatment and control.}
 
-\item{assignment_prob}{A number in (0,1). Treatment assignment probability.}
+\item{assignment_probs}{A number or vector of numbers in (0,1). Treatment assignment probability for each block (specified in order of \code{N_clusters_in_block}).}
 
 \item{control_mean}{A number. Average outcome in control.}
 
