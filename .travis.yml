@@ -8,28 +8,42 @@ matrix:
   include:
     - os: linux
       r: release
+      r_github_packages:
+      - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
+      - ropensci/git2r
 
     - os: linux
       r: 3.4
       after_success:
       - echo skipping source packaging on linux/oldrel
+      r_github_packages:
+      - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
+      - ropensci/git2r
 
     - os: linux
       r: devel
       after_success:
       - echo skipping source packaging on linux/devel
+      r_github_packages:
+      - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
+      - ropensci/git2r
 
     - os: osx
       r: release
       if: branch = master
       r_github_packages:
       - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
       - ropensci/git2r
 
     - os: osx
       r: 3.4
       r_github_packages:
       - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
       - ropensci/git2r
       if: branch = master
 
@@ -41,5 +55,6 @@ env:
 
 r_github_packages:
 - DeclareDesign/DDtools
+- DeclareDesign/DeclareDesign
 after_success:
 - Rscript -e DDtools::after_build
