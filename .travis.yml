@@ -8,16 +8,28 @@ matrix:
   include:
     - os: linux
       r: release
+      r_github_packages:
+      - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
+      - ropensci/git2r
 
     - os: linux
       r: 3.4
       after_success:
       - echo skipping source packaging on linux/oldrel
+      r_github_packages:
+      - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
+      - ropensci/git2r
 
     - os: linux
       r: devel
       after_success:
       - echo skipping source packaging on linux/devel
+      r_github_packages:
+      - DeclareDesign/DDtools
+      - DeclareDesign/DeclareDesign
+      - ropensci/git2r
 
     - os: osx
       r: release
