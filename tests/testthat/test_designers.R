@@ -87,7 +87,8 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
             expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_1 = -1))
-            expect_error(block_cluster_two_arm_designer(assignment_prob = 10))
+            expect_error(block_cluster_two_arm_designer(assignment_probs = 10))
+            expect_error(block_cluster_two_arm_designer(assignment_probs = 2:10 / (sum(2:10))))
             expect_error(block_cluster_two_arm_designer(rho = 10))
             expect_error(block_cluster_two_arm_designer(N = 1, N_i_in_cluster = 10))
             expect_error(block_cluster_two_arm_designer(
