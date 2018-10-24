@@ -220,14 +220,14 @@ test_that(desc = "process_tracing_designer errors when it should",
           })
 
 
-test_that(desc = "simple_iv_designer errors when it should",
+test_that(desc = "binary_iv_designer errors when it should",
           code = {
-            expect_error(simple_iv_designer(assignment_probs = -20))
-            expect_error(simple_iv_designer(assignment_probs = 20))
-            expect_error(simple_iv_designer(outcome_sd = -20))
-            expect_error(simple_iv_designer(a = -20))
-            expect_error(simple_iv_designer(b = -20))
-            expect_error(simple_iv_designer(d = -20))
+            expect_error(binary_iv_designer(assignment_probs = -20))
+            expect_error(binary_iv_designer(assignment_probs = 20))
+            expect_error(binary_iv_designer(outcome_sd = -20))
+            expect_error(binary_iv_designer(a = -20))
+            expect_error(binary_iv_designer(b = -20))
+            expect_error(binary_iv_designer(d = -20))
           })
 
 
