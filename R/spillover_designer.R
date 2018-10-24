@@ -34,16 +34,16 @@
 
 
 spillover_designer <- function(N_groups = 80, 
-                                      N_i_group = 3, 
-                                      sd_i = .2,
-                                      gamma = 2)
+                               N_i_group = 3, 
+                               sd_i = .2,
+                               gamma = 2)
 {
   if(sd_i < 0) stop("sd_i must be nonnegative")
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 
-                              i = add_level(N = n, zeros = 0, ones = 1))
+                                     i = add_level(N = n, zeros = 0, ones = 1))
     
     dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd_i
     
@@ -58,7 +58,7 @@ spillover_designer <- function(N_groups = 80,
     assignment <- declare_assignment()
     
     reveal_Y <- declare_reveal(handler=fabricate,
-                             Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
+                               Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
     
     # A: Answer Strategy
     estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
