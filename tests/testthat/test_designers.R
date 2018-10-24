@@ -127,10 +127,10 @@ test_that(desc = "mediation_analysis_designer errors when it should",
             expect_error(mediation_analysis_designer(rho = 10))
           })
 
-test_that(desc = "simple_spillover_designer errors when it should",
+test_that(desc = "spillover_designer errors when it should",
           code = {
-            expect_error(simple_spillover_designer(sd_i = -10))
-            expect_error(simple_spillover_designer(N_i_group = -10))
+            expect_error(spillover_designer(sd_i = -10))
+            expect_error(spillover_designer(N_i_group = -10))
           })
 
 test_that(desc = "regression_discontinuity_designer errors when it should",
