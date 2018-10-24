@@ -104,15 +104,15 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
               N_clusters_in_block = c(2,2)))
           })
 
-test_that(desc = "simple_factorial_designer errors when it should",
+test_that(desc = "two_by_two_designer errors when it should",
           code = {
-            expect_error(simple_factorial_designer(weight_A = 10))
-            expect_error(simple_factorial_designer(weight_B = 10))
-            expect_error(simple_factorial_designer(outcome_sds = -1))
-            expect_error(simple_factorial_designer(prob_A = -1))
-            expect_error(simple_factorial_designer(prob_A = 3))
-            expect_error(simple_factorial_designer(prob_B = -1))
-            expect_error(simple_factorial_designer(prob_B = 3))
+            expect_error(two_by_two_designer(weight_A = 10))
+            expect_error(two_by_two_designer(weight_B = 10))
+            expect_error(two_by_two_designer(outcome_sds = -1))
+            expect_error(two_by_two_designer(prob_A = -1))
+            expect_error(two_by_two_designer(prob_A = 3))
+            expect_error(two_by_two_designer(prob_B = -1))
+            expect_error(two_by_two_designer(prob_B = 3))
           })
 
 test_that(desc = "simple_two_arm_designer errors when it should",
