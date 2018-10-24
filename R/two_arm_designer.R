@@ -34,13 +34,13 @@
 
 
 two_arm_designer <- function(N = 100,
-                                    assignment_prob = .5,
-                                    control_mean = 0,
-                                    control_sd = 1,
-                                    ate = 1,
-                                    treatment_mean = control_mean + ate,
-                                    treatment_sd = control_sd,
-                                    rho = 1
+                             assignment_prob = .5,
+                             control_mean = 0,
+                             control_sd = 1,
+                             ate = 1,
+                             treatment_mean = control_mean + ate,
+                             treatment_sd = control_sd,
+                             rho = 1
 ){
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
@@ -54,7 +54,7 @@ two_arm_designer <- function(N = 100,
     
     potential_outcomes <- declare_potential_outcomes(
       Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
-          Z     * (u_1*treatment_sd + treatment_mean))
+        Z     * (u_1*treatment_sd + treatment_mean))
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
