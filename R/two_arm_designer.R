@@ -93,7 +93,7 @@ attr(two_arm_designer, "description") <- "
 
 simple_two_arm_designer <- function(...){
   .Deprecated("two_arm_designer")
-  simple_two_arm_designer(...)
+  two_arm_designer(...)
 }
   
   
