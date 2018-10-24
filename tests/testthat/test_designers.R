@@ -249,3 +249,14 @@ test_that(desc = "block_cluster designer handles reports ICC with verbose = TRUE
             expect_silent(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = FALSE))
           })
 
+
+
+# Aliases -----------------------------------------------------------------
+
+test_that(desc = "aliases throw a warning",
+          code = {
+            expect_warning(simple_factorial_designer())
+            expect_warning(simple_iv_designer())
+            expect_warning(simple_spillover_designer())
+            expect_warning(simple_two_arm_designer(N = 10))
+          })
