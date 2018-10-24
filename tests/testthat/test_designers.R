@@ -115,11 +115,11 @@ test_that(desc = "two_by_two_designer errors when it should",
             expect_error(two_by_two_designer(prob_B = 3))
           })
 
-test_that(desc = "simple_two_arm_designer errors when it should",
+test_that(desc = "two_arm_designer errors when it should",
           code = {
-            expect_error(simple_two_arm_designer(control_sd = -1))
-            expect_error(simple_two_arm_designer(assignment_prob = 10))
-            expect_error(simple_two_arm_designer(rho = 10))
+            expect_error(two_arm_designer(control_sd = -1))
+            expect_error(two_arm_designer(assignment_prob = 10))
+            expect_error(two_arm_designer(rho = 10))
           })
 
 test_that(desc = "mediation_analysis_designer errors when it should",
