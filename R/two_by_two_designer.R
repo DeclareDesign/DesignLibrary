@@ -59,17 +59,17 @@
 #' }
 #' 
 two_by_two_designer <- function(N = 100,
-                                      prob_A = .5,
-                                      prob_B = .5,
-                                      weight_A = .5, 
-                                      weight_B = .5, 
-                                      outcome_means = rep(0,4),
-                                      mean_A0B0 = outcome_means[1],
-                                      mean_A0B1 = outcome_means[2],
-                                      mean_A1B0 = outcome_means[3],
-                                      mean_A1B1 = outcome_means[4],
-                                      sd_i = 1,
-                                      outcome_sds = rep(0,4)
+                                prob_A = .5,
+                                prob_B = .5,
+                                weight_A = .5, 
+                                weight_B = .5, 
+                                outcome_means = rep(0,4),
+                                mean_A0B0 = outcome_means[1],
+                                mean_A0B1 = outcome_means[2],
+                                mean_A1B0 = outcome_means[3],
+                                mean_A1B1 = outcome_means[4],
+                                sd_i = 1,
+                                outcome_sds = rep(0,4)
 ){
   if((weight_A < 0) || (weight_B < 0) || (weight_A > 1) || (weight_B > 1)) stop("weight_A and weight_B must be in [0,1]")
   if(max(c(sd_i, outcome_sds) < 0) )      stop("sd_i and outcome_sds must be nonnegative")
