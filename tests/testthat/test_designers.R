@@ -3,6 +3,7 @@ context(desc = "Testing that designers in the library work as they should")
 
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
+designers <- designers[!grepl("simple",designers)]
 
 for(designer in designers){
   
