@@ -2,8 +2,8 @@
 title: "Simple Spillover Design"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
-designer: "simple_spillover_designer.Rd"
-example-design: "simple_spillover_design.Rd"
+designer: "spillover_designer.Rd"
+example-design: "spillover_design.Rd"
 vignette: >
   %\VignetteIndexEntry{Spillover design}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,7 +19,7 @@ library(knitr)
 
 An advantage of experimental designs is that fewer assumptions are needed to justify causal claims. However some assumptions are still needed. Perhaps the most important of these is the assumption that there are no spillovers (technically this is assumption is part of what is called the Stable Unit Treatment Value Assumption, or "SUTVA"). 
 
-The `simple_spillover_designer` generates a simple design with a data generating process that suffers from spillovers. 
+The `spillover_designer` generates a simple design with a data generating process that suffers from spillovers. 
 
 The presence of spillovers creates a challenge for the definition of the estimand. Indeed the assumption of no spillovers runs so deep that it is often invoked even prior to the definition of estimands. If you write the "average treatment effect" estimand as $E(Y(1) - Y(0))$ you are assuming already that the potential outcomes depend only on a unit's own assignment to treatment. 
 
@@ -62,7 +62,7 @@ $$Y_i = \left(\frac{1}{n_{G[i]}} \sum_{j\in G[i]}Z_j \right)^\gamma + \epsilon_i
 
 In code:
 
-```{r, code = get_design_code(simple_spillover_designer()), eval=TRUE}
+```{r, code = get_design_code(spillover_designer()), eval=TRUE}
 ```
 
 ## Diagnosis
@@ -71,7 +71,7 @@ The diagnosis of this design is below.
 
 
 ```{r,eval = TRUE}
-diagnosis <- diagnose_design(simple_spillover_design)
+diagnosis <- diagnose_design(spillover_design)
 ```
 
 
@@ -86,25 +86,25 @@ The sign of the bias term is perhaps more surprising. The idea that positive spi
 
 ## Using the Spillover Designer
 
-In R, you can generate a simple_spillover design using the template function `simple_spillover_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
+In R, you can generate a spillover design using the template function `spillover_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
 
 ```{r, eval=FALSE}
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_simple_spillover_design` with `n_groups`, `group_size`, `sd`, and `gamma` set to 40, 10, .25, and 4, respectively, by running the lines below.
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_spillover_design` with `n_groups`, `group_size`, `sd`, and `gamma` set to 40, 10, .25, and 4, respectively, by running the lines below.
 
 ```{r, eval=FALSE}
-simple_spillover_design <- simple_spillover_designer(n_groups = 40, 
+spillover_design <- spillover_designer(n_groups = 40, 
                                                      group_size = 10,
                                                      sd = .25,
                                                      gamma = 4)
 ```
 
-You can see more details on the `simple_spillover_designer()` function and its arguments by running the following line of code:
+You can see more details on the `spillover_designer()` function and its arguments by running the following line of code:
 
 ```{r, eval=FALSE}
-??simple_spillover_designer
+??spillover_designer
 ```
 
 
