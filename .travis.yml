@@ -34,6 +34,7 @@ matrix:
     - os: osx
       r: release
       if: branch = master
+      fortran: false 
       r_github_packages:
       - DeclareDesign/DDtools
       - DeclareDesign/DeclareDesign
@@ -41,6 +42,7 @@ matrix:
 
     - os: osx
       r: 3.4
+      fortran: false 
       r_github_packages:
       - DeclareDesign/DDtools
       - DeclareDesign/DeclareDesign
