@@ -36,8 +36,6 @@ or by specifying a \code{control_mean} and \code{ate}.
 }
 \details{
 Units are assigned to treatment using complete random assignment. Potential outcomes are normally distributed according to the mean and sd arguments.
-
-See \href{https://declaredesign.org/library/articles/two_arm.html}{vignette online}.
 }
 \examples{
 #Generate a simple two-arm design using default arguments
