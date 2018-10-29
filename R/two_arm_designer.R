@@ -7,8 +7,6 @@
 #' @details 
 #' Units are assigned to treatment using complete random assignment. Potential outcomes are normally distributed according to the mean and sd arguments.
 #' 
-#' See \href{https://declaredesign.org/library/articles/two_arm.html}{vignette online}.
-#' 
 #' @param N An integer. Sample size.
 #' @param assignment_prob A number in [0,1]. Probability of assignment to treatment.
 #' @param control_mean A number. Average outcome in control.
