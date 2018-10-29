@@ -19,7 +19,7 @@ First, install the development version of **DesignLibrary** in `R`:
 devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 ```
 
-A designer is a function that returns designs. For example, `simple_two_arm_designer()` generates simple two-arm designs as `DeclareDesign` objects. 
+A designer is a function that returns designs. For example, `two_arm_designer()` generates simple two-arm designs as `DeclareDesign` objects. 
 
 In addition to using our pre-made designers, you can contribute your own designers to the `DesignLibrary`, using the following guidelines. 
 
@@ -214,7 +214,7 @@ Next, list and describe all arguments needed in the design code following the sy
 You can also add keywords and reference other related designs and designers.
 ```{r, eval=FALSE}
 #' @concept two arm design
-#' @seealso \code{\link{my_design}} \code{\link{simple_two_arm_designer}} 
+#' @seealso \code{\link{my_design}} \code{\link{two_arm_designer}} 
 ```
 
 Finally, give yourself credit for your work.
