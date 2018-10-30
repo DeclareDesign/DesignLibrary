@@ -31,7 +31,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design redesign
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust
+#' @importFrom estimatr lm_robust
 #' @export two_by_two_designer simple_factorial_designer
 #'
 #' @examples

@@ -25,7 +25,6 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy
 #' @importFrom stats rnorm
 #' @export
 #' @examples

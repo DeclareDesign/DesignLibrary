@@ -38,7 +38,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate add_level
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust
+#' @importFrom estimatr lm_robust
 #' @importFrom rlang is_integerish
 #' @importFrom stats rnorm
 #' @export

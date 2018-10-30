@@ -21,7 +21,7 @@
 #' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_sampling
 #' @importFrom fabricatr fabricate add_level draw_normal_icc draw_ordered
 #' @importFrom randomizr conduct_ra draw_rs 
-#' @importFrom estimatr tidy lm_robust
+#' @importFrom estimatr lm_robust
 #' @importFrom stats qnorm
 #' @export
 #' @examples

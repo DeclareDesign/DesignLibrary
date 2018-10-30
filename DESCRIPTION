@@ -26,9 +26,9 @@ Depends:
     fabricatr (>= 0.4.0),
     estimatr (>= 0.10.0)
 Imports:
+    generics,
     rlang
 Suggests: 
-    testthat, 
-    broom
+    testthat
 RoxygenNote: 6.1.0
 
