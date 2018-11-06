@@ -18,7 +18,6 @@
 #' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal set_diagnosands tidy_estimator
 #' @importFrom fabricatr fabricate draw_binary
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy 
 #' @export
 #' @examples
 #' # Generate a randomized response design using default arguments:

@@ -20,7 +20,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy difference_in_means
+#' @importFrom estimatr difference_in_means
 #' @importFrom rlang eval_bare expr quo_text quos sym
 #' @importFrom utils data
 #' @export

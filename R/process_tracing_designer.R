@@ -37,7 +37,6 @@
 #' @importFrom DeclareDesign declare_diagnosands declare_estimand declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
-#' @importFrom estimatr tidy
 #' @importFrom stats rbinom
 #' @importFrom rlang is_integerish is_character
 #' @importFrom utils data

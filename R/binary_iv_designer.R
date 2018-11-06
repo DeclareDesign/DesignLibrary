@@ -22,7 +22,8 @@
 #' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy iv_robust lm_robust
+#' @importFrom generics tidy
+#' @importFrom estimatr iv_robust lm_robust
 #' @importFrom stats runif
 #' @aliases simple_iv_designer
 #' @export binary_iv_designer simple_iv_designer

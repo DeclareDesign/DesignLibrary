@@ -22,7 +22,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_reveal
 #' @importFrom fabricatr fabricate add_level fabricate
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust
+#' @importFrom estimatr lm_robust
 #' @aliases simple_spillover_designer
 #' @export spillover_designer simple_spillover_designer
 #' @examples

@@ -24,11 +24,11 @@ Depends:
     R (>= 3.4.0),
     randomizr (>= 0.16.1),
     fabricatr (>= 0.4.0),
-    estimatr (>= 0.10.0)
+    estimatr (>= 0.13.0)
 Imports:
+    generics,
     rlang
 Suggests: 
-    testthat, 
-    broom
+    testthat
 RoxygenNote: 6.1.0
 
