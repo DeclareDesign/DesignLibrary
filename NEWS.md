@@ -26,7 +26,7 @@
 
 * Improved handling of variance in `block_cluster_two_arm_designer()`, including verbose messaging
 
-* Imported `tidy` from `generics` following update to estimator (>= 0.13.0)
+* Imported `tidy` from `generics` following update to estimatr (>= 0.14.0)
 
 # DesignLibrary 0.1.1
 
