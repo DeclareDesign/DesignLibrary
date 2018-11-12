@@ -11,7 +11,6 @@ matrix:
       r_github_packages:
       - DeclareDesign/DDtools
       - DeclareDesign/DeclareDesign
-      - ropensci/git2r
 
     - os: linux
       r: 3.4
@@ -20,7 +19,6 @@ matrix:
       r_github_packages:
       - DeclareDesign/DDtools
       - DeclareDesign/DeclareDesign
-      - ropensci/git2r
 
     - os: linux
       r: devel
@@ -29,7 +27,6 @@ matrix:
       r_github_packages:
       - DeclareDesign/DDtools
       - DeclareDesign/DeclareDesign
-      - ropensci/git2r
 
     - os: osx
       r: release
