@@ -28,8 +28,6 @@ Depends:
 Imports:
     generics,
     rlang
-Remotes:
-    DeclareDesign/DeclareDesign
 Suggests: 
     testthat
 RoxygenNote: 6.1.1
