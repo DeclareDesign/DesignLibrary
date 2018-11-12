@@ -1,7 +1,7 @@
 ## Test environments
 
-* local OS X install, R 3.5.1
-* local Windows install 8 x64 (build 9200), R 3.5.1
+* local macOS High Sierra 10.13.6, R 3.5.1
+* winbuilder install Windows 8 x64, R Under development (unstable) (2018-11-08 r75566)
 * ubuntu 14.04.5 LTS (on travis-ci), R 3.5.1 (2017-01-27)
 * ubuntu 14.04.5 LTS (on travis-ci), R 3.4.4 (2017-01-27)
 * macOS High Sierra 10.13.3 (on travis-ci), R 3.5.0 (2018-04-23)
