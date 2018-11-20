@@ -34,10 +34,9 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
-#' @importFrom DeclareDesign declare_diagnosands declare_estimand declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data get_estimands get_estimates set_diagnosands
+#' @importFrom DeclareDesign declare_diagnosands declare_estimand declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
-#' @importFrom estimatr tidy
 #' @importFrom stats rbinom
 #' @importFrom rlang is_integerish is_character
 #' @importFrom utils data
@@ -45,8 +44,8 @@
 #' @examples
 #' # Generate a process-tracing design using default arguments:
 #' pt_1 <- process_tracing_designer()
-#' get_estimands(pt_1)
-#' get_estimates(pt_1)
+#' draw_estimands(pt_1)
+#' draw_estimates(pt_1)
 #' draw_data(pt_1)
 #' \dontrun{
 #' diagnose_design(pt_1, sims = 1000)
@@ -63,7 +62,7 @@
 #'                                  label_E1 = "Doubly-Decisive: H",
 #'                                  p_E2_H = .05,p_E2_not_H = .80,
 #'                                  label_E2 = "Doubly-Decisive: Not H")
-#' get_estimates(pt_3)                                
+#' draw_estimates(pt_3)                                
 #' \dontrun{
 #' diagnose_design(pt_3, sims = 1000)
 #' }

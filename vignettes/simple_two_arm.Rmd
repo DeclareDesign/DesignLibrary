@@ -40,12 +40,12 @@ How does this design work? One way to think about it is to compare the random as
     We subtract the mean of the control group from the mean of the treatment group in order to estimate the average treatment effect.
 
 
-```{r, code = get_design_code(simple_two_arm_designer()), eval=TRUE}
+```{r, code = get_design_code(two_arm_designer()), eval=TRUE}
 ```
 
 
 ```{r}
-diagnosis <- diagnose_design(simple_two_arm_design)
+diagnosis <- diagnose_design(two_arm_design)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}
@@ -57,22 +57,22 @@ kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
 
 ## Using the Simple Two Arm Designer
 
-In R, you can generate a simple two arm design using the template function `simple_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
+In R, you can generate a simple two arm design using the template function `two_arm_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
 
 ```{r, eval=FALSE}
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we can create a design called `my_simple_two_arm_design` where `N`, `prob`, and `ate` set to 500, .5, and .4, respectively, and other parameters use default values. To do so, we run the lines below.
+We can then create specific designs by defining values for each argument. For example, we can create a design called `my_two_arm_design` where `N`, `prob`, and `ate` set to 500, .5, and .4, respectively, and other parameters use default values. To do so, we run the lines below.
 
 ```{r, eval=FALSE}
-simple_two_arm_design <- simple_two_arm_designer(N = 500, prob = .5, ate = .4)
+two_arm_design <- two_arm_designer(N = 500, prob = .5, ate = .4)
 ```
 
-You can see more details on the `simple_two_arm_designer()` function, its arguments, and default values, by running the following line of code:
+You can see more details on the `two_arm_designer()` function, its arguments, and default values, by running the following line of code:
 
 ```{r, eval=FALSE}
-??simple_two_arm_designer
+??two_arm_designer
 ```
 
 

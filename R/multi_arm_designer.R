@@ -20,7 +20,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy difference_in_means
+#' @importFrom estimatr difference_in_means
 #' @importFrom rlang eval_bare expr quo_text quos sym
 #' @importFrom utils data
 #' @export
@@ -47,7 +47,7 @@ multi_arm_designer <- function(N = 30,
                                fixed = NULL) {
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
-  N_ <- N
+  N_ <- N; sd_i_ <- sd_i
   if (m_arms <= 1 || round(m_arms) != m_arms)
     stop("m_arms should be an integer greater than one.")
   if (length(outcome_means) != m_arms ||
@@ -56,15 +56,17 @@ multi_arm_designer <- function(N = 30,
     stop("outcome_means, outcome_sds and conditions arguments must be of length m_arms.")
   if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
+  
   if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
   if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
   if (!"N" %in% fixed) N_ <- expr(N)
+  if (!"sd_i" %in% fixed) sd_i_ <- expr(sd_i)
   
   # Create helper vars to be used in design
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
   error_names <- paste0("u_", 1:m_arms)
   names(errors) <- error_names
-  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*sd_i))
+  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*!!sd_i_))
   
   conditions <- as.character(conditions)
   
@@ -166,8 +168,7 @@ multi_arm_designer <- function(N = 30,
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = c("m_arms", fixed, "fixed", "conditions")
-    )
+      exclude_args = union(c("m_arms", "fixed", "conditions"), fixed))
   
   design_code <-
     gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)

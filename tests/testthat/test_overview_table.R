@@ -6,6 +6,7 @@ overview <- read.csv(system.file("extdata", "overview.csv", package = "DesignLib
 # Get designers
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
+designers <- designers[!grepl("simple",designers)]
 
 # Get design vignettes
 vignettes <- list.files("vignettes")
@@ -40,6 +41,10 @@ testthat::test_that(
     expect_true(all(vignettes %in% overview$vignette))
   }
 )
+
+
+
+
 
 
 

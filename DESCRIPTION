@@ -1,7 +1,7 @@
 Package: DesignLibrary
 Type: Package
 Title: Library of Research Designs
-Version: 0.1.1.9000
+Version: 0.1.2.9999
 Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut")),
              person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut", "cre")),
              person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
@@ -20,15 +20,14 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    DeclareDesign (>= 0.10.0),
+    DeclareDesign (>= 0.12.0),
     R (>= 3.4.0),
     randomizr (>= 0.16.1),
-    fabricatr (>= 0.4.0),
-    estimatr (>= 0.10.0)
+    fabricatr (>= 0.6.0),
+    estimatr (>= 0.14.0)
 Imports:
+    generics,
     rlang
 Suggests: 
-    testthat, 
-    broom
-RoxygenNote: 6.1.0
-
+    testthat
+RoxygenNote: 6.1.1
