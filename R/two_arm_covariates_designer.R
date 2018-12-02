@@ -24,7 +24,10 @@
 #' @return A simple two-arm design with covariate W.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom stats rnorm
 #' @export
 #'
 #' @examples
