@@ -27,6 +27,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr lm_lin lm_robust difference_in_means 
 #' @importFrom stats rnorm
 #' @export
 #'
@@ -35,16 +36,22 @@
 #' two_arm_covariate_design <- two_arm_covariate_designer()
 #' # Design with no confounding but a prognostic covariate 
 #' prognostic <- two_arm_covariate_designer(N = 40, ate = .2, rho_WY = .9, h = .5)
+#' \dontrun{
 #' diagnose_design(prognostic)
+#' }
 #' # Design with confounding 
 #' confounding <- two_arm_covariate_designer(N = 40, ate = 0, rho_WZ = .9, rho_WY = .9, h = .5)
+#' \dontrun{
 #' diagnose_design(confounding, sims = 2000)
+#' }
 #'
 #' # Curse of power: A biased design may be more likely to mislead the larger it is 
 #' curses <- expand_design(two_arm_covariate_designer, 
 #'                         N = c(50, 500, 5000), ate = 0, rho_WZ = .2, rho_WY = .2)
+#' \dontrun{
 #' diagnoses <- diagnose_design(curses)
 #' subset(diagnoses$diagnosands_df, estimator_label == "No controls")[,c("N", "power")]
+#' }
 
 
 
