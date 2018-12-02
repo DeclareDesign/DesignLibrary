@@ -56,14 +56,14 @@
 
 
 two_arm_covariate_designer <- function(N = 100,
-                                    prob = .5,
-                                    control_mean = 0,
-                                    sd = 1,
-                                    ate = 1,
-                                    h = 0,
-                                    treatment_mean = control_mean + ate,
-                                    rho_WY = 0,
-                                    rho_WZ = 0
+                                       prob = .5,
+                                       control_mean = 0,
+                                       sd = 1,
+                                       ate = 1,
+                                       h = 0,
+                                       treatment_mean = control_mean + ate,
+                                       rho_WY = 0,
+                                       rho_WZ = 0
 ){
   if(sd < 0 ) stop("sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
@@ -74,33 +74,33 @@ two_arm_covariate_designer <- function(N = 100,
     population <- declare_population(
       N = N,
       u_W = rnorm(N),
-      u_Y = rnorm(n = N, mean = rho_WY * u_W, sd = sqrt(1 - rho_WY^2)),
-      u_Z = rnorm(n = N, mean = rho_WZ * u_W, sd = sqrt(1 - rho_WZ^2)),
+      u_Y = rnorm(n = N, mean = rho_WY * u_W, sd = sqrt(1 - rho_WY ^ 2)),
+      u_Z = rnorm(n = N, mean = rho_WZ * u_W, sd = sqrt(1 - rho_WZ ^ 2)),
       W   = u_W
-      )
+    )
     
     potentials <- declare_potential_outcomes(
-      Y ~ (1-Z) * (u_Y*sd + control_mean) + 
-          Z     * (u_Y*sd + treatment_mean + h*u_W))
+      Y ~ (1 - Z) * (u_Y * sd + control_mean) + 
+        Z         * (u_Y * sd + treatment_mean + h * u_W))
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment  <- declare_step(Z = 1*(u_Z <  qnorm(prob)), handler = fabricate)
+    assignment  <- declare_step(Z = 1 * (u_Z <  qnorm(prob)), handler = fabricate)
     reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(Y ~ Z,   estimand = estimand, 
                                      label = "No controls")
-    estimator_2 <- declare_estimator(Y ~ Z+W, estimand = estimand, model = lm_robust, 
+    estimator_2 <- declare_estimator(Y ~ Z + W, estimand = estimand, model = lm_robust, 
                                      label = "With controls")
     estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, estimand = estimand, model = lm_lin,
                                      label = "Lin")
     
     # Design
     two_arm_covariate_design <- population + potentials + estimand + assignment + reveal_Y + 
-      estimator_1 + estimator_2 +     estimator_3
+                                estimator_1 + estimator_2 + estimator_3
   }}}
   
   attr(two_arm_covariate_design, "code") <- 
