@@ -187,6 +187,14 @@ test_that(desc = "multi_arm_designer errors when it should",
             expect_error(multi_arm_designer(sd_i = -1))
           })
 
+test_that(desc = "two_arm_covariate_designer errors when it should",
+          code = {
+            expect_error(two_arm_covariate_designer(sd = -1))
+            expect_error(two_arm_covariate_designer(prob = 10))
+            expect_error(two_arm_covariate_designer(rho_WY = 10))
+            expect_error(two_arm_covariate_designer(rho_WZ = 10))
+          })
+
 test_that(desc = "factorial_designer errors when it should",
           code = {
             expect_error(factorial_designer(outcome_name = c("Y ")))
