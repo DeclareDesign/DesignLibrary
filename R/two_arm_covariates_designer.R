@@ -41,7 +41,7 @@
 #' curses <- expand_design(two_arm_covariate_designer, 
 #'                         N = c(50, 500, 5000), ate = 0, rho_WZ = .2, rho_WY = .2)
 #' diagnoses <- diagnose_design(curses)
-#' dplyr::filter(diagnoses$diagnosands_df, estimator_label == "No controls")[,c("N", "power")]
+#' subset(diagnoses$diagnosands_df, estimator_label == "No controls")[,c("N", "power")]
 
 
 
