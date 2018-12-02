@@ -43,6 +43,7 @@ globalVariables(
     "u_a",
     "u_R",
     "u_t1",
+    "u_W",
     "U_Z", 
     "withholder",
     "X",
