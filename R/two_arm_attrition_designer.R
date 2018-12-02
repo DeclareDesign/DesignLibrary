@@ -22,7 +22,10 @@
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
+#' @importFrom fabricatr fabricate fabricate
+#' @importFrom randomizr conduct_ra 
+#' @importFrom stats rnorm
 #' @export
 #' @examples
 #' # To make a design using default argument (missing completely at random):
@@ -56,8 +59,8 @@ two_arm_attrition_designer <- function(N = 100,
                                        u_R = rnorm(N), 
                                        u_Y = rnorm(N, mean = rho * u_R, 
                                                    sd = sqrt(1 - rho^2)))
-    potentials_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
-    potentials_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
+    potential_outcomes_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
+    potential_outcomes_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
     
     # I: Inquiry
     estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
@@ -82,7 +85,7 @@ two_arm_attrition_designer <- function(N = 100,
                         estimand = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
-    two_arm_attrition_design <- population + potentials_R +  potentials_Y +
+    two_arm_attrition_design <- population + potential_outcomes_R +  potential_outcomes_Y +
       assignment  + reveal + observed +
       estimand_1  + estimand_2  + estimand_3 +
       estimator_1 + estimator_2 + estimator_3
@@ -94,7 +97,9 @@ two_arm_attrition_designer <- function(N = 100,
   two_arm_attrition_design
 }
 
-attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample", b_R = "How reporting is related to treatment", rho = "Correlation between reporting error term and outcome error term")
+attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample",
+                                              b_R = "How reporting is related to treatment", 
+                                              rho = "Correlation between reporting error term and outcome error term")
 attr(two_arm_attrition_designer, "shiny_arguments") <- list(N = c(100, 500), b_R = 0:2, rho = c(0,1))
 attr(two_arm_attrition_designer, "description") <- "<p> A two arm design in which an outcome (Y) is observed conditional on a post-treatment variable (R)."
 

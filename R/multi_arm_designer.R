@@ -9,7 +9,7 @@
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.
 #' @param outcome_means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
-#' @param sd A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
+#' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.
 #' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces). 
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.
@@ -17,7 +17,12 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr rlang
+#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom fabricatr fabricate 
+#' @importFrom randomizr conduct_ra 
+#' @importFrom estimatr difference_in_means
+#' @importFrom rlang eval_bare expr quo_text quos sym
+#' @importFrom utils data
 #' @export
 #' @examples
 #'
@@ -25,7 +30,7 @@
 #' design <- multi_arm_designer()
 #'
 #'
-#' # A design with different mean and sd in each arm
+#' # A design with different means and standard deviations in each arm
 #' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
 #'
 # A design with fixed sds and means. N is the sole modifiable argument.
@@ -36,35 +41,37 @@
 multi_arm_designer <- function(N = 30,
                                m_arms = 3,
                                outcome_means = rep(0, m_arms),
-                               sd = 1,
+                               sd_i = 1,
                                outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
                                fixed = NULL) {
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
-  N_ <- N
+  N_ <- N; sd_i_ <- sd_i
   if (m_arms <= 1 || round(m_arms) != m_arms)
     stop("m_arms should be an integer greater than one.")
   if (length(outcome_means) != m_arms ||
       length(outcome_sds) != m_arms ||
       length(conditions) != m_arms)
     stop("outcome_means, outcome_sds and conditions arguments must be of length m_arms.")
-  if (sd < 0) stop("sd should be nonnegative")
+  if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
+  
   if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
   if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
   if (!"N" %in% fixed) N_ <- expr(N)
+  if (!"sd_i" %in% fixed) sd_i_ <- expr(sd_i)
   
   # Create helper vars to be used in design
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
   error_names <- paste0("u_", 1:m_arms)
   names(errors) <- error_names
-  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*sd))
+  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*!!sd_i_))
   
   conditions <- as.character(conditions)
   
   f_Y <- formula(
-    paste0("Y ~ ",paste0(
+    paste0("Y ~ ", paste0(
       "(", outcome_means_, " + ", error_names,
       ")*( Z == '", conditions, "')",
       collapse = " + "), "+ u"))
@@ -117,11 +124,14 @@ multi_arm_designer <- function(N = 30,
     x = as.character(all_pairs[,2]),
     y = as.character(all_pairs[,1])
   )
+  
+  estimator_labels <- paste0("DIM (Z_", as.character(all_pairs[,1]), " - Z_", as.character(all_pairs[,2]), ")")
+  
   names(estimators) <- estimand_names
   estimator_expr <- expr(declare_estimator(
     handler = function(data){
       estimates <- rbind.data.frame(!!!estimators)
-      estimates$estimator_label <- "DIM"
+      estimates$estimator_label <- !!estimator_labels
       estimates$estimand_label <- rownames(estimates)
       estimates$estimate <- estimates$coefficients
       estimates$term <- NULL
@@ -133,7 +143,7 @@ multi_arm_designer <- function(N = 30,
     # M: Model
     population <- eval_bare(population_expr)
     
-    potentials <- eval_bare(potential_outcomes_expr)
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
     # I: Inquiry
     estimand  <- eval_bare(estimand_expr)
@@ -148,7 +158,7 @@ multi_arm_designer <- function(N = 30,
     
     # Design
     multi_arm_design <-
-      population + potentials + assignment + reveal_Y + estimand +  estimator
+      population + potential_outcomes + assignment + reveal_Y + estimand +  estimator
     
   }}}
   
@@ -158,8 +168,7 @@ multi_arm_designer <- function(N = 30,
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = c("m_arms", fixed, "fixed", "conditions")
-    )
+      exclude_args = union(c("m_arms", "fixed", "conditions"), fixed))
   
   design_code <-
     gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)

@@ -1,31 +1,35 @@
 #' Create a design for cluster random sampling
 #'
-#' Builds a cluster sampling design of a population with \code{N_blocks}, \code{N_clusters_in_block} containing \code{N_i_in_cluster}. Estimations sample \code{N_clusters_in_block} each comprising \code{n_i_in_cluster} units. Outcomes within clusters have ICC approximately equal to \code{ICC}.
+#' Builds a cluster sampling design for an ordinal outcome variable for a population with \code{N_blocks} strata, each with \code{N_clusters_in_block} clusters, each of which contains \code{N_i_in_cluster} units. The sampling strategy involves sampling \code{n_clusters_in_block} clusters in each stratum, and then sampling \code{n_i_in_cluster} units in each cluster. Outcomes within clusters have intra-cluster correlation approximately equal to \code{ICC}.
 #'
 #' @details 
-#' Key limitations: The design assumes clusters draw with equal probability (rather than, for example, proportionate to size).
+#' Key limitations: The design assumes a fixed number of clusters drawn in each stratum and a fixed number of individuals drawn from each cluster.
 #' 
 #' See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
 #' 
-#' @param N_blocks An integer. Number of blocks. Defaults to 1 for no blocks. 
-#' @param N_clusters_in_block An integer. Total number of clusters in the population.
-#' @param N_i_in_cluster An integer of vector of integers of length \code{N_clusters_in_block}. Total number of subjects per cluster in the population.
-#' @param n_clusters_in_block An integer. Number of clusters to sample.
-#' @param n_i_in_cluster An integer. Number of subjects to sample per cluster.
+#' @param N_blocks An integer. Number of blocks (strata). Defaults to 1 for no blocks. 
+#' @param N_clusters_in_block An integer or vector of integers of length \code{N_blocks}. Number of clusters in each block in the population.
+#' @param N_i_in_cluster An integer or vector of integers of length \code{sum(N_clusters_in_block)}. Number of units per cluster sampled.
+#' @param n_clusters_in_block An integer. Number of clusters to sample in each block (stratum).
+#' @param n_i_in_cluster An integer. Number of units to sample in each cluster.
 #' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
-#' @return A cluster sampling design.
+#' @return A stratified cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
 #' @concept observational
 #' @concept measurement
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_sampling
+#' @importFrom fabricatr fabricate add_level draw_normal_icc draw_ordered
+#' @importFrom randomizr conduct_ra draw_rs 
+#' @importFrom estimatr lm_robust
+#' @importFrom stats qnorm
 #' @export
 #' @examples
 #' # To make a design using default arguments:
 #' cluster_sampling_design <- cluster_sampling_designer()
-#' # A design with varying cluster size
+#' # A design with varying block size and varying cluster size
 #' cluster_sampling_design <- cluster_sampling_designer(
-#'   N_clusters_in_block = 10, N_i_in_cluster = 3:12, 
+#'   N_blocks = 2, N_clusters_in_block = 6:7, N_i_in_cluster = 3:15, 
 #'   n_clusters_in_block = 5,  n_i_in_cluster = 2)
 
 cluster_sampling_designer <- function(N_blocks = 1,
@@ -35,7 +39,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
                                       n_i_in_cluster = 10,
                                       icc = 0.2
 ){
-  if(n_clusters_in_block > N_clusters_in_block) stop(paste0("N_clusters_in_block sampled must be smaller than the total number of ", N_clusters_in_block, " clusters."))
+  if(n_clusters_in_block > min(N_clusters_in_block)) stop(paste0("n_clusters_in_block sampled must be smaller than the total number of ", N_clusters_in_block, " clusters."))
   if(n_i_in_cluster > min(N_i_in_cluster)) stop(paste0("n_i_in_cluster must be smaller than or equal to the minimum of ", N_i_in_cluster, " subjects per cluster."))
   if(icc < 0 || icc > 1) stop("icc must be a number in [0,1]")
   {{{
@@ -68,8 +72,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
                                        clusters = cluster,
                                        estimand = estimand,
                                        label = "Clustered Standard Errors")
-    
-    
+
     # Design
     cluster_sampling_design <- population + estimand +
       stage_1_sampling + stage_2_sampling + clustered_ses
@@ -94,6 +97,6 @@ attr(cluster_sampling_designer, "description") <- "
 <p> A cluster sampling design that samples <code>n_clusters_in_block</code> clusters from each block, each
 comprising  <code>n_i_in_cluster</code> units from a population with  <code>N_blocks</code> with
 <code>N_clusters_in_block</code> with <code>N_i_in_cluster</code> units each. Outcomes 
-exhibit ICC approximately equal to <code>ICC</code>. 
+are ordinal and exhibit ICC approximately equal to <code>ICC</code>. 
 "
 

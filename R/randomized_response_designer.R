@@ -15,9 +15,10 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept descriptive
-#' @import DeclareDesign stats utils fabricatr estimatr randomizr
+#' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal set_diagnosands tidy_estimator
+#' @importFrom fabricatr fabricate draw_binary
+#' @importFrom randomizr conduct_ra 
 #' @export
-#'
 #' @examples
 #' # Generate a randomized response design using default arguments:
 #' randomized_response_design <- randomized_response_designer()
@@ -38,7 +39,7 @@ randomized_response_designer <- function(N = 1000,
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
       direct_answer =  sensitive_trait - withholder
     )
-    potentials <- declare_potential_outcomes(
+    potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
@@ -70,7 +71,7 @@ randomized_response_designer <- function(N = 1000,
     )
     
     # Design
-    randomized_response_design <- population + assignment + potentials +
+    randomized_response_design <- population + assignment + potential_outcomes +
       estimand + declare_reveal(Y, Z) +
       estimator_randomized_response + estimator_direct_question
     
@@ -94,7 +95,7 @@ attr(randomized_response_designer,"tips") <-
 attr(randomized_response_designer,"shiny_arguments") <-
   list(
     N = c(1000, 1500, 2000, 2500),
-    prob_forced_yes = c(.6,seq(.1,.9,.1)),
+    prob_forced_yes = c(.6,seq(.1,.5,.1),seq(.7,.9,.1)),
     prevalence_rate = c(.1,seq(.05,.95,.1)),
     withholding_rate = c(.5,seq(.05,.95,.1))
   )
