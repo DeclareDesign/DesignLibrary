@@ -38,21 +38,15 @@ two_arm_designer <- function(N = 100,
                              ate = 1,
                              treatment_mean = control_mean + ate,
                              treatment_sd = control_sd,
-                             rho = 1
+                             rho = 1,
+                             design_name = c("two_arm_designer"),
+                             fixed = c("design_name")
 ){
   if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
   # if(treatment_mean != control_mean+ate) warning("`treatment_mean` inconsistent with values of `control_mean` and `ate`. Former will override the latter.")
-  
-  definitions <- data.frame(
-    names = c("N", "assignment_prob", "control_mean", "control_sd", 
-      "ate", "treatment_mean", "treatment_sd", "rho", "design_name", "fixed"),
-    class = c("integer", rep("numeric", 7), rep("character", 2)),
-    min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1, NA, NA),
-    max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA, NA)
-  )
   
   N_ <- N; assignment_prob_ <- assignment_prob; control_mean_ <- control_mean
   control_sd_ <- control_sd; ate_ <- ate; treatment_mean_ <- treatment_mean
@@ -86,9 +80,7 @@ two_arm_designer <- function(N = 100,
     # M: Model
     population <- eval_bare(population_expr)
     
-    potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
-        Z     * (u_1*treatment_sd + treatment_mean))
+    potential_outcomes <- eval_bare(potential_expr)
 
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
@@ -105,14 +97,33 @@ two_arm_designer <- function(N = 100,
     two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator
   }}}
   
-  attr(two_arm_design, "code") <- 
+  design_code <- 
     construct_design_code(designer = two_arm_designer, 
                           args = match.call.defaults(), 
                           exclude_args = c("ate", "fixed", fixed),
                           arguments_as_values = TRUE)
   
+  design_code <-
+    gsub("two_arm_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(potential_expr\\)", quo_text(potential_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
+  
+  attr(two_arm_design, "code") <- design_code
+  
   two_arm_design
 }
+
+attr(two_arm_designer, "definitions") <- data.frame(
+  names = c("N", "assignment_prob", "control_mean", "control_sd", 
+            "ate", "treatment_mean", "treatment_sd", "rho", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 7), rep("character", 2)),
+  min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1, NA, NA),
+  max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA, NA)
+)
 
 attr(two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 
 
