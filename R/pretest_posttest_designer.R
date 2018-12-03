@@ -21,7 +21,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust
+#' @importFrom estimatr lm_robust
 #' @export
 #' @examples
 #' # Generate a pre-test post-test design using default arguments:
@@ -45,7 +45,7 @@ pretest_posttest_designer <- function(N = 100,
       u_t2 = rnorm(N, rho * u_t1, sqrt(1 - rho^2))*sd_2,
       Y_t1 = u_t1
     )
-
+    
     potential_outcomes <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
     
     # I: Inquiry
@@ -53,8 +53,8 @@ pretest_posttest_designer <- function(N = 100,
     
     # D: Data Strategy
     assignment <- declare_assignment()
-    report     <- declare_assignment(m = round(N * (1 - attrition_rate)),
-                                    assignment_variable = R)
+    report     <- declare_assignment(prob = 1 - attrition_rate,
+                                     assignment_variable = R)
     reveal_t2 <- declare_reveal(Y_t2) 
     manipulation <- declare_step(difference = (Y_t2 - Y_t1), handler = fabricate)  
     

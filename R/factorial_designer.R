@@ -28,7 +28,7 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design tidy_estimator
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust tidy tidy.lm_robust
+#' @importFrom estimatr tidy lm_robust
 #' @importFrom rlang eval_bare expr is_integerish parse_expr quo_text quos sym UQS
 #' @importFrom stats rnorm formula
 #' @export
@@ -127,12 +127,12 @@ factorial_designer <- function(
   
   # fixed argument ----------------------------------------------------------
   
-  outcome_sds_ <- outcome_sds; means_ <- outcome_means; assignment_probs_ <- assignment_probs; N_ <- N; k_ <- k 
+  outcome_sds_ <- outcome_sds; outcome_means_ <- outcome_means; assignment_probs_ <- assignment_probs; N_ <- N; k_ <- k 
   
   if(is.null(fixed)) fixed <- ""
   if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) expr(outcome_sds[!!i])) 
   if(!"outcome_means" %in% fixed)  outcome_means_ <- sapply(1:length(outcome_means), function(i) expr(outcome_means[!!i])) 
-  if(!"N"     %in% fixed)  N_ <- expr(N)
+  if(!"N" %in% fixed)  N_ <- expr(N)
   
   
   # population --------------------------------------------------------------
@@ -213,7 +213,7 @@ factorial_designer <- function(
       handler = tidy_estimator(function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
         mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/Z_cond_prob)
-        estimate_df <- tidy.lm_robust(mod)
+        estimate_df <- tidy(mod)
         estimate_df$estimand_label <- paste0("te_", estimate_df$term)
         estimate_df$estimand_label[estimate_df$estimand_label == "te_(Intercept)"] <- "Overall_average"
         estimate_df

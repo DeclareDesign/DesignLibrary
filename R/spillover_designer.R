@@ -1,4 +1,4 @@
-#' Create a simple design with spillovers
+#' Create a design with spillovers
 #'
 #' Builds a design with \code{N_groups} groups each containing \code{N_i_group} individuals. 
 #' Potential outcomes exhibit spillovers: if any individual in a group receives treatment, 
@@ -11,8 +11,6 @@
 #' 
 #' The default estimand is the average difference across subjects between no one treated and only that subject treated.  
 #' 
-#' See \href{https://declaredesign.org/library/articles/simple_spillover.html}{vignette online}.
-#' 
 #' @param N_groups An integer. Number of groups.
 #' @param N_i_group Number of units in each group. Can be scalar or vector of length \code{N_groups}.
 #' @param sd_i A nonnegative number. Standard deviation of individual-level shock.
@@ -24,25 +22,26 @@
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_reveal
 #' @importFrom fabricatr fabricate add_level fabricate
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust
-#' @export
+#' @importFrom estimatr lm_robust
+#' @aliases simple_spillover_designer
+#' @export spillover_designer simple_spillover_designer
 #' @examples
 #' # Generate a simple spillover design using default arguments:
-#' simple_spillover_design <- simple_spillover_designer()
+#' spillover_design <- spillover_designer()
 #'
 
 
-simple_spillover_designer <- function(N_groups = 80, 
-                                      N_i_group = 3, 
-                                      sd_i = .2,
-                                      gamma = 2)
+spillover_designer <- function(N_groups = 80, 
+                               N_i_group = 3, 
+                               sd_i = .2,
+                               gamma = 2)
 {
   if(sd_i < 0) stop("sd_i must be nonnegative")
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
     # M: Model
     population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 
-                              i = add_level(N = n, zeros = 0, ones = 1))
+                                     i = add_level(N = n, zeros = 0, ones = 1))
     
     dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd_i
     
@@ -57,30 +56,30 @@ simple_spillover_designer <- function(N_groups = 80,
     assignment <- declare_assignment()
     
     reveal_Y <- declare_reveal(handler=fabricate,
-                             Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
+                               Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
     
     # A: Answer Strategy
     estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
                                    model = lm_robust, label = "naive")
     
     # Design
-    simple_spillover_design <- population + estimand + assignment + reveal_Y + estimator
+    spillover_design <- population + estimand + assignment + reveal_Y + estimator
     
   }}}
-  attr(simple_spillover_design, "code") <- 
-    construct_design_code(simple_spillover_designer, match.call.defaults())
+  attr(spillover_design, "code") <- 
+    construct_design_code(spillover_designer, match.call.defaults())
   
-  simple_spillover_design
+  spillover_design
 }
 
-attr(simple_spillover_designer, "shiny_arguments") <- list(
+attr(spillover_designer, "shiny_arguments") <- list(
   N_groups = c(50, 100, 500),
   N_i_group = c(10, 50, 100),
   sd_i = c(0, .5, 1),
   gamma = c(-2, 2)
 )
 
-attr(simple_spillover_designer, "tips") <-
+attr(spillover_designer, "tips") <-
   list(
     N_groups = "Number of groups",
     N_i_group = "Number of units in each group",
@@ -88,8 +87,14 @@ attr(simple_spillover_designer, "tips") <-
     gamma = "Parameter that controls whether spillovers within groups substitute or complement each other"
   )
 
-attr(simple_spillover_designer, "description") <- "
+attr(spillover_designer, "description") <- "
 <p> A spillover design with <code>N_groups</code> groups each containing 
 <code>N_i_group</code> individuals. Potential outcomes exhibit spillovers: if 
 any individual in a group receives treatment, the effect is spread equally among 
 members of the group."
+
+simple_spillover_designer <- function(...){
+  .Deprecated("spillover_designer")
+  spillover_designer(...)
+}
+

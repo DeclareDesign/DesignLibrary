@@ -1,4 +1,4 @@
-#' Create a simple instrumental variables design
+#' Create a binary instrumental variables design
 #'
 #' Builds a design with one instrument, one binary explanatory variable, and one outcome.
 #' 
@@ -22,42 +22,44 @@
 #' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy iv_robust lm_robust
+#' @importFrom generics tidy
+#' @importFrom estimatr iv_robust lm_robust
 #' @importFrom stats runif
-#' @export
+#' @aliases simple_iv_designer
+#' @export binary_iv_designer simple_iv_designer
 #'
 #' @examples
 #' # Generate a simple iv design: iv identifies late not ate 
-#' simple_iv_design_1 <- simple_iv_designer(N = 1000, b = c(.1, .2, .3, .4))
+#' binary_iv_design_1 <- binary_iv_designer(N = 1000, b = c(.1, .2, .3, .4))
 #' \dontrun{
-#' diagnose_design(simple_iv_design_1)
+#' diagnose_design(binary_iv_design_1)
 #' }
 #' 
 #' # Generates a simple iv design with violation of monotonicity
-#' simple_iv_design_2 <- simple_iv_designer(type_probs = c(.1,.1,.6, .2), b_Y = .5)
+#' binary_iv_design_2 <- binary_iv_designer(type_probs = c(.1,.1,.6, .2), b_Y = .5)
 #' \dontrun{
-#' diagnose_design(simple_iv_design_2)
+#' diagnose_design(binary_iv_design_2)
 #' }
 #' 
 #' # Generates a simple iv design with violation of exclusion restriction
-#' simple_iv_design_3 <- simple_iv_designer(d_Y = .5, b_Y = .5)
+#' binary_iv_design_3 <- binary_iv_designer(d_Y = .5, b_Y = .5)
 #' \dontrun{
-#' diagnose_design(simple_iv_design_3)
+#' diagnose_design(binary_iv_design_3)
 #' }
 #' 
 #' # Generates a simple iv design with violation of randomization
-#' simple_iv_design_4 <- simple_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
+#' binary_iv_design_4 <- binary_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
 #' \dontrun{
-#' diagnose_design(simple_iv_design_4)
+#' diagnose_design(binary_iv_design_4)
 #' }
 #' 
 #' # Generates a simple iv design with violation of first stage
-#' simple_iv_design_5 <- simple_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
+#' binary_iv_design_5 <- binary_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
 #' \dontrun{
-#' diagnose_design(simple_iv_design_5)
+#' diagnose_design(binary_iv_design_5)
 #' }
 #' 
-simple_iv_designer <- function(N = 100, 
+binary_iv_designer <- function(N = 100, 
                                type_probs = c(1/3, 1/3, 1/3, 0), 
                                assignment_probs = c(.5, .5, .5, .5), 
                                a_Y = 1,
@@ -115,30 +117,41 @@ simple_iv_designer <- function(N = 100,
                                      label = "iv_robust")
     
     
-    simple_iv_design <- population + potential_outcomes + reveal + 
+    binary_iv_design <- population + potential_outcomes + reveal + 
       estimand + estimator_1 + estimator_2 + estimator_3
     
   }}}
   
-  attr(simple_iv_design, "code") <- 
-    construct_design_code(designer = simple_iv_designer, 
+  attr(binary_iv_design, "code") <- 
+    construct_design_code(designer = binary_iv_designer, 
                           args = match.call.defaults(), 
                           exclude_args = c("a_Y", "b_Y", "d_Y"),
                           arguments_as_values = TRUE)
   
-  simple_iv_design 
+  binary_iv_design 
   
 }
 
-attr(simple_iv_designer, "shiny_arguments") <- list(N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
+attr(binary_iv_designer, "shiny_arguments") <- list(N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
 
-attr(simple_iv_designer, "tips") <-
+attr(binary_iv_designer, "tips") <-
   list(
     N = "Sample size",
     b_Y = "Effect of X on Y",
     d_Y = "Effect of Z on Y"
   )
 
-attr(simple_iv_designer, "description") <- "
+attr(binary_iv_designer, "description") <- "
 <p> A simple IV design of sample size <code>N</code>.
 "
+
+simple_iv_designer <- function(...){
+  .Deprecated("binary_iv_designer")
+  binary_iv_designer(...)
+}
+
+
+
+
+
+

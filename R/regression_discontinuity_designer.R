@@ -19,7 +19,7 @@
 #' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_sampling
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra draw_rs 
-#' @importFrom estimatr tidy lm_robust
+#' @importFrom estimatr lm_robust
 #' @importFrom rlang is_integerish
 #' @importFrom stats poly runif
 #' @export

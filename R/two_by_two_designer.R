@@ -1,4 +1,4 @@
-#' Create a simple factorial design
+#' Create a two-by-two factorial design
 #'
 #' Builds a two-by-two factorial design in which assignments to each factor are independent of each other.
 #' 
@@ -17,33 +17,34 @@
 #' @param prob_B A number in [0,1]. Probability of assignment to treatment B.
 #' @param weight_A A number. Weight placed on A=1 condition in definition of "average effect of B" estimand.
 #' @param weight_B A number. Weight placed on B=1 condition in definition of "average effect of A" estimand.
-#' @param outcome_means A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, if provided mean_A1B1.
+#' @param outcome_means A vector of length 4. Average outcome in each A,B condition, in order AB = 00, 01, 10, 11. Values overridden by mean_A0B0, mean_A0B1, mean_A1B0, mean_A1B1, if provided.
 #' @param mean_A0B0 A number. Mean outcome in A=0, B=0 condition.
 #' @param mean_A0B1 A number. Mean outcome in A=0, B=1 condition.
 #' @param mean_A1B0 A number. Mean outcome in A=1, B=0 condition.
 #' @param mean_A1B1 A number. Mean outcome in A=1, B=1 condition.
 #' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative vector of length 4. Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.
+#' @aliases simple_factorial_designer
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment factorial
 #' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design redesign
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
-#' @importFrom estimatr tidy lm_robust
-#' @export
+#' @importFrom estimatr lm_robust
+#' @export two_by_two_designer simple_factorial_designer
 #'
 #' @examples
-#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1))
+#' design <- two_by_two_designer(outcome_means = c(0,0,0,1))
 #' 
 #' # A design biased for the specified estimands:
-#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
+#' design <- two_by_two_designer(outcome_means = c(0,0,0,1), prob_A = .8, prob_B = .2)
 #' \dontrun{
 #' diagnose_design(design)
 #' }
 #' 
 #' # A design with estimands that "match" the assignment:
-#' design <- simple_factorial_designer(outcome_means = c(0,0,0,1), 
+#' design <- two_by_two_designer(outcome_means = c(0,0,0,1), 
 #'                                     prob_A = .8, prob_B = .2, 
 #'                                     weight_A = .8, weight_B = .2)
 #' \dontrun{
@@ -51,24 +52,24 @@
 #' }
 #' 
 #' # Compare power with and without interactions, given same average effects in each arm
-#' designs <- redesign(simple_factorial_designer(), 
+#' designs <- redesign(two_by_two_designer(), 
 #'                     outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 #' \dontrun{
 #' diagnose_design(designs)
 #' }
 #' 
-simple_factorial_designer <- function(N = 100,
-                                      prob_A = .5,
-                                      prob_B = .5,
-                                      weight_A = .5, 
-                                      weight_B = .5, 
-                                      outcome_means = rep(0,4),
-                                      mean_A0B0 = outcome_means[1],
-                                      mean_A0B1 = outcome_means[2],
-                                      mean_A1B0 = outcome_means[3],
-                                      mean_A1B1 = outcome_means[4],
-                                      sd_i = 1,
-                                      outcome_sds = rep(0,4)
+two_by_two_designer <- function(N = 100,
+                                prob_A = .5,
+                                prob_B = .5,
+                                weight_A = .5, 
+                                weight_B = .5, 
+                                outcome_means = rep(0,4),
+                                mean_A0B0 = outcome_means[1],
+                                mean_A0B1 = outcome_means[2],
+                                mean_A1B0 = outcome_means[3],
+                                mean_A1B1 = outcome_means[4],
+                                sd_i = 1,
+                                outcome_sds = rep(0,4)
 ){
   if((weight_A < 0) || (weight_B < 0) || (weight_A > 1) || (weight_B > 1)) stop("weight_A and weight_B must be in [0,1]")
   if(max(c(sd_i, outcome_sds) < 0) )      stop("sd_i and outcome_sds must be nonnegative")
@@ -116,30 +117,30 @@ simple_factorial_designer <- function(N = 100,
                                      label = "Interaction")
     
     # Design
-    simple_factorial_design <- population + potential_outcomes + 
+    two_by_two_design <- population + potential_outcomes + 
       estimand_1 + estimand_2 + estimand_3 +
       assign_A + assign_B + reveal_Y + 
       estimator_1 + estimator_2
     
   }}}
   
-  attr(simple_factorial_design, "code") <- 
-    construct_design_code(designer = simple_factorial_designer, 
+  attr(two_by_two_design, "code") <- 
+    construct_design_code(designer = two_by_two_designer, 
                           args = match.call.defaults(), 
                           exclude_args = "outcome_means",
                           arguments_as_values = TRUE)
   
-  simple_factorial_design
+  two_by_two_design
 }
 
 
-attr(simple_factorial_designer, "shiny_arguments") <- list(
+attr(two_by_two_designer, "shiny_arguments") <- list(
   N = c(16, 32, 64), weight_A = c(0, .5), 
   mean_A0B1 = 0:1, 
   mean_A1B0 = 0:1, 
   mean_A1B1 = -1:3) 
 
-attr(simple_factorial_designer, "tips") <-
+attr(two_by_two_designer, "tips") <-
   list(
     N = "Sample size",
     weight_A = "Weight on B=1 condition for effect of A estimand",
@@ -148,6 +149,12 @@ attr(simple_factorial_designer, "tips") <-
     mean_A1B1 = "Mean outcome for A=1, B=1"
   )
 
-attr(simple_factorial_designer, "description") <- "
+attr(two_by_two_designer, "description") <- "
 <p> A 2x2 factorial design of sample size <code>N</code> with independent treatment assignment.
 "
+
+
+simple_factorial_designer <- function(...){
+  .Deprecated("two_by_two_designer")
+  two_by_two_designer(...)
+}

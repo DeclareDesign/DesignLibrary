@@ -3,6 +3,7 @@ context(desc = "Testing that designers in the library work as they should")
 
 functions <- ls("package:DesignLibrary")
 designers <- functions[grepl("_designer\\b",functions)]
+designers <- designers[!grepl("simple",designers)]
 
 for(designer in designers){
   
@@ -87,7 +88,8 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
             expect_error(block_cluster_two_arm_designer(sd_cluster = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_0 = -1))
             expect_error(block_cluster_two_arm_designer(sd_i_1 = -1))
-            expect_error(block_cluster_two_arm_designer(assignment_prob = 10))
+            expect_error(block_cluster_two_arm_designer(assignment_probs = 10))
+            expect_error(block_cluster_two_arm_designer(assignment_probs = 2:10 / (sum(2:10))))
             expect_error(block_cluster_two_arm_designer(rho = 10))
             expect_error(block_cluster_two_arm_designer(N = 1, N_i_in_cluster = 10))
             expect_error(block_cluster_two_arm_designer(
@@ -103,22 +105,22 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
               N_clusters_in_block = c(2,2)))
           })
 
-test_that(desc = "simple_factorial_designer errors when it should",
+test_that(desc = "two_by_two_designer errors when it should",
           code = {
-            expect_error(simple_factorial_designer(weight_A = 10))
-            expect_error(simple_factorial_designer(weight_B = 10))
-            expect_error(simple_factorial_designer(outcome_sds = -1))
-            expect_error(simple_factorial_designer(prob_A = -1))
-            expect_error(simple_factorial_designer(prob_A = 3))
-            expect_error(simple_factorial_designer(prob_B = -1))
-            expect_error(simple_factorial_designer(prob_B = 3))
+            expect_error(two_by_two_designer(weight_A = 10))
+            expect_error(two_by_two_designer(weight_B = 10))
+            expect_error(two_by_two_designer(outcome_sds = -1))
+            expect_error(two_by_two_designer(prob_A = -1))
+            expect_error(two_by_two_designer(prob_A = 3))
+            expect_error(two_by_two_designer(prob_B = -1))
+            expect_error(two_by_two_designer(prob_B = 3))
           })
 
-test_that(desc = "simple_two_arm_designer errors when it should",
+test_that(desc = "two_arm_designer errors when it should",
           code = {
-            expect_error(simple_two_arm_designer(control_sd = -1))
-            expect_error(simple_two_arm_designer(assignment_prob = 10))
-            expect_error(simple_two_arm_designer(rho = 10))
+            expect_error(two_arm_designer(control_sd = -1))
+            expect_error(two_arm_designer(assignment_prob = 10))
+            expect_error(two_arm_designer(rho = 10))
           })
 
 test_that(desc = "mediation_analysis_designer errors when it should",
@@ -126,10 +128,10 @@ test_that(desc = "mediation_analysis_designer errors when it should",
             expect_error(mediation_analysis_designer(rho = 10))
           })
 
-test_that(desc = "simple_spillover_designer errors when it should",
+test_that(desc = "spillover_designer errors when it should",
           code = {
-            expect_error(simple_spillover_designer(sd_i = -10))
-            expect_error(simple_spillover_designer(N_i_group = -10))
+            expect_error(spillover_designer(sd_i = -10))
+            expect_error(spillover_designer(N_i_group = -10))
           })
 
 test_that(desc = "regression_discontinuity_designer errors when it should",
@@ -219,15 +221,42 @@ test_that(desc = "process_tracing_designer errors when it should",
           })
 
 
-test_that(desc = "simple_iv_designer errors when it should",
+test_that(desc = "binary_iv_designer errors when it should",
           code = {
-            expect_error(simple_iv_designer(assignment_probs = -20))
-            expect_error(simple_iv_designer(assignment_probs = 20))
-            expect_error(simple_iv_designer(outcome_sd = -20))
-            expect_error(simple_iv_designer(a = -20))
-            expect_error(simple_iv_designer(b = -20))
-            expect_error(simple_iv_designer(d = -20))
+            expect_error(binary_iv_designer(assignment_probs = -20))
+            expect_error(binary_iv_designer(assignment_probs = 20))
+            expect_error(binary_iv_designer(outcome_sd = -20))
+            expect_error(binary_iv_designer(a = -20))
+            expect_error(binary_iv_designer(b = -20))
+            expect_error(binary_iv_designer(d = -20))
+          })
+
+
+# Test `fixed` argument works ---------------------------------------------
+
+test_that(desc = "`fixed` argument works",
+          code = {
+            expect_error(factorial_designer(fixed = names(formals(factorial_designer))), NA)
+            expect_error(multi_arm_designer(fixed = names(formals(multi_arm_designer))), NA)
+          })
+
+
+test_that(desc = "block_cluster designer handles reports ICC with verbose = TRUE",
+          code = {
+            expect_output(d <- block_cluster_two_arm_designer(sd = 2))
+            expect_silent(d <- block_cluster_two_arm_designer(sd = 2, verbose = FALSE))
+            expect_output(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = TRUE))
+            expect_silent(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = FALSE))
           })
 
 
 
+# Aliases -----------------------------------------------------------------
+
+test_that(desc = "aliases throw a warning",
+          code = {
+            expect_warning(simple_factorial_designer())
+            expect_warning(simple_iv_designer())
+            expect_warning(simple_spillover_designer())
+            expect_warning(simple_two_arm_designer(N = 10))
+          })
