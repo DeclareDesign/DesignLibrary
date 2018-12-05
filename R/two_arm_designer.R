@@ -22,6 +22,7 @@
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom stats rnorm
+#' @importFrom rlang list2 expr eval_bare
 #' @aliases simple_two_arm_designer
 #' @export two_arm_designer simple_two_arm_designer
 #'
@@ -67,12 +68,12 @@ two_arm_designer <- function(N = 100,
     two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator
   }}}
   
-  attr(two_arm_design, "code") <- 
-    construct_design_code(designer = two_arm_designer, 
-                          args = match.call.defaults(), 
+  attr(two_arm_design, "code") <-
+    construct_design_code(designer = two_arm_designer,
+                          args = match.call.defaults(),
                           exclude_args = "ate",
                           arguments_as_values = TRUE)
-  
+
   two_arm_design
 }
 
@@ -90,7 +91,8 @@ attr(two_arm_designer, "description") <- "
 
 simple_two_arm_designer <- function(...){
   .Deprecated("two_arm_designer")
-  two_arm_designer(...)
+  dots <- list2(...)
+  eval_bare(expr(two_arm_designer(!!!dots)))
 }
   
   
