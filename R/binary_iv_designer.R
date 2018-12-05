@@ -25,6 +25,7 @@
 #' @importFrom generics tidy
 #' @importFrom estimatr iv_robust lm_robust
 #' @importFrom stats runif
+#' @importFrom rlang list2 expr eval_bare
 #' @aliases simple_iv_designer
 #' @export binary_iv_designer simple_iv_designer
 #'
@@ -147,10 +148,9 @@ attr(binary_iv_designer, "description") <- "
 
 simple_iv_designer <- function(...){
   .Deprecated("binary_iv_designer")
-  binary_iv_designer(...)
+  dots <- list2(...)
+  eval_bare(expr(binary_iv_designer(!!!dots)))
 }
-
-
 
 
 

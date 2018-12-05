@@ -32,6 +32,7 @@
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
+#' @importFrom rlang list2 expr eval_bare
 #' @export two_by_two_designer simple_factorial_designer
 #'
 #' @examples
@@ -156,5 +157,6 @@ attr(two_by_two_designer, "description") <- "
 
 simple_factorial_designer <- function(...){
   .Deprecated("two_by_two_designer")
-  two_by_two_designer(...)
+  dots <- list2(...)
+  eval_bare(expr(two_by_two_designer(!!!dots)))
 }
