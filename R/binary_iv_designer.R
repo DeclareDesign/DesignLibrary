@@ -5,6 +5,8 @@
 #' A researcher is interested in the effect of binary X on outcome Y.  The relationship is confounded  because units that are more likely to be assigned to X=1 have higher Y outcomes.
 #' A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for some, and affects Y only through X. 
 #' 
+#' @details 
+#' See \href{https://declaredesign.org/library/articles/binary_iv.html}{vignette online} for more details on estimands.
 #' 
 #' @param N An integer. Sample size.
 #' @param type_probs A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier).
@@ -15,8 +17,7 @@
 #' @param b A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).
 #' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.
 #' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).
-#' @param outcome_sd A non negative number. Standard deviation on Y.
-#' @return A simple instrumental variables design.
+#' @return A simple instrumental variables design with binary instrument, treatment, and outcome variables.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
@@ -68,7 +69,7 @@ binary_iv_designer <- function(N = 100,
                                outcome_sd = 1,
                                a = c(1,0,0,0) * a_Y, 
                                b = rep(b_Y, 4), 
-                               d = rep(d_Y, 4) 
+                               d = rep(d_Y, 4)
 ){
   if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative.")
   if(max(assignment_probs) > 1 ) stop("assignment_probs must be < 1.")
@@ -76,9 +77,10 @@ binary_iv_designer <- function(N = 100,
   if(length(a) != 4) stop("vector a must be length 4.")
   if(length(b) != 4) stop("vector b must be length 4.")
   if(length(d) != 4) stop("vector d must be length 4.")
+  
   {{{
     
-    # Model
+    # M: Model
     population <- declare_population(
       N = N,
       type = sample(1:4, N, replace = TRUE, prob = type_probs),
@@ -96,23 +98,25 @@ binary_iv_designer <- function(N = 100,
     reveal <- declare_reveal(outcome_variables = Y,
                              assignment_variables = "X")
     
-    # I: Inquiries
+    # I: Inquiry
     estimand <- declare_estimand(
       first_stage = mean((type == 3) - (type == 4)),
       ate = mean(Y_X_1 - Y_X_0),
-      late = mean(Y_X_1[type == 3] - Y_X_0[type == 3])
+      late = mean(Y_X_1[type == 3] - Y_X_0[type == 3]),
+      late_het = (mean(type == 3)*mean(Y_X_1[type == 3] - Y_X_0[type == 3]) -
+                         mean(type == 4)*mean(Y_X_1[type == 4] - Y_X_0[type == 4]))/(mean(type == 3) - mean(type == 4))
     )
     
-    # Answers
+    # A: Answer Strategy
     estimator_1 <- declare_estimator(X ~ Z, 
                                      estimand = "first_stage", 
                                      label = "d-i-m")
     estimator_2 <- declare_estimator(Y ~ X, 
-                                     estimand = c("ate", "late"), 
+                                     estimand = c("ate", "late","late_het"), 
                                      model = lm_robust, 
                                      label = "lm_robust")
     estimator_3 <- declare_estimator(Y ~ X | Z, 
-                                     estimand = c("ate", "late"), 
+                                     estimand = c("ate", "late", "late_het"), 
                                      model = iv_robust, 
                                      label = "iv_robust")
     
