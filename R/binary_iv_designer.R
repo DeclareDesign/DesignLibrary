@@ -100,9 +100,7 @@ binary_iv_designer <- function(N = 100,
     estimand <- declare_estimand(
       first_stage = mean((type == 3) - (type == 4)),
       ate = mean(Y_X_1 - Y_X_0),
-      late = mean(Y_X_1[type == 3] - Y_X_0[type == 3]),
-      late_weighted = (mean(type == 3)*mean(Y_X_1[type == 3] - Y_X_0[type == 3]) -
-        mean(type == 4)*mean(Y_X_1[type == 4] - Y_X_0[type == 4]))/(mean(type == 3) - mean(type == 4))
+      late = mean(Y_X_1[type == 3] - Y_X_0[type == 3])
     )
     
     # Answers
@@ -114,7 +112,7 @@ binary_iv_designer <- function(N = 100,
                                      model = lm_robust, 
                                      label = "lm_robust")
     estimator_3 <- declare_estimator(Y ~ X | Z, 
-                                     estimand = c("ate", "late", "late_weighted"), 
+                                     estimand = c("ate", "late"), 
                                      model = iv_robust, 
                                      label = "iv_robust")
     
