@@ -24,6 +24,7 @@
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom stats rnorm
+#' @importFrom rlang list2 expr eval_bare
 #' @aliases simple_two_arm_designer
 #' @export two_arm_designer simple_two_arm_designer
 #'
@@ -139,7 +140,8 @@ attr(two_arm_designer, "description") <- "
 
 simple_two_arm_designer <- function(...){
   .Deprecated("two_arm_designer")
-  two_arm_designer(...)
+  dots <- list2(...)
+  eval_bare(expr(two_arm_designer(!!!dots)))
 }
   
   
