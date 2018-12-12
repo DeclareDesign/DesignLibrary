@@ -8,7 +8,9 @@
 binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
   assignment_probs = c(0.5, 0.5, 0.5, 0.5), a_Y = 1, b_Y = 0,
   d_Y = 0, outcome_sd = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y,
-  4), d = rep(d_Y, 4))
+  4), d = rep(d_Y, 4), outcome_name = c("Y"),
+  treatment_name = c("X"), instrument_name = c("Z"),
+  design_name = c("binary_iv_design"), fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -30,6 +32,16 @@ binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 \item{b}{A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).}
 
 \item{d}{A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).}
+
+\item{outcome_name}{A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("Conflict")}.}
+
+\item{treatment_name}{A character. Name of outcome variable (defaults to "X"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("GDP")}.}
+
+\item{instrument_name}{A character. Name of outcome variable (defaults to "Z"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("Rain")}.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing inside the function \code{c()} as in \code{design_name = c("my_design")}.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design. \code{outcome_name}, \code{treatment_name} and \code{instrument_name} are always fixed.}
 }
 \value{
 A simple instrumental variables design.

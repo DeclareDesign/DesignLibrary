@@ -16,6 +16,11 @@
 #' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.
 #' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).
 #' @param outcome_sd A non negative number. Standard deviation on Y.
+#' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("Conflict")}.
+#' @param treatment_name A character. Name of outcome variable (defaults to "X"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("GDP")}.
+#' @param instrument_name A character. Name of outcome variable (defaults to "Z"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("Rain")}.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing inside the function \code{c()} as in \code{design_name = c("my_design")}.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{outcome_name}, \code{treatment_name} and \code{instrument_name} are always fixed.
 #' @return A simple instrumental variables design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -25,7 +30,7 @@
 #' @importFrom generics tidy
 #' @importFrom estimatr iv_robust lm_robust
 #' @importFrom stats runif
-#' @importFrom rlang list2 expr eval_bare
+#' @importFrom rlang list2 eval_bare expr exprs is_integerish parse_expr quo_text quos sym UQS
 #' @aliases simple_iv_designer
 #' @export binary_iv_designer simple_iv_designer
 #'
@@ -69,7 +74,12 @@ binary_iv_designer <- function(N = 100,
                                outcome_sd = 1,
                                a = c(1,0,0,0) * a_Y, 
                                b = rep(b_Y, 4), 
-                               d = rep(d_Y, 4) 
+                               d = rep(d_Y, 4),
+                               outcome_name = c("Y"),
+                               treatment_name = c("X"),
+                               instrument_name = c("Z"),
+                               design_name = c("binary_iv_design"),
+                               fixed = NULL
 ){
   if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative.")
   if(max(assignment_probs) > 1 ) stop("assignment_probs must be < 1.")
@@ -77,66 +87,129 @@ binary_iv_designer <- function(N = 100,
   if(length(a) != 4) stop("vector a must be length 4.")
   if(length(b) != 4) stop("vector b must be length 4.")
   if(length(d) != 4) stop("vector d must be length 4.")
+  
+  if(!"N" %in% fixed) N_ <- expr(N)
+  if(!"type_probs" %in% fixed) type_probs_ <- expr(type_probs)
+  if(!"assignment_probs" %in% fixed) assignment_probs_ <- expr(assignment_probs)
+  if(!"outcome_sd" %in% fixed) outcome_sd_ <- expr(outcome_sd)
+  if(!"a" %in% fixed) a_ <- expr(a)
+  if(!"b" %in% fixed) b_ <- expr(b)
+  if(!"d" %in% fixed) d_ <- expr(d)
+
+  N_ <- N; assignment_probs_ <- assignment_probs; a_Y_ <- a_Y 
+  b_Y_ <- b_Y; d_Y_ <- d_Y; outcome_sd_ <- outcome_sd
+  a_ <- a; b_ <- b; d_ <- d
+
+  type <- sym("type")
+
+  population_args <- exprs(N = !!N_,
+                           type = sample(1:4, N, replace = TRUE, prob = !!type_probs_),
+                           type_label = c("Always", "Never", "Complier", "Defier")[type],
+                           u_Z = runif(N),
+                           u_Y = rnorm(N) * !!outcome_sd_,
+                           !!instrument_name := (u_Z < (!!(assignment_probs_))[type]),
+                           !!treatment_name := (type == 1) + (type == 3) * !!sym(instrument_name) + (type == 4) * (1 - !!sym(instrument_name)))
+  
+  population_expr <- expr(declare_population(
+    !!!population_args
+  ))
+    
+  potentials_expr <- expr(declare_potential_outcomes(
+    !!sym(outcome_name) ~ a[type] + b[type] * !!sym(treatment_name) + d[type] * !!sym(instrument_name) + u_Y,
+    assignment_variables = !!treatment_name))
+  
+  reveal_expr <- expr(declare_reveal(outcome_variables = !!outcome_name,
+                                assignment_variables = !!treatment_name))
+  
+  po_names <- sapply(paste(outcome_name, treatment_name, 0:1, sep = "_"), sym)
+    
+  estimand_expr <- expr(declare_estimand(
+    first_stage = mean((type == 3) - (type == 4)),
+    ate = mean(!!po_names[[2]] - !!po_names[[1]]),
+    late = mean((!!po_names[[2]])[type == 3] - (!!po_names[[1]])[type == 3])
+  ))
+  
+  estimator1_expr <- expr(declare_estimator(!!sym(treatment_name) ~ !!sym(instrument_name), 
+                                       estimand = "first_stage", 
+                                       label = "d-i-m"))
+  estimator2_expr <- expr(declare_estimator(!!sym(outcome_name) ~ !!sym(treatment_name), 
+                                            estimand = c("ate", "late"), 
+                                            model = lm_robust, 
+                                            label = "lm_robust"))
+  estimator3_expr <- expr(declare_estimator(!!sym(outcome_name) ~ !!sym(treatment_name) | Z, 
+                                            estimand = c("ate", "late"), 
+                                            model = iv_robust, 
+                                            label = "iv_robust"))
+  
   {{{
     
     # Model
-    population <- declare_population(
-      N = N,
-      type = sample(1:4, N, replace = TRUE, prob = type_probs),
-      type_label = c("Always", "Never", "Complier", "Defier")[type],
-      u_Z = runif(N),
-      u_Y = rnorm(N) * outcome_sd,
-      Z = (u_Z < assignment_probs[type]),
-      X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z)
-    )
+    population <- eval_bare(population_expr)
     
-    potential_outcomes <-
-      declare_potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + u_Y,
-                                 assignment_variables = "X")
+    potential_outcomes <- eval_bare(potentials_expr)
     
-    reveal <- declare_reveal(outcome_variables = Y,
-                             assignment_variables = "X")
+    reveal <- eval_bare(reveal_expr)
     
     # I: Inquiries
-    estimand <- declare_estimand(
-      first_stage = mean((type == 3) - (type == 4)),
-      ate = mean(Y_X_1 - Y_X_0),
-      late = mean(Y_X_1[type == 3] - Y_X_0[type == 3])
-    )
+    estimand <- eval_bare(estimand_expr)
     
     # Answers
-    estimator_1 <- declare_estimator(X ~ Z, 
-                                     estimand = "first_stage", 
-                                     label = "d-i-m")
-    estimator_2 <- declare_estimator(Y ~ X, 
-                                     estimand = c("ate", "late"), 
-                                     model = lm_robust, 
-                                     label = "lm_robust")
-    estimator_3 <- declare_estimator(Y ~ X | Z, 
-                                     estimand = c("ate", "late"), 
-                                     model = iv_robust, 
-                                     label = "iv_robust")
-    
+    estimator_1 <- eval_bare(estimator1_expr)
+    estimator_2 <- eval_bare(estimator2_expr)
+    estimator_3 <- eval_bare(estimator3_expr)
     
     binary_iv_design <- population + potential_outcomes + reveal + 
       estimand + estimator_1 + estimator_2 + estimator_3
     
   }}}
   
-  attr(binary_iv_design, "code") <- 
-    construct_design_code(designer = binary_iv_designer, 
-                          args = match.call.defaults(), 
-                          exclude_args = c("a_Y", "b_Y", "d_Y"),
-                          arguments_as_values = TRUE)
+  design_code <- construct_design_code(binary_iv_designer,
+                                       match.call.defaults(),
+                                       arguments_as_values = TRUE,
+                                       exclude_args = c("a_Y", "b_Y", "d_Y",
+                                                        "outcome_name", "treatment_name", 
+                                                        "instrument_name", "design_name", fixed, "fixed"))
+  
+  design_code <-
+    gsub("binary_iv_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  design_code <-
+    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(potentials_expr\\)", quo_text(potentials_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(reveal_expr\\)", quo_text(reveal_expr), design_code)
+  design_code <-
+    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
+  design_code <- 
+    gsub("eval_bare\\(estimator1_expr\\)", quo_text(estimator1_expr), design_code)
+  design_code <- 
+    gsub("eval_bare\\(estimator2_expr\\)", quo_text(estimator2_expr), design_code)
+  design_code <- 
+    gsub("eval_bare\\(estimator3_expr\\)", quo_text(estimator3_expr), design_code)
+
+  
+  attr(binary_iv_design, "code") <- design_code
   
   binary_iv_design 
   
 }
 
-attr(binary_iv_designer, "shiny_arguments") <- list(N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
+attr(binary_iv_designer, "definitions") <- data.frame(
+  names = c("N", "type_probs", "assignment_probs", "a_Y", "b_Y", "d_Y",
+            "outcome_sd", "a", "b", "d", "outcome_name", "treatment_name",
+            "instrument_name", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 9), rep("character", 5)),
+  min   = c(4, rep(0, 9), rep(NA, 5)),
+  max   = c(Inf, 1, 1, rep(Inf, 7), rep(NA, 5))
+)
+
+
+attr(binary_iv_designer, "shiny_arguments") <- list(design_name = "binary_iv_design",
+                                                    N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
 
 attr(binary_iv_designer, "tips") <-
   list(
+    design_name = "Name of design",
     N = "Sample size",
     b_Y = "Effect of X on Y",
     d_Y = "Effect of Z on Y"
