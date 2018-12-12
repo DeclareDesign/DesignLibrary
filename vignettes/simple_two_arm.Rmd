@@ -14,21 +14,21 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-One of the simplest ways to learn the effect of a cause is to randomly divide  a group into two smaller groups: one gets a treatment and the other doesn't. By comparing the average of the treatment group to that of the control group, you get to learn the true causal effect of the treatment -- at least on average. Magic. So how does it work?
+One of the simplest ways to learn about the effect of a cause is to randomly divide a group in two: one gets a treatment and the other doesn't. By comparing the averages of the outcomes in the treatment group to those of the control group, you get to learn about the causal effect of the treatment -- at least on average. Magic. 
 
-The two-arm design gets its name from the fact that we divided our group into **two** smaller groups -- no more and no fewer. For each individual in our study, we imagine two counterfactuals: one in which they ended up in the treatment group, and one where they ended up in the control. An important assumption we'll make is that an individual's outcome is not affected by whoever else did or did not end up in their group.^[This is often referred to as the "no spillovers" assumption. An individual's outcome depends only on their treatment assignment status and is not affected by that of any other individual.]
+So how does it work? In fact it works only if we are willing to make a few assumptions. First, for each individual in our study, we are willing to imagine two counterfactuals: one in which they ended up in the treatment group, and one where they ended up in the control. We'll define the unit level treatment effect as the difference between these two. Second we'll assume that an individual's outcome is not affected by whoever else did or did not end up in their group.^[This is often referred to as the "no spillovers" assumption. An individual's outcome depends only on their treatment assignment status and is not affected by that of any other individual.]
 
 Ideally, we'd like to observe both counterfactuals for each individual, and we'd know the true causal effect by looking at the differences. But we can't see the world in two counterfactual states at once: that's called the fundamental problem of causal inference. 
 
-Don't despair! Amazingly, while can never learn the true causal effect of an individual, we *can* learn the true causal effect *averaged across groups of individuals*. The basis for that inference shares an interesting parallel with random sampling. 
+Amazingly though, while we can never learn the true causal effect of an individual, we *can* learn about the true causal effect *averaged across groups of individuals*. The basis for that inference shares an interesting parallel with random sampling. 
 
-When we take a random sample, we can use the fact that we know each individual's probability of entering the sample from the population to make an inference about the outcomes of that population: the average age of the sample, say, is thought to be representative of the average age of the population. In an experiment, it's as though we're taking two representative samples from *two counterfactual states of the world*. 
+When we take a random sample from a population, the sample becomes representative of the population in the sense that the average outcome in the sample will, on average, be the same as the average outcome in the population.  Technically: the procedure delivers unbiased estimates of averages. In an experiment, it's as though we're taking two separate representative samples from *two counterfactual states of the world*, one from a world in which the cause is present and one from one in which it is absent. By taking the mean of the group that represents the treated potential outcomes and comparing it to the mean of the group that represents the untreated potential outcomes, we can construct an unbiased guess of the true average difference in the two states of the world.^[This last step used the useful fact that the difference of averages is the same as the  average of differences.] 
 
-Seen in this way, the treatment and control groups are 'random samples' from the potential outcomes in a world where the cause is present and one in which it is absent. By taking the mean of the group that represents the treated potential outcomes and comparing it to the mean of the group that represents the untreated potential outcomes, we can construct a representative guess of the true average difference in the two states of the world. 
-
-Just like in random sampling, as the size of our experiment grows our guess of the average treatment effect (ATE) will converge to the true ATE, implying that our design is unbiased. As we shall see, however, characterizing our uncertainty about our guesses can be complicated, even in such a simple design.  
+This logic does not guarantee that an answer is *correct.* A two arm trial does not let us *see* the true treatment effect. but it does produce an estimate that is not biased up or down.  Just like in random sampling, as the size of our experiment grows, our guess of the average treatment effect (ATE) will converge to the true ATE. As we shall see, however, characterizing our uncertainty about our guesses can be complicated, even in such a simple design.  
 
 ## Design Declaration
+
+here are the components of a two arm trial design:
 
 - **M**odel: 
     
