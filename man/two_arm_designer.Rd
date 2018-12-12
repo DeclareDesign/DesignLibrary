@@ -8,7 +8,7 @@
 two_arm_designer(N = 100, assignment_prob = 0.5, control_mean = 0,
   control_sd = 1, ate = 1, treatment_mean = control_mean + ate,
   treatment_sd = control_sd, rho = 1,
-  design_name = c("two_arm_designer"), fixed = c("design_name"))
+  design_name = c("two_arm_design"), fixed = c("design_name"))
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -27,7 +27,7 @@ two_arm_designer(N = 100, assignment_prob = 0.5, control_mean = 0,
 
 \item{rho}{A number in [-1,1]. Correlation between treatment and control outcomes.}
 
-\item{design_name}{A character vector. Name of design. Must be provided without spacing inside the function \code{c()} as in \code{design_name = c("abc_123")}.}
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing inside the function \code{c()} as in \code{design_name = c("abc_123")}.}
 
 \item{fixed}{A character vector. Names of arguments to be fixed in design.}
 }
