@@ -88,6 +88,8 @@ binary_iv_designer <- function(N = 100,
   if(length(b) != 4) stop("vector b must be length 4.")
   if(length(d) != 4) stop("vector d must be length 4.")
   if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   if(!"N" %in% fixed) N_ <- expr(N)
   if(!"type_probs" %in% fixed) type_probs_ <- expr(type_probs)

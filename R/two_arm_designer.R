@@ -48,6 +48,9 @@ two_arm_designer <- function(N = 100,
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
   # if(treatment_mean != control_mean+ate) warning("`treatment_mean` inconsistent with values of `control_mean` and `ate`. Former will override the latter.")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   N_ <- N; assignment_prob_ <- assignment_prob; control_mean_ <- control_mean
   control_sd_ <- control_sd; ate_ <- ate; treatment_mean_ <- treatment_mean

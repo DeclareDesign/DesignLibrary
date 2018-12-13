@@ -9,6 +9,7 @@
 #' @param outcome_sds A non negative numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
 #' @param assignment_probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
 #' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
 #' @param treatment_names A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.
 #' @return A factorial design.
@@ -99,6 +100,9 @@ factorial_designer <- function(
   if(k < 2 || !is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(assignment_probs <= 0)) stop("`assignment_probs' should have positive values only.")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   # pre-objects -------------------------------------------------------------
   

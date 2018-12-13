@@ -44,6 +44,7 @@ multi_arm_designer <- function(N = 30,
                                sd_i = 1,
                                outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
+                               design_name = "multi_arm_designer",
                                fixed = NULL) {
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
@@ -56,12 +57,15 @@ multi_arm_designer <- function(N = 30,
     stop("outcome_means, outcome_sds and conditions arguments must be of length m_arms.")
   if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
   if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
   if (!"N" %in% fixed) N_ <- expr(N)
   if (!"sd_i" %in% fixed) sd_i_ <- expr(sd_i)
-  
+
   # Create helper vars to be used in design
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
   error_names <- paste0("u_", 1:m_arms)
