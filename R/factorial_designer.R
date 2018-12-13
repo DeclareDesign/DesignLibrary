@@ -87,6 +87,7 @@ factorial_designer <- function(
   assignment_probs = rep(.5, k),
   outcome_name = "Y",
   treatment_names = NULL,
+  design_name = "factorial_design",
   fixed = NULL
 ){
   
@@ -257,11 +258,22 @@ factorial_designer <- function(
                                reveal_expr, estimand_expr, assignment_expr1,
                                assignment_expr2, estimator_expr)
   
+  design_code <- gsub("factorial_design <-", paste0(design_name, " <-"), design_code)
+  
   attr(factorial_design, "code") <- design_code
   
   return(factorial_design)
   
 }
+
+attr(factorial_designer,"definitions") <- data.frame(
+  names = c("N", "k", "outcome_means", "sd", "outcome_sds", 
+            "assignment_probs", "outcome_name", "treatment_names",
+            "fixed"),
+  class = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
+  min   = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
+  max   = c(rep(Inf, 5), 1, rep(NA, 3))
+)
 
 attr(factorial_designer,"shiny_arguments") <-
   list(
