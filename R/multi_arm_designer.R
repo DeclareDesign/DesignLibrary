@@ -11,7 +11,7 @@
 #' @param outcome_means A numeric vector of length \code{m_arms}.  Average outcome in each arm.
 #' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.
-#' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces). 
+#' @param conditions A character vector of length \code{m_arms}. The names of each arm. Must not contain blank spaces. 
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -43,7 +43,7 @@ multi_arm_designer <- function(N = 30,
                                outcome_means = rep(0, m_arms),
                                sd_i = 1,
                                outcome_sds = rep(0, m_arms),
-                               conditions = 1:m_arms,
+                               conditions = as.character(1:m_arms),
                                design_name = "multi_arm_designer",
                                fixed = NULL) {
   outcome_sds_ <- outcome_sds 
@@ -58,6 +58,7 @@ multi_arm_designer <- function(N = 30,
   if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
   if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  if(any(grepl(" ", conditions, fixed = TRUE))) "Names in `conditions` may not contain any blank spaces."
   fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
