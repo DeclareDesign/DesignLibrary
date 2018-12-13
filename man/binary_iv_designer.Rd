@@ -23,6 +23,8 @@ binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 
 \item{d_Y}{A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.}
 
+\item{outcome_sd}{A real number. The standard deviation of the outcome.}
+
 \item{a}{A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier).}
 
 \item{b}{A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).}

@@ -17,6 +17,7 @@
 #' @param b A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).
 #' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.
 #' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).
+#' @param outcome_sd A real number. The standard deviation of the outcome.
 #' @return A simple instrumental variables design with binary instrument, treatment, and outcome variables.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
