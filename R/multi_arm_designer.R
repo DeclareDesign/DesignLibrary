@@ -73,8 +73,6 @@ multi_arm_designer <- function(N = 30,
   names(errors) <- error_names
   population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*!!sd_i_))
   
-  conditions <- as.character(conditions)
-  
   f_Y <- formula(
     paste0("Y ~ ", paste0(
       "(", outcome_means_, " + ", error_names,
@@ -181,12 +179,22 @@ multi_arm_designer <- function(N = 30,
                                potential_outcomes_expr, assignment_expr,
                                estimator_expr)
 
+  design_code <- gsub("multi_arm_design <-", paste0(design_name, " <-"), design_code)
+  
   #  Add  code plus argments as attributes
   attr(multi_arm_design, "code") <- design_code
 
   # Return design
   return(multi_arm_design)
 }
+
+attr(two_arm_designer, "definitions") <- data.frame(
+  names = c("N", "m_arms", "outcome_means", "sd_i", 
+            "outcome_sds", "conditions", "fixed"),
+  class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
+  min   = c(6, 2, -Inf, 0, 0, NA, NA),
+  max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA)
+)
 
 attr(multi_arm_designer, "shiny_arguments") <-
   list(N = c(10, 20, 50))
