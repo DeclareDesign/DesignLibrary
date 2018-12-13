@@ -6,7 +6,7 @@
 \usage{
 factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
   sd = 1, outcome_sds = rep(sd, 2^k), assignment_probs = rep(0.5, k),
-  outcome_name = c("Y"), treatment_names = NULL, fixed = NULL)
+  outcome_name = "Y", treatment_names = NULL, fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -21,7 +21,7 @@ factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
 
 \item{assignment_probs}{A numeric vector of length \code{k}. Independent probability of assignment to each treatment.}
 
-\item{outcome_name}{A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("War")}.}
+\item{outcome_name}{A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing.}
 
 \item{treatment_names}{A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.}
 

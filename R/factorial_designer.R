@@ -8,7 +8,7 @@
 #' @param sd A nonnegative number. Standard deviation for outcomes when all outcomes have identical standard deviations. For outcome-specific standard deviations use \code{outcomes_sds}.
 #' @param outcome_sds A non negative numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
 #' @param assignment_probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
-#' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing inside the function \code{c()} as in \code{outcome_name = c("War")}.
+#' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing.
 #' @param treatment_names A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.
 #' @return A factorial design.
@@ -85,7 +85,7 @@ factorial_designer <- function(
   sd = 1, 
   outcome_sds = rep(sd, 2^k),
   assignment_probs = rep(.5, k),
-  outcome_name = c("Y"),
+  outcome_name = "Y",
   treatment_names = NULL,
   fixed = NULL
 ){
@@ -249,25 +249,13 @@ factorial_designer <- function(
   
   design_code <- construct_design_code(factorial_designer,
                                        match.call.defaults(),
-                                       # rlang = TRUE,
                                        arguments_as_values = TRUE,
                                        exclude_args = c("k", "assignment_probs", "outcome_name", "treatment_names", "sd", fixed, "fixed"))
   
   
-  design_code <-
-    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(reveal_expr\\)", quo_text(reveal_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
-  design_code <- 
-    gsub("eval_bare\\(assignment_expr1\\)", quo_text(assignment_expr1), design_code)
-  design_code <- 
-    gsub("eval_bare\\(assignment_expr2\\)", quo_text(assignment_expr2), design_code)
-  design_code <- 
-    gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
+  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr,
+                               reveal_expr, estimand_expr, assignment_expr1,
+                               assignment_expr2, estimator_expr)
   
   attr(factorial_design, "code") <- design_code
   
