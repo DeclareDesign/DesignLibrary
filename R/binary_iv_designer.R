@@ -75,10 +75,10 @@ binary_iv_designer <- function(N = 100,
                                a = c(1,0,0,0) * a_Y, 
                                b = rep(b_Y, 4), 
                                d = rep(d_Y, 4),
-                               outcome_name = c("Y"),
-                               treatment_name = c("X"),
-                               instrument_name = c("Z"),
-                               design_name = c("binary_iv_design"),
+                               outcome_name = "Y",
+                               treatment_name = "X",
+                               instrument_name = "Z",
+                               design_name = "binary_iv_design",
                                fixed = NULL
 ){
   if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative.")
@@ -95,13 +95,13 @@ binary_iv_designer <- function(N = 100,
   if(!"a" %in% fixed) a_ <- expr(a)
   if(!"b" %in% fixed) b_ <- expr(b)
   if(!"d" %in% fixed) d_ <- expr(d)
-
+  
   N_ <- N; assignment_probs_ <- assignment_probs; a_Y_ <- a_Y 
   b_Y_ <- b_Y; d_Y_ <- d_Y; outcome_sd_ <- outcome_sd
   a_ <- a; b_ <- b; d_ <- d
-
+  
   type <- sym("type")
-
+  
   population_args <- exprs(N = !!N_,
                            type = sample(1:4, N, replace = TRUE, prob = !!type_probs_),
                            type_label = c("Always", "Never", "Complier", "Defier")[type],
@@ -113,16 +113,16 @@ binary_iv_designer <- function(N = 100,
   population_expr <- expr(declare_population(
     !!!population_args
   ))
-    
+  
   potentials_expr <- expr(declare_potential_outcomes(
     !!sym(outcome_name) ~ a[type] + b[type] * !!sym(treatment_name) + d[type] * !!sym(instrument_name) + u_Y,
     assignment_variables = !!treatment_name))
   
   reveal_expr <- expr(declare_reveal(outcome_variables = !!outcome_name,
-                                assignment_variables = !!treatment_name))
+                                     assignment_variables = !!treatment_name))
   
   po_names <- sapply(paste(outcome_name, treatment_name, 0:1, sep = "_"), sym)
-    
+  
   estimand_expr <- expr(declare_estimand(
     first_stage = mean((type == 3) - (type == 4)),
     ate = mean(!!po_names[[2]] - !!po_names[[1]]),
@@ -130,8 +130,8 @@ binary_iv_designer <- function(N = 100,
   ))
   
   estimator1_expr <- expr(declare_estimator(!!sym(treatment_name) ~ !!sym(instrument_name), 
-                                       estimand = "first_stage", 
-                                       label = "d-i-m"))
+                                            estimand = "first_stage", 
+                                            label = "d-i-m"))
   estimator2_expr <- expr(declare_estimator(!!sym(outcome_name) ~ !!sym(treatment_name), 
                                             estimand = c("ate", "late"), 
                                             model = lm_robust, 
@@ -167,7 +167,7 @@ binary_iv_designer <- function(N = 100,
                                        match.call.defaults(),
                                        arguments_as_values = TRUE,
                                        exclude_args = c("a_Y", "b_Y", "d_Y",
-                                                        "outcome_name", "treatment_name", 
+                                                        "outcome_name", "treatment_name",
                                                         "instrument_name", "design_name", fixed, "fixed"))
   
   design_code <- sub_expr_text(design_code, population_expr, potentials_expr,
@@ -178,7 +178,7 @@ binary_iv_designer <- function(N = 100,
   
   attr(binary_iv_design, "code") <- design_code
   
-  binary_iv_design 
+  binary_iv_design
   
 }
 

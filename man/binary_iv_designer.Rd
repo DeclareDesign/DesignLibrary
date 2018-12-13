@@ -8,9 +8,9 @@
 binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
   assignment_probs = c(0.5, 0.5, 0.5, 0.5), a_Y = 1, b_Y = 0,
   d_Y = 0, outcome_sd = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y,
-  4), d = rep(d_Y, 4), outcome_name = c("Y"),
-  treatment_name = c("X"), instrument_name = c("Z"),
-  design_name = c("binary_iv_design"), fixed = NULL)
+  4), d = rep(d_Y, 4), outcome_name = "Y", treatment_name = "X",
+  instrument_name = "Z", design_name = "binary_iv_design",
+  fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
