@@ -87,6 +87,7 @@ binary_iv_designer <- function(N = 100,
   if(length(a) != 4) stop("vector a must be length 4.")
   if(length(b) != 4) stop("vector b must be length 4.")
   if(length(d) != 4) stop("vector d must be length 4.")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
   
   if(!"N" %in% fixed) N_ <- expr(N)
   if(!"type_probs" %in% fixed) type_probs_ <- expr(type_probs)
@@ -187,7 +188,7 @@ attr(binary_iv_designer, "definitions") <- data.frame(
             "outcome_sd", "a", "b", "d", "outcome_name", "treatment_name",
             "instrument_name", "design_name", "fixed"),
   class = c("integer", rep("numeric", 9), rep("character", 5)),
-  min   = c(4, rep(0, 9), rep(NA, 5)),
+  min   = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3), rep(NA, 5)),
   max   = c(Inf, 1, 1, rep(Inf, 7), rep(NA, 5))
 )
 
