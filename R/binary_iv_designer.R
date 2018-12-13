@@ -170,23 +170,11 @@ binary_iv_designer <- function(N = 100,
                                                         "outcome_name", "treatment_name", 
                                                         "instrument_name", "design_name", fixed, "fixed"))
   
-  design_code <-
-    gsub("binary_iv_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
-  design_code <-
-    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(potentials_expr\\)", quo_text(potentials_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(reveal_expr\\)", quo_text(reveal_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
-  design_code <- 
-    gsub("eval_bare\\(estimator1_expr\\)", quo_text(estimator1_expr), design_code)
-  design_code <- 
-    gsub("eval_bare\\(estimator2_expr\\)", quo_text(estimator2_expr), design_code)
-  design_code <- 
-    gsub("eval_bare\\(estimator3_expr\\)", quo_text(estimator3_expr), design_code)
-
+  design_code <- sub_expr_text(design_code, population_expr, potentials_expr,
+                               reveal_expr, estimand_expr, estimator1_expr,
+                               estimator2_expr, estimator3_expr)
+  
+  design_code <- gsub("binary_iv_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
   
   attr(binary_iv_design, "code") <- design_code
   

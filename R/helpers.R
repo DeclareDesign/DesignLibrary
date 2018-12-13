@@ -53,6 +53,7 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 #' Generates clean code string that reproduces design
 #' @importFrom utils getSrcref
+#' @importFrom rlang expr quo_text
 #' @param designer Designer function.
 #' @param args Named list of arguments to be passed to designer function.
 #' @param arguments_as_values Logical. Whether to replace argument names for value.
@@ -80,11 +81,11 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   
   # Get names of arguments   
   arg_names <- names(args[-1])
-  
+
   # If true, arguments are parsed as values -- be careful with functions
   if(arguments_as_values){
     # Evaluate args in order provided in formals
-    for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", args[arg_names[j]])))  
+    for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", gsub("[(][)]$", "", quo_text(expr(!!args[arg_names[j]]))))))  
     arg_vals <- sapply(arg_names, function(x) eval(parse(text = paste0("c(", paste(x, collapse = ","), ")"))))
     # convert args to text
     args_text <- paste(sapply(arg_names, function(x) paste(x, " <- ", arg_vals[x])))
@@ -129,6 +130,26 @@ pred <- function(expr, depth=3) {
       expr[[1]] == as.symbol('{') &&
       Recall(expr[[2]], depth - 1)
   )
+}
+
+#' Substitute text from expressions in design code
+#' @importFrom rlang get_expr quo_text list2 quos
+#' @param code List contaitining design code.
+#' @param ... List of expressions to be substituted for their text.
+#' @return Code with expression text.
+sub_expr_text <- function(code, ...){
+  dots <- list2(...)
+  qdots <- quos(...)
+  exs <- sapply(1:length(dots), function(e) {
+    ex <- get_expr(qdots[[e]])
+    deparse(substitute(ex))
+  })
+  
+  for(i in 1:length(dots)){
+    to_sub <- paste0("eval_bare\\(", exs[i], "\\)")
+    code <- gsub(to_sub, quo_text(dots[[i]]), code)
+  }
+  code
 }
 
 #' Clean code for method substitute
