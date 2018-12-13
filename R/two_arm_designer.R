@@ -15,7 +15,7 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param treatment_sd  A nonnegative number. Standard deviation in treatment. By default equals \code{control_sd}.
 #' @param rho A number in [-1,1]. Correlation between treatment and control outcomes.
-#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing inside the function \code{c()} as in \code{design_name = c("abc_123")}.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
 #' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -40,7 +40,7 @@ two_arm_designer <- function(N = 100,
                              treatment_mean = control_mean + ate,
                              treatment_sd = control_sd,
                              rho = 1,
-                             design_name = c("two_arm_design"),
+                             design_name = "two_arm_design",
                              fixed = c("design_name")
 ){
   if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
