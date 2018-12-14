@@ -31,6 +31,9 @@ randomized_response_designer <- function(N = 1000,
   if(prob_forced_yes < 0 || prob_forced_yes > 1)   stop("prob_forced_yes must be in [0,1]")
   if(prevalence_rate < 0 || prevalence_rate > 1)   stop("prevalence_rate must be in [0,1]")
   if(withholding_rate < 0 || withholding_rate > 1) stop("withholding_rate must be in [0,1]")
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   {{{
     # M: Model
     population <- declare_population(
@@ -48,7 +51,8 @@ randomized_response_designer <- function(N = 1000,
     estimand <- declare_estimand(true_rate = mean(sensitive_trait))
     
     # D: Data Strategy
-    assignment <- declare_assignment(
+
+        assignment <- declare_assignment(
       prob = prob_forced_yes,
       conditions = c("Truth","Yes")
     )
@@ -80,11 +84,30 @@ randomized_response_designer <- function(N = 1000,
       diagnosands = declare_diagnosands(select = bias)
       )
     
+    
+    design_code <- construct_design_code(designer = randomized_response_designer, 
+                                         args = match.call.defaults(), 
+                                         exclude_args = union(c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "design_name", "fixed"), fixed),
+                                         arguments_as_values = TRUE)
+    
+    
+    design_code <- gsub("randomized_response_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+      
+    attr(randomized_response_design, "code") <- design_code
+    
+    randomized_response_design
+    
   }}}
-  attr(randomized_response_design, "code") <- 
-    construct_design_code(randomized_response_designer, match.call.defaults())
-  randomized_response_design
+  # attr(randomized_response_design, "code") <- 
+  #   construct_design_code(randomized_response_designer, match.call.defaults())
+  # randomized_response_design
 }
+attr(randomized_response_designer,"definitions") <- data.frame(
+  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "fixed"),
+  class = c("integer", rep("numeric",3), "character"),
+  min   = c(1000, 0.1, 0.05, 0.05, NA),
+  max   = c(2500,0.9, 0.95, 0.95, NA)
+)
 attr(randomized_response_designer,"tips") <-
   list(
     N = "Size of sample",

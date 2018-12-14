@@ -8,7 +8,7 @@
 two_arm_designer(N = 100, assignment_prob = 0.5, control_mean = 0,
   control_sd = 1, ate = 1, treatment_mean = control_mean + ate,
   treatment_sd = control_sd, rho = 1, design_name = "two_arm_design",
-  fixed = c("design_name"))
+  fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}

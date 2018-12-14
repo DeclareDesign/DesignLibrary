@@ -5,7 +5,8 @@
 \title{Create a randomized response design}
 \usage{
 randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
-  prevalence_rate = 0.1, withholding_rate = 0.5)
+  prevalence_rate = 0.1, withholding_rate = 0.5,
+  design_name = "randomized_response_design", fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -15,6 +16,10 @@ randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
 \item{prevalence_rate}{A number in [0,1]. Probability that individual has the sensitive trait.}
 
 \item{withholding_rate}{A number in [0,1]. Probability that an individual with the sensitive trait hides it.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design.}
 }
 \value{
 A randomized response design.
