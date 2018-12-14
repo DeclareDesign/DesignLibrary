@@ -258,7 +258,7 @@ factorial_designer <- function(
                                        arguments_as_values = TRUE,
                                        exclude_args = union(c("k", "assignment_probs", 
                                                         "outcome_name", "treatment_names", 
-                                                        "sd", "fixed", "design_name")), fixed)
+                                                        "sd", "fixed", "design_name"), fixed))
   
   
   design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr,
