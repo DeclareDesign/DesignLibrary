@@ -44,7 +44,7 @@ multi_arm_designer <- function(N = 30,
                                sd_i = 1,
                                outcome_sds = rep(0, m_arms),
                                conditions = as.character(1:m_arms),
-                               design_name = "multi_arm_designer",
+                               design_name = "multi_arm_design",
                                fixed = NULL) {
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
