@@ -41,7 +41,7 @@ two_arm_designer <- function(N = 100,
                              treatment_sd = control_sd,
                              rho = 1,
                              design_name = "two_arm_design",
-                             fixed = c("design_name")
+                             fixed = NULL
 ){
   if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
   if(control_sd < 0 ) stop("control_sd must be non-negative")
@@ -49,7 +49,8 @@ two_arm_designer <- function(N = 100,
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
   # if(treatment_mean != control_mean+ate) warning("`treatment_mean` inconsistent with values of `control_mean` and `ate`. Former will override the latter.")
   if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
-  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   N_ <- N; assignment_prob_ <- assignment_prob; control_mean_ <- control_mean
@@ -104,17 +105,14 @@ two_arm_designer <- function(N = 100,
   design_code <- 
     construct_design_code(designer = two_arm_designer, 
                           args = match.call.defaults(), 
-                          exclude_args = c("ate", "fixed", fixed),
+                          exclude_args = union(c("ate", "fixed", "design_name"), fixed),
                           arguments_as_values = TRUE)
   
   design_code <-
     gsub("two_arm_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
-  design_code <-
-    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(potential_expr\\)", quo_text(potential_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
+  
+  design_code <- sub_expr_text(design_code, population_expr, potential_expr,
+                               assignment_expr)
   
   attr(two_arm_design, "code") <- design_code
   

@@ -59,7 +59,8 @@ multi_arm_designer <- function(N = 30,
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
   if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
   if(any(grepl(" ", conditions, fixed = TRUE))) "Names in `conditions` may not contain any blank spaces."
-  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
@@ -171,7 +172,7 @@ multi_arm_designer <- function(N = 30,
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = union(c("m_arms", "fixed", "conditions"), fixed))
+      exclude_args = union(c("m_arms", "fixed", "conditions", "design_name"), fixed))
   
   
   # design_code

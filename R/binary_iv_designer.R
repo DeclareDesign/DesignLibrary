@@ -88,7 +88,8 @@ binary_iv_designer <- function(N = 100,
   if(length(b) != 4) stop("vector b must be length 4.")
   if(length(d) != 4) stop("vector d must be length 4.")
   if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
-  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   if(!"N" %in% fixed) N_ <- expr(N)
@@ -169,9 +170,9 @@ binary_iv_designer <- function(N = 100,
   design_code <- construct_design_code(binary_iv_designer,
                                        match.call.defaults(),
                                        arguments_as_values = TRUE,
-                                       exclude_args = c("a_Y", "b_Y", "d_Y",
+                                       exclude_args = union(c("a_Y", "b_Y", "d_Y",
                                                         "outcome_name", "treatment_name",
-                                                        "instrument_name", "design_name", fixed, "fixed"))
+                                                        "instrument_name", "design_name", "fixed"), fixed))
   
   design_code <- sub_expr_text(design_code, population_expr, potentials_expr,
                                reveal_expr, estimand_expr, estimator1_expr,

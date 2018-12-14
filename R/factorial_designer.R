@@ -101,7 +101,8 @@ factorial_designer <- function(
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(assignment_probs <= 0)) stop("`assignment_probs' should have positive values only.")
   if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
-  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   # pre-objects -------------------------------------------------------------
@@ -255,7 +256,9 @@ factorial_designer <- function(
   design_code <- construct_design_code(factorial_designer,
                                        match.call.defaults(),
                                        arguments_as_values = TRUE,
-                                       exclude_args = c("k", "assignment_probs", "outcome_name", "treatment_names", "sd", fixed, "fixed"))
+                                       exclude_args = union(c("k", "assignment_probs", 
+                                                        "outcome_name", "treatment_names", 
+                                                        "sd", "fixed", "design_name")), fixed)
   
   
   design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr,
