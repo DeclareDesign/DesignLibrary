@@ -188,7 +188,7 @@ multi_arm_designer <- function(N = 30,
   return(multi_arm_design)
 }
 
-attr(two_arm_designer, "definitions") <- data.frame(
+attr(multi_arm_designer, "definitions") <- data.frame(
   names = c("N", "m_arms", "outcome_means", "sd_i", 
             "outcome_sds", "conditions", "fixed"),
   class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
