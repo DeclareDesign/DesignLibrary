@@ -13,9 +13,9 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-Learning about what works within a field often takes time, money and effort. Multi-arm designs can make this process somewhat more efficient: multiple treatments are assigned in parallel and compared against the same control group, which reduces sample size and hence costs. 
+Learning about effects of causes takes time, money and effort. Multi-arm designs can make this process somewhat more efficient: multiple treatments are assigned in parallel and compared against the same control group, which reduces sample size and hence costs. 
 
-Suppose that we want to learn whether there is racial discrimination in the labor market by conducting an experiment. Companies from our population of size $30$ are randomly assigned to receive a résumé from a white, black or Latino candidate. Companies are assigned to one of these three conditions with equal probabilities, and résumés only vary race and are otherwise identical. We define our outcome of interest as the difference in callbacks between experimental conditions. 
+Suppose that we want to learn whether there is racial discrimination in the labor market by conducting an experiment. Companies from our population of size $30$ are randomly assigned to receive a résumé from a white, black, or Latino candidate. Companies are assigned to one of these three conditions with equal probabilities, and résumés only vary race and are otherwise identical. We define our outcome of interest as the difference in callbacks between experimental conditions. 
 
 In settings of multiple treatment arms, we could do a number of pairwise comparisons: across treatments and each treatment against control. 
 <!--One must be however careful since increasing the number of hyphoteses being tested might increase the probability of type 1 error -->
@@ -23,16 +23,17 @@ In settings of multiple treatment arms, we could do a number of pairwise compari
   
 ## Design Declaration
   
-  - **M**odel: We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $m$ $(m = 1, 2, ..., M)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $m$ and the control condition: $Y_i(Z = m)  -Y_i(Z = 0)$.
+  - **M**odel: We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $M$ $(m = 1, 2, ..., M)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $m$ and the control condition: $Y_i(Z = m)  -Y_i(Z = 0)$.
 
-- **I**nquiry:  We are interested in the effect of each treatment arm with respect to a comparison group.
+- **I**nquiry:  We are interested in all of the pairwise comparisons between arms: $E[Y(m) - Y(m')]$, for all $m \in \{1,...,M\}$.  
 
-- **D**ata strategy: We randomly assign $k/N$ units to each of the three treatment arms.
+- **D**ata strategy: We randomly assign $k/N$ units to each of the treatment arms.
 
-- **A**nswer strategy: We fit a linear regression model with individual indicators for each of the treatments as covariates. The average treatment effect is equal to the regression coefficients, which are computed by subtracting the mean of the comparison group from the mean of each treatment group.
+- **A**nswer strategy: We take every pairwise difference in means corresponding to the specific estimand.
 
+## Takeaways
 
-```{r, code = get_design_code(multi_arm_designer(outcome_means = c(0.5, 1, 2))), eval=TRUE}
+```{r, code = get_design_code(multi_arm_designer(m_arms = 4, outcome_means = c(0.5, 1, 2, .5)) ), eval=TRUE}
 ```
 
 ```{r}
@@ -40,28 +41,16 @@ diagnosis <- diagnose_design(multi_arm_design)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[,-c(1,12)], digits = 2)
+kable(reshape_diagnosis(diagnosis)[,c("Bias","Power","Coverage","Mean Estimate","Mean Estimand")], digits = 2)
 ```
 
-The diagnosis of our design indicates that the regression provides unbiased estimates of  the average treatment effect (ATE) in each arm. These estimates, however, are not so precise;  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the time.
+- We see that a design like this 
 
-## Using the  Multi-Arm Designer
+- The pairwise differences in means provide unbiased estimates of  the average treatment effect (ATE) in each arm. These estimates, however, are not so precise;  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the time.
 
-In R, you can generate a multi-arm design using the template function `multi_arm_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
-  
-```{r, eval=FALSE}
-library(DesignLibrary)
-```
+## Exercises
 
-We can then create specific designs by defining values for each argument. For example, we can create a design called `my_multi_arm_design` where `N`, `m_arms`, and `outcome_means` set to 80, 4, and `c(-0.2, 0.2, 0.1)`, respectively, and other parameters use default values. To do so, we run the lines below.
+- Use the designer to declare four designs. Each should only have one arm that has an effect, 
 
-```{r, eval=FALSE}
-my_multi_arm_design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = c(-0.2, 0.2, 0.1))
-```
 
-You can see more details on the `multi_arm_designer()` function, its arguments, and default values, by running the following line of code:
-  
-```{r, eval=FALSE}
-??multi_arm_designer
-```
 
