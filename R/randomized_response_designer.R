@@ -11,6 +11,8 @@
 #' @param prob_forced_yes A number in [0,1]. Probability of a forced yes.
 #' @param prevalence_rate A number in [0,1]. Probability that individual has the sensitive trait.
 #' @param withholding_rate A number in [0,1]. Probability that an individual with the sensitive trait hides it.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A randomized response design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
