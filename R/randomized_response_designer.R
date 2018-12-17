@@ -26,7 +26,9 @@
 randomized_response_designer <- function(N = 1000,
                                          prob_forced_yes = .6,
                                          prevalence_rate = .1,
-                                         withholding_rate = .5
+                                         withholding_rate = .5,
+                                         design_name = "randomized_response_design",
+                                         fixed = NULL
 ){
   if(prob_forced_yes < 0 || prob_forced_yes > 1)   stop("prob_forced_yes must be in [0,1]")
   if(prevalence_rate < 0 || prevalence_rate > 1)   stop("prevalence_rate must be in [0,1]")
