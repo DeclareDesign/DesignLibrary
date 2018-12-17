@@ -122,10 +122,10 @@ randomized_response_designer <- function(N = 1000,
 
 }
 attr(randomized_response_designer,"definitions") <- data.frame(
-  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "fixed"),
-  class = c("integer", rep("numeric",3), "character"),
-  min   = c(1000, 0.1, 0.05, 0.05, NA),
-  max   = c(2500,0.9, 0.95, 0.95, NA)
+  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "design_name", "fixed"),
+  class = c("integer", rep("numeric",3), rep("character", 2)),
+  min   = c(1, 0, 0, 0, NA, NA),
+  max   = c(Inf,1, 1, 1, NA, NA)
 )
 attr(randomized_response_designer,"tips") <-
   list(
