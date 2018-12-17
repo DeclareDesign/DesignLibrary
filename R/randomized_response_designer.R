@@ -38,14 +38,39 @@ randomized_response_designer <- function(N = 1000,
   argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
   fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  N_ <- N; prob_forced_yes_ <- prob_forced_yes; prevalence_rate_ <- prevalence_rate; withholding_rate_ <- withholding_rate
+  
+  if(!"N" %in% fixed) N_ <- expr(N)
+  if(!"prob_forced_yes" %in% fixed) prob_forced_yes_ <- expr(prob_forced_yes)
+  if(!"prevalence_rate" %in% fixed) prevalence_rate_ <- expr(prevalence_rate)
+  if(!"withholding_rate" %in% fixed) withholding_rate_ <- expr(withholding_rate)
+  
+  population_expr <- expr(declare_population(
+    N = !!N_,
+    sensitive_trait = draw_binary(prob = !!prevalence_rate_, N = N),
+    withholder = draw_binary(prob = sensitive_trait * !!withholding_rate_, N = N),
+    direct_answer =  sensitive_trait - withholder
+  ))
+  
+  assignment_expr <- expr(declare_assignment(
+    prob = !!prob_forced_yes_,
+    conditions = c("Truth","Yes")
+  ))
+  
+  estimator_randomized_response_expr <- expr(declare_estimator(
+    handler = tidy_estimator(
+      function(data) with(
+        data,
+        data.frame(estimate = (mean(Y) - !!prob_forced_yes_) / (1 - !!prob_forced_yes_)))),
+    estimand = estimand,
+    label = "Forced Randomized Response"
+  ))
+  
   {{{
     # M: Model
-    population <- declare_population(
-      N = N,
-      sensitive_trait = draw_binary(prob = prevalence_rate, N = N),
-      withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
-      direct_answer =  sensitive_trait - withholder
-    )
+    population <- eval_bare(population_expr)
+    
     potential_outcomes <- declare_potential_outcomes(
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
@@ -55,21 +80,12 @@ randomized_response_designer <- function(N = 1000,
     estimand <- declare_estimand(true_rate = mean(sensitive_trait))
     
     # D: Data Strategy
-
-        assignment <- declare_assignment(
-      prob = prob_forced_yes,
-      conditions = c("Truth","Yes")
-    )
+    
+    assignment <- eval_bare(assignment_expr)
     
     # A: Answer Strategy
-    estimator_randomized_response <- declare_estimator(
-      handler = tidy_estimator(
-        function(data) with(
-          data,
-          data.frame(estimate = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
-      estimand = estimand,
-      label = "Forced Randomized Response"
-    )
+    estimator_randomized_response <- eval_bare(estimator_randomized_response_expr)
+    
     estimator_direct_question <- declare_estimator(
       handler = tidy_estimator(function(data) with(
         data,
@@ -86,25 +102,24 @@ randomized_response_designer <- function(N = 1000,
     randomized_response_design <- set_diagnosands(
       design = randomized_response_design,
       diagnosands = declare_diagnosands(select = bias)
-      )
-    
-    
-    design_code <- construct_design_code(designer = randomized_response_designer, 
-                                         args = match.call.defaults(), 
-                                         exclude_args = union(c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "design_name", "fixed"), fixed),
-                                         arguments_as_values = TRUE)
-    
-    
-    design_code <- gsub("randomized_response_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
-      
-    attr(randomized_response_design, "code") <- design_code
-    
-    randomized_response_design
+    )
     
   }}}
-  # attr(randomized_response_design, "code") <- 
-  #   construct_design_code(randomized_response_designer, match.call.defaults())
-  # randomized_response_design
+  
+  design_code <- construct_design_code(designer = randomized_response_designer, 
+                                       args = match.call.defaults(), 
+                                       exclude_args = union(c("design_name", "fixed"), fixed),
+                                       arguments_as_values = TRUE)
+  
+  design_code <- sub_expr_text(design_code, population_expr, assignment_expr, 
+                               estimator_randomized_response_expr)
+  
+  design_code <- gsub("randomized_response_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  
+  attr(randomized_response_design, "code") <- design_code
+  
+  randomized_response_design
+
 }
 attr(randomized_response_designer,"definitions") <- data.frame(
   names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "fixed"),
