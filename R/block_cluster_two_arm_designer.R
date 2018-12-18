@@ -131,7 +131,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
       i = add_level(
         N = N_i_in_cluster,
         u_0 = rnorm(N) * sd_i_0,
-        u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)) * sd_i_1)
+        u_1 = rnorm(n = N, mean = rho * scale(u_0), sd = sqrt(1 - rho^2)) * sd_i_1)
     )
     
     potential_outcomes <- declare_potential_outcomes(
