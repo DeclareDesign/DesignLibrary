@@ -126,7 +126,10 @@ test_that(desc = "two_arm_designer errors when it should",
 test_that(desc = "mediation_analysis_designer errors when it should",
           code = {
             expect_error(mediation_analysis_designer(rho = 10))
+            expect_error(mediation_analysis_designer(mediation_package = "true"))
           })
+
+
 
 test_that(desc = "spillover_designer errors when it should",
           code = {
