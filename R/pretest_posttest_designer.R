@@ -42,7 +42,7 @@ pretest_posttest_designer <- function(N = 100,
     population <- declare_population(
       N    = N,
       u_t1 = rnorm(N)*sd_1,
-      u_t2 = rnorm(N, rho * u_t1, sqrt(1 - rho^2))*sd_2,
+      u_t2 = rnorm(N, rho * scale(u_t1), sqrt(1 - rho^2))*sd_2,
       Y_t1 = u_t1
     )
     
