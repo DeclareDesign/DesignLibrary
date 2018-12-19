@@ -4,29 +4,31 @@
 \alias{mediation_analysis_designer}
 \title{Create a design for mediation analysis}
 \usage{
-mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
-  d = 0.5, rho = 0)
+mediation_analysis_designer(N = 200, Z_on_M = 1, M_on_Y_Z0 = 0.4,
+  M_on_Y_Z1 = 0, Z_on_Y_M0 = 0.5, rho = 0,
+  mediation_package = FALSE)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
 
-\item{a}{A number. Parameter governing effect of treatment (Z) on mediator (M).}
+\item{Z_on_M}{A number. Parameter governing effect of treatment (Z) on mediator (M).}
 
-\item{b}{A number. Effect of mediator (M) on outcome (Y) when Z = 0.}
+\item{M_on_Y_Z0}{A number. Effect of mediator (M) on outcome (Y) when Z = 0.}
 
-\item{c}{A number. Interaction between mediator (M) and (Z) for outcome (Y).}
+\item{M_on_Y_Z1}{A number. Interaction between mediator (M) and (Z) for outcome (Y).}
 
-\item{d}{A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.}
+\item{Z_on_Y_M0}{A number. Effect of treatment (Z) on outcome (Y), when M = 0.}
 
 \item{rho}{A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.}
+
+\item{mediation_package}{A logical value. If 'TRUE' direct and indirect effects are estimated using \code{mediate} function from \code{mediation} package. Default is 'FALSE'.}
 }
 \value{
 A mediation analysis design.
 }
 \description{
-A mediation analysis design that examines the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on outcome (Y) (given Z=0) 
-as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis is implemented using an interacted regression model. 
-Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
+A mediation analysis design that examines the effect of (Z) on mediator (M), the natural and controlled direct effect of treatment (Z) on outcome (Y) as well as the natural and controlled indirect effect of treatment (Z) on outcome (Y) through mediator (M).
+Analysis is implemented using a set of two linear structural models: a first stage model and a interacted model. Note estimates are not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
 }
 \details{
 See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vignette online}.
@@ -34,17 +36,18 @@ See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vi
 \examples{
 # Generate a mediation analysis design using default arguments:
 mediation_1 <- mediation_analysis_designer()
-draw_estimands(mediation_1)
+get_estimands(mediation_1)
 \dontrun{
 diagnose_design(mediation_1, sims = 1000)
 }
 
 # A design with a violation of sequential ignorability and heterogeneous effects:
-mediation_2 <- mediation_analysis_designer(a = 1, rho = .5, c = 1, d = .75)
-draw_estimands(mediation_2)
+mediation_2 <- mediation_analysis_designer(Z_on_M =1, rho = .5, M_on_Y_Z1 = 1, Z_on_Y_M0  =.75)
+get_estimands(mediation_2)
 \dontrun{
 diagnose_design(mediation_2, sims = 1000)
 }
+
 
 }
 \author{

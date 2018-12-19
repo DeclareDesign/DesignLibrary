@@ -92,11 +92,11 @@ In R, you can generate a mediation_analysis design using the template function `
 library(DesignLibrary)
 ```
 
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_mediation_analysis_design` with `N`, `a`, `b`, `d` and `rho` set to 500, .2, .4, .2, and .15, respectively, by running the lines below.
+We can then create specific designs by defining values for each argument. For example, we create a design called `my_mediation_analysis_design` with `N`, `Z_on_M `, `M_on_Y_Z0`, `M_on_Y_Z1` and `rho` set to 500, .2, .4, .2, and .15, respectively, by running the lines below.
 
 ```{r, eval=FALSE}
 mediation_analysis_design <- mediation_analysis_designer(
-  N = 500, a = .2, b = .4, d = .2, rho = .15)
+  N = 500, Z_on_M  = .2, M_on_Y_Z0 = .4, M_on_Y_Z1 = .2, rho = .15)
 ```
 
 You can see more details on the `mediation_analysis_designer()` function and its arguments by running the following line of code:

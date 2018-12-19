@@ -98,20 +98,18 @@ mediation_analysis_designer <- function(N = 200,
     
     # A: Answer Strategy
     
-    mediation_analysis_expr <-  rlang::expr(
-      
-      # QBA: Quasi-Bayesian Approximation
-      mediation_analysis <- function(data){
+
+    
+    
+     mediate_estimator_expr <-  rlang::expr(
+       mediate_estimator <- declare_estimator(handler = function(data){
+        
+        # QBA: Quasi-Bayesian Approximation
         e1 <- lm(M ~ Z, data = data)
         e2 <- lm(Y ~ M + Z + M:Z, data = data)
-        m  <- mediation::mediate(e1, e2, sims = 50, treat = "Z", mediator = "M")
-        out <- broom::tidy(m, conf.int = TRUE)
-        out
-      })
-    
-    mediate_estimator_expr <-  rlang::expr(
-      mediate_estimator <- declare_estimator(handler = function(data){
-        estimates <-   mediation_analysis(data)
+        m  <- mediate(e1, e2, sims = 100, treat = "Z", mediator = "M")
+        
+        estimates <-   tidy(m, conf.int = TRUE)
         estimates <-  rbind(estimates, estimates)
         estimates$estimator_label <-  rep(c("qba - indirect_0", "qba - indirect_1", "qba - direct_0", "qba - direct_1") , 2)
         estimates$estimand_label <- c("natural_indirect_0", "natural_indirect_1", "natural_direct_0", "natural_direct_1",
@@ -120,7 +118,8 @@ mediation_analysis_designer <- function(N = 200,
         estimates$term <- rep(c("indirect_0", "indirect_1", "direct_0", "direct_1"), 2)
         as.data.frame(estimates)
       },
-      label = "mediate"))
+                                             label = "mediate")
+     )
     
     # Design
     mediation_design_expr <-  rlang::expr(
@@ -202,13 +201,13 @@ mediation_analysis_designer <- function(N = 200,
       estimand = c("natural_direct_1", "controlled_direct_1")
     )
     
-    rlang::eval_bare(mediation_analysis_expr)
+    
     rlang::eval_bare(mediate_estimator_expr)
     
     # Design
     
     mediation_analysis_design <- rlang::eval_bare(mediation_design_expr)
-    mediation_analysis_design
+
     
   }}}
   
