@@ -47,7 +47,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     population <- declare_population(
       N = N, 
       e1 = rnorm(N),
-      e2 = rnorm(n = N, mean = rho * e1, sd = 1 - rho^2)
+      e2 = rnorm(n = N, mean = rho * e1, sd = sqrt(1 - rho^2))
     )
     POs_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
     POs_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
