@@ -6,7 +6,8 @@
 \usage{
 factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
   sd = 1, outcome_sds = rep(sd, 2^k), assignment_probs = rep(0.5, k),
-  outcome_name = "Y", treatment_names = NULL, fixed = NULL)
+  outcome_name = "Y", treatment_names = NULL,
+  design_name = "factorial_design", fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -24,6 +25,8 @@ factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
 \item{outcome_name}{A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing.}
 
 \item{treatment_names}{A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
 
 \item{fixed}{A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.}
 }

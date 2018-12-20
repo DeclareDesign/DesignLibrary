@@ -6,7 +6,8 @@
 \usage{
 multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
   m_arms), sd_i = 1, outcome_sds = rep(0, m_arms),
-  conditions = 1:m_arms, fixed = NULL)
+  conditions = as.character(1:m_arms),
+  design_name = "multi_arm_design", fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -19,7 +20,7 @@ multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
 
 \item{outcome_sds}{A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.}
 
-\item{conditions}{A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces).}
+\item{conditions}{A character vector of length \code{m_arms}. The names of each arm. Must not contain blank spaces.}
 
 \item{fixed}{A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.}
 }
