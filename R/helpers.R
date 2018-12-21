@@ -152,6 +152,15 @@ sub_expr_text <- function(code, ...){
   code
 }
 
+#' Substitute text from expressions in design code
+#' @importFrom rlang get_expr quo_text list2 quos
+#' @param argument_names Names of arguments that can be fixed in designer.
+fixed_expr <- function(argument_names){
+  txt1 <- paste0(argument_names, "_ <- ", argument_names, collapse = ";")
+  txt2 <- paste0("if(!\"", argument_names, "\" %in% fixed) ", argument_names, "_ <- expr(", argument_names, ")", collapse = ";")
+  return(c(txt1, txt2))
+}
+
 #' Clean code for method substitute
 #' @param code A string. Design code
 #' @return clean code 
