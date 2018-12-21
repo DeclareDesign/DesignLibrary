@@ -14,6 +14,8 @@
 #' @param c A number. Interaction between mediator (M) and (Z) for outcome (Y).
 #' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
 #' @param rho A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A mediation analysis design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -22,6 +24,7 @@
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
+#' @importFrom rlang eval_bare expr
 #' @export
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
@@ -38,26 +41,45 @@
 #' diagnose_design(mediation_2, sims = 1000)
 #' }
 #'
-mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0)
+mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, 
+                                        rho = 0, design_name = "mediation_analysis_design",
+                                        fixed = NULL)
 {
   
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N", "a", "b", "c", "d", "rho"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(declare_population(
+    N = !!N_, 
+    e1 = rnorm(!!N_),
+    e2 = rnorm(n = !!N_, mean = !!rho_ * e1, sd = sqrt(1 - rho^2))))
+    
+  POs_M_expr <- expr(declare_potential_outcomes(M ~ 1*(!!a_ * Z + e1 > 0)))
+  
+  POs_Y_expr <- expr(declare_potential_outcomes(Y ~ !!d_ * Z + !!b_ * M + !!c_ * M * Z + e2,
+                                           conditions = list(M = 0:1, Z = 0:1)))
+  POs_Y_nat_0_expr <- expr(declare_potential_outcomes(
+    Y_nat0_Z_0 = !!b_ * M_Z_0 + e2,
+    Y_nat0_Z_1 = !!d_ + !!b_ * M_Z_0 + !!c_ * M_Z_0 + e2))
+  
+  POs_Y_nat_1_expr <- expr(declare_potential_outcomes(
+    Y_nat1_Z_0 = !!b_ * M_Z_1 + e2,
+    Y_nat1_Z_1 = !!d_ + !!b_ * M_Z_1 + !!c_ * M_Z_1 + e2))
+  
   {{{
     # M: Model
-    population <- declare_population(
-      N = N, 
-      e1 = rnorm(N),
-      e2 = rnorm(n = N, mean = rho * e1, sd = sqrt(1 - rho^2))
-    )
-    POs_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
-    POs_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
-                                        conditions = list(M = 0:1, Z = 0:1))
-    POs_Y_nat_0 <- declare_potential_outcomes(
-      Y_nat0_Z_0 = b * M_Z_0 + e2,
-      Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
-    POs_Y_nat_1 <- declare_potential_outcomes(
-      Y_nat1_Z_0 = b * M_Z_1 + e2,
-      Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
+    population <- eval_bare(population_expr)
+
+    POs_M <- eval_bare(POs_M_expr)
+    POs_Y <- eval_bare(POs_Y_expr)
+    POs_Y_nat_0 <- eval_bare(POs_Y_nat_0_expr)
+    POs_Y_nat_1 <- eval_bare(POs_Y_nat_1_expr)
     
     # I: Inquiry
     estimands <- declare_estimands(
@@ -113,11 +135,26 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       mediator_regression + stage2_1 + stage2_2 + stage2_3
     
   }}}
-  attr(mediation_analysis_design, "code") <- 
-    construct_design_code(mediation_analysis_designer, match.call.defaults())
+  
+  design_code <- construct_design_code(mediation_analysis_designer, match.call.defaults(),
+                                       exclude_args = union(c("design_name", "fixed"), fixed),
+                                       arguments_as_values = TRUE)
+  
+  design_code <- sub_expr_text(design_code, population_expr, POs_M_expr, POs_Y_expr,
+                               POs_Y_nat_0_expr, POs_Y_nat_1_expr)
+  design_code <- gsub("mediation_analysis_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  
+  attr(mediation_analysis_design, "code") <- design_code
   
   mediation_analysis_design
 }
+
+attr(mediation_analysis_designer,"definitions") <- data.frame(
+  names = c("N",  "a",  "b",  "c",  "d",  "rho", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 5), rep("character", 2)),
+  min = c(1, rep(-Inf, 4), -1, NA, NA),
+  max = c(1, rep(Inf, 4), 1, NA, NA)
+)
 
 attr(mediation_analysis_designer,"shiny_arguments") <- list(
   N = c(100, 50, 1000),

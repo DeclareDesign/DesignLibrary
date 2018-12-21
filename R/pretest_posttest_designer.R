@@ -13,6 +13,8 @@
 #' @param sd_2 Nonnegative number. Standard deviation of period 2 shocks.
 #' @param rho A number in [-1,1]. Correlation in outcomes between pre- and post-test.
 #' @param attrition_rate A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{design_name} is always fixed.
 #' @return A pretest-posttest design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -32,29 +34,41 @@ pretest_posttest_designer <- function(N = 100,
                                       sd_1 = 1,
                                       sd_2 = 1,
                                       rho = .5,
-                                      attrition_rate = .1)
+                                      attrition_rate = .1, 
+                                      design_name = "pretest_posttest_design",
+                                      fixed = NULL)
 {
   if(rho < -1 || rho > 1) stop("'rho' must be a value in [-1, 1]")
   if(any(sd_1 < 0, sd_2 < 0)) stop("'sd_1' and 'sd_2' must be nonnegative")
   if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be in [0,1]")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N", "ate", "sd_1", "sd_2", "rho", "attrition_rate"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(declare_population(
+    N    = !!N_,
+    u_t1 = rnorm(!!N_)*!!sd_1_,
+    u_t2 = rnorm(!!N_, rho * scale(u_t1), sqrt(1 - (!!rho)^2))*!!sd_2_,
+    Y_t1 = u_t1
+  ))
+  potential_outcomes_expr <- expr(declare_potential_outcomes(Y_t2 ~ u_t2 + !!ate_ * Z))
+  report_expr <- expr(declare_assignment(prob = 1 - !!attrition_rate_,
+                                         assignment_variable = R))
   {{{
     # M: Model
-    population <- declare_population(
-      N    = N,
-      u_t1 = rnorm(N)*sd_1,
-      u_t2 = rnorm(N, rho * scale(u_t1), sqrt(1 - rho^2))*sd_2,
-      Y_t1 = u_t1
-    )
-    
-    potential_outcomes <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
+    population <- eval_bare(population_expr)
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
     
     # D: Data Strategy
     assignment <- declare_assignment()
-    report     <- declare_assignment(prob = 1 - attrition_rate,
-                                     assignment_variable = R)
+    report     <- eval_bare(report_expr)
     reveal_t2 <- declare_reveal(Y_t2) 
     manipulation <- declare_step(difference = (Y_t2 - Y_t1), handler = fabricate)  
     
@@ -85,11 +99,21 @@ pretest_posttest_designer <- function(N = 100,
       pretest_lhs + pretest_rhs + posttest_only
   }}}
   
-  attr(pretest_posttest_design, "code") <- 
-    construct_design_code(pretest_posttest_designer, match.call.defaults())
-  
+  design_code <- construct_design_code(pretest_posttest_designer, match.call.defaults(),
+                                       arguments_as_values = TRUE,
+                                       exclude_args = union(c("fixed", "design_name"), fixed))
+  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr,
+                               report_expr)
+  design_code <- gsub("pretest_posttest_design <-", paste0(design_name, " <-"), design_code)
+  attr(pretest_posttest_design, "code") <- design_code
   pretest_posttest_design
 }
+attr(pretest_posttest_designer, "definitions") <- data.frame(
+  names = c("N",  "ate",  "sd_1",  "sd_2",  "rho",  "attrition_rate", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 5), rep("character", 2)),
+  min = c(2, -Inf, 0, 0, -1, 0, NA, NA),
+  max = c(Inf, Inf, Inf, Inf, 1, 1, NA, NA)
+)
 attr(pretest_posttest_designer, "shiny_arguments") <- list(
   N = c(100, 50, 1000),
   ate = c(.25,0,.5),

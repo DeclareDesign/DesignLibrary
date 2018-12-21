@@ -5,7 +5,8 @@
 \title{Create a pretest-posttest design}
 \usage{
 pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
-  rho = 0.5, attrition_rate = 0.1)
+  rho = 0.5, attrition_rate = 0.1,
+  design_name = "pretest_posttest_design", fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -19,6 +20,10 @@ pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
 \item{rho}{A number in [-1,1]. Correlation in outcomes between pre- and post-test.}
 
 \item{attrition_rate}{A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design. \code{design_name} is always fixed.}
 }
 \value{
 A pretest-posttest design.

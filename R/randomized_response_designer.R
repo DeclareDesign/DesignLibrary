@@ -39,17 +39,13 @@ randomized_response_designer <- function(N = 1000,
   fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
-  N_ <- N; prob_forced_yes_ <- prob_forced_yes; prevalence_rate_ <- prevalence_rate; withholding_rate_ <- withholding_rate
-  
-  if(!"N" %in% fixed) N_ <- expr(N)
-  if(!"prob_forced_yes" %in% fixed) prob_forced_yes_ <- expr(prob_forced_yes)
-  if(!"prevalence_rate" %in% fixed) prevalence_rate_ <- expr(prevalence_rate)
-  if(!"withholding_rate" %in% fixed) withholding_rate_ <- expr(withholding_rate)
+  fixed_txt <- fixed_expr(c("N","prob_forced_yes","prevalence_rate","withholding_rate"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
   
   population_expr <- expr(declare_population(
     N = !!N_,
-    sensitive_trait = draw_binary(prob = !!prevalence_rate_, N = N),
-    withholder = draw_binary(prob = sensitive_trait * !!withholding_rate_, N = N),
+    sensitive_trait = draw_binary(prob = !!prevalence_rate_, N = !!N_),
+    withholder = draw_binary(prob = sensitive_trait * !!withholding_rate_, N = !!N_),
     direct_answer =  sensitive_trait - withholder
   ))
   

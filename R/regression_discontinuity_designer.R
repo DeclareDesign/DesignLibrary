@@ -6,12 +6,14 @@
 #' 
 #' @param N An integer. Size of population to sample from.
 #' @param tau A number. Difference in potential outcomes functions at the threshold.
-#' @param outcome_sd A positive number. The standard deviation of the outcome.
+#' @param outcome_sd A nonnegative number. The standard deviation of the outcome.
 #' @param cutoff A number in (0,1). Threshold on running variable beyond which units are treated.
 #' @param bandwidth A number. The value of the bandwidth on both sides of the threshold from which to include units.
 #' @param control_coefs A vector of numbers. Coefficients for polynomial regression function that generates control potential outcomes. Order of polynomial is equal to length.
 #' @param treatment_coefs A vector of numbers. Coefficients for polynomial regression function that generates treatment potential outcomes. Order of polynomial is equal to length.
 #' @param poly_reg_order Integer greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{design_name}, \code{label_E1}, and \code{label_E2} are always fixed.
 #' @return A regression discontinuity design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
@@ -35,7 +37,9 @@ regression_discontinuity_designer <- function(
   bandwidth = .5,
   control_coefs = c(.5,.5),
   treatment_coefs = c(-5,1),
-  poly_reg_order = 4
+  poly_reg_order = 4,
+  design_name = "regression_discontinuity_design",
+  fixed = NULL
 ){
   if(cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0,1).")
   if(poly_reg_order < 1) stop("poly_reg_order must be at least 1.")
@@ -43,17 +47,37 @@ regression_discontinuity_designer <- function(
   if(length(control_coefs) < 1) stop("control_coefs must be a numeric vector of length > 0.")
   if(length(treatment_coefs) < 1) stop("treatment_coefs must be a numeric vector of length > 0.")
   if(outcome_sd < 0) stop("outcome_sd must be positive.")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N","tau","outcome_sd","cutoff","bandwidth",
+                            "control_coefs","treatment_coefs","poly_reg_order"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  control_expr <- expr(function(X) {
+    as.vector(poly(X, length(!!control_coefs_), raw = T) %*% !!control_coefs_)})
+  treatment_expr <- expr(function(X) {
+    as.vector(poly(X, length(!!treatment_coefs_), raw = T) %*% treatment_coefs) + !!tau_})
+  
+  population_expr <- expr(declare_population(
+    N = !!N_,
+    X = runif(!!N_,0,1) - !!cutoff_,
+    noise = rnorm(!!N_,0,!!outcome_sd_),
+    Z = 1 * (X > 0)))
+  
+  estimator_expr <- expr(declare_estimator(
+    formula = Y ~ poly(X, !!poly_reg_order_) * Z,
+    model = lm_robust,
+    term = "Z",
+    estimand = estimand))
+  
   {{{
     # M: Model
-    control <- function(X) {
-      as.vector(poly(X, length(control_coefs), raw = T) %*% control_coefs)}
-    treatment <- function(X) {
-      as.vector(poly(X, length(treatment_coefs), raw = T) %*% treatment_coefs) + tau}
-    population <- declare_population(
-      N = N,
-      X = runif(N,0,1) - cutoff,
-      noise = rnorm(N,0,outcome_sd),
-      Z = 1 * (X > 0))
+    control <- eval_bare(control_expr)
+    treatment <- eval_bare(treatment_expr)
+    population <- eval_bare(population_expr)
     potential_outcomes <- declare_potential_outcomes(
       Y_Z_0 = control(X) + noise,
       Y_Z_1 = treatment(X) + noise)
@@ -67,22 +91,32 @@ regression_discontinuity_designer <- function(
       subset(data,(X > 0 - abs(bandwidth)) & X < 0 + abs(bandwidth))})
     
     # A: Answer Strategy 
-    estimator <- declare_estimator(
-      formula = Y ~ poly(X, poly_reg_order) * Z,
-      model = lm_robust,
-      term = "Z",
-      estimand = estimand)
+    estimator <- eval_bare(estimator_expr)
     
     # Design
     regression_discontinuity_design <- 
       population + potential_outcomes + estimand + reveal_Y + sampling + estimator
   }}}
   
-  attr(regression_discontinuity_design, "code") <- 
-    construct_design_code(regression_discontinuity_designer, match.call.defaults())
+  design_code <- construct_design_code(regression_discontinuity_designer, match.call.defaults(),
+                                       arguments_as_values = TRUE,
+                                       exclude_args = union(c("fixed", "design_name"), fixed))
+  
+  design_code <- sub_expr_text(design_code, control_expr, treatment_expr, 
+                               population_expr, estimator_expr)
+  design_code <- gsub("regression_discontinuity_design <-", paste0(design_name, " <-"), design_code)
+  attr(regression_discontinuity_design, "code") <- design_code
   
   regression_discontinuity_design
 }
+
+attr(regression_discontinuity_designer, "definitions") <- data.frame(
+  names = c("N","tau","outcome_sd","cutoff","bandwidth","control_coefs",
+            "treatment_coefs","poly_reg_order", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 6), "integer", "character", "character"),
+  min = c(2, -Inf, 0, 0, rep(-Inf, 4), NA, NA),
+  max = c(Inf, Inf, Inf, 1, rep(Inf, 4), NA, NA)
+)
 
 attr(regression_discontinuity_designer,"shiny_arguments") <-
   list(

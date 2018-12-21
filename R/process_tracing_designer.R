@@ -30,6 +30,8 @@
 #' @param cor_E1E2_not_H A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is not true. 
 #' @param label_E1 A string. Label for the first piece of evidence (e.g., "Smoking Gun").
 #' @param label_E2 A string. Label for the second piece of evidence (e.g., "Straw in the Wind").
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{design_name}, \code{label_E1}, and \code{label_E2} are always fixed.
 #' @return A process-tracing design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
@@ -80,7 +82,9 @@ process_tracing_designer <- function(
   cor_E1E2_H = 0,
   cor_E1E2_not_H = 0,
   label_E1 = "Smoking Gun",
-  label_E2 = "Straw in the Wind"
+  label_E2 = "Straw in the Wind",
+  design_name = "process_tracing_design",
+  fixed = NULL
 ){
   if(!is_integerish(N) || N < 1) stop("N must be a positive integer.")
   if(prob_X < 0 || prob_X > 1) stop("prob_X must be in [0,1].")
@@ -100,21 +104,52 @@ process_tracing_designer <- function(
   if(min(test_prob(p_E1_not_H, p_E2_not_H, cor_E1E2_not_H)) < 0) stop("Correlation coefficient not compatible with probabilities")
   if(!is_character(label_E1) || length(label_E1) > 1) stop("label_E1 must be a character of length 1.")
   if(!is_character(label_E2) || length(label_E2) > 1) stop("label_E2 must be a character of length 1.")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N", "prob_X", "process_proportions", "prior_H", 
+                            "p_E1_H", "p_E1_not_H", "p_E2_H", "p_E2_not_H", 
+                            "cor_E1E2_H", "cor_E1E2_not_H"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(declare_population(
+    N = !!N_,
+    causal_process = sample(
+      x = c('X_causes_Y', 'Y_regardless',
+            'X_causes_not_Y', 'not_Y_regardless'),
+      size = !!N_,
+      replace = TRUE,
+      prob = !!process_proportions_),
+    X = rbinom(!!N_, 1, !!prob_X_) == 1,
+    Y = (X & causal_process == "X_causes_Y") | # 1. X causes Y
+      (!X & causal_process == "X_causes_not_Y") | # 2. Not X causes Y
+      (causal_process == "Y_regardless") # 3. Y happens irrespective of X
+  ))
+  
+  joint_prob_H_expr <- expr(joint_prob(!!p_E1_H_, !!p_E2_H_, !!cor_E1E2_H_))
+  joint_prob_not_H_expr <- expr(joint_prob(!!p_E1_not_H_, !!p_E2_not_H_, !!cor_E1E2_not_H_))
+  
+  E1_only_estimator_expr <- expr(declare_estimator(
+    handler = tidy_estimator(E1_only),
+    label = !!label_E1,
+    estimand = estimand
+  ))
+  E2_only_estimator_expr <- expr(declare_estimator(
+    handler = tidy_estimator(E2_only),
+    label = !!label_E2,
+    estimand = estimand
+  ))
+  E1_and_E2_estimator_expr <- expr(declare_estimator(
+    handler = tidy_estimator(E1_and_E2),
+    label = paste(!!label_E1, "and", !!label_E2),
+    estimand = estimand
+  ))
+  
   {{{
     # M: Model
-    population <- declare_population(
-      N = N,
-      causal_process = sample(
-        x = c('X_causes_Y', 'Y_regardless',
-              'X_causes_not_Y', 'not_Y_regardless'),
-        size = N,
-        replace = TRUE,
-        prob = process_proportions),
-      X = rbinom(N, 1, prob_X) == 1,
-      Y = (X & causal_process == "X_causes_Y") | # 1. X causes Y
-        (!X & causal_process == "X_causes_not_Y") | # 2. Not X causes Y
-        (causal_process == "Y_regardless") # 3. Y happens irrespective of X
-    )
+    population <- eval_bare(population_expr)
     # D: Data Strategy 1
     select_case <- declare_sampling(
       strata = paste(X, Y),
@@ -131,8 +166,9 @@ process_tracing_designer <- function(
         p01 = p2 * (1 - p1) - r,
         p10 = p1 * (1 - p2) - r,
         p11 = p1 * p2 + r)}
-    joint_prob_H <- joint_prob(p_E1_H, p_E2_H, cor_E1E2_H)
-    joint_prob_not_H <- joint_prob(p_E1_not_H, p_E2_not_H, cor_E1E2_not_H)
+    
+    joint_prob_H <- eval_bare(joint_prob_H_expr)
+    joint_prob_not_H <- eval_bare(joint_prob_not_H_expr)
     
     trace_processes <- declare_step(
       test_results = sample(
@@ -187,21 +223,9 @@ process_tracing_designer <- function(
       label = "No tests (Prior)",
       estimand = estimand
     )
-    E1_only_estimator <- declare_estimator(
-      handler = tidy_estimator(E1_only),
-      label = label_E1,
-      estimand = estimand
-    )
-    E2_only_estimator <- declare_estimator(
-      handler = tidy_estimator(E2_only),
-      label = label_E2,
-      estimand = estimand
-    )
-    E1_and_E2_estimator <- declare_estimator(
-      handler = tidy_estimator(E1_and_E2),
-      label = paste(label_E1, "and", label_E2),
-      estimand = estimand
-    )
+    E1_only_estimator <- eval_bare(E1_only_estimator_expr)
+    E2_only_estimator <- eval_bare(E2_only_estimator_expr)
+    E1_and_E2_estimator <- eval_bare(E1_and_E2_estimator_expr)
     
     # Design
     process_tracing_design <-
@@ -212,9 +236,18 @@ process_tracing_designer <- function(
     
   }}}
   
-  attr(process_tracing_design, "code") <- 
-    construct_design_code(process_tracing_designer, match.call.defaults())
+  design_code <- construct_design_code(process_tracing_designer, 
+                                       match.call.defaults(),
+                                       arguments_as_values = TRUE,
+                                       exclude_args = union(c("label_E1", "label_E2", "fixed", "design_name"), fixed))
   
+  design_code <- sub_expr_text(design_code, population_expr, joint_prob_H_expr, 
+                               joint_prob_not_H_expr, E1_only_estimator_expr, 
+                               E2_only_estimator_expr, E1_and_E2_estimator_expr)
+  
+  design_code <- gsub("process_tracing_design <-", paste0(design_name, " <-"), design_code)
+  
+  attr(process_tracing_design, "code") <- design_code
   process_tracing_design <- set_diagnosands(
     process_tracing_design,
     diagnosands = declare_diagnosands(
@@ -228,6 +261,15 @@ process_tracing_designer <- function(
   
   process_tracing_design
 }
+
+attr(process_tracing_designer, "definitions") <- data.frame(
+  names = c("N",  "prob_X",  "process_proportions",  "prior_H",  "p_E1_H",  "p_E1_not_H",  
+            "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2",
+            "design_name", "fixed"),
+  class = c("integer", rep("numeric", 9), rep("character", 4)), 
+  min = c(6, rep(0, 7), -1, -1, rep(NA, 4)),
+  max = c(Inf, rep(1, 9), rep(NA, 4))
+)
 
 attr(process_tracing_designer,"shiny_arguments") <- list(
   prior_H = c(.25,.5),

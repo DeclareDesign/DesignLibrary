@@ -53,18 +53,9 @@ two_arm_designer <- function(N = 100,
   fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
-  N_ <- N; assignment_prob_ <- assignment_prob; control_mean_ <- control_mean
-  control_sd_ <- control_sd; ate_ <- ate; treatment_mean_ <- treatment_mean
-  treatment_sd_ <- treatment_sd; rho_ <- rho
-  
-  if(!"N" %in% fixed)  N_ <- expr(N)
-  if(!"assignment_prob" %in% fixed)  assignment_prob_ <- expr(assignment_prob)
-  if(!"control_mean" %in% fixed)  control_mean_ <- expr(control_mean)
-  if(!"control_sd" %in% fixed)  control_sd_ <- expr(control_sd)
-  if(!"ate" %in% fixed)  ate_ <- expr(ate)
-  if(!"treatment_mean" %in% fixed)  treatment_mean_ <- expr(treatment_mean)
-  if(!"treatment_sd" %in% fixed)  treatment_sd_ <- expr(treatment_sd)
-  if(!"rho" %in% fixed)  rho_ <- expr(rho)
+  fixed_txt <- fixed_expr(c("N","assignment_prob","control_mean","control_sd",
+                            "ate","treatment_mean","treatment_sd","rho"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
   
   population_expr <- expr(
     declare_population(

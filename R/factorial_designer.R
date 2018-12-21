@@ -9,8 +9,8 @@
 #' @param outcome_sds A non negative numeric vector of length \code{2^k}. Standard deviations for each of the treatment combinations. See `Details` for the correct order of values. 
 #' @param assignment_probs A numeric vector of length \code{k}. Independent probability of assignment to each treatment. 
 #' @param outcome_name A character. Name of outcome variable (defaults to "Y"). Must be provided without spacing.
-#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
 #' @param treatment_names A character vector of length \code{k}. Name of treatment factors variable (defaults to "T1", "T2", ..., "Tk"). Must be provided without spacing.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
 #' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.
 #' @return A factorial design.
 #' @details 
@@ -133,9 +133,7 @@ factorial_designer <- function(
   
   # fixed argument ----------------------------------------------------------
   
-  outcome_sds_ <- outcome_sds; outcome_means_ <- outcome_means; assignment_probs_ <- assignment_probs; N_ <- N; k_ <- k 
-  
-  if(is.null(fixed)) fixed <- ""
+  outcome_sds_ <- outcome_sds; outcome_means_ <- outcome_means; N_ <- N 
   if(!"outcome_sds"   %in% fixed)  outcome_sds_ <- sapply(1:length(outcome_sds), function(i) expr(outcome_sds[!!i])) 
   if(!"outcome_means" %in% fixed)  outcome_means_ <- sapply(1:length(outcome_means), function(i) expr(outcome_means[!!i])) 
   if(!"N" %in% fixed)  N_ <- expr(N)
@@ -157,7 +155,7 @@ factorial_designer <- function(
   assignment_given_factor <- sapply(1:length(cond_row), function(i) quos(as.numeric(!!Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
   
-  assignment_expr1 <- expr(declare_assignment(conditions = 1:(2^!!k_), prob_each = !!prob_each))
+  assignment_expr1 <- expr(declare_assignment(conditions = 1:(2^!!k), prob_each = !!prob_each))
   assignment_expr2 <- expr(declare_step(fabricate, !!!assignment_given_factor))
   
   # reveal outcomes ---------------------------------------------------------

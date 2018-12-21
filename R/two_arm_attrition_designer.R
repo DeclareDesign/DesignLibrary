@@ -19,6 +19,8 @@
 #' @param a_Y A number. Constant in equation relating treatment to outcome.
 #' @param b_Y A number. Slope coefficient in equation relating treatment to outcome.
 #' @param rho A number in [0,1]. Correlation between shocks in equations for R and Y.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{design_name}, \code{label_E1}, and \code{label_E2} are always fixed.
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
@@ -50,17 +52,32 @@ two_arm_attrition_designer <- function(N = 100,
                                        b_R = 1,
                                        a_Y = 0,
                                        b_Y = 1,
-                                       rho = 0
+                                       rho = 0,
+                                       design_name = "two_arm_attrition_design",
+                                       fixed = NULL
 ){
   if(rho < 0 || rho > 1) stop("rho must be in [0,1]")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N", "a_R",  "b_R",  "a_Y",  "b_Y",  "rho"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(declare_population(N   = !!N_, 
+                                             u_R = rnorm(!!N_), 
+                                             u_Y = rnorm(!!N_, mean = !!rho_ * u_R, 
+                                                         sd = sqrt(1 - (!!rho_)^2))))
+  potential_outcomes_R_expr <- expr(declare_potential_outcomes(R ~ (!!a_R_ + !!b_R_*Z > u_R)))
+  potential_outcomes_Y_expr <- expr(declare_potential_outcomes(Y ~ (!!a_Y_ + !!b_Y_*Z > u_Y)))
+  
   {{{
+    
     # M: Model
-    population   <- declare_population(N   = N, 
-                                       u_R = rnorm(N), 
-                                       u_Y = rnorm(N, mean = rho * u_R, 
-                                                   sd = sqrt(1 - rho^2)))
-    potential_outcomes_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
-    potential_outcomes_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
+    population   <- eval_bare(population_expr)
+    potential_outcomes_R <- eval_bare(potential_outcomes_R_expr)
+    potential_outcomes_Y <- eval_bare(potential_outcomes_Y_expr)
     
     # I: Inquiry
     estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
@@ -91,11 +108,25 @@ two_arm_attrition_designer <- function(N = 100,
       estimator_1 + estimator_2 + estimator_3
   }}}
   
-  attr(two_arm_attrition_design, "code") <- 
-    construct_design_code(two_arm_attrition_designer, match.call.defaults())
+  design_code <- construct_design_code(two_arm_attrition_designer, match.call.defaults(),
+                                       arguments_as_values = TRUE,
+                                       exclude_args = union(c("fixed", "design_name"), fixed))
+  
+  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_R_expr,
+                               potential_outcomes_Y_expr)
+  
+  design_code <- gsub("two_arm_attrition_design <-", paste0(design_name, " <-"), design_code)
+  attr(two_arm_attrition_design, "code") <- design_code
   
   two_arm_attrition_design
 }
+
+attr(two_arm_attrition_designer, "definitions") <- data.frame(
+  names = c("N",  "a_R",  "b_R",  "a_Y",  "b_Y",  "rho", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 5), rep("character", 2)),
+  min = c(6, rep(-Inf, 4), 0, NA, NA),
+  max = c(rep(Inf, 5), 1, NA, NA)
+)
 
 attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample",
                                               b_R = "How reporting is related to treatment", 

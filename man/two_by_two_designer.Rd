@@ -9,7 +9,8 @@ two_by_two_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
   weight_A = 0.5, weight_B = 0.5, outcome_means = rep(0, 4),
   mean_A0B0 = outcome_means[1], mean_A0B1 = outcome_means[2],
   mean_A1B0 = outcome_means[3], mean_A1B1 = outcome_means[4],
-  sd_i = 1, outcome_sds = rep(0, 4))
+  sd_i = 1, outcome_sds = rep(0, 4),
+  design_name = "two_by_two_design", fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -35,6 +36,10 @@ two_by_two_designer(N = 100, prob_A = 0.5, prob_B = 0.5,
 \item{sd_i}{A nonnegative scalar. Standard deviation of individual-level shock (common across arms).}
 
 \item{outcome_sds}{A nonnegative vector of length 4. Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.}
 }
 \value{
 A two-by-two factorial design.

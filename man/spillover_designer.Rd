@@ -6,7 +6,7 @@
 \title{Create a design with spillovers}
 \usage{
 spillover_designer(N_groups = 80, N_i_group = 3, sd_i = 0.2,
-  gamma = 2)
+  gamma = 2, design_name = "spillover_design", fixed = NULL)
 }
 \arguments{
 \item{N_groups}{An integer. Number of groups.}
@@ -16,6 +16,10 @@ spillover_designer(N_groups = 80, N_i_group = 3, sd_i = 0.2,
 \item{sd_i}{A nonnegative number. Standard deviation of individual-level shock.}
 
 \item{gamma}{A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design. \code{design_name} is always fixed.}
 }
 \value{
 A simple spillover design.

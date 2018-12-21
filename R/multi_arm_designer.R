@@ -46,9 +46,7 @@ multi_arm_designer <- function(N = 30,
                                conditions = as.character(1:m_arms),
                                design_name = "multi_arm_design",
                                fixed = NULL) {
-  outcome_sds_ <- outcome_sds 
-  outcome_means_ <- outcome_means
-  N_ <- N; sd_i_ <- sd_i
+
   if (m_arms <= 1 || round(m_arms) != m_arms)
     stop("m_arms should be an integer greater than one.")
   if (length(outcome_means) != m_arms ||
@@ -63,6 +61,7 @@ multi_arm_designer <- function(N = 30,
   fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
+  outcome_sds_ <- outcome_sds; outcome_means_ <- outcome_means; N_ <- N; sd_i_ <- sd_i
   if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
   if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
   if (!"N" %in% fixed) N_ <- expr(N)

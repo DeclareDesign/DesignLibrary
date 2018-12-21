@@ -92,25 +92,16 @@ binary_iv_designer <- function(N = 100,
   fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
-  if(!"N" %in% fixed) N_ <- expr(N)
-  if(!"type_probs" %in% fixed) type_probs_ <- expr(type_probs)
-  if(!"assignment_probs" %in% fixed) assignment_probs_ <- expr(assignment_probs)
-  if(!"outcome_sd" %in% fixed) outcome_sd_ <- expr(outcome_sd)
-  if(!"a" %in% fixed) a_ <- expr(a)
-  if(!"b" %in% fixed) b_ <- expr(b)
-  if(!"d" %in% fixed) d_ <- expr(d)
-  
-  N_ <- N; assignment_probs_ <- assignment_probs; a_Y_ <- a_Y 
-  b_Y_ <- b_Y; d_Y_ <- d_Y; outcome_sd_ <- outcome_sd
-  a_ <- a; b_ <- b; d_ <- d
-  
+  fixed_txt <- fixed_expr(c("N","type_probs","assignment_probs", "outcome_sd",
+                            "a","b","d"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
   type <- sym("type")
   
   population_args <- exprs(N = !!N_,
-                           type = sample(1:4, N, replace = TRUE, prob = !!type_probs_),
+                           type = sample(1:4, !!N_, replace = TRUE, prob = !!type_probs_),
                            type_label = c("Always", "Never", "Complier", "Defier")[type],
-                           u_Z = runif(N),
-                           u_Y = rnorm(N) * !!outcome_sd_,
+                           u_Z = runif(!!N_),
+                           u_Y = rnorm(!!N_) * !!outcome_sd_,
                            !!instrument_name := (u_Z < (!!(assignment_probs_))[type]),
                            !!treatment_name := (type == 1) + (type == 3) * !!sym(instrument_name) + (type == 4) * (1 - !!sym(instrument_name)))
   
@@ -119,7 +110,7 @@ binary_iv_designer <- function(N = 100,
   ))
   
   potentials_expr <- expr(declare_potential_outcomes(
-    !!sym(outcome_name) ~ a[type] + b[type] * !!sym(treatment_name) + d[type] * !!sym(instrument_name) + u_Y,
+    !!sym(outcome_name) ~ (!!a)[type] + (!!b)[type] * !!sym(treatment_name) + (!!d)[type] * !!sym(instrument_name) + u_Y,
     assignment_variables = !!treatment_name))
   
   reveal_expr <- expr(declare_reveal(outcome_variables = !!outcome_name,

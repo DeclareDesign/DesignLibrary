@@ -30,6 +30,8 @@
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
 #' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{design_name}, \code{label_E1}, and \code{label_E2} are always fixed.
 #' @param verbose Logical. If TRUE, prints intra-cluster correlation implied by design parameters.
 #' @return A block cluster two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -70,6 +72,8 @@ block_cluster_two_arm_designer <- function(N = NULL,
                                            control_mean = 0,
                                            ate = 0,
                                            treatment_mean = control_mean + ate,
+                                           design_name = "block_cluster_two_arm_design",
+                                           fixed = NULL,
                                            verbose = TRUE
 ){  
   
@@ -112,37 +116,55 @@ block_cluster_two_arm_designer <- function(N = NULL,
       }
     }
   }
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   if(verbose) print(paste0("The implied ICC in (control) is ", round(1- sd_i_0^2/(sd_i_0^2 + sd_block^2 + sd_cluster^2), 3)))
   if(verbose) print(paste0("The implied ICC in (control) conditional on block is  ", round(1- sd_i_0^2/(sd_i_0^2 + sd_cluster^2), 3)))
   if(verbose & abs(sd^2 - sd_block^2 - sd_cluster^2 - sd_i_0^2)>.0001) print(
                     paste0("Overall sd is ", 
                     round((sum(sd_block^2 + sd_cluster^2 + sd_i_0^2))^.5, 3),  
                     ", which differs from overall specified sd of ", round(sd, 3)))
-    {{{    
-    # M: Model
-    population <- declare_population(
-      blocks = add_level(
-        N = N_blocks,
-        u_b = rnorm(N) * sd_block),
-      clusters = add_level(
-        N = N_clusters_in_block,
-        u_c = rnorm(N) * sd_cluster,
-        cluster_size = N_i_in_cluster),
-      i = add_level(
-        N = N_i_in_cluster,
-        u_0 = rnorm(N) * sd_i_0,
-        u_1 = rnorm(n = N, mean = rho * scale(u_0), sd = sqrt(1 - rho^2)) * sd_i_1)
-    )
     
-    potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1 - Z) * (control_mean + u_0 + u_b + u_c) + 
-        Z * (treatment_mean + u_1 + u_b + u_c) )
+  fixed_txt <- fixed_expr(c("N",  "N_blocks",  "N_clusters_in_block",  "N_i_in_cluster",  
+                            "sd",  "sd_block",  "sd_cluster",  "sd_i_0",  "sd_i_1",  
+                            "rho",  "assignment_probs",  "control_mean",
+                            "ate",  "treatment_mean"))
+  
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(declare_population(
+    blocks = add_level(
+      N = !!N_blocks_,
+      u_b = rnorm(N) * !!sd_block_),
+    clusters = add_level(
+      N = !!N_clusters_in_block_,
+      u_c = rnorm(N) * !!sd_cluster_,
+      cluster_size = !!N_i_in_cluster_),
+    i = add_level(
+      N = !!N_i_in_cluster_,
+      u_0 = rnorm(N) * !!sd_i_0_,
+      u_1 = rnorm(n = N, mean = !!rho_ * scale(u_0), sd = sqrt(1 - (!!rho)^2)) * !!sd_i_1_)
+  ))
+  
+  potential_outcomes_expr <- expr(declare_potential_outcomes(
+    Y ~ (1 - Z) * (!!control_mean_ + u_0 + u_b + u_c) + 
+      Z * (!!treatment_mean_ + u_1 + u_b + u_c)))
+  
+  assignment_expr <- expr(declare_assignment(block_prob = !!assignment_probs_,
+                                             blocks = blocks, clusters = clusters))
+  {{{    
+    # M: Model
+    population <- eval_bare(population_expr)
+    
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
     # I: Inquiry
     estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(block_prob = assignment_probs, blocks = blocks, clusters = clusters)
+    assignment <- eval_bare(assignment_expr)
     reveal <- declare_reveal(Y, Z)
     
     # A: Answer Strategy
@@ -159,14 +181,25 @@ block_cluster_two_arm_designer <- function(N = NULL,
       reveal + estimator
   }}}
   
-  attr(block_cluster_two_arm_design, "code") <- 
-    construct_design_code(block_cluster_two_arm_designer, match.call.defaults(),
-                          exclude_args = c("ate", "sd", "N"),
-                          arguments_as_values = TRUE)
+  design_code <- construct_design_code(block_cluster_two_arm_designer, match.call.defaults(),
+                                       exclude_args = union(c("ate", "sd", "N", "design_name", 
+                                                              "fixed", "verbose"), fixed),
+                                       arguments_as_values = TRUE)
+  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr, assignment_expr)
+  design_code <- gsub("block_cluster_two_arm_design <-", paste0(design_name, " <-"), design_code)
   
+  attr(block_cluster_two_arm_design, "code") <- design_code
   block_cluster_two_arm_design
-  
 }
+
+attr(block_cluster_two_arm_designer, "shiny_arguments") <- data.frame(
+  names = c("N","N_blocks","N_clusters_in_block","N_i_in_cluster","sd","sd_block",
+            "sd_cluster","sd_i_0","sd_i_1","rho","assignment_probs","control_mean",
+            "ate","treatment_mean","design_name","fixed","verbose"),
+  class = c(rep("integer", 4), rep("numeric", 10), rep("character", 2), "logical"),
+  min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA, NA, NA),
+  max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA, NA, NA)
+)
 
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-
   list(

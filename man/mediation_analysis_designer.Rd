@@ -5,7 +5,8 @@
 \title{Create a design for mediation analysis}
 \usage{
 mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
-  d = 0.5, rho = 0)
+  d = 0.5, rho = 0, design_name = "mediation_analysis_design",
+  fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -19,6 +20,10 @@ mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
 \item{d}{A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.}
 
 \item{rho}{A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design.}
 }
 \value{
 A mediation analysis design.

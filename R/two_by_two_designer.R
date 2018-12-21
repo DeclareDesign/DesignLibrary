@@ -24,6 +24,8 @@
 #' @param mean_A1B1 A number. Mean outcome in A=1, B=1 condition.
 #' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative vector of length 4. Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. By default \code{k}, \code{probs}, \code{outcome_name}, and \code{treatment_names} are always fixed.
 #' @aliases simple_factorial_designer
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -70,39 +72,63 @@ two_by_two_designer <- function(N = 100,
                                 mean_A1B0 = outcome_means[3],
                                 mean_A1B1 = outcome_means[4],
                                 sd_i = 1,
-                                outcome_sds = rep(0,4)
+                                outcome_sds = rep(0,4),
+                                design_name = "two_by_two_design",
+                                fixed = NULL
 ){
   if((weight_A < 0) || (weight_B < 0) || (weight_A > 1) || (weight_B > 1)) stop("weight_A and weight_B must be in [0,1]")
   if(max(c(sd_i, outcome_sds) < 0) )      stop("sd_i and outcome_sds must be nonnegative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob_ arguments must be nonnegative")
   if(max(c(prob_A, prob_B) > 1))  stop("prob_ arguments must not exceed 1")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N","prob_A","prob_B","weight_A","weight_B",
+                            "mean_A0B0","mean_A0B1","mean_A1B0","mean_A1B1",
+                            "sd_i","outcome_sds"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(declare_population(!!N_, u = rnorm(!!N_, sd=!!sd_i_)))
+  
+  potential_outcomes_expr <- expr(declare_potential_outcomes(
+    Y_A_0_B_0 = !!mean_A0B0_ + u + rnorm(!!N_, sd = (!!outcome_sds_)[1]),  
+    Y_A_0_B_1 = !!mean_A0B1_ + u + rnorm(!!N_, sd = (!!outcome_sds_)[2]),  
+    Y_A_1_B_0 = !!mean_A1B0_ + u + rnorm(!!N_, sd = (!!outcome_sds_)[3]),
+    Y_A_1_B_1 = !!mean_A1B1_ + u + rnorm(!!N_, sd = (!!outcome_sds_)[4])))
+  
+  estimand_1_expr <- expr(declare_estimand(
+    ate_A = !!weight_B_*mean(Y_A_1_B_1 - Y_A_0_B_1) + (1-!!weight_B_)*mean(Y_A_1_B_0 - Y_A_0_B_0)))
+  
+  estimand_2_expr <- expr(declare_estimand(
+    ate_B = !!weight_A_*mean(Y_A_1_B_1 - Y_A_1_B_0) + (1-!!weight_A_)*mean(Y_A_0_B_1 - Y_A_0_B_0)))
+  
+  estimand_3_expr <- expr(declare_estimand(
+    interaction = mean((Y_A_1_B_1 - Y_A_1_B_0) - (Y_A_0_B_1 - Y_A_0_B_0))))
+  
+  assign_A_expr <- expr(declare_assignment(prob = !!prob_A_, assignment_variable = A))
+  assign_B_expr <- expr(declare_assignment(prob = !!prob_B_, assignment_variable = B, blocks = A))
+  
   {{{
     
     # M: Model
-    population <- declare_population(N, u = rnorm(N, sd=sd_i))
+    population <- eval_bare(population_expr)
     
-    potential_outcomes <- declare_potential_outcomes(
-      Y_A_0_B_0 = mean_A0B0 + u + rnorm(N, sd = outcome_sds[1]),  
-      Y_A_0_B_1 = mean_A0B1 + u + rnorm(N, sd = outcome_sds[2]),  
-      Y_A_1_B_0 = mean_A1B0 + u + rnorm(N, sd = outcome_sds[3]),
-      Y_A_1_B_1 = mean_A1B1 + u + rnorm(N, sd = outcome_sds[4]))
-    
+    potential_outcomes <- eval_bare(potential_outcomes_expr)
     
     # I: Inquiry
-    estimand_1 <- declare_estimand(
-      ate_A = weight_B*mean(Y_A_1_B_1 - Y_A_0_B_1) + (1-weight_B)*mean(Y_A_1_B_0 - Y_A_0_B_0))
+    estimand_1 <- eval_bare(estimand_1_expr)
     
-    estimand_2 <- declare_estimand(
-      ate_B = weight_A*mean(Y_A_1_B_1 - Y_A_1_B_0) + (1-weight_A)*mean(Y_A_0_B_1 - Y_A_0_B_0))
+    estimand_2 <- eval_bare(estimand_2_expr)
     
-    estimand_3 <- declare_estimand(
-      interaction = mean((Y_A_1_B_1 - Y_A_1_B_0) - (Y_A_0_B_1 - Y_A_0_B_0)))
+    estimand_3 <- eval_bare(estimand_3_expr)
     
     # D: Data Strategy
     
     # Factorial assignments
-    assign_A <- declare_assignment(prob = prob_A, assignment_variable = A)
-    assign_B <- declare_assignment(prob = prob_B, assignment_variable = B, blocks = A)
+    assign_A <- eval_bare(assign_A_expr)
+    assign_B <- eval_bare(assign_B_expr)
     reveal_Y <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
     
     # A: Answer Strategy
@@ -125,15 +151,27 @@ two_by_two_designer <- function(N = 100,
     
   }}}
   
-  attr(two_by_two_design, "code") <- 
-    construct_design_code(designer = two_by_two_designer, 
-                          args = match.call.defaults(), 
-                          exclude_args = "outcome_means",
-                          arguments_as_values = TRUE)
+  design_code <- construct_design_code(designer = two_by_two_designer, 
+                                       args = match.call.defaults(), 
+                                       exclude_args = union(c("outcome_means", "design_name", "fixed"), fixed),
+                                       arguments_as_values = TRUE)
+  
+  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr, estimand_1_expr, estimand_2_expr,
+                               estimand_3_expr, assign_A_expr, assign_B_expr)
+  design_code <- gsub("two_by_two_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  attr(two_by_two_design, "code") <- design_code
   
   two_by_two_design
 }
 
+attr(two_by_two_designer, "definitions") <- data.frame(
+  names  = c("N",  "prob_A",  "prob_B",  "weight_A",  "weight_B",  
+             "outcome_means",  "mean_A0B0",  "mean_A0B1",  "mean_A1B0",  
+             "mean_A1B1",  "sd_i",  "outcome_sds", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 11), rep("character", 2)),
+  min = c(1, 0, 0, 0, 0, rep(-Inf, 5), 0, 0, NA, NA), 
+  max = c(Inf, 1, 1, rep(Inf, 9), NA, NA)
+)
 
 attr(two_by_two_designer, "shiny_arguments") <- list(
   N = c(16, 32, 64), weight_A = c(0, .5), 

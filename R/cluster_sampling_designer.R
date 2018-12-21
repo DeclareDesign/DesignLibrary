@@ -13,6 +13,8 @@
 #' @param n_clusters_in_block An integer. Number of clusters to sample in each block (stratum).
 #' @param n_i_in_cluster An integer. Number of units to sample in each cluster.
 #' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design. \code{design_name} is always fixed.
 #' @return A stratified cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
@@ -37,22 +39,38 @@ cluster_sampling_designer <- function(N_blocks = 1,
                                       N_i_in_cluster = 50,
                                       n_clusters_in_block = 100,
                                       n_i_in_cluster = 10,
-                                      icc = 0.2
+                                      icc = 0.2,
+                                      design_name = "cluster_sampling_design",
+                                      fixed = NULL
 ){
   if(n_clusters_in_block > min(N_clusters_in_block)) stop(paste0("n_clusters_in_block sampled must be smaller than the total number of ", N_clusters_in_block, " clusters."))
   if(n_i_in_cluster > min(N_i_in_cluster)) stop(paste0("n_i_in_cluster must be smaller than or equal to the minimum of ", N_i_in_cluster, " subjects per cluster."))
   if(icc < 0 || icc > 1) stop("icc must be a number in [0,1]")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N_blocks",  "N_clusters_in_block",  "N_i_in_cluster",  
+                            "n_clusters_in_block",  "n_i_in_cluster",  "icc"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  fixed_pop_expr <- expr(
+    declare_population(
+      block = add_level(N = !!N_blocks_),
+      cluster = add_level(N = !!N_clusters_in_block_),
+      subject = add_level(N = !!N_i_in_cluster_,
+                          latent = draw_normal_icc(mean = 0, N = N, clusters = cluster, ICC = !!icc_),
+                          Y = draw_ordered(x = latent, breaks = qnorm(seq(0, 1, length.out = 8)))
+      ))())
+  stage_1_sampling_expr <- expr(declare_sampling(strata = block, 
+                                                 clusters = cluster, n = !!n_clusters_in_block_, 
+                                                 sampling_variable = "Cluster_Sampling_Prob"))
+  stage_2_sampling_expr <- expr(declare_sampling(strata = cluster,   n = !!n_i_in_cluster_, 
+                                                 sampling_variable = "Within_Cluster_Sampling_Prob"))
   {{{
     # M: Model
-    fixed_pop <-
-      declare_population(
-        block = add_level(N = N_blocks),
-        cluster = add_level(N = N_clusters_in_block),
-        subject = add_level(N = N_i_in_cluster,
-                            latent = draw_normal_icc(mean = 0, N = N, clusters = cluster, ICC = icc),
-                            Y = draw_ordered(x = latent, breaks = qnorm(seq(0, 1, length.out = 8)))
-        )
-      )()
+    fixed_pop <- eval_bare(fixed_pop_expr)
     
     population <- declare_population(data = fixed_pop)
     
@@ -60,11 +78,8 @@ cluster_sampling_designer <- function(N_blocks = 1,
     estimand <- declare_estimand(mean(Y), label = "Ybar")
     
     # D: Data Strategy
-    stage_1_sampling <- declare_sampling(strata = block, 
-                                         clusters = cluster, n = n_clusters_in_block, 
-                                         sampling_variable = "Cluster_Sampling_Prob")
-    stage_2_sampling <- declare_sampling(strata = cluster,   n = n_i_in_cluster, 
-                                         sampling_variable = "Within_Cluster_Sampling_Prob")
+    stage_1_sampling <- eval_bare(stage_1_sampling_expr)
+    stage_2_sampling <- eval_bare(stage_2_sampling_expr)
     
     # A: Answer Strategy
     clustered_ses <- declare_estimator(Y ~ 1,
@@ -78,11 +93,25 @@ cluster_sampling_designer <- function(N_blocks = 1,
       stage_1_sampling + stage_2_sampling + clustered_ses
   }}}
   
-  attr(cluster_sampling_design, "code") <- 
-    construct_design_code(cluster_sampling_designer, match.call.defaults())
+  design_code <- construct_design_code(cluster_sampling_designer, 
+                                       match.call.defaults(),
+                                       arguments_as_values = TRUE,
+                                       exclude_args = union(c("fixed", "design_name"), fixed))
+  design_code <- sub_expr_text(design_code, fixed_pop_expr, 
+                               stage_1_sampling_expr, stage_2_sampling_expr)
+  design_code <- gsub("cluster_sampling_design <-", paste0(design_name, " <-"), design_code)
+  attr(cluster_sampling_design, "code") <- design_code
   
   cluster_sampling_design 
 }
+attr(cluster_sampling_designer, "definitions") <- data.frame(
+  names = c("N_blocks",  "N_clusters_in_block",  "N_i_in_cluster",  
+            "n_clusters_in_block",  "n_i_in_cluster",  "icc", "design_name", 
+            "fixed"),
+  class = c(rep("integer", 5), "numeric", "character", "character"),
+  min = c(rep(1, 5), 0, NA, NA),
+  max = c(rep(Inf, 5), 1, NA, NA)
+)
 attr(cluster_sampling_designer, "tips") <- list(
   n_clusters_in_block = "Number of clusters to sample",
   n_i_in_cluster = "Number of subjects per cluster to sample",
