@@ -96,7 +96,7 @@ spillover_designer <- function(N_groups = 80,
   spillover_design
 }
 
-attr(spillover_designer, "shiny_arguments") <- data.frame(
+attr(spillover_designer, "definitions") <- data.frame(
   names = c("N_groups", "N_i_group", "sd_i", "gamma", "design_name", "fixed"),
   class = c("integer", "integer", "numeric", "numeric", "character", "character"),
   min = c(1, 1, 0, 0, NA, NA),
