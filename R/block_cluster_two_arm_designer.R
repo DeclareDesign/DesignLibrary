@@ -192,7 +192,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
   block_cluster_two_arm_design
 }
 
-attr(block_cluster_two_arm_designer, "shiny_arguments") <- data.frame(
+attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
   names = c("N","N_blocks","N_clusters_in_block","N_i_in_cluster","sd","sd_block",
             "sd_cluster","sd_i_0","sd_i_1","rho","assignment_probs","control_mean",
             "ate","treatment_mean","design_name","fixed","verbose"),
