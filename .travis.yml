@@ -39,6 +39,9 @@ matrix:
       r_github_packages:
       - DeclareDesign/DDtools
       - DeclareDesign/DeclareDesign
+      r_binary_packages:
+      - libgit2
+      - magick
 
 env:
   global:
