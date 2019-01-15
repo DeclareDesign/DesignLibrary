@@ -123,17 +123,17 @@ test_that(desc = "two_arm_designer errors when it should",
 
 test_that(desc = "mediation_analysis_designer errors when it should",
           code = {
-            expect_error(mediation_analysis_designer(rho = 10))
-            expect_error(mediation_analysis_designer(mediation_package = "true"))
-          
-          })
+          expect_error(mediation_analysis_designer(rho = 10))
+          expect_error(mediation_analysis_designer(mediation_package = "true"))
+        
+         })
 
 
 test_that(desc =  "mediation_analysis_designer with mediate package errors", 
     code = {
     med_design <- mediation_analysis_designer(mediation_package = TRUE)
     expect_true("design" %in% class(med_design))
-    expect_true( class(draw_estimates(med_design)) == "data.frame")
+    expect_true("data.frame" %in% class(draw_estimates(med_design)))
   })
 
 

@@ -24,6 +24,7 @@
 #' @importFrom mediation mediate 
 #' @importFrom stats lm
 #' @importFrom estimatr tidy lm_robust
+#' @importFrom broom tidy
 #' @export
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
@@ -98,11 +99,11 @@ mediation_analysis_designer <- function(N = 200,
     
     # A: Answer Strategy
     
-
     
     
-     mediate_estimator_expr <-  rlang::expr(
-       mediate_estimator <- declare_estimator(handler = function(data){
+    
+    mediate_estimator_expr <-  rlang::expr(
+      mediate_estimator <- declare_estimator(handler = function(data){
         
         # QBA: Quasi-Bayesian Approximation
         e1 <- lm(M ~ Z, data = data)
@@ -118,8 +119,8 @@ mediation_analysis_designer <- function(N = 200,
         estimates$term <- rep(c("indirect_0", "indirect_1", "direct_0", "direct_1"), 2)
         as.data.frame(estimates)
       },
-                                             label = "mediate")
-     )
+      label = "mediate")
+    )
     
     # Design
     mediation_design_expr <-  rlang::expr(
@@ -207,7 +208,7 @@ mediation_analysis_designer <- function(N = 200,
     # Design
     
     mediation_analysis_design <- rlang::eval_bare(mediation_design_expr)
-
+    
     
   }}}
   

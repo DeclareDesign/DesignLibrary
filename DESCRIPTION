@@ -28,7 +28,8 @@ Depends:
 Imports:
     generics,
     rlang,
-    mediation
+    mediation,
+    broom (>= 0.5.0.9)
 Suggests: 
     testthat,
 RoxygenNote: 6.1.1
