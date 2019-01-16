@@ -18,10 +18,9 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept mediation
-#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design get_estimands
+#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design draw_estimands
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra
-#' @importFrom mediation mediate 
 #' @importFrom stats lm
 #' @importFrom estimatr tidy lm_robust
 #' @importFrom broom tidy
@@ -29,14 +28,14 @@
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
 #' mediation_1 <- mediation_analysis_designer()
-#' get_estimands(mediation_1)
+#' draw_estimands(mediation_1)
 #' \dontrun{
 #' diagnose_design(mediation_1, sims = 1000)
 #' }
 #' 
 #' # A design with a violation of sequential ignorability and heterogeneous effects:
 #' mediation_2 <- mediation_analysis_designer(Z_on_M =1, rho = .5, M_on_Y_Z1 = 1, Z_on_Y_M0  =.75)
-#' get_estimands(mediation_2)
+#' draw_estimands(mediation_2)
 #' \dontrun{
 #' diagnose_design(mediation_2, sims = 1000)
 #' }
@@ -81,6 +80,7 @@ mediation_analysis_designer <- function(N = 200,
   )
   
   if(mediation_package){
+    stopifnot(requireNamespace("mediation"))
     
     # I: Inquiry
     estimands_expr <- rlang::expr(
@@ -108,7 +108,7 @@ mediation_analysis_designer <- function(N = 200,
         # QBA: Quasi-Bayesian Approximation
         e1 <- lm(M ~ Z, data = data)
         e2 <- lm(Y ~ M + Z + M:Z, data = data)
-        m  <- mediate(e1, e2, sims = 100, treat = "Z", mediator = "M")
+        m  <- mediation::mediate(e1, e2, sims = 100, treat = "Z", mediator = "M")
         
         estimates <-   tidy(m, conf.int = TRUE)
         estimates <-  rbind(estimates, estimates)
