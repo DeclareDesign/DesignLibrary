@@ -1,0 +1,122 @@
+---
+title: "Example Design"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+  %\VignetteIndexEntry{Example Design}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+You should make sure to install any required packages. The example design uses `systemfit` as well as `DeclareDesign`.
+
+```{r eval = FALSE}
+install.packages("systemfit")
+install.packages("DeclareDesign")
+install.packages("knitr")
+install.packages("RCurl")
+```
+
+Load the packages:
+
+```{r,message=FALSE}
+library(systemfit)
+library(DeclareDesign)
+library(knitr)
+library(RCurl)
+```
+
+Here is one way to load external data for use in the design:
+
+```{r,warning = FALSE}
+online_data <- read.csv(file = "https://declaredesign.org/example_data.csv",
+                        header = TRUE)
+
+rho <- with(online_data, rho)
+tau_A <- with(online_data, tau_A)
+tau_B <- with(online_data, tau_B)
+```
+
+## Design Declaration
+
+You may want to give an overview of the design, and provide any background info.
+
+- **M**odel: 
+    
+    We have two untreated potential outcomes, $Y_A(0)$ and $Y_B(0)$ that are distributed standard normally and correlated with each other at $\rho = .2$. We have $Y_A(1) = Y_A(0) + \tau_A$ and  $Y_B(1) = Y_B(0) + \tau_B$. 
+  
+- **I**nquiry: 
+    
+    We want to know the value of $E[Y_A(1) - Y_A(0)]$. 
+
+- **D**ata strategy: 
+    
+    Half the units are assigned to a treatment, $Z_A$, that only affects $Y_A$. Units are also independently assigned to $Z_B$, a treatment that only affects $Y_B$. 
+
+- **A**nswer strategy: 
+    
+    We compare two strategies: in one we simply regress $Y_A$ on an indicator for $Z_A$, and in the other we use include in our system of seemingly unrelated regressions (SUR) a second equation for $Y_B$ on $Z_B$. 
+
+## Design code
+
+Very often, designs require custom functions and data cleaning. You may want to do that separately from your design declaration. Here we make a custom `sur()` function to use the seemingly unrelated regression estimator in `systemfit::systemfit`. 
+
+```{r}
+sur <- function(data){
+  fit <- data.frame(summary(systemfit(formula = list(YA ~ ZA, 
+                                                     YB ~ ZB),
+                                      data = data,
+                                      method = "SUR"))$coefficients)
+  names(fit) <- c("estimate","std.error","statistic","p.value")
+  fit$conf.low <- with(fit, estimate - 1.96 * std.error)
+  fit$conf.high <- with(fit, estimate + 1.96 * std.error)
+  fit <- cbind(estimator_label = "SUR",
+               term = row.names(fit),
+               fit, 
+               df = NA, 
+               outcome = "YA",
+               estimand_label = "ate_YA")
+  row.names(fit) <- NULL
+  fit <- subset(fit, term == "eq1_ZA")
+  return(fit)
+}
+```
+
+Now we declare the design in code.
+
+```{r}
+my_design <- 
+  # Model
+  declare_population(N = 100,
+                     YA_0 = rnorm(N),
+                     YB_0 = rnorm(N, YA_0 * rho, sqrt(1 - rho^2))) +
+  declare_potential_outcomes(YA ~ YA_0 + ZA * tau_A,
+                             assignment_variable = "ZA") +
+  declare_potential_outcomes(YB ~ YB_0 + ZB * tau_B,
+                             assignment_variable = "ZB") +
+  # Inquiry
+  declare_estimand(ate_YA = mean(YA_ZA_1 - YA_ZA_0)) +
+  # Data Strategy
+  declare_assignment(m = 50, assignment_variable = "ZA") +
+  declare_assignment(m = 50, assignment_variable = "ZB") +
+  declare_reveal(YA,ZA) +
+  declare_reveal(YB,ZB) +
+  # Answer Strategy
+  declare_estimator(YA ~ ZA, model = lm_robust, 
+                    estimand = "ate_YA", label = "lm_robust") +
+  declare_estimator(handler = sur) 
+```
+
+
+## Design diagnosis
+
+You may want to display features of the design here.
+
+```{r}
+my_design_cor <- redesign(design = my_design, rho = .8)
+diagnosis <- diagnose_design(my_design, my_design_cor)
+kable(reshape_diagnosis(diagnosis), digits = 2)
+```
+
+We see that the SUR approach exhibits much lower variance in estimates and much higher power when $\rho$ is high.
+
