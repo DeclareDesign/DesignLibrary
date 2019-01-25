@@ -15,53 +15,40 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-A $2^K$ factorial design is an extension of the `simple_factorial_designer` that allows for $k$ number of factors (or treatments), each with two levels, resulting in $2^K$ combinations of treatment conditions. Researchers might be interested in testing not just how two, but rather how three, or any number ($k$) treatment conditions interact. As we will see below, the interest in the effect of different treatments in the presence or absence of other treatments is a key distinction from the `multi_arm_designer`, in which we evaluate the effect of treatments where there is no overlap in the assignment of different conditions.
+A $2^K$ factorial design is an extension of the `two_by_two_designer` that allows for $k$ number of factors (or treatments), each with two levels, resulting in $2^K$ combinations of treatment conditions. You might be interested in testing not just how two, but rather how three, or how any number ($k$) of treatment conditions interact. The interest in the effect of different treatments in the presence or absence of other treatments is a key distinction from the `multi_arm_designer`, in which we evaluate the effect of treatments where there is no overlap in the assignment of different conditions.
 
-Consider researchers are interested how a set of incentives and managerial practices affects employee productivity *in combination*. Let us imagine that intervention $A$ is a salary increase conditional on performance indicators, intervention $B$ is increased monitoring, and intervention $C$ is a motivational activity. A key question might be the marginal effect of  conditional salary increase on productivity in the presence of greater monitoring or in the presence of motivational interventions, or both.
+Let's say you set out to study how incentives and managerial practices affect employee productivity *in combination*. Let's imagine that intervention $A$ is a salary increase conditional on performance indicators, intervention $B$ is increased monitoring, and intervention $C$ is a motivational activity. A key question might be the marginal effect of conditional salary increases on productivity in the presence of greater monitoring or in the presence of motivational interventions, or both.
 
-Let's imagine there are 400 participants in a study. Assuming employees have equal probability of being assigned to each of the three conditions, and that this probability is 0.5, we end up with a sample in which we have 8 ($2^{k=3}$) combinations of treatment conditions, each with roughly 50 employees.
+## Design Declaration
 
-<!--  - **M**odel: We stipulate two outcomes, $Y_A$ and $Y_B$, whose error terms are correlated, $cor(u_A,u_B) = \rho$. Indexing treatments $k \in \{A,B\}$ and denoting the treatment effects $\tau_k$, we stipulate the potential outcomes of $Y_k$ to be a function of $k$ and $\neg k$: $Y_k = k \times \tau_k + u_k + \alpha \times (\neg k \times \tau_{\neg k} + u_{\neg k})$. The parameter $\alpha$ thus represents the extent to which the no crossover effects assumption is violated. -->
+- **M**odel: 
+    
+     We stipulate $2^k$ potential outcomes. In our example, with treatments $\{A,B,C\} \in \{0,1\}$, for example, we have $Y^{ABC}$. We can denote the potential outcome of a unit who is in control for all treatments $Y^{000}_i$, for example, and that for a unit who is assigned to B and C only as $Y^{011}$. Each potential outcome is distributed normally with mean $\mu_j$ and standard deviation $\sigma_j$, where $j \in \{1,...,2^k\}$. 
+  
+- **I**nquiry: 
+    
+    Estimands are defined for each combination of treatment assignment as weighted averages of differences in potential outcomes. The effect of A in this design, $\tau_A$, averaged over conditions defined by B and C, is given by: $\tau_A = 1/4*(Y^{111} - Y^{011}) + 1/4*(Y^{101} - Y^{001}) + 1/4*(Y^{110} - Y^{010}) + 1/4*(Y^{100} - Y^{000})$.
 
-<!--  - **I**nquiry: We focus here on the average treatment effect of $A$ when $B = 0$, $E[Y_A(A = 1) - Y_A(A = 0) \mid B = 0]$.  -->
+- **D**ata strategy: 
+    
+    We randomly assign units to one of the $2^k$ combinations of treatment using equal probabilities of assignment.
 
-<!--  - **D**ata strategy: We assign 1/4 of our sample to pure control, 1/4 to $A$ only, 1/4 to $B$ only, and 1/4 to a mix of $A$ and $B$.  -->
+- **A**nswer strategy: 
+    
+    Estimates draw from a regression in which all treatments are demeaned and weighted by the inverse probability of being in the condition they are in. In this demeaned regression, the constant captures the average outcome across all conditions — not the outcome when all units are in the control condition. 
 
-<!--  - **A**nwer strategy: We compare three estimators. The first assumes that there are no crossover effects of $B$ onto $Y_A$: $Y_A \sim A$. The second models an effect of $B$ on $Y_A$: Y_A ~ A + B$. Finally, we declare a SUR estimator that is not included by default in the `factorial_designer()` and below we add it to the design. -->
 
-<!-- The code for a single run of the default design produced by `factorial_designer()` is as follows: -->
-
-```{r, code = get_design_code(factorial_designer(N = 120, a = .5, b = .5, crossover = .2, rho = .6)), eval=TRUE}
+```{r, code = get_design_code(factorial_designer()), eval=TRUE}
 ```
 
-Diagnose the design:
+# Takeaways
 
 ```{r}
 diagnosis <- diagnose_design(factorial_design)
 ```
 
 ```{r,echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[-c(1,2,4)], digits = 2,row.names = F)
-# kable(reshape_diagnosis(diagnosis)[c(1,4,2,5,3,6), -c(1:2, 4:5)], digits = 2,row.names = F)
+kable(reshape_diagnosis(diagnosis), digits = 2,row.names = F)
 ```
 
-## Using the Factorial Designer
-
-In R, you can generate a factorial design using the template function `factorial_designer()` in the `DesignLibrary` package by running the following lines, which install and load the package:
-
-```{r, eval=FALSE}
-devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
-library(DesignLibrary)
-```
-
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_factorial_design` with `N`, `a`, `b`, and `crossover` set to 300, .2, .4, and .15, respectively, by running the lines below.
-
-```{r, eval=FALSE}
-my_factorial_design <- factorial_designer(N = 300)
-```
-
-You can see more details on the `factorial_designer()` function and its arguments by running the following line of code:
-
-```{r, eval=FALSE}
-??factorial_designer
-```
+- We see that the space of estimands we can estimate is amazingly rich, but our power to do so is very low. 
