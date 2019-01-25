@@ -15,6 +15,10 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param treatment_sd  A nonnegative number. Standard deviation in treatment. By default equals \code{control_sd}.
 #' @param rho A number in [-1,1]. Correlation between treatment and control outcomes.
+#' @param treatment_name A character vector containing the name of the outcome column. Must be provided without spacing.
+#' @param outcome_name A character vector containing the name of the assignment (treatment) column. Must be provided without spacing.
+#' @param design_name A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.
+#' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -30,7 +34,6 @@
 #' #Generate a simple two-arm design using default arguments
 #' two_arm_design <- two_arm_designer()
 
-
 two_arm_designer <- function(N = 100,
                              assignment_prob = .5,
                              control_mean = 0,
@@ -38,44 +41,99 @@ two_arm_designer <- function(N = 100,
                              ate = 1,
                              treatment_mean = control_mean + ate,
                              treatment_sd = control_sd,
-                             rho = 1
+                             rho = 1,
+                             design_name = "two_arm_design",
+                             treatment_name = "Z",
+                             outcome_name = "Y",
+                             fixed = NULL
 ){
+  if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
+  # if(treatment_mean != control_mean+ate) warning("`treatment_mean` inconsistent with values of `control_mean` and `ate`. Former will override the latter.")
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  if(grepl(" ", treatment_name, fixed = TRUE)) "`treatment_name` may not contain any spaces."
+  if(grepl(" ", design_name, fixed = TRUE)) "`design_name` may not contain any spaces."
+  argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
+  if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
+  
+  fixed_txt <- fixed_expr(c("N","assignment_prob","control_mean","control_sd",
+                            "ate","treatment_mean","treatment_sd","rho"))
+  for(i in 1:length(fixed_txt)) eval(parse(text = fixed_txt[i]))
+  
+  population_expr <- expr(
+    declare_population(
+      N = !!N_,
+      u_0 = rnorm(!!N_),
+      u_1 = rnorm(n = !!N_, mean = !!rho_ * u_0, sd = sqrt(1 - (!!rho_)^2)))
+  )
+  
+  potential_expr <- expr(
+    declare_potential_outcomes(
+      !!parse_expr(outcome_name) ~ (1-!!parse_expr(treatment_name)) * (u_0*!!control_sd_ + !!control_mean_) + 
+        !!parse_expr(treatment_name)     * (u_1*!!treatment_sd_ + !!treatment_mean_), assignment_variables = !!treatment_name)
+  )
+  
+  assignment_expr <- expr(declare_assignment(prob = !!assignment_prob_, 
+                                             assignment_variable = !!treatment_name))
+  
+  po_cols <- paste(outcome_name, treatment_name, c(1,0), sep = "_")
+  estimand_expr <- expr(declare_estimand(ATE = mean(!!sym(po_cols[1]) - !!sym(po_cols[2]))))
+  
+  estimator_expr <- expr(declare_estimator(!!parse_expr(paste0(outcome_name, "~",  treatment_name)), estimand = "ATE"))
+  
+  reveal_expr <- expr(declare_reveal(outcome_variables = !!outcome_name, assignment_variables = !!treatment_name))
+  
   {{{
     # M: Model
-    population <- declare_population(
-      N = N,
-      u_0 = rnorm(N),
-      u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
+    population <- eval_bare(population_expr)
     
-    potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
-        Z     * (u_1*treatment_sd + treatment_mean))
+    potential_outcomes <- eval_bare(potential_expr)
     
     # I: Inquiry
-    estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+    estimand <- eval_bare(estimand_expr)
     
     # D: Data Strategy
-    assignment <- declare_assignment(prob = assignment_prob)
-    reveal_Y    <- declare_reveal()
+    assignment <- eval_bare(assignment_expr)
+    
+    reveal_Y    <- eval_bare(reveal_expr)
     
     # A: Answer Strategy
-    estimator <- declare_estimator(Y ~ Z, estimand = estimand)
+    estimator <- eval_bare(estimator_expr)
     
     # Design
     two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator
   }}}
   
-  attr(two_arm_design, "code") <-
-    construct_design_code(designer = two_arm_designer,
-                          args = match.call.defaults(),
-                          exclude_args = "ate",
+  design_code <- 
+    construct_design_code(designer = two_arm_designer, 
+                          args = match.call.defaults(), 
+                          exclude_args = union(c("ate", "fixed", "design_name",
+                                                 "treatment_name", "outcome_name"), fixed),
                           arguments_as_values = TRUE)
-
+  
+  design_code <-
+    gsub("two_arm_design <-", paste0(design_name, " <-"), design_code, fixed = TRUE)
+  
+  design_code <- sub_expr_text(design_code, population_expr, potential_expr,
+                               assignment_expr, estimator_expr, estimand_expr,
+                               reveal_expr)
+  
+  attr(two_arm_design, "code") <- design_code
+  
   two_arm_design
 }
+
+attr(two_arm_designer, "definitions") <- data.frame(
+  names = c("N", "assignment_prob", "control_mean", "control_sd", 
+            "ate", "treatment_mean", "treatment_sd", "rho", "design_name", 
+            "treatment_name", "outcome_name", "fixed"),
+  class = c("integer", rep("numeric", 7), rep("character", 4)),
+  min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1, NA, NA, NA, NA),
+  max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA, NA, NA, NA)
+)
 
 attr(two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 
 
@@ -94,6 +152,5 @@ simple_two_arm_designer <- function(...){
   dots <- list2(...)
   eval_bare(expr(two_arm_designer(!!!dots)))
 }
-  
-  
-  
+
+

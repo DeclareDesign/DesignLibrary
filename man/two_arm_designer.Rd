@@ -7,7 +7,8 @@
 \usage{
 two_arm_designer(N = 100, assignment_prob = 0.5, control_mean = 0,
   control_sd = 1, ate = 1, treatment_mean = control_mean + ate,
-  treatment_sd = control_sd, rho = 1)
+  treatment_sd = control_sd, rho = 1, design_name = "two_arm_design",
+  treatment_name = "Z", outcome_name = "Y", fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -25,6 +26,14 @@ two_arm_designer(N = 100, assignment_prob = 0.5, control_mean = 0,
 \item{treatment_sd}{A nonnegative number. Standard deviation in treatment. By default equals \code{control_sd}.}
 
 \item{rho}{A number in [-1,1]. Correlation between treatment and control outcomes.}
+
+\item{design_name}{A character vector. Name of design. This is the label of the design object returned by \code{get_design_code()}. Must be provided without spacing.}
+
+\item{treatment_name}{A character vector containing the name of the outcome column. Must be provided without spacing.}
+
+\item{outcome_name}{A character vector containing the name of the assignment (treatment) column. Must be provided without spacing.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design.}
 }
 \value{
 A simple two-arm design.
