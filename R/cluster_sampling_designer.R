@@ -111,9 +111,9 @@ attr(cluster_sampling_designer, "definitions") <- data.frame(
   class = c(rep("integer", 5), "numeric", "character", "character"),
   min = c(rep(1, 5), 0, NA, NA),
   max = c(rep(Inf, 5), 1, NA, NA),
-  inspector_min = 1,
-  inpector_max = 10,
-  inspector_step = 1
+  inspector_min = c(rep(1,5), 0, NA, NA),
+  inspector_max = c(4, rep(Inf,4), 1, NA, NA),
+  inspector_step = c(1, 1000, 50, 100, 10, 0.2, NA, NA)
 )
 attr(cluster_sampling_designer, "tips") <- list(
   n_clusters_in_block = "Number of clusters to sample",
