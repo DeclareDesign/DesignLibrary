@@ -13,28 +13,35 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-Learning about effects of causes takes time, money and effort. Multi-arm designs can make this process somewhat more efficient: multiple treatments are assigned in parallel and compared against the same control group, which reduces sample size and hence costs. 
+Learning about effects of causes takes time, money, and effort. Multi-arm designs can make this process somewhat more efficient: multiple treatments are assigned in parallel and compared against the same control group, which reduces sample size and hence costs. 
 
 Suppose that we want to learn whether there is racial discrimination in the labor market by conducting an experiment. Companies from our population of size $30$ are randomly assigned to receive a résumé from a white, black, or Latino candidate. Companies are assigned to one of these three conditions with equal probabilities, and résumés only vary race and are otherwise identical. We define our outcome of interest as the difference in callbacks between experimental conditions. 
 
 In settings of multiple treatment arms, we could do a number of pairwise comparisons: across treatments and each treatment against control. 
-<!--One must be however careful since increasing the number of hyphoteses being tested might increase the probability of type 1 error -->
   
   
 ## Design Declaration
   
-  - **M**odel: We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $M$ $(m = 1, 2, ..., M)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $m$ and the control condition: $Y_i(Z = m)  -Y_i(Z = 0)$.
+- **M**odel: 
+  
+    We specify a population of size $N$ where a unit $i$ has a potential outcome, $Y_i(Z = 0)$, when it remains untreated and $M$ $(m = 1, 2, ..., M)$ potential outcomes defined according to the treatment that it receives. The effect of each treatment on the outcome of unit $i$ is equal to the difference in the potential outcome under treatment condition $m$ and the control condition: $Y_i(Z = m)  -Y_i(Z = 0)$.
 
-- **I**nquiry:  We are interested in all of the pairwise comparisons between arms: $E[Y(m) - Y(m')]$, for all $m \in \{1,...,M\}$.  
+- **I**nquiry:  
 
-- **D**ata strategy: We randomly assign $k/N$ units to each of the treatment arms.
+    We are interested in all of the pairwise comparisons between arms: $E[Y(m) - Y(m')]$, for all $m \in \{1,...,M\}$.  
 
-- **A**nswer strategy: We take every pairwise difference in means corresponding to the specific estimand.
+- **D**ata strategy: 
 
-## Takeaways
+    We randomly assign $k/N$ units to each of the treatment arms.
+
+- **A**nswer strategy: 
+
+    We take every pairwise difference in means corresponding to the specific estimand.
 
 ```{r, code = get_design_code(multi_arm_designer(m_arms = 4, outcome_means = c(0.5, 1, 2, .5)) ), eval=TRUE}
 ```
+
+## Takeaways
 
 ```{r}
 diagnosis <- diagnose_design(multi_arm_design)
@@ -44,13 +51,11 @@ diagnosis <- diagnose_design(multi_arm_design)
 kable(reshape_diagnosis(diagnosis)[,c("Bias","Power","Coverage","Mean Estimate","Mean Estimand")], digits = 2)
 ```
 
-- We see that a design like this 
+- The pairwise differences in means provide unbiased estimates of  the average treatment effect (ATE) in each arm. 
 
-- The pairwise differences in means provide unbiased estimates of  the average treatment effect (ATE) in each arm. These estimates, however, are not so precise;  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the time.
+- These estimates, however, are not so precise.  The estimated standard deviation is large yielding wide confidence intervals that contain the true value of the ATEs more than 95\% of the time.
 
-## Exercises
 
-- Use the designer to declare four designs. Each should only have one arm that has an effect, 
 
 
 
