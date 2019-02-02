@@ -10,6 +10,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(knitr)
+```
+
+
 Studying causal mechanisms is hard. One of the best ways we know to study if one cause works better or worse when another one is present is through a two-by-two experiment. As its name suggests, the design involves two overlapping two-arm experiments. 
 
 Before conducting studies of this kind, researchers often want to increase their confidence in their ability to detect significant interactions when the effect of $Z_1$ on $Y$ really is a function of $Z_2$. How many subjects are needed to raise the probability of correctly inferring that there is an interaction 80\%?
@@ -24,40 +30,40 @@ This is a surprisingly difficult question to answer, because answering it accura
 
 - **I**nquiry: 
 
-    We can express the effect of $Z_A$ when $Z_B$ is present as $\tau_{Z_1 \mid Z_2} = E[(Y \mid Z_1 = 1, Z_2 = 1) - (Y \mid Z_1 = 0, Z_2 = 1)]$, and the effect of $Z_1$ when $Z_2$ is absent as $\tau_{Z_1 \mid \neg Z_2} = E[(Y \mid Z_1 = 1, Z_2 = 0) - (Y \mid Z_1 = 0, Z_2 = 0)]$. Thus, our estimand is $\tau_{Z_1 \mid Z_2} - \tau_{Z_1 \mid \neg Z_2}$: the difference in the effect of $Z_1$ induced by moving $Z_2$ from 0 to 1.
+    We can express the effect of $Z_A$ when $Z_B$ is present as $\tau_{Z_A \mid Z_B} = E[(Y \mid Z_A = 1, Z_B = 1) - (Y \mid Z_A = 0, Z_B = 1)]$, and the effect of $Z_1$ when $Z_2$ is absent as $\tau_{Z_A \mid \neg Z_B} = E[(Y \mid Z_A = 1, Z_B = 0) - (Y \mid Z_A = 0, Z_B = 0)]$. Thus, our estimand is $\tau_{Z_A \mid Z_B} - \tau_{Z_A \mid \neg Z_B}$: the difference in the effect of $Z_A$ induced by moving $Z_B$ from 0 to 1. Our design also features estimands that involve a weighted average of $\tau_{Z_A \mid Z_B}$ and $\tau_{Z_A \mid \neg Z_B}$ (with equivalent expressions for the effect of $B$). We're going to weight the average so that our non-interaction estimands are equivalent to the effect of each treatment when the other one is absent.
 
-- **D**ata strategy: We randomly assign an equal number of subjects to one of four conditions. In the first both causal factors are absent, in the second and third only $Z_1$ or $Z_2$ is present, respectively, and in the fourth both are present. 
+- **D**ata strategy: 
+  
+    We randomly assign an equal number of subjects to one of four conditions, by blocking the assignment of $B$ on the assignment of $A$. In the first both causal factors are absent, in the second and third only $A$ or $B$ is present, respectively, and in the fourth both are present. 
 
-- **A**nswer strategy: We estimate the interaction effect using a linear regression model that focuses on the coefficient on the $Z_1 \times Z_2$ term.
+- **A**nswer strategy: 
+    
+    We estimate the interaction effect using a linear regression model that focuses on the coefficient on the $Z_A \times Z_B$ term.
 
-### Declaration
 
-Our `factorial_template` function takes as arguments the total sample size (`N`), the effect of $Z_1$ (`beta_1`), the effect of $Z_2$ (`beta_2`), and the effect of $Z_1 \times Z_2$ (`beta_3`). 
-```{r, code = get_design_code(process_tracing_designer()), eval=TRUE}
+```{r, code = get_design_code(two_by_two_designer(mean_A0B0 = 0, mean_A1B0 = 0, mean_A0B1 = 0, mean_A1B1 = .10,weight_A = 0,weight_B = 0)), eval=TRUE}
 ```
 
 
 ### Takeaways
 
-```{r, echo=FALSE}
-diagnosand_plot <- diagnoses$diagnosands %>%
-  filter(beta_3 == .25) %>% 
-  ggplot(aes(N, power)) +
-  geom_point() +
-  geom_line() +
-  geom_hline(yintercept = 0.8, color = "red") +
-  xlab("Number of Subjects") +
-  scale_y_continuous("Power to Detect a 0.25 SD Interaction",breaks = c(seq(0,1,.25),8), limits = c(0,1)) +
-  ggtitle("2x2 Factorial Experiment", "Power Analysis") +
-  theme_bw()
-
-if (knitr::opts_knit$get("rmarkdown.pandoc.to") != "html") {
-  diagnosand_plot
-}
+```{r}
+diagnosis <- diagnose_design(two_by_two_design)
 ```
+
+```{r,eval = TRUE, echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[,-c(1,3,5)], digits = 2)
+```
+
+- Wow, the power is really low for our interaction! It's only `r subset(get_diagnosands(diagnosis),estimand_label == "interaction", select = "power")*100`%. That's because our estimator has to take account of the variation in both effects when estimating their difference. Note that the standard deviation of the interaction estimates is twice that of the estimates of the main effects. 
+
+- We also see that our estimates of the main effects are biased: we set out to estimate the effect of each treatment when the other was absent, but half the time the other treatment was present, so we get a boost in the *estimated* effect size due to the interaction.
 
 ### Exercises
 
-1. Alter the template so that outcomes are binary instead of normally distibuted. What is the expected standard error for the interaction term for a sample size of 1000? Discuss the implications of your diagnosis for practice.
+1. Alter the answer strategy so that the estimates of the main effects are no longer biased.
 
-2. Heterogeneous shifts by making effects noise
+2. Use `expand_designs()` with the `two_by_two_designer()` to determine the minimal interaction that can be detected with 80% power, holding other parameters constant.
+
+3. Alter the template so that outcomes are binary instead of normally distibuted. What is the expected standard error for the interaction term for a sample size of 1000? Discuss the implications of your diagnosis for practice.
+
