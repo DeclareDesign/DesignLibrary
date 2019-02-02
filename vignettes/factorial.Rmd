@@ -23,7 +23,7 @@ Let's say you set out to study how incentives and managerial practices affect em
 
 - **M**odel: 
     
-     We stipulate $2^k$ potential outcomes. In our example, with treatments $\{A,B,C\} \in \{0,1\}$, for example, we have $Y^{ABC}$. We can denote the potential outcome of a unit who is in control for all treatments $Y^{000}_i$, for example, and that for a unit who is assigned to B and C only as $Y^{011}$. Each potential outcome is distributed normally with mean $\mu_j$ and standard deviation $\sigma_j$, where $j \in \{1,...,2^k\}$. 
+     We stipulate $2^k$ potential outcomes. In our example, with treatments $\{A,B,C\} \in \{0,1\}$, we have $Y^{ABC}$. We can denote the potential outcome of a unit who is in control for all treatments $Y^{000}_i$, for example, and that for a unit who is assigned to B and C only as $Y^{011}$. Each potential outcome is distributed normally with mean $\mu_j$ and standard deviation $\sigma_j$, where $j \in \{1,...,2^k\}$. 
   
 - **I**nquiry: 
     
