@@ -1,8 +1,6 @@
 ---
 title: "Binary Instrumental Variable"
 output: rmarkdown::html_vignette
-designer: "binary_iv_designer.Rd"
-example-design: "binary_iv_design.Rd"
 bibliography: bib.bib
 nocite: |
   @imbens2014instrumental
@@ -19,7 +17,7 @@ library(knitr)
 
 Instrumental variables methods are often used in experimental or observational settings where we *cannot* credibly assume the treatment of interest is randomly assigned, but can assume the treatment is assigned my some third variable that's unrelated to the outcome of interest.
 
-Take two examples of causal relationships researchers might be interested in observing: the effect of distributive benefits on voter turnout and the effect of fertilizer use on farmers' crop yield. In both cases, the distribution of resources or the use of fertilizer may depend on the outcome we wish to study ---on the one hand, politicians may disburse funds according to local electoral characteristics, and on the other, famers with higher crop yield might be both more likely to use fertilizers. Instrumental variables can be a useful approach in these contexts where a treatment $X$ is endogenous to an outcome $Y$.
+Take two examples of causal relationships researchers might be interested in observing: the effect of distributive benefits on voter turnout and the effect of fertilizer use on farmers' crop yield. In both cases, the distribution of resources or the use of fertilizer may depend on the outcome we wish to study --- on the one hand, politicians may disburse funds according to local electoral characteristics, and on the other, famers with higher crop yield might be both more likely to use fertilizers. Instrumental variables can be a useful approach in these contexts where a treatment $X$ is endogenous to an outcome $Y$.
 
 Strong instrumental variables satisfy four key assumptions:
 
@@ -85,9 +83,9 @@ iv_nonrandom   <- binary_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
 iv_nonexcl     <- binary_iv_designer(d_Y = .1)
 ```
 
-We also compare estimations across designs in which we assume violation of the monotonicity assumption with homogeneous and heterogeneous treatment effects across complier types.
+We also compare estimates across designs in which we assume violation of the monotonicity assumption with homogeneous and heterogeneous treatment effects across complier types.
 
-```{r}
+```{r, warning=FALSE}
 # Violates monotonicity with homogeneous treatment effects
 iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2))
 
@@ -121,3 +119,4 @@ kable(diagnoses_table[diagnoses_table$`Estimand Label` %in% c("ate", "late", "la
 ```
 
 
+## References
