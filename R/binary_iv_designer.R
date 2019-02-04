@@ -5,6 +5,8 @@
 #' A researcher is interested in the effect of binary X on outcome Y.  The relationship is confounded  because units that are more likely to be assigned to X=1 have higher Y outcomes.
 #' A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for some, and affects Y only through X. 
 #' 
+#' @details 
+#' See \href{https://declaredesign.org/library/articles/binary_iv.html}{vignette online} for more details on estimands.
 #' 
 #' @param N An integer. Sample size.
 #' @param type_probs A vector of four numbers in [0,1]. Probability of each complier type (always-taker, never-taker, complier, defier).
@@ -80,6 +82,7 @@ binary_iv_designer <- function(N = 100,
                                instrument_name = "Z",
                                design_name = "binary_iv_design",
                                fixed = NULL
+
 ){
   if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative.")
   if(max(assignment_probs) > 1 ) stop("assignment_probs must be < 1.")
@@ -144,7 +147,7 @@ binary_iv_designer <- function(N = 100,
     potential_outcomes <- eval_bare(potentials_expr)
     
     reveal <- eval_bare(reveal_expr)
-    
+
     # I: Inquiries
     estimand <- eval_bare(estimand_expr)
     

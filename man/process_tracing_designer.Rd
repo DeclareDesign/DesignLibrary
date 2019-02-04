@@ -33,7 +33,7 @@ process_tracing_designer(N = 100, prob_X = 0.5,
 
 \item{cor_E1E2_not_H}{A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is not true.}
 
-\item{label_E1}{A string. Label for the first piece of evidence (e.g., "Smoking Gun").}
+\item{label_E1}{A string. Label for the first piece of evidence (e.g., "Straw in the Wind").}
 
 \item{label_E2}{A string. Label for the second piece of evidence (e.g., "Straw in the Wind").}
 

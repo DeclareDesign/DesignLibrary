@@ -29,7 +29,9 @@ We'll consider an application of the regression discontinuity design that examin
 
 ## Design Declaration
 
-  - **M**odel: Regression discontinuity designs have four components: A running variable, a cutoff, a treatment variable, and an outcome. The cutoff determines which units are treated depending on the value of the running variable.
+- **M**odel: 
+
+    Regression discontinuity designs have four components: A running variable, a cutoff, a treatment variable, and an outcome. The cutoff determines which units are treated depending on the value of the running variable.
   
     In our example, the running variable $X$ is the Democratic party's margin of victory at time $t-1$; and the treatment, $Z$, is whether the Democratic party won the election in time $t-1$. The outcome, $Y$, is the Democratic vote margin at time $t$. We'll consider a population of 1,000 of these pairs of elections.
     
@@ -53,9 +55,9 @@ dd_theme <-
   }
 
 control <- function(X) {
-  as.vector(poly(X, 4, raw = T) %*% c(.7, -.8, .5, 1))}
+  as.vector(poly(X, 2, raw = T) %*% c(.5,.5))}
 treatment <- function(X) {
-  as.vector(poly(X, 4, raw = T) %*% c(0, -1.5, .5, .8)) + .15}
+  as.vector(poly(X, 2, raw = T) %*% c(-5,1))}
 mock_data <- draw_data(regression_discontinuity_design)
 X <- seq(-.5,.5,.005)
 treatment_frame <- data.frame(
@@ -86,11 +88,17 @@ ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) +
 ```
 
 
-- **I**nquiry: Our estimand is the effect of a Democratic win in an election on the Democratic vote margin of the next election, when the Democratic vote margin of the first election is zero. Formally, it is the difference in the conditional expectation functions of the control and treatment potential outcomes when the running variable is exactly zero. The black vertical line in the plot shows this difference.
+- **I**nquiry: 
 
-- **D**ata strategy: We collect data on the Democratic vote share at time $t-1$ and time $t$ for all 1,000 pairs of elections. There is no sampling or random assignment.
+    Our estimand is the effect of a Democratic win in an election on the Democratic vote margin of the next election, when the Democratic vote margin of the first election is zero. Formally, it is the difference in the conditional expectation functions of the control and treatment potential outcomes when the running variable is exactly zero. The black vertical line in the plot shows this difference.
 
-- **A**nswer strategy: We will approximate the treated and untreated conditional expectation functions to the left and right of the cutoff using a flexible regression specification estimated via OLS. In particular, we fit each regression using a fourth-order polynomial. Much of the literature on regression discontinuity designs focuses on the tradeoffs among answer strategies, with many analysts recommending against higher-order polynomial regression specifications. We use one here to highlight how well such an answer strategy does when it matches the functional form in the model. We discuss alternative estimators in the exercises. 
+- **D**ata strategy: 
+
+    We collect data on the Democratic vote share at time $t-1$ and time $t$ for all 1,000 pairs of elections. There is no sampling or random assignment.
+
+- **A**nswer strategy: 
+
+    We will approximate the treated and untreated conditional expectation functions to the left and right of the cutoff using a flexible regression specification estimated via OLS. In particular, we fit each regression using a fourth-order polynomial. Much of the literature on regression discontinuity designs focuses on the tradeoffs among answer strategies, with many analysts recommending against higher-order polynomial regression specifications. We use one here to highlight how well such an answer strategy does when it matches the functional form in the model. We discuss alternative estimators in the exercises. 
 
 ```{r, eval = TRUE, code = get_design_code(regression_discontinuity_designer())}
 
@@ -108,40 +116,9 @@ diagnosis <- diagnose_design(regression_discontinuity_design)
 kable(reshape_diagnosis(diagnosis)[,-c(1:2)], digits = 2)
 ```
 
-We highlight three takeaways. First, the power of this design is very low: with 1,000 units we do not achieve even 10% statistical power. However, our estimates of the uncertainty are not too wide: the coverage probability indicates that our confidence intervals indeed contain the estimand 95% of the time as they should. Our answer strategy is highly uncertain because the fourth-order polynomial specification in regression model gives weights to the data that greatly increase the variance of the estimator (Gelman and Imbens, 2017). In the exercises we explore alternative answer strategies that perform better.
 
-Second, the design is biased because polynomial approximations of the average effect at exactly the point of the threshold will be inaccurate in small samples (Sekhon and Titiunik, 2017), especially as units farther away from the cutoff are incorporated into the answer strategy. We know that the estimated bias is not due to simulation error by examining the bootstrapped standard error of the bias estimates.
+- The power of this design is very low: with 1,000 units we do not achieve even 10% statistical power. However, our estimates of the uncertainty are not too wide: the coverage probability indicates that our confidence intervals indeed contain the estimand 95% of the time as they should. Our answer strategy is highly uncertain because the second-order polynomial specification in regression model gives weights to the data that greatly increase the variance of the estimator (Gelman and Imbens, 2017).
 
-Finally, from the figure, we can see how poorly the average effect at the threshold approximates the average effect for all units. The average treatment effect among the treated (to the right of the threshold in the figure) is negative, whereas at the threshold it is positive. This clarifies that the estimand of the regression discontinuity design, the difference at the cutoff, is only relevant for a small – and possibly empty – set of units very close to the cutoff.
+- The design is biased because polynomial approximations of the average effect at exactly the point of the threshold will be inaccurate in small samples (Sekhon and Titiunik, 2017), especially as units farther away from the cutoff are incorporated into the answer strategy. 
 
-## Using the Regression Discontinuity Designer
-
-In R, you can generate a regression_discontinuity design using the template function `regression_discontinuity_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
-
-```{r, eval=FALSE}
-library(DesignLibrary)
-```
-
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_regression_discontinuity_design` with our chosen values for `N`, `tau`, `cutoff`, `bandwidth`, and `poly_order` by running the lines below.
-
-```{r, eval=FALSE}
-regression_discontinuity_design <- regression_discontinuity_designer(N = 300,
-                                                        tau = .2,
-                                                        cutoff = .4,
-                                                        bandwidth = .01,
-                                                        poly_order = .15)
-```
-
-You can see more details on the `regression_discontinuity_designer()` function and its arguments by running the following line of code:
-
-```{r, eval=FALSE}
-??regression_discontinuity_designer
-```
-
-## Further reading
-
-1. Since its rediscovery by social scientists in the late 1990s, the regression discontinuity design has been widely used to study diverse causal effects such as: prison on recidivism (Mitchell et al., 2017); China’s one child policy on human capital (Qin, Zhuang and Yang, 2017); eligibility for World Bank loans on political liberalization (Carnegie and Samii, 2017); and anti-discrimination laws on minority employment (Hahn, Todd and Van der Klaauw, 1999).
-
-2. We’ve discussed a “sharp” regression discontinuity design in which all units above the threshold were treated and all units below were untreated. In fuzzy regression discontinuity designs, some units above the cutoff remain untreated or some units below take treatment. This setting is analogous to experiments that experience noncompliance and may require instrumental variables approaches to the answer strategy (see Compliance is a Potential Outcome).
-
-3. Geographic regression discontinuity designs use distance to a border as the running variable: units on one side of the border are treated and units on the other are untreated. Keele and Titiunik (2016) use such a design to study whether voters are more likely to turn out when they have the opportunity to vote directly on legislation on so-called ballot initiatives. A complication of this design is how to measure distance to the border in two dimensions.
+- Finally, from the figure, we can see how poorly the average effect at the threshold approximates the average effect for all units. The average treatment effect among the treated (to the right of the threshold in the figure) is negative, whereas at the threshold it is zero This clarifies that the estimand of the regression discontinuity design, the difference at the cutoff, is only relevant for a small – and possibly empty – set of units very close to the cutoff.

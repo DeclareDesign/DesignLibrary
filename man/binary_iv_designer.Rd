@@ -25,7 +25,7 @@ binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 
 \item{d_Y}{A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.}
 
-\item{outcome_sd}{A non negative number. Standard deviation on Y.}
+\item{outcome_sd}{A real number. The standard deviation of the outcome.}
 
 \item{a}{A vector of four numbers. Constant in Y equation for each complier type (always-taker, never-taker, complier, defier).}
 
@@ -44,7 +44,7 @@ binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 \item{fixed}{A character vector. Names of arguments to be fixed in design. \code{outcome_name}, \code{treatment_name} and \code{instrument_name} are always fixed.}
 }
 \value{
-A simple instrumental variables design.
+A simple instrumental variables design with binary instrument, treatment, and outcome variables.
 }
 \description{
 Builds a design with one instrument, one binary explanatory variable, and one outcome.
@@ -52,6 +52,9 @@ Builds a design with one instrument, one binary explanatory variable, and one ou
 \details{
 A researcher is interested in the effect of binary X on outcome Y.  The relationship is confounded  because units that are more likely to be assigned to X=1 have higher Y outcomes.
 A potential instrument Z is examined, which plausibly causes X. The instrument can be used to assess the effect of X on Y for units whose value of X depends on Z if Z does not negatively affect X for some cases, affects X positively for some, and affects Y only through X.
+
+
+See \href{https://declaredesign.org/library/articles/binary_iv.html}{vignette online} for more details on estimands.
 }
 \examples{
 # Generate a simple iv design: iv identifies late not ate 
