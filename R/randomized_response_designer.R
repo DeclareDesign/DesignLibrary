@@ -36,7 +36,7 @@ randomized_response_designer <- function(N = 1000,
   if(prevalence_rate < 0 || prevalence_rate > 1)   stop("prevalence_rate must be in [0,1]")
   if(withholding_rate < 0 || withholding_rate > 1) stop("withholding_rate must be in [0,1]")
   argument_names <- names(match.call.defaults(envir = parent.frame()))[-1]
-  fixed_wrong <- fixed[!fixed %in% names(as.list(match.call()))]
+  fixed_wrong <- fixed[!fixed %in% argument_names]
   if(length(fixed_wrong)!=0) stop(paste0("The following arguments in `fixed` do not match a designer argument:", fixed_wrong)) 
   
   fixed_txt <- fixed_expr(c("N","prob_forced_yes","prevalence_rate","withholding_rate"))
