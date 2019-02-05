@@ -199,9 +199,9 @@ attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
   class = c(rep("integer", 4), rep("numeric", 10), rep("character", 2), "logical"),
   min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA, NA, NA),
   max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA, NA, NA),
-  inspector_min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA, NA, NA),
-  inspector_max = c(Inf, 5, rep(Inf,7), 1, 1, Inf, Inf, Inf, NA, NA, NA),
-  inspector_step = c(10, 1, rep(10, 7), 0.2, 0.5, 100, 100, 100, NA, NA, NA)
+  inspector_min = c(100, 1, 100, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, NA, NA, NA),
+  inspector_max = c(400, 6, 400, 30, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, NA, NA, NA),
+  inspector_step = c(50, 1, 50, 10, rep(.5, 10), NA, NA, NA)
 )
 
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-

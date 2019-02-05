@@ -101,9 +101,9 @@ attr(spillover_designer, "definitions") <- data.frame(
   class = c("integer", "integer", "numeric", "numeric", "character", "character"),
   min = c(1, 1, 0, 0, NA, NA),
   max = c(rep(Inf, 4), NA, NA),
-  inspector_min = c(80, 1, 0, 0, NA, NA),
-  inspector_max = c(100, rep(Inf, 3), NA, NA),
-  inspector_step = c(5, 3, 0.2, 2, NA, NA)
+  inspector_min = c(50, 10, 0, 0, NA, NA),
+  inspector_max = c(100, 100, 3, 4, NA, NA),
+  inspector_step = c(10, 20, 0.5, .5, NA, NA)
 )
   
 
