@@ -119,6 +119,13 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
   mediation_analysis_design
 }
 
+attr(mediation_analysis_designer,"definitions") <- data.frame(
+  names = c("N",  "a",  "b",  "c",  "d",  "rho", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 5), rep("character", 2)),
+  min = c(1, rep(-Inf, 4), -1, NA, NA),
+  max = c(1, rep(Inf, 4), 1, NA, NA)
+)
+
 attr(mediation_analysis_designer,"shiny_arguments") <- list(
   N = c(100, 50, 1000),
   a = seq(from = .5, to = -.5, by = -.5),

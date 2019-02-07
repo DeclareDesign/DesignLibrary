@@ -72,6 +72,17 @@ spillover_designer <- function(N_groups = 80,
   spillover_design
 }
 
+attr(spillover_designer, "definitions") <- data.frame(
+  names = c("N_groups", "N_i_group", "sd_i", "gamma", "design_name", "fixed"),
+  class = c("integer", "integer", "numeric", "numeric", "character", "character"),
+  min = c(1, 1, 0, 0, NA, NA),
+  max = c(rep(Inf, 4), NA, NA),
+  inspector_min = c(50, 10, 0, 0, NA, NA),
+  inspector_max = c(100, 100, 3, 4, NA, NA),
+  inspector_step = c(10, 20, 0.5, .5, NA, NA)
+)
+  
+
 attr(spillover_designer, "shiny_arguments") <- list(
   N_groups = c(50, 100, 500),
   N_i_group = c(10, 50, 100),

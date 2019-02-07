@@ -97,6 +97,13 @@ two_arm_attrition_designer <- function(N = 100,
   two_arm_attrition_design
 }
 
+attr(two_arm_attrition_designer, "definitions") <- data.frame(
+  names = c("N",  "a_R",  "b_R",  "a_Y",  "b_Y",  "rho", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 5), rep("character", 2)),
+  min = c(6, rep(-Inf, 4), 0, NA, NA),
+  max = c(rep(Inf, 5), 1, NA, NA)
+)
+
 attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample",
                                               b_R = "How reporting is related to treatment", 
                                               rho = "Correlation between reporting error term and outcome error term")

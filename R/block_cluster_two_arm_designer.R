@@ -168,6 +168,18 @@ block_cluster_two_arm_designer <- function(N = NULL,
   
 }
 
+attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
+  names = c("N","N_blocks","N_clusters_in_block","N_i_in_cluster","sd","sd_block",
+            "sd_cluster","sd_i_0","sd_i_1","rho","assignment_probs","control_mean",
+            "ate","treatment_mean","design_name","fixed","verbose"),
+  class = c(rep("integer", 4), rep("numeric", 10), rep("character", 2), "logical"),
+  min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA, NA, NA),
+  max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA, NA, NA),
+  inspector_min = c(100, 1, 100, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, NA, NA, NA),
+  inspector_max = c(400, 6, 400, 30, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, NA, NA, NA),
+  inspector_step = c(50, 1, 50, 10, rep(.5, 10), NA, NA, NA)
+)
+
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-
   list(
     N_blocks = c(10, 20, 50),

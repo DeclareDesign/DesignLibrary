@@ -187,6 +187,14 @@ multi_arm_designer <- function(N = 30,
   return(multi_arm_design)
 }
 
+attr(multi_arm_designer, "definitions") <- data.frame(
+  names = c("N", "m_arms", "outcome_means", "sd_i", 
+            "outcome_sds", "conditions", "fixed"),
+  class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
+  min   = c(6, 2, -Inf, 0, 0, NA, NA),
+  max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA)
+)
+
 attr(multi_arm_designer, "shiny_arguments") <-
   list(N = c(10, 20, 50))
 

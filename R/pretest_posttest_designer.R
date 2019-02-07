@@ -90,6 +90,12 @@ pretest_posttest_designer <- function(N = 100,
   
   pretest_posttest_design
 }
+attr(pretest_posttest_designer, "definitions") <- data.frame(
+  names = c("N",  "ate",  "sd_1",  "sd_2",  "rho",  "attrition_rate", "design_name", "fixed"),
+  class = c("integer", rep("numeric", 5), rep("character", 2)),
+  min = c(2, -Inf, 0, 0, -1, 0, NA, NA),
+  max = c(Inf, Inf, Inf, Inf, 1, 1, NA, NA)
+)
 attr(pretest_posttest_designer, "shiny_arguments") <- list(
   N = c(100, 50, 1000),
   ate = c(.25,0,.5),

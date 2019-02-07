@@ -85,6 +85,12 @@ randomized_response_designer <- function(N = 1000,
     construct_design_code(randomized_response_designer, match.call.defaults())
   randomized_response_design
 }
+attr(randomized_response_designer,"definitions") <- data.frame(
+  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "design_name", "fixed"),
+  class = c("integer", rep("numeric",3), rep("character", 2)),
+  min   = c(1, 0, 0, 0, NA, NA),
+  max   = c(Inf,1, 1, 1, NA, NA)
+)
 attr(randomized_response_designer,"tips") <-
   list(
     N = "Size of sample",
