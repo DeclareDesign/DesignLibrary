@@ -70,10 +70,9 @@ for(designer in designers){
       }
     )
     testthat::test_that(
-      desc = paste0("Any shiny_arguments in the attributes of ",designer," have associated tips."),
+      desc = paste0("All shiny_arguments in the attributes of ",designer," have a tip."),
       code = {
-        expect_length(setdiff(names(shiny_arguments),names(shiny_tips)),0)
-        expect_length(setdiff(names(shiny_tips),names(shiny_arguments)),0)
+        expect_true(all(names(shiny_arguments) %in% names(shiny_tips)))
       }
     )
   }
