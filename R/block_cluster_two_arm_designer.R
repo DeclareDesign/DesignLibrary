@@ -190,10 +190,22 @@ attr(block_cluster_two_arm_designer, "shiny_arguments") <-
 
 attr(block_cluster_two_arm_designer, "tips") <-
   list(
+    N = "Total number of units",
     N_blocks = "Number of blocks",
     N_clusters_in_block = "Number of clusters in each block",
     N_i_in_cluster = "Number of units in each cluster",
-    ate = "The average treatment effect"
+    sd = "Overall standard deviation",
+    sd_block = "Standard deviation of block level shocks",
+    sd_cluster = "Standard deviation of cluster level shock",
+    sd_i_0 = "Standard deviation of individual level shock in control",
+    sd_i_1 = "Standard deviation of individual level shock in treatment",
+    rho = "Correlation in individual shock between potential outcomes for treatment and control",
+    assignment_probs = "Treatment assignment probability for each block",
+    control_mean = "Average outcome in control",
+    ate = "Average treatment effect",
+    treatment_mean = "Average outcome in treatment",
+    verbose = "If TRUE, prints intra-cluster correlation"
+    
   )
 attr(block_cluster_two_arm_designer, "description") <- "
 <p> A two arm blocked and clustered experiment with <code>N_blocks</code> blocks, 

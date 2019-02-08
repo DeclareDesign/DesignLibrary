@@ -290,9 +290,17 @@ attr(factorial_designer,"shiny_arguments") <-
     k = c(2, 3, 4)
   )
 
-attr(factorial_designer,"tips") <-
-  c(N = "Size of sample",
-    k = "The number of factors in the design"
+attr(factorial_designer,"tips") <-list(
+  N = "Size of sample",
+  k = "The number of factors in the design",
+  outcome_means = "Means for each of the treatment combinations",
+  sd = "Standard deviation for outcomes",
+  outcome_sds = "Standard deviations for each of the treatment combinations",
+  assignment_probs = "Independent probability of assignment to each treatment",
+  outcome_name = "Name of outcome variable",
+  treatment_names = "Name of treatment factors variable"
+  
+  
   )
 
 attr(factorial_designer,"description") <- "

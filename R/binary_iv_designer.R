@@ -155,8 +155,16 @@ attr(binary_iv_designer, "shiny_arguments") <- list(design_name = "binary_iv_des
 attr(binary_iv_designer, "tips") <-
   list(
     N = "Sample size",
+    type_prob = "Probability of each complier type",
+    assignment_probs = "Probability of assignment to encouragement", 
+    a_Y = "Constant in Y equation for each complier type",
     b_Y = "Effect of X on Y",
-    d_Y = "Effect of Z on Y"
+    d_Y = "Effect of Z on Y",
+    outcome_sd = "Standard deviation of the outcome.",
+    a = "Constant in Y equation", 
+    b = " Slope on X in Y equation for each complier type", 
+    d = "Slope on Z in Y equation for each complier type"
+    
   )
 
 attr(binary_iv_designer, "description") <- "

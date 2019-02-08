@@ -243,9 +243,19 @@ attr(process_tracing_designer,"shiny_arguments") <- list(
   cor_E1E2_H = c(0,.32)
 )
 attr(process_tracing_designer,"tips") <- c(
-  prior_H = "Prior probability that the hypothesis that X causes Y is true.",
-  p_E1_H = "Probability of observing the first piece of evidence given X indeed causes Y.",
-  cor_E1E2_H = "Correlation in first and second pieces of evidence given X indeed causes Y."
+  N = "Size of population of cases selected",
+  prob_X = "Probability that X = 1 for a given case",
+  process_proportions = "Simplex denoting the proportion of cases in the population",
+  prior_H = "Prior probability that X indeed causes Y",
+  p_E1_H = "Probability of observing the first piece of evidence given X indeed causes Y",
+  p_E1_not_H = "Probability of observing first piece of evidence given that X caused Y is not true",
+  p_E2_H = "Probability of observing second piece of evidence given X indeed caused Y ",
+  p_E2_not_H = "robability of observing second piece of evidence given that X caused Y is not true.",
+  cor_E1E2_H = "Correlation in first and second pieces of evidence given X indeed causes Y",
+  cor_E1E2_not_H = "Correlation in first and second pieces of evidence given that X caused Y is not true",
+  label_E1 = "Label for the first piece of evidence",
+  label_E2 = "Label for the second piece of evidence"
+
 )
 attr(process_tracing_designer,"description") <- "A process-tracing design in which two pieces of evidence are sought and used to update about whether X caused Y using Bayes' rule."
 

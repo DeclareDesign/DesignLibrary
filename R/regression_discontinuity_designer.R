@@ -101,12 +101,16 @@ attr(regression_discontinuity_designer,"shiny_arguments") <-
     poly_reg_order = c(4, 3, 2, 1)
   )
 
-attr(regression_discontinuity_designer,"tips") <-
-  c(N = "Size of population to sample from",
-    tau = "Difference in potential outcomes functions at the threshold",
-    cutoff = "Threshold on running variable beyond which units are treated",
-    bandwidth = "Bandwidth around threshold from which to include units",
-    poly_reg_order = "Order of the polynomial regression used to estimate the jump at the cutoff"
+attr(regression_discontinuity_designer,"tips") <-list(
+  N = "Size of population to sample from",
+  tau = "Difference in potential outcomes functions at the threshold",
+  outcome_sd = "Standard deviation of the outcome",
+  cutoff = "Threshold on running variable beyond which units are treated",
+  bandwidth = "Bandwidth around threshold from which to include units",
+  control_coefs = "Coefficients for polynomial regression function that generates control potential outcomes",
+  treatment_coefs = "Coefficients for polynomial regression function that generates treatment potential outcomes",
+  poly_reg_order = "Order of the polynomial regression used to estimate the jump at the cutoff"
+ 
   )
 
 attr(regression_discontinuity_designer,"description") <- "

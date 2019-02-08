@@ -34,7 +34,8 @@
 spillover_designer <- function(N_groups = 80, 
                                N_i_group = 3, 
                                sd_i = .2,
-                               gamma = 2)
+                               gamma = 2
+                               )
 {
   if(sd_i < 0) stop("sd_i must be nonnegative")
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
