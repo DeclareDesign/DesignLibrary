@@ -9,6 +9,7 @@ for(designer in designers){
   
   the_designer <- get(x = designer)
   has_shiny <- !is.null(attributes(the_designer)$shiny_arguments)
+  has_definition <- !is.null(attributes(the_designer)$definitions)
   
   designer_args <- formals(the_designer)
   designer_attr <- attributes(the_designer)
@@ -73,6 +74,32 @@ for(designer in designers){
       code = {
         expect_length(setdiff(names(shiny_arguments),names(shiny_tips)),0)
         expect_length(setdiff(names(shiny_tips),names(shiny_arguments)),0)
+      }
+    )
+  }
+  
+  if(has_definition){
+    test_that(
+      desc = paste0("Definitions attribute of ", designer," has the same row number as its formals."),
+      code = {
+        definitions <- designer_attr$definitions
+        expect_equal(nrow(definitions), length(designer_args)
+        )
+      }
+    )
+    
+    test_that(
+      desc = paste0("All 'names' in definitions attribute of ", designer," are contained in its formals."),
+      code = {
+        definitions <- designer_attr$definitions
+        expect_true(all(definitions$names %in% names(designer_args)))
+      }
+    )
+    test_that(
+      desc = paste0("All 'class' values in  definitions attribute of ", designer," exist."),
+      code = {
+        classes <- designer_attr$definitions[["class"]]
+        expect_true(all(classes %in% c("character", "numeric", "integer", "logical")))
       }
     )
   }
@@ -248,7 +275,6 @@ test_that(desc = "block_cluster designer handles reports ICC with verbose = TRUE
             expect_output(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = TRUE))
             expect_silent(d <- block_cluster_two_arm_designer(sd = 1, sd_block = 2, verbose = FALSE))
           })
-
 
 
 # Aliases -----------------------------------------------------------------
