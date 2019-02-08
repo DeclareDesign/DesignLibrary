@@ -137,10 +137,12 @@ two_by_two_designer <- function(N = 100,
 attr(two_by_two_designer, "definitions") <- data.frame(
   names  = c("N",  "prob_A",  "prob_B",  "weight_A",  "weight_B",  
              "outcome_means",  "mean_A0B0",  "mean_A0B1",  "mean_A1B0",  
-             "mean_A1B1",  "sd_i",  "outcome_sds", "design_name", "fixed"),
-  class = c("integer", rep("numeric", 11), rep("character", 2)),
-  min = c(1, 0, 0, 0, 0, rep(-Inf, 5), 0, 0, NA, NA), 
-  max = c(Inf, 1, 1, rep(Inf, 9), NA, NA)
+             "mean_A1B1",  "sd_i",  "outcome_sds"),
+  class = c("integer", rep("numeric", 11)),
+  min = c(1, 0, 0, 1/10000, 1/10000, rep(-Inf, 5), 0, 0), 
+  max = c(Inf, 1, 1, rep(Inf, 9)),
+  inspector_min = c(100, 0, 0, 1/10, 1/10, -1),
+  inspector_step = c(50, .2, .2, 1/2, 1/2, rep(.2, 7))
 )
 
 attr(two_by_two_designer, "shiny_arguments") <- list(

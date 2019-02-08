@@ -192,7 +192,9 @@ attr(multi_arm_designer, "definitions") <- data.frame(
             "outcome_sds", "conditions", "fixed"),
   class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
   min   = c(6, 2, -Inf, 0, 0, NA, NA),
-  max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA)
+  max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA),
+  inspector_min = c(120, 2, 0, 0, 0, NA, NA),
+  inspector_step = c(60, 1, rep(.2, 3), NA, NA)
 )
 
 attr(multi_arm_designer, "shiny_arguments") <-

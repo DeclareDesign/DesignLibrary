@@ -86,10 +86,12 @@ regression_discontinuity_designer <- function(
 
 attr(regression_discontinuity_designer, "definitions") <- data.frame(
   names = c("N","tau","outcome_sd","cutoff","bandwidth","control_coefs",
-            "treatment_coefs","poly_reg_order", "design_name", "fixed"),
-  class = c("integer", rep("numeric", 6), "integer", "character", "character"),
-  min = c(2, -Inf, 0, 0, rep(-Inf, 4), NA, NA),
-  max = c(Inf, Inf, Inf, 1, rep(Inf, 4), NA, NA)
+            "treatment_coefs","poly_reg_order"),
+  class = c("integer", rep("numeric", 6), "integer"),
+  min = c(2, -Inf, 0, 0, rep(-Inf, 3), 1),
+  max = c(Inf, Inf, Inf, 1, Inf, Inf, Inf, 10),
+  inspector_min = c(100, 0, 0, 0.1, .1, 0, 0, 1),
+  inspector_step = c(50, rep(.2, 6), 1)
 )
 
 attr(regression_discontinuity_designer,"shiny_arguments") <-

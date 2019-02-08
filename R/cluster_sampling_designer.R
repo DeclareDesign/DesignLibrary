@@ -85,14 +85,12 @@ cluster_sampling_designer <- function(N_blocks = 1,
 }
 attr(cluster_sampling_designer, "definitions") <- data.frame(
   names = c("N_blocks",  "N_clusters_in_block",  "N_i_in_cluster",  
-            "n_clusters_in_block",  "n_i_in_cluster",  "icc", "design_name", 
-            "fixed"),
-  class = c(rep("integer", 5), "numeric", "character", "character"),
-  min = c(rep(1, 5), 0, NA, NA),
-  max = c(rep(Inf, 5), 1, NA, NA),
-  inspector_min = c(rep(1,5), 0, NA, NA),
-  inspector_max = c(4, 21, 100, 80, 80, 1, NA, NA),
-  inspector_step = c(1, 5, 10, 10, 10, 0.2, NA, NA)
+            "n_clusters_in_block",  "n_i_in_cluster",  "icc"),
+  class = c(rep("integer", 5), "numeric"),
+  min = c(rep(1, 5), 0),
+  max = c(rep(Inf, 5), 1),
+  inspector_min = c(rep(1,5), 0),
+  inspector_step = c(1, 5, 10, 10, 10, 0.2)
 )
 attr(cluster_sampling_designer, "tips") <- list(
   n_clusters_in_block = "Number of clusters to sample",

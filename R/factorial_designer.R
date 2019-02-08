@@ -276,12 +276,14 @@ factorial_designer <- function(
 }
 
 attr(factorial_designer,"definitions") <- data.frame(
-  names = c("N", "k", "outcome_means", "sd", "outcome_sds", 
+  names         = c("N", "k", "outcome_means", "sd", "outcome_sds", 
             "assignment_probs", "outcome_name", "treatment_names",
             "fixed"),
-  class = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
-  min   = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
-  max   = c(rep(Inf, 5), 1, rep(NA, 3))
+  class         = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
+  min           = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
+  max           = c(rep(Inf, 5), 1, rep(NA, 3)),
+  inspector_min = c(100, 2, 0, 0, 0, 0.1, NA, NA, NA),
+  inspector_step= c(100, 1, rep(.2, 4), rep(NA, 3))
 )
 
 attr(factorial_designer,"shiny_arguments") <-

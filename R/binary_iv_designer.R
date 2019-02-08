@@ -139,15 +139,16 @@ binary_iv_designer <- function(N = 100,
 }
 
 attr(binary_iv_designer, "shiny_arguments") <- list(N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
-attr(binary_iv_designer, "definitions") <- data.frame(
-  names = c("N", "type_probs", "assignment_probs", "a_Y", "b_Y", "d_Y",
-            "outcome_sd", "a", "b", "d", "outcome_name", "treatment_name",
-            "instrument_name", "design_name", "fixed"),
-  class = c("integer", rep("numeric", 9), rep("character", 5)),
-  min   = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3), rep(NA, 5)),
-  max   = c(Inf, 1, 1, rep(Inf, 7), rep(NA, 5))
-)
 
+attr(binary_iv_designer, "definitions") <- data.frame(
+  names         = c("N", "type_probs", "assignment_probs", "a_Y", "b_Y", "d_Y",
+                    "outcome_sd", "a", "b", "d"),
+  class         = c("integer", rep("numeric", 9)),
+  min           = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3)),
+  max           = c(Inf, 1, 1, rep(Inf, 7)),
+  inspector_min = c(100, .1, .1, rep(0, 7)),
+  inspector_step= c(100, .1, .1, rep(.1, 7))
+)
 
 attr(binary_iv_designer, "shiny_arguments") <- list(design_name = "binary_iv_design",
                                                     N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 

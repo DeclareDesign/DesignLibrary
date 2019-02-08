@@ -79,10 +79,12 @@ two_arm_designer <- function(N = 100,
 
 attr(two_arm_designer, "definitions") <- data.frame(
   names = c("N", "assignment_prob", "control_mean", "control_sd", 
-            "ate", "treatment_mean", "treatment_sd", "rho", "design_name", "fixed"),
-  class = c("integer", rep("numeric", 7), rep("character", 2)),
-  min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1, NA, NA),
-  max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA, NA)
+            "ate", "treatment_mean", "treatment_sd", "rho"),
+  class = c("integer", rep("numeric", 7)),
+  min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1),
+  max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1),
+  inspector_min = c(100, rep(0, 6), -1),
+  inspector_step = c(50, rep(.2, 7))
 )
 
 attr(two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 

@@ -98,10 +98,12 @@ two_arm_attrition_designer <- function(N = 100,
 }
 
 attr(two_arm_attrition_designer, "definitions") <- data.frame(
-  names = c("N",  "a_R",  "b_R",  "a_Y",  "b_Y",  "rho", "design_name", "fixed"),
-  class = c("integer", rep("numeric", 5), rep("character", 2)),
-  min = c(6, rep(-Inf, 4), 0, NA, NA),
-  max = c(rep(Inf, 5), 1, NA, NA)
+  names = c("N",  "a_R",  "b_R",  "a_Y",  "b_Y",  "rho"),
+  class = c("integer", rep("numeric", 5)),
+  min = c(6, rep(-Inf, 4), 0),
+  max = c(rep(Inf, 5), 1),
+  inspector_min = c(100, rep(0, 5)),
+  inspector_step = c(50, rep(.2, 5))
 )
 
 attr(two_arm_attrition_designer, "tips") <- c(N = "Size of sample",

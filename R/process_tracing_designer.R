@@ -230,11 +230,12 @@ process_tracing_designer <- function(
 
 attr(process_tracing_designer, "definitions") <- data.frame(
   names = c("N",  "prob_X",  "process_proportions",  "prior_H",  "p_E1_H",  "p_E1_not_H",  
-            "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2",
-            "design_name", "fixed"),
-  class = c("integer", rep("numeric", 9), rep("character", 4)), 
-  min = c(6, rep(0, 7), -1, -1, rep(NA, 4)),
-  max = c(Inf, rep(1, 9), rep(NA, 4))
+            "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2"),
+  class = c("integer", rep("numeric", 9), rep("character", 2)), 
+  min = c(6, rep(0, 7), -1, -1, rep(NA, 2)),
+  max = c(Inf, rep(1, 9), rep(NA, 2)),
+  inspector_min = c(100, rep(0, 7), -1, -1, NA, NA),
+  inspector_step = c(50, rep(.2, 9), NA, NA)
 )
 
 attr(process_tracing_designer,"shiny_arguments") <- list(

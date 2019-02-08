@@ -86,10 +86,12 @@ randomized_response_designer <- function(N = 1000,
   randomized_response_design
 }
 attr(randomized_response_designer,"definitions") <- data.frame(
-  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate", "design_name", "fixed"),
-  class = c("integer", rep("numeric",3), rep("character", 2)),
-  min   = c(1, 0, 0, 0, NA, NA),
-  max   = c(Inf,1, 1, 1, NA, NA)
+  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate"),
+  class = c("integer", rep("numeric",3)),
+  min   = c(1, 0, 0, 0),
+  max   = c(Inf,1, 1, 1),
+  inspector_min = c(100, 0, 0, 0),
+  inspector_step = c(50, rep(.2, 3))
 )
 attr(randomized_response_designer,"tips") <-
   list(
