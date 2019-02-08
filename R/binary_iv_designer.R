@@ -160,7 +160,7 @@ attr(binary_iv_designer, "tips") <-
     d_Y = "Effect of Z on Y",
     outcome_sd = "Standard deviation of the outcome.",
     a = "Constant in Y equation", 
-    b = " Slope on X in Y equation for each complier type", 
+    b = "Slope on X in Y equation for each complier type", 
     d = "Slope on Z in Y equation for each complier type"
     
   )

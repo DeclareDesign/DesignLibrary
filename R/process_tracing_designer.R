@@ -251,7 +251,7 @@ attr(process_tracing_designer,"tips") <- c(
   p_E1_H = "Probability of observing the first piece of evidence given X indeed causes Y",
   p_E1_not_H = "Probability of observing first piece of evidence given that X caused Y is not true",
   p_E2_H = "Probability of observing second piece of evidence given X indeed caused Y ",
-  p_E2_not_H = "robability of observing second piece of evidence given that X caused Y is not true.",
+  p_E2_not_H = "Probability of observing second piece of evidence given that X caused Y is not true.",
   cor_E1E2_H = "Correlation in first and second pieces of evidence given X indeed causes Y",
   cor_E1E2_not_H = "Correlation in first and second pieces of evidence given that X caused Y is not true",
   label_E1 = "Label for the first piece of evidence",
