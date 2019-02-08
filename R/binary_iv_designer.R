@@ -150,9 +150,6 @@ attr(binary_iv_designer, "definitions") <- data.frame(
   inspector_step= c(100, .1, .1, rep(.1, 7))
 )
 
-attr(binary_iv_designer, "shiny_arguments") <- list(design_name = "binary_iv_design",
-                                                    N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
-
 attr(binary_iv_designer, "tips") <-
   list(
     N = "Sample size",
