@@ -92,7 +92,14 @@ attr(two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, 
 attr(two_arm_designer, "tips") <-
   list(
     N = "Sample size",
-    ate = "The average treatment effect"
+    assignment_prob = "Probability of assignment to treatment",
+    control_mean = "Average outcome in control",
+    control_sd = "Standard deviation in control",
+    ate = "Average treatment effect",
+    treatment_mean = "Average outcome in treatment",
+    treatment_sd = "Standard deviation in treatment",
+    rho = "Correlation between treatment and control outcomes"
+
   )
 
 attr(two_arm_designer, "description") <- "

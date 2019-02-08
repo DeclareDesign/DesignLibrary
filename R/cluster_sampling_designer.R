@@ -93,9 +93,15 @@ attr(cluster_sampling_designer, "definitions") <- data.frame(
   inspector_step = c(1, 5, 10, 10, 10, 0.2)
 )
 attr(cluster_sampling_designer, "tips") <- list(
-  n_clusters_in_block = "Number of clusters to sample",
-  n_i_in_cluster = "Number of subjects per cluster to sample",
+  N_blocks = "Number of blocks",
+  N_clusters_in_block = "Number of clusters in each block",
+  N_i_in_cluster = "Number of units per cluster sampled",
+  n_clusters_in_block = "Number of clusters to sample in each block",
+  n_i_in_cluster = "Number of units to sample in each cluster",
   icc = "Intra-cluster Correlation"
+  
+  
+  
 )
 attr(cluster_sampling_designer, "shiny_arguments") <- list(
   n_clusters_in_block = c(100, seq(10, 30, 10)),

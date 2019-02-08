@@ -107,8 +107,11 @@ attr(pretest_posttest_designer, "shiny_arguments") <- list(
 attr(pretest_posttest_designer, "tips") <- c(
   N = "Size of sample",
   ate = "Average treatment effect",
+  sd_1 = "Standard deviation of period 1 shocks",
+  sd_2 = "Standard deviation of period 2 shocks",
   rho = "Correlation in outcomes between pre- and post-test",
   attrition_rate = "Proportion of respondents lost when using pre-test data"
+
 )
 attr(pretest_posttest_designer, "description") <- "
 <p> A pretest-posttest design with sample of size <code>N</code>, average treatment effect of size <code>ate</code>, 
