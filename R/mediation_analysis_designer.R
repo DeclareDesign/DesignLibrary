@@ -252,14 +252,22 @@ attr(mediation_analysis_designer,"shiny_arguments") <- list(
   mediation_package =  c(FALSE, TRUE)
 )
 
-attr(mediation_analysis_designer,"tips") <- c(
-  N = "Size of sample",
-  Z_on_M = "Effect of treatment (Z) on mediator (M)",
-  M_on_Y_Z0 = "Effect of mediator (M) on outcome (Y) when Z = 0",
-  M_on_Y_Z1 = "Interaction between mediator (M) and (Z) for outcome (Y)",
-  Z_on_Y_M0 = "Effect of treatment (Z) on outcome (Y), when M = 0",
-  rho =  "Correlation between mediator (M) and outcome (Y) error terms",
-  mediation_package = "If 'TRUE' direct and indirect effects are estimated using mediation::mediate()"
+
+attr(mediation_analysis_designer,"definitions") <- data.frame(
+  names = c("N",  "Z_on_M",  "M_on_Y_Z0 ",  "M_on_Y_Z1",  "Z_on_Y_M0",  "rho", "mediation_package"),
+  tips  = c("Size of sample",
+            "Effect of treatment (Z) on mediator (M)",
+            "Effect of mediator (M) on outcome (Y) when Z = 0.",
+            "Interaction between mediator (M) and (Z) for outcome (Y)",
+            "Effect of treatment (Z) on outcome (Y), when M = 0",
+            "Correlation of mediator (M) and outcome (Y) error terms",
+            "If 'TRUE' direct and indirect effects are estimated using mediation::mediate()"),
+  class = c("integer", rep("numeric", 5), "logical"),
+  min = c(1, rep(-Inf, 4), -1, 0),
+  max = c(1, rep(Inf, 4), 1, 1),
+  inspector_min = c(100, rep(0, 4), -1, 0),
+  inspector_step = c(50, 0.1, .2, 0.3, 0.4, 0.2, 0),
+  stringsAsFactors = FALSE
 )
 
 attr(mediation_analysis_designer,"description") <- "
