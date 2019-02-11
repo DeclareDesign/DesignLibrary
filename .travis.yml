@@ -49,5 +49,6 @@ env:
 r_github_packages:
 - DeclareDesign/DDtools
 - DeclareDesign/DeclareDesign
+- r-lib/generics
 after_success:
 - Rscript -e DDtools::after_build

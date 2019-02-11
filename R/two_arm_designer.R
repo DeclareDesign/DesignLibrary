@@ -27,7 +27,7 @@
 #' @export two_arm_designer simple_two_arm_designer
 #'
 #' @examples
-#' #Generate a simple two-arm design using default arguments
+#' # Generate a simple two-arm design using default arguments
 #' two_arm_design <- two_arm_designer()
 
 
@@ -59,6 +59,7 @@ two_arm_designer <- function(N = 100,
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = assignment_prob)
+
     reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
