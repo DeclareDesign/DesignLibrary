@@ -16,7 +16,7 @@ library(knitr)
 
 One of the simplest ways to learn about the effect of a cause is to randomly divide a group in two: one gets a treatment and the other doesn't. By comparing the averages of the outcomes in the treatment group to those of the control group, you get to learn about the causal effect of the treatment -- at least on average. Magic. 
 
-So how does it work? In fact it works only if we are willing to make a few assumptions. First, for each individual in our study, we are willing to imagine two counterfactuals: one in which they ended up in the treatment group, and one where they ended up in the control. We'll define the unit level treatment effect as the difference between these two. Second we'll assume that an individual's outcome is not affected by whoever else did or did not end up in their group.^[This is often referred to as the "no spillovers" assumption. An individual's outcome depends only on their treatment assignment status and is not affected by that of any other individual.]
+So how does it work? In fact, it works only if we are willing to make a few assumptions. First, for each individual in our study, we are willing to imagine two counterfactuals: one in which they ended up in the treatment group, and one where they ended up in the control. We'll define the unit level treatment effect as the difference between these two. Second, we'll assume that an individual's outcome is not affected by whoever else did or did not end up in their group.^[This is often referred to as the "no spillovers" assumption. An individual's outcome depends only on their treatment assignment status and is not affected by that of any other individual.]
 
 Ideally, we'd like to observe both counterfactuals for each individual, and we'd know the true causal effect by looking at the differences. But we can't see the world in two counterfactual states at once: that's called the fundamental problem of causal inference. 
 
@@ -24,11 +24,9 @@ Amazingly though, while we can never learn the true causal effect of an individu
 
 When we take a random sample from a population, the sample becomes representative of the population in the sense that the average outcome in the sample will, on average, be the same as the average outcome in the population.  Technically: the procedure delivers unbiased estimates of averages. In an experiment, it's as though we're taking two separate representative samples from *two counterfactual states of the world*, one from a world in which the cause is present and one from one in which it is absent. By taking the mean of the group that represents the treated potential outcomes and comparing it to the mean of the group that represents the untreated potential outcomes, we can construct an unbiased guess of the true average difference in the two states of the world.^[This last step used the useful fact that the difference of averages is the same as the  average of differences.] 
 
-This logic does not guarantee that an answer is *correct.* A two arm trial does not let us *see* the true treatment effect. but it does produce an estimate that is not biased up or down.  Just like in random sampling, as the size of our experiment grows, our guess of the average treatment effect (ATE) will converge to the true ATE. As we shall see, however, characterizing our uncertainty about our guesses can be complicated, even in such a simple design.  
+This logic does not guarantee that an answer is *correct.* A two arm trial does not let us *see* the true treatment effect. But it does produce an estimate that is not biased up or down. Just like in random sampling, as the size of our experiment grows, our guess of the average treatment effect (ATE) will converge to the true ATE. As we shall see, however, characterizing our uncertainty about our guesses can be complicated, even in such a simple design.  
 
 ## Design Declaration
-
-here are the components of a two arm trial design:
 
 - **M**odel: 
     
@@ -60,9 +58,9 @@ diagnosis <- diagnose_design(two_arm_design)
 kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
 ```
 
-- As the diagnosis reveals, the estimate of the ATE is unbiased. We could have shown this without simulations using simple algebra. Our estimator, $\hat{\tau}$, can be written $E[Y_i(Z = 1)] - E[Y_i(Z = 0)] = E[Y_i(Z = 1) - Y_i(Z = 0)]$ (via "the linearity of expectation"). This implies our estimand is equivalent to our estimator in expectation. 
+- As the diagnosis reveals, the estimate of the ATE is unbiased. We could have shown this without simulations using simple algebra. Our estimator, $\hat{\tau}$, can be written $E[Y_i(Z = 1)] - E[Y_i(Z = 0)] = E[Y_i(Z = 1) - Y_i(Z = 0)]$ (via "the linearity of expectation"). Note this implies $\tau = \hat{\tau}$: our estimand is equivalent to our estimator in expectation. 
 
-- But our coverage is above what it should be (95\%) -- suggesting that our unbiased point estimates have biased confidence intervals! This reflects the fact that conventional estimators of the standard error for the difference in means make conservative assumptions about the true covariance in potential outcomes. Using this conservative rule of thumb, those standard error estimators tend to produce confidence intervals that are too wide. 
+- But our coverage is above what it should be (95\%) -- suggesting that our unbiased point estimates have biased confidence intervals! This reflects the fact that conventional estimators of the standard error for the difference assume the true covariance in potential outcomes is zero. This conservative rule of thumb leads to standard error estimates that overstate the true variation in the sampling distribution of the point estimator.
 
 ## Exercises
 

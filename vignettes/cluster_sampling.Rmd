@@ -28,21 +28,27 @@ Assuming enough variation in the outcome of interest, the random assignment of e
 
 ## Design Declaration
 
-- **M**odel: We specify the variable of interest $Y$ (political ideology, say) as a discrete variable ranging from 1 (most liberal) to 7 (most conservative). We do not define a functional model since we are interested in the population mean of $Y$. The model also includes information about the number of sampled clusters and the number of individuals per cluster.
+- **M**odel: 
 
-- **I**nquiry: Our estimand is the population mean of political identification $Y$. Because we employed random sampling, we can expect the value of the sample mean ($\widehat{\overline{y}}$) to approximate the true population parameter ($\widehat{\overline{Y}}$).
+    We specify the variable of interest $Y$ (political ideology, say) as a discrete variable ranging from 1 (most liberal) to 7 (most conservative). We do not define a functional model since we are interested in the population mean of $Y$. The model also includes information about the number of sampled clusters and the number of individuals per cluster.
 
-- **D**ata strategy: sampling follows a two-stage strategy. We first draw a random sample 30 counties in California, and in each county select 20 individuals at random. This guarantees that each county has the same probability of being included in the sample and each resident within a county the same probability of being in the sample. In this design we estimate $Y$ for n = 600 respondents.
+- **I**nquiry: 
 
-- **A**nswer strategy: We estimate the population mean with the sample mean estimator: $\widehat{\overline{Y}} = \frac{1}{n} \sum_1^n Y_i$, and estimate standard errors under the assumption of independent and heteroskedastic errors as well as cluster-robust standard errors to take into account correlation of errors within clusters. Below we demonstrate the the imprecision of our estimated $\widehat{\overline{Y}}$ when we cluster standard errors and when we do not in the presence of an intracluster correlation coefficient (ICC) of 0.402.
+    Our estimand is the population mean of political identification $Y$. Because we employed random sampling, we can expect the value of the sample mean ($\widehat{\overline{y}}$) to approximate the true population parameter ($\widehat{\overline{Y}}$).
+
+- **D**ata strategy: 
+
+    Sampling follows a two-stage strategy. We first draw a random sample 30 counties in California, and in each county select 20 individuals at random. This guarantees that each county has the same probability of being included in the sample and each resident within a county the same probability of being in the sample. In this design we estimate $Y$ for n = 600 respondents.
+
+- **A**nswer strategy: 
+
+    We estimate the population mean with the sample mean estimator: $\widehat{\overline{Y}} = \frac{1}{n} \sum_1^n Y_i$, and estimate standard errors under the assumption of independent and heteroskedastic errors as well as cluster-robust standard errors to take into account correlation of errors within clusters. Below we demonstrate the the imprecision of our estimated $\widehat{\overline{Y}}$ when we cluster standard errors and when we do not in the presence of an intracluster correlation coefficient (ICC) of 0.402.
 
 
 ```{r,eval = TRUE, code = get_design_code(cluster_sampling_designer(n_clusters = 30, n_i_in_cluster = 20, icc = 0.402))}
 ```
 
 ## Takeaways
-
-We now diagnose the design:
 
 ```{r}
 diagnosis <- diagnose_design(cluster_sampling_design)
@@ -52,7 +58,7 @@ diagnosis <- diagnose_design(cluster_sampling_design)
 kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 ```
 
-To appreciate the role of clustering better we also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors. TO do this we first add an additional estimator to the design that does not take account of clusters. 
+To appreciate the role of clustering better we also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors. To do this we first add an additional estimator to the design that does not take account of clusters. 
 
 ```{r plot setup, echo=TRUE, warning=FALSE}
 
@@ -108,28 +114,4 @@ dd_theme <-
 
 The figure above may give us the impression that our estimate with clustered standard errors is less precise, when in fact, it correctly accounts for the uncertainty surrounding our estimates. The blue lines in the graph demonstrate the estimates from simulations which contain our estimand. As our table and graphs show, the share of these simulations over the total number of simulations, also known as coverage, is (correctly) close to 95% in estimations with clustered standard errors and 54% in estimations without clustered standard errors. As expected, the mean estimate itself and the bias is the same in both specifications.
 
-## Using the Cluster Sampling Designer
-
-In R, you can generate a cluster sampling design using the template function `cluster_sampling_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
-
-```{r, eval=FALSE}
-library(DesignLibrary)
-```
-
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_cluster_sampling_design` with `n_clusters`, `n_i_in_cluster`, `icc`, `N_clusters`, and `N_i_in_cluster` set to 40, 20, .2, 1000, and 50, respectively, by running the lines below.
-
-```{r, eval=FALSE}
-my_cluster_sampling_design <- cluster_sampling_designer(n_clusters = 40,
-                                                        n_i_in_cluster = 20,
-                                                        icc = .2, 
-                                                        N_clusters = 1000, 
-                                                        N_i_in_cluster = 50)
-```
-
-You can see more details on the `cluster_sampling_designer()` function and its arguments by running the following line of code:
-
-```{r, eval=FALSE}
-??cluster_sampling_designer
-```
-
-## Further reading
+## References

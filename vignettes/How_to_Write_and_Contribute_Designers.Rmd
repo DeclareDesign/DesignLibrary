@@ -12,7 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(DesignLibrary)
 ```
 
-
 First, install the development version of **DesignLibrary** in `R`:
 
 ```{r,eval=FALSE}
