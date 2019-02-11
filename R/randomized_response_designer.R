@@ -76,9 +76,9 @@ randomized_response_designer <- function(N = 1000,
       estimator_randomized_response + estimator_direct_question
     
     randomized_response_design <- set_diagnosands(
-      design = randomized_response_design,
-      diagnosands = declare_diagnosands(select = bias)
-      )
+      randomized_response_design,
+      declare_diagnosands(select = bias)
+    )
     
   }}}
   attr(randomized_response_design, "code") <- 
