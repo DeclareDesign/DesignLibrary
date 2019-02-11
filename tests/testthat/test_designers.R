@@ -59,7 +59,7 @@ for(designer in designers){
   if(has_shiny){
     
     shiny_arguments <- designer_attr$shiny_arguments
-    shiny_tips <- designer_attr$tips
+    shiny_tips <- designer_attr$definitions$names
     
     testthat::test_that(
       desc = paste0("Any shiny_arguments in the attributes of ",designer," should all be in the its formals."),
@@ -72,7 +72,7 @@ for(designer in designers){
     testthat::test_that(
       desc = paste0("All shiny_arguments in the attributes of ",designer," have a tip."),
       code = {
-        expect_true(all(names(shiny_arguments) %in% names(shiny_tips)))
+        expect_true(all(names(shiny_arguments) %in% shiny_tips))
       }
     )
   }

@@ -277,8 +277,8 @@ factorial_designer <- function(
 
 attr(factorial_designer,"definitions") <- data.frame(
   names         = c("N", "k", "outcome_means", "sd", "outcome_sds", 
-            "assignment_probs", "outcome_name", "treatment_names",
-            "fixed"),
+                    "assignment_probs", "outcome_name", "treatment_names",
+                    "fixed"),
   tips          = c("Size of sample",
                     "The number of factors in the design",
                     "Means for each of the treatment combinations",
@@ -286,7 +286,8 @@ attr(factorial_designer,"definitions") <- data.frame(
                     "Standard deviations for each of the treatment combinations",
                     "Independent probability of assignment to each treatment",
                     "Name of outcome variable",
-                    "Name of treatment factors variable"),
+                    "Name of treatment factors variable",
+                    "Names of arguments to be fixed"),
   class         = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
   min           = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
   max           = c(rep(Inf, 5), 1, rep(NA, 3)),

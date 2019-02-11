@@ -124,13 +124,15 @@ attr(mediation_analysis_designer,"definitions") <- data.frame(
   tips  = c("Size of sample",
             "Effect of treatment (Z) on mediator (M)",
             "Effect of mediator (M) on outcome (Y)",
+            "Interaction between mediator (M) and (Z) for outcome (Y)",
             "Direct effect of treatment (Z) on outcome (Y)",
             "Correlation of mediator (M) and outcome (Y) error terms"),
   class = c("integer", rep("numeric", 5)),
   min = c(1, rep(-Inf, 4), -1),
   max = c(1, rep(Inf, 4), 1),
   inspector_min = c(100, rep(0, 4), -1),
-  inspector_step = c(50, 0.1, .2)
+  inspector_step = c(50, 0.1, .2),
+  stringsAsFactors = FALSE
 )
 
 attr(mediation_analysis_designer,"shiny_arguments") <- list(
@@ -138,8 +140,7 @@ attr(mediation_analysis_designer,"shiny_arguments") <- list(
   a = seq(from = .5, to = -.5, by = -.5),
   b = seq(from = .5, to = -.5, by = -.5),
   d = seq(from = .5, to = -.5, by = -.5),
-  rho = c(.2, seq(from = -1, to = 1, by = .5)),
-  stringsAsFactors = FALSE
+  rho = c(.2, seq(from = -1, to = 1, by = .5))
 )
 
 attr(mediation_analysis_designer,"description") <- "
