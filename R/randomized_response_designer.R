@@ -95,7 +95,8 @@ attr(randomized_response_designer,"definitions") <- data.frame(
   min   = c(1, 0, 0, 0),
   max   = c(Inf,1, 1, 1),
   inspector_min = c(100, 0, 0, 0),
-  inspector_step = c(50, rep(.2, 3))
+  inspector_step = c(50, rep(.2, 3)),
+  stringsAsFactors = FALSE
 )
 attr(randomized_response_designer,"shiny_arguments") <-
   list(

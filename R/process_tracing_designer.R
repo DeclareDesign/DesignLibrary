@@ -247,7 +247,8 @@ attr(process_tracing_designer, "definitions") <- data.frame(
   min = c(6, rep(0, 7), -1, -1, rep(NA, 2)),
   max = c(Inf, rep(1, 9), rep(NA, 2)),
   inspector_min = c(100, rep(0, 7), -1, -1, NA, NA),
-  inspector_step = c(50, rep(.2, 9), NA, NA)
+  inspector_step = c(50, rep(.2, 9), NA, NA),
+  stringsAsFactors = FALSE
 )
 
 attr(process_tracing_designer,"shiny_arguments") <- list(

@@ -138,7 +138,8 @@ attr(mediation_analysis_designer,"shiny_arguments") <- list(
   a = seq(from = .5, to = -.5, by = -.5),
   b = seq(from = .5, to = -.5, by = -.5),
   d = seq(from = .5, to = -.5, by = -.5),
-  rho = c(.2, seq(from = -1, to = 1, by = .5))
+  rho = c(.2, seq(from = -1, to = 1, by = .5)),
+  stringsAsFactors = FALSE
 )
 
 attr(mediation_analysis_designer,"description") <- "

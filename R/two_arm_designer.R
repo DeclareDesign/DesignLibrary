@@ -92,7 +92,8 @@ attr(two_arm_designer, "definitions") <- data.frame(
   min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1),
   max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1),
   inspector_min = c(100, rep(0, 6), -1),
-  inspector_step = c(50, rep(.2, 7))
+  inspector_step = c(50, rep(.2, 7)),
+  stringsAsFactors = FALSE
 )
 
 attr(two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 

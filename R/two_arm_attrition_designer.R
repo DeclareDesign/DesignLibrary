@@ -109,7 +109,8 @@ attr(two_arm_attrition_designer, "definitions") <- data.frame(
   min = c(6, rep(-Inf, 4), 0),
   max = c(rep(Inf, 5), 1),
   inspector_min = c(100, rep(0, 5)),
-  inspector_step = c(50, rep(.2, 5))
+  inspector_step = c(50, rep(.2, 5)),
+  stringsAsFactors = FALSE
 )
 
 attr(two_arm_attrition_designer, "shiny_arguments") <- list(N = c(100, 500), b_R = 0:2, rho = c(0,1))

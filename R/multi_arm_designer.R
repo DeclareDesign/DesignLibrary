@@ -200,7 +200,8 @@ attr(multi_arm_designer, "definitions") <- data.frame(
   min   = c(6, 2, -Inf, 0, 0, NA, NA),
   max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA),
   inspector_min = c(120, 2, 0, 0, 0, NA, NA),
-  inspector_step = c(60, 1, rep(.2, 3), NA, NA)
+  inspector_step = c(60, 1, rep(.2, 3), NA, NA),
+  stringsAsFactors = FALSE
 )
 
 attr(multi_arm_designer, "shiny_arguments") <-

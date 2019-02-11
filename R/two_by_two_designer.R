@@ -154,7 +154,8 @@ attr(two_by_two_designer, "definitions") <- data.frame(
   min = c(1, 0, 0, 1/10000, 1/10000, rep(-Inf, 5), 0, 0), 
   max = c(Inf, 1, 1, rep(Inf, 9)),
   inspector_min = c(100, 0, 0, 1/10, 1/10, -1),
-  inspector_step = c(50, .2, .2, 1/2, 1/2, rep(.2, 7))
+  inspector_step = c(50, .2, .2, 1/2, 1/2, rep(.2, 7)),
+  stringsAsFactors = FALSE
 )
 
 attr(two_by_two_designer, "shiny_arguments") <- list(

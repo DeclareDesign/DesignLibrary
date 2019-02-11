@@ -102,7 +102,8 @@ attr(pretest_posttest_designer, "definitions") <- data.frame(
   min = c(2, -Inf, 0, 0, -1, 0),
   max = c(Inf, Inf, Inf, Inf, 1, 1),
   inspector_min = c(100, 0, 0, 0, -1, 0),
-  inspector_step = c(50, rep(.2, 4), .2)
+  inspector_step = c(50, rep(.2, 4), .2),
+  stringsAsFactors = FALSE
 )
 attr(pretest_posttest_designer, "shiny_arguments") <- list(
   N = c(100, 50, 1000),

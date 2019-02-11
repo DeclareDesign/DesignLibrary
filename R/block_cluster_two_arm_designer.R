@@ -191,7 +191,8 @@ attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
   min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA),
   max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA),
   inspector_min = c(100, 1, 100, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, NA),
-  inspector_step = c(100, 1, 50, 10, rep(.2, 10), NA)
+  inspector_step = c(100, 1, 50, 10, rep(.2, 10), NA),
+  stringsAsFactors = FALSE
 )
 
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-

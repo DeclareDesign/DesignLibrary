@@ -83,7 +83,8 @@ attr(spillover_designer, "definitions") <- data.frame(
   min = c(1, 1, 0, 0),
   max = c(rep(Inf, 4)),
   inspector_min = c(100, 2, 0, 0),
-  inspector_step = c(50, 10, .2, .2)
+  inspector_step = c(50, 10, .2, .2),
+  stringsAsFactors = FALSE
 )
   
 

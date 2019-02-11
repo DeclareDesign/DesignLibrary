@@ -96,7 +96,8 @@ attr(cluster_sampling_designer, "definitions") <- data.frame(
   min = c(rep(1, 5), 0),
   max = c(rep(Inf, 5), 1),
   inspector_min = c(rep(1,5), 0),
-  inspector_step = c(1, 5, 10, 10, 10, 0.2)
+  inspector_step = c(1, 5, 10, 10, 10, 0.2),
+  stringsAsFactors = FALSE
 )
 
 attr(cluster_sampling_designer, "shiny_arguments") <- list(

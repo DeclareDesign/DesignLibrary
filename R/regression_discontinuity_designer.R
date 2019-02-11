@@ -99,7 +99,8 @@ attr(regression_discontinuity_designer, "definitions") <- data.frame(
   min = c(2, -Inf, 0, 0, rep(-Inf, 3), 1),
   max = c(Inf, Inf, Inf, 1, Inf, Inf, Inf, 10),
   inspector_min = c(100, 0, 0, 0.1, .1, 0, 0, 1),
-  inspector_step = c(50, rep(.2, 6), 1)
+  inspector_step = c(50, rep(.2, 6), 1),
+  stringsAsFactors = FALSE
 )
 
 attr(regression_discontinuity_designer,"shiny_arguments") <-
