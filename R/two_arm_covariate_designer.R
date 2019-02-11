@@ -112,17 +112,26 @@ two_arm_covariate_designer <- function(N = 100,
   two_arm_covariate_design
 }
 
+attr(two_arm_covariate_designer, "definitions") <- data.frame(
+  names = c("N", "prob", "control_mean", "sd", "ate", "h", "treatment_mean", "rho_WY", "rho_WZ"),
+  tips = c("Sample size",
+           "Probability of assignment to treatment",
+           "Average outcome in control",
+           "Standard deviation of shock on outcome (Y)",
+           "The average treatment effect",
+           "Heterogeneous treatment effects by covariate (W)",
+           "Average outcome in treatment. Overrides ate if both specified",
+           "Correlation between shock on Y and W",
+           "Correlation between shock on Y and latent variable for Z assignment"),
+  class = c("integer", rep("numeric", 8)),
+  min = c(4, 1/10, -Inf, 0, rep(-Inf, 3), -1, -1),
+  max = c(Inf, 9/10, rep(Inf, 5), 1, 1),
+  inspector_min = c(100, 1/10, rep(0, 5), -1, -1),
+  inspector_step = c(50, rep(0.1, 6), rep(.5, 2)),
+  stringsAsFactors = FALSE
+)
 attr(two_arm_covariate_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5), 
                                                             rho_WZ = c(0, .5), rho_WY = c(0, .5)) 
-
-attr(two_arm_covariate_designer, "tips") <-
-  list(
-    N = "Sample size",
-    ate = "The average treatment effect",
-    rho_WY = "Correlation between shock on Y and W",
-    rho_WZ = "Correlation between shock on Y and latent variable for Z assignment"
-  )
-
 attr(two_arm_covariate_designer, "description") <- "
 <p> A simple two arm designer with covariate <code>W</code>,  sample size <code>N</code>, independent assignment, and constant average treatment effect equal to <code>ate</code>.
 "
