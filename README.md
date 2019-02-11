@@ -43,6 +43,18 @@ code:
 devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 ```
 
+## Contributing designs and designers
+
+We welcome contributions to the library\!
+
+  - You can [submit static
+    designs](https://declaredesign.org/library/articles/how_to_write_and_contribute_designs.html)
+    made in `DeclareDesign`, which will live as properly attributed
+    entries in the library on our website
+  - Or you can [submit designer functions that generate
+    designs](https://declaredesign.org/library/articles/how_to_write_and_contribute_designers.html),
+    which may be added to the CRAN version of the package
+
 -----
 
 This project is generously supported by a grant from the [Laura and John

@@ -1,0 +1,85 @@
+---
+title: "Two-Arm Experiment"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+  %\VignetteIndexEntry{Two-Arm Experiment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(knitr)
+```
+
+One of the simplest ways to learn about the effect of a cause is to randomly divide a group in two: one gets a treatment and the other doesn't. By comparing the averages of the outcomes in the treatment group to those of the control group, you get to learn about the causal effect of the treatment -- at least on average. Magic. 
+
+So how does it work? In fact, it works only if we are willing to make a few assumptions. First, for each individual in our study, we are willing to imagine two counterfactuals: one in which they ended up in the treatment group, and one where they ended up in the control. We'll define the unit level treatment effect as the difference between these two. Second, we'll assume that an individual's outcome is not affected by whoever else did or did not end up in their group.^[This is often referred to as the "no spillovers" assumption. An individual's outcome depends only on their treatment assignment status and is not affected by that of any other individual.]
+
+Ideally, we'd like to observe both counterfactuals for each individual, and we'd know the true causal effect by looking at the differences. But we can't see the world in two counterfactual states at once: that's called the fundamental problem of causal inference. 
+
+Amazingly though, while we can never learn the true causal effect of an individual, we *can* learn about the true causal effect *averaged across groups of individuals*. The basis for that inference shares an interesting parallel with random sampling. 
+
+When we take a random sample from a population, the sample becomes representative of the population in the sense that the average outcome in the sample will, on average, be the same as the average outcome in the population.  Technically: the procedure delivers unbiased estimates of averages. In an experiment, it's as though we're taking two separate representative samples from *two counterfactual states of the world*, one from a world in which the cause is present and one from one in which it is absent. By taking the mean of the group that represents the treated potential outcomes and comparing it to the mean of the group that represents the untreated potential outcomes, we can construct an unbiased guess of the true average difference in the two states of the world.^[This last step used the useful fact that the difference of averages is the same as the  average of differences.] 
+
+This logic does not guarantee that an answer is *correct.* A two arm trial does not let us *see* the true treatment effect. But it does produce an estimate that is not biased up or down. Just like in random sampling, as the size of our experiment grows, our guess of the average treatment effect (ATE) will converge to the true ATE. As we shall see, however, characterizing our uncertainty about our guesses can be complicated, even in such a simple design.  
+
+## Design Declaration
+
+- **M**odel: 
+    
+    Our model of the world specifies a population of $N$ units that have a control potential outcome, $Y_i(Z = 0)$, that is distributed standard normally. A unit's individual treatment effect is a random draw from a distribution with mean $\tau$ and standard deviation $\sigma$, that is added to its control potential outcome: $Y_i(Z = 1) = Y_i(Z = 0) + t_i$.^[This implies that the variance of the sample's treated potential outcomes is higher than the variance of their control potential outcomes, although they are correlated because the treated potential outcome is created by simply adding the treatment effect to the control potential outcome.]  
+  
+- **I**nquiry: 
+    
+    We want to know the average of all units' differences in treated and untreated potential outcomes -- the average treatment effect: $E[Y_i(Z = 1) - Y_i(Z = 0)] = E[t_i] = \tau$.  
+
+- **D**ata strategy: 
+    
+    We randomly sample $n$ units from the population of $N$. We randomly assign a fixed number, $m$, to treatment, and the rest of the $n-m$ units to control.
+
+- **A**nswer strategy: 
+    
+    We subtract the mean of the control group from the mean of the treatment group in order to estimate the average treatment effect. $E[Y_i(Z = 1)] - E[Y_i(Z = 0)] = \hat{\tau}$.  
+
+
+```{r, code = get_design_code(two_arm_designer()), eval=TRUE}
+```
+
+## Takeaways
+
+```{r}
+diagnosis <- diagnose_design(two_arm_design)
+```
+
+```{r,eval = TRUE, echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
+```
+
+- As the diagnosis reveals, the estimate of the ATE is unbiased. We could have shown this without simulations using simple algebra. Our estimator, $\hat{\tau}$, can be written $E[Y_i(Z = 1)] - E[Y_i(Z = 0)] = E[Y_i(Z = 1) - Y_i(Z = 0)]$ (via "the linearity of expectation"). Note this implies $\tau = \hat{\tau}$: our estimand is equivalent to our estimator in expectation. 
+
+- But our coverage is above what it should be (95\%) -- suggesting that our unbiased point estimates have biased confidence intervals! This reflects the fact that conventional estimators of the standard error for the difference assume the true covariance in potential outcomes is zero. This conservative rule of thumb leads to standard error estimates that overstate the true variation in the sampling distribution of the point estimator.
+
+## Exercises
+
+1. Using the `two_arm_designer()`, declare a set of designs in which the correlation in potential outcomes goes from negative, to zero, to positive. What do you notice about the coverage? Explain with reference to the mean standard error and the standard deviation of the estimates.
+
+2. Modify the assignment step in the design so that individuals' probability of assignment is a function of `u_0`, but don't change anything else. What do you notice about the diagnosands of the design now? How might you change the estimation strategy to account for this updated assignment strategy?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

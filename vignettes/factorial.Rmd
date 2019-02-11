@@ -1,0 +1,54 @@
+---
+title: "$2^k$ Factorial Design"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+  %\VignetteIndexEntry{2^k Factorial Design}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+set.seed(1234)
+library(DesignLibrary)
+library(knitr)
+```
+
+A $2^K$ factorial design is an extension of the `two_by_two_designer` that allows for $k$ number of factors (or treatments), each with two levels, resulting in $2^K$ combinations of treatment conditions. You might be interested in testing not just how two, but rather how three, or how any number ($k$) of treatment conditions interact. The interest in the effect of different treatments in the presence or absence of other treatments is a key distinction from the `multi_arm_designer`, in which we evaluate the effect of treatments where there is no overlap in the assignment of different conditions.
+
+Let's say you set out to study how incentives and managerial practices affect employee productivity *in combination*. Let's imagine that intervention $A$ is a salary increase conditional on performance indicators, intervention $B$ is increased monitoring, and intervention $C$ is a motivational activity. A key question might be the marginal effect of conditional salary increases on productivity in the presence of greater monitoring or in the presence of motivational interventions, or both.
+
+## Design Declaration
+
+- **M**odel: 
+    
+     We stipulate $2^k$ potential outcomes. In our example, with treatments $\{A,B,C\} \in \{0,1\}$, we have $Y^{ABC}$. We can denote the potential outcome of a unit who is in control for all treatments $Y^{000}_i$, for example, and that for a unit who is assigned to B and C only as $Y^{011}$. Each potential outcome is distributed normally with mean $\mu_j$ and standard deviation $\sigma_j$, where $j \in \{1,...,2^k\}$. 
+  
+- **I**nquiry: 
+    
+    Estimands are defined for each combination of treatment assignment as weighted averages of differences in potential outcomes. The effect of A in this design, $\tau_A$, averaged over conditions defined by B and C, is given by: $\tau_A = 1/4*(Y^{111} - Y^{011}) + 1/4*(Y^{101} - Y^{001}) + 1/4*(Y^{110} - Y^{010}) + 1/4*(Y^{100} - Y^{000})$.
+
+- **D**ata strategy: 
+    
+    We randomly assign units to one of the $2^k$ combinations of treatment using equal probabilities of assignment.
+
+- **A**nswer strategy: 
+    
+    Estimates draw from a regression in which all treatments are demeaned and weighted by the inverse probability of being in the condition they are in. In this demeaned regression, the constant captures the average outcome across all conditions — not the outcome when all units are in the control condition. 
+
+
+```{r, code = get_design_code(factorial_designer()), eval=TRUE}
+```
+
+# Takeaways
+
+```{r}
+diagnosis <- diagnose_design(factorial_design)
+```
+
+```{r,echo = FALSE}
+kable(reshape_diagnosis(diagnosis), digits = 2,row.names = F)
+```
+
+- We see that the space of estimands we can estimate is amazingly rich, but our power to do so is very low. 

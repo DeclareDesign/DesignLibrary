@@ -5,11 +5,10 @@
 \title{Create a process-tracing design}
 \usage{
 process_tracing_designer(N = 100, prob_X = 0.5,
-  process_proportions = c(X_causes_Y = 0.25, Y_regardless = 0.25,
-  X_causes_not_Y = 0.25, not_Y_regardless = 0.25), prior_H = 0.5,
-  p_E1_H = 0.3, p_E1_not_H = 0, p_E2_H = 0.8, p_E2_not_H = 0.2,
-  cor_E1E2_H = 0, cor_E1E2_not_H = 0, label_E1 = "Smoking Gun",
-  label_E2 = "Straw in the Wind")
+  process_proportions = c(0.25, 0.25, 0.25, 0.25), prior_H = 0.5,
+  p_E1_H = 0.8, p_E1_not_H = 0.2, p_E2_H = 0.3, p_E2_not_H = 0,
+  cor_E1E2_H = 0, cor_E1E2_not_H = 0, label_E1 = "Straw in the Wind",
+  label_E2 = "Smoking Gun")
 }
 \arguments{
 \item{N}{An integer. Size of population of cases from which a single case is selected.}
@@ -32,9 +31,9 @@ process_tracing_designer(N = 100, prob_X = 0.5,
 
 \item{cor_E1E2_not_H}{A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is not true.}
 
-\item{label_E1}{A string. Label for the first piece of evidence (e.g., "Smoking Gun").}
+\item{label_E1}{A string. Label for the first piece of evidence (e.g., "Straw in the Wind").}
 
-\item{label_E2}{A string. Label for the second piece of evidence (e.g., "Straw in the Wind").}
+\item{label_E2}{A string. Label for the second piece of evidence (e.g., "Smoking Gun").}
 }
 \value{
 A process-tracing design.

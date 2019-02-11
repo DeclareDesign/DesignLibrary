@@ -7,10 +7,11 @@ multi_arm_design,multi_arm_designer,multi_arm,,multi_arm,DeclareDesign,https://d
 pretest_posttest_design,pretest_posttest_designer,pretest_posttest,,pretest_posttest,DeclareDesign,https://declaredesign.org/about/
 randomized_response_design,randomized_response_designer,randomized_response,,randomized_response,DeclareDesign,https://declaredesign.org/about/
 regression_discontinuity_design,regression_discontinuity_designer,regression_discontinuity,,regression_discontinuity,DeclareDesign,https://declaredesign.org/about/
-spillover_design,spillover_designer,simple_spillover,,spillover,DeclareDesign,https://declaredesign.org/about/
-two_arm_design,two_arm_designer,simple_two_arm,,two_arm,DeclareDesign,https://declaredesign.org/about/
+spillover_design,spillover_designer,spillover,,spillover,DeclareDesign,https://declaredesign.org/about/
+two_arm_design,two_arm_designer,two_arm,,two_arm,DeclareDesign,https://declaredesign.org/about/
 two_by_two_design,two_by_two_designer,,,two_by_two,DeclareDesign,https://declaredesign.org/about/
 two_arm_attrition_design,two_arm_attrition_designer,,,,DeclareDesign,https://declaredesign.org/about/
 process_tracing_design,process_tracing_designer,,,process_tracing,DeclareDesign,https://declaredesign.org/about/
 binary_iv_design,binary_iv_designer,,,binary_iv_design,DeclareDesign,https://declaredesign.org/about/
 two_arm_covariate_design,two_arm_covariate_designer,,,two_arm_covariate,DeclareDesign,https://declaredesign.org/about/
+my_design,,example_design,,,Joe Bloggs,https://en.wikipedia.org/wiki/Joe_Bloggs

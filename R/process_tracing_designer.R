@@ -28,8 +28,8 @@
 #' @param p_E2_not_H A number in [0,1]. Probability of observing second piece of evidence given hypothesis that X caused Y is not true. 
 #' @param cor_E1E2_H A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is true. 
 #' @param cor_E1E2_not_H A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is not true. 
-#' @param label_E1 A string. Label for the first piece of evidence (e.g., "Smoking Gun").
-#' @param label_E2 A string. Label for the second piece of evidence (e.g., "Straw in the Wind").
+#' @param label_E1 A string. Label for the first piece of evidence (e.g., "Straw in the Wind").
+#' @param label_E2 A string. Label for the second piece of evidence (e.g., "Smoking Gun").
 #' @return A process-tracing design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
@@ -70,17 +70,16 @@
 process_tracing_designer <- function(
   N = 100,
   prob_X = .5,
-  process_proportions = c('X_causes_Y' = .25, 'Y_regardless' = .25,
-                          'X_causes_not_Y' = .25, 'not_Y_regardless' = .25),
+  process_proportions = c(.25, .25, .25, .25),
   prior_H = .5,
-  p_E1_H = .3,
-  p_E1_not_H = 0,
-  p_E2_H = .8,
-  p_E2_not_H = .2,
+  p_E1_H = .8,
+  p_E1_not_H = .2,
+  p_E2_H = .3,
+  p_E2_not_H = 0,
   cor_E1E2_H = 0,
   cor_E1E2_not_H = 0,
-  label_E1 = "Smoking Gun",
-  label_E2 = "Straw in the Wind"
+  label_E1 = "Straw in the Wind",
+  label_E2 = "Smoking Gun"
 ){
   if(!is_integerish(N) || N < 1) stop("N must be a positive integer.")
   if(prob_X < 0 || prob_X > 1) stop("prob_X must be in [0,1].")
