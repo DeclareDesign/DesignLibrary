@@ -168,6 +168,33 @@ block_cluster_two_arm_designer <- function(N = NULL,
   
 }
 
+attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
+  names = c("N","N_blocks","N_clusters_in_block","N_i_in_cluster","sd","sd_block",
+            "sd_cluster","sd_i_0","sd_i_1","rho","assignment_probs","control_mean",
+            "ate","treatment_mean","verbose"),
+  tips  = c("Total number of units",
+            "Number of blocks",
+            "Number of clusters in each block",
+            "Number of units in each cluster",
+            "Overall standard deviation",
+            "Standard deviation of block level shocks",
+            "Standard deviation of cluster level shock",
+            "Standard deviation of individual level shock in control",
+            "Standard deviation of individual level shock in treatment",
+            "Correlation in individual shock between potential outcomes for treatment and control",
+            "Treatment assignment probability for each block",
+            "Average outcome in control",
+            "Average treatment effect",
+            "Average outcome in treatment",
+            "If TRUE, prints intra-cluster correlation"),
+  class = c(rep("integer", 4), rep("numeric", 10), "logical"),
+  min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA),
+  max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA),
+  inspector_min = c(100, 1, 100, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, NA),
+  inspector_step = c(100, 1, 50, 10, rep(.2, 10), NA),
+  stringsAsFactors = FALSE
+)
+
 attr(block_cluster_two_arm_designer, "shiny_arguments") <-
   list(
     N_blocks = c(10, 20, 50),
@@ -176,13 +203,6 @@ attr(block_cluster_two_arm_designer, "shiny_arguments") <-
     ate = c(0, .1, .3)
   )
 
-attr(block_cluster_two_arm_designer, "tips") <-
-  list(
-    N_blocks = "Number of blocks",
-    N_clusters_in_block = "Number of clusters in each block",
-    N_i_in_cluster = "Number of units in each cluster",
-    ate = "The average treatment effect"
-  )
 attr(block_cluster_two_arm_designer, "description") <- "
 <p> A two arm blocked and clustered experiment with <code>N_blocks</code> blocks, 
 each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn contains 

@@ -38,7 +38,7 @@ or by specifying a \code{control_mean} and \code{ate}.
 Units are assigned to treatment using complete random assignment. Potential outcomes are normally distributed according to the mean and sd arguments.
 }
 \examples{
-#Generate a simple two-arm design using default arguments
+# Generate a simple two-arm design using default arguments
 two_arm_design <- two_arm_designer()
 }
 \author{
