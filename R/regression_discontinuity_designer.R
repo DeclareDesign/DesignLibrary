@@ -87,6 +87,14 @@ regression_discontinuity_designer <- function(
 attr(regression_discontinuity_designer, "definitions") <- data.frame(
   names = c("N","tau","outcome_sd","cutoff","bandwidth","control_coefs",
             "treatment_coefs","poly_reg_order"),
+  tips  = c("Size of population to sample from",
+            "Difference in potential outcomes functions at the threshold",
+            "Standard deviation of the outcome",
+            "Threshold on running variable beyond which units are treated",
+            "Bandwidth around threshold from which to include units",
+            "Coefficients for polynomial regression function that generates control potential outcomes",
+            "Coefficients for polynomial regression function that generates treatment potential outcomes",
+            "Order of the polynomial regression used to estimate the jump at the cutoff"),
   class = c("integer", rep("numeric", 6), "integer"),
   min = c(2, -Inf, 0, 0, rep(-Inf, 3), 1),
   max = c(Inf, Inf, Inf, 1, Inf, Inf, Inf, 10),
@@ -101,18 +109,6 @@ attr(regression_discontinuity_designer,"shiny_arguments") <-
     cutoff = c(.5,  .25),
     bandwidth = c(.5,  .25),
     poly_reg_order = c(4, 3, 2, 1)
-  )
-
-attr(regression_discontinuity_designer,"tips") <-list(
-  N = "Size of population to sample from",
-  tau = "Difference in potential outcomes functions at the threshold",
-  outcome_sd = "Standard deviation of the outcome",
-  cutoff = "Threshold on running variable beyond which units are treated",
-  bandwidth = "Bandwidth around threshold from which to include units",
-  control_coefs = "Coefficients for polynomial regression function that generates control potential outcomes",
-  treatment_coefs = "Coefficients for polynomial regression function that generates treatment potential outcomes",
-  poly_reg_order = "Order of the polynomial regression used to estimate the jump at the cutoff"
- 
   )
 
 attr(regression_discontinuity_designer,"description") <- "

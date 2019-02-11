@@ -190,6 +190,12 @@ multi_arm_designer <- function(N = 30,
 attr(multi_arm_designer, "definitions") <- data.frame(
   names = c("N", "m_arms", "outcome_means", "sd_i", 
             "outcome_sds", "conditions", "fixed"),
+  tips  = c("Sample size",
+            "Number of arms",
+            "Average outcome in each arm",
+            "Standard deviation of individual-level shock",
+            "Standard deviations for condition-level shocks",
+            "Names of each arm"),
   class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
   min   = c(6, 2, -Inf, 0, 0, NA, NA),
   max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA),
@@ -199,16 +205,6 @@ attr(multi_arm_designer, "definitions") <- data.frame(
 
 attr(multi_arm_designer, "shiny_arguments") <-
   list(N = c(10, 20, 50))
-
-attr(multi_arm_designer, "tips") <-list(
-  N = "Sample size",
-  m_arms = "Number of arms",
-  outcome_means = "Average outcome in each arm",
-  sd_i = "Standard deviation of individual-level shock",
-  outcome_sds = "Standard deviations for condition-level shocks",
-  conditions = "Names of each arm"
- 
-)
 
 attr(multi_arm_designer,"description") <- "
 <p> A design with <code>m_arms</code> experimental arms, each assigned with equal probability."

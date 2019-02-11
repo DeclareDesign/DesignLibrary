@@ -92,6 +92,12 @@ pretest_posttest_designer <- function(N = 100,
 }
 attr(pretest_posttest_designer, "definitions") <- data.frame(
   names = c("N",  "ate",  "sd_1",  "sd_2",  "rho",  "attrition_rate"),
+  tips  = c("Size of sample",
+            "Average treatment effect",
+            "Standard deviation of period 1 shocks",
+            "Standard deviation of period 2 shocks",
+            "Correlation in outcomes between pre- and post-test",
+            "Proportion of respondents lost when using pre-test data"),
   class = c("integer", rep("numeric", 5)),
   min = c(2, -Inf, 0, 0, -1, 0),
   max = c(Inf, Inf, Inf, Inf, 1, 1),
@@ -104,15 +110,7 @@ attr(pretest_posttest_designer, "shiny_arguments") <- list(
   rho = c(.25,0,.5),
   attrition_rate = c(0,.1,.2)
 )
-attr(pretest_posttest_designer, "tips") <- c(
-  N = "Size of sample",
-  ate = "Average treatment effect",
-  sd_1 = "Standard deviation of period 1 shocks",
-  sd_2 = "Standard deviation of period 2 shocks",
-  rho = "Correlation in outcomes between pre- and post-test",
-  attrition_rate = "Proportion of respondents lost when using pre-test data"
 
-)
 attr(pretest_posttest_designer, "description") <- "
 <p> A pretest-posttest design with sample of size <code>N</code>, average treatment effect of size <code>ate</code>, 
     and correlation between pre- and post-test outcomes equal to <code>rho</code>. The proportion of pre-test respondents  

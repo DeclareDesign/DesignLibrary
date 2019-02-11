@@ -172,6 +172,21 @@ attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
   names = c("N","N_blocks","N_clusters_in_block","N_i_in_cluster","sd","sd_block",
             "sd_cluster","sd_i_0","sd_i_1","rho","assignment_probs","control_mean",
             "ate","treatment_mean","verbose"),
+  tips  = c("Total number of units",
+            "Number of blocks",
+            "Number of clusters in each block",
+            "Number of units in each cluster",
+            "Overall standard deviation",
+            "Standard deviation of block level shocks",
+            "Standard deviation of cluster level shock",
+            "Standard deviation of individual level shock in control",
+            "Standard deviation of individual level shock in treatment",
+            "Correlation in individual shock between potential outcomes for treatment and control",
+            "Treatment assignment probability for each block",
+            "Average outcome in control",
+            "Average treatment effect",
+            "Average outcome in treatment",
+            "If TRUE, prints intra-cluster correlation"),
   class = c(rep("integer", 4), rep("numeric", 10), "logical"),
   min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA),
   max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA),
@@ -187,25 +202,6 @@ attr(block_cluster_two_arm_designer, "shiny_arguments") <-
     ate = c(0, .1, .3)
   )
 
-attr(block_cluster_two_arm_designer, "tips") <-
-  list(
-    N = "Total number of units",
-    N_blocks = "Number of blocks",
-    N_clusters_in_block = "Number of clusters in each block",
-    N_i_in_cluster = "Number of units in each cluster",
-    sd = "Overall standard deviation",
-    sd_block = "Standard deviation of block level shocks",
-    sd_cluster = "Standard deviation of cluster level shock",
-    sd_i_0 = "Standard deviation of individual level shock in control",
-    sd_i_1 = "Standard deviation of individual level shock in treatment",
-    rho = "Correlation in individual shock between potential outcomes for treatment and control",
-    assignment_probs = "Treatment assignment probability for each block",
-    control_mean = "Average outcome in control",
-    ate = "Average treatment effect",
-    treatment_mean = "Average outcome in treatment",
-    verbose = "If TRUE, prints intra-cluster correlation"
-    
-  )
 attr(block_cluster_two_arm_designer, "description") <- "
 <p> A two arm blocked and clustered experiment with <code>N_blocks</code> blocks, 
 each containing <code>N_clusters_in_block</code> clusters. Each cluster in turn contains 

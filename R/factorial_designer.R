@@ -279,6 +279,14 @@ attr(factorial_designer,"definitions") <- data.frame(
   names         = c("N", "k", "outcome_means", "sd", "outcome_sds", 
             "assignment_probs", "outcome_name", "treatment_names",
             "fixed"),
+  tips          = c("Size of sample",
+                    "The number of factors in the design",
+                    "Means for each of the treatment combinations",
+                    "Standard deviation for outcomes",
+                    "Standard deviations for each of the treatment combinations",
+                    "Independent probability of assignment to each treatment",
+                    "Name of outcome variable",
+                    "Name of treatment factors variable"),
   class         = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
   min           = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
   max           = c(rep(Inf, 5), 1, rep(NA, 3)),
@@ -290,19 +298,6 @@ attr(factorial_designer,"shiny_arguments") <-
   list(
     N = c(50, 100, 500, 1000),
     k = c(2, 3, 4)
-  )
-
-attr(factorial_designer,"tips") <-list(
-  N = "Size of sample",
-  k = "The number of factors in the design",
-  outcome_means = "Means for each of the treatment combinations",
-  sd = "Standard deviation for outcomes",
-  outcome_sds = "Standard deviations for each of the treatment combinations",
-  assignment_probs = "Independent probability of assignment to each treatment",
-  outcome_name = "Name of outcome variable",
-  treatment_names = "Name of treatment factors variable"
-  
-  
   )
 
 attr(factorial_designer,"description") <- "

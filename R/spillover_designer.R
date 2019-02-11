@@ -76,6 +76,10 @@ spillover_designer <- function(N_groups = 80,
 attr(spillover_designer, "definitions") <- data.frame(
   names = c("N_groups", "N_i_group", "sd_i", "gamma"),
   class = c("integer", "integer", "numeric", "numeric"),
+  tips  = c("Number of groups",
+            "Number of units in each group",
+            "Standard deviation of individual-level shock",
+            "Parameter that controls whether spillovers within groups substitute or complement each other"),
   min = c(1, 1, 0, 0),
   max = c(rep(Inf, 4)),
   inspector_min = c(100, 2, 0, 0),
@@ -89,14 +93,6 @@ attr(spillover_designer, "shiny_arguments") <- list(
   sd_i = c(0, .5, 1),
   gamma = c(-2, 2)
 )
-
-attr(spillover_designer, "tips") <-
-  list(
-    N_groups = "Number of groups",
-    N_i_group = "Number of units in each group",
-    sd_i = "Standard deviation of individual-level shock",
-    gamma = "Parameter that controls whether spillovers within groups substitute or complement each other"
-  )
 
 attr(spillover_designer, "description") <- "
 <p> A spillover design with <code>N_groups</code> groups each containing 

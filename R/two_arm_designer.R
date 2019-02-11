@@ -80,6 +80,14 @@ two_arm_designer <- function(N = 100,
 attr(two_arm_designer, "definitions") <- data.frame(
   names = c("N", "assignment_prob", "control_mean", "control_sd", 
             "ate", "treatment_mean", "treatment_sd", "rho"),
+  tips  = c("Sample size",
+            "Probability of assignment to treatment",
+            "Average outcome in control",
+            "Standard deviation in control",
+            "Average treatment effect",
+            "Average outcome in treatment",
+            "Standard deviation in treatment",
+            "Correlation between treatment and control outcomes"),
   class = c("integer", rep("numeric", 7)),
   min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1),
   max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1),
@@ -88,19 +96,6 @@ attr(two_arm_designer, "definitions") <- data.frame(
 )
 
 attr(two_arm_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5)) 
-
-attr(two_arm_designer, "tips") <-
-  list(
-    N = "Sample size",
-    assignment_prob = "Probability of assignment to treatment",
-    control_mean = "Average outcome in control",
-    control_sd = "Standard deviation in control",
-    ate = "Average treatment effect",
-    treatment_mean = "Average outcome in treatment",
-    treatment_sd = "Standard deviation in treatment",
-    rho = "Correlation between treatment and control outcomes"
-
-  )
 
 attr(two_arm_designer, "description") <- "
 <p> A simple two arm design of sample size <code>N</code> and with average treatment effect equal to <code>ate</code>.
