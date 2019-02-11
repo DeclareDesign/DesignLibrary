@@ -140,12 +140,26 @@ binary_iv_designer <- function(N = 100,
 
 attr(binary_iv_designer, "shiny_arguments") <- list(N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
 
-attr(binary_iv_designer, "tips") <-
-  list(
-    N = "Sample size",
-    b_Y = "Effect of X on Y",
-    d_Y = "Effect of Z on Y"
-  )
+attr(binary_iv_designer, "definitions") <- data.frame(
+  names         = c("N", "type_probs", "assignment_probs", "a_Y", "b_Y", "d_Y",
+                    "outcome_sd", "a", "b", "d"),
+  tips          = c("Sample size",
+                    "Probability of each complier type",
+                    "Probability of assignment to encouragement", 
+                    "Constant in Y equation for each complier type",
+                    "Effect of X on Y",
+                    "Effect of Z on Y",
+                    "Standard deviation of the outcome.",
+                    "Constant in Y equation", 
+                    "Slope on X in Y equation for each complier type", 
+                    "Slope on Z in Y equation for each complier type"),
+  class         = c("integer", rep("numeric", 9)),
+  min           = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3)),
+  max           = c(Inf, 1, 1, rep(Inf, 7)),
+  inspector_min = c(100, .1, .1, rep(0, 7)),
+  inspector_step= c(100, .1, .1, rep(.1, 7)),
+  stringsAsFactors = FALSE
+)
 
 attr(binary_iv_designer, "description") <- "
 <p> A simple IV design of sample size <code>N</code>.

@@ -34,7 +34,8 @@
 spillover_designer <- function(N_groups = 80, 
                                N_i_group = 3, 
                                sd_i = .2,
-                               gamma = 2)
+                               gamma = 2
+                               )
 {
   if(sd_i < 0) stop("sd_i must be nonnegative")
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
@@ -72,20 +73,27 @@ spillover_designer <- function(N_groups = 80,
   spillover_design
 }
 
+attr(spillover_designer, "definitions") <- data.frame(
+  names = c("N_groups", "N_i_group", "sd_i", "gamma"),
+  class = c("integer", "integer", "numeric", "numeric"),
+  tips  = c("Number of groups",
+            "Number of units in each group",
+            "Standard deviation of individual-level shock",
+            "Parameter that controls whether spillovers within groups substitute or complement each other"),
+  min = c(1, 1, 0, 0),
+  max = c(rep(Inf, 4)),
+  inspector_min = c(100, 2, 0, 0),
+  inspector_step = c(50, 10, .2, .2),
+  stringsAsFactors = FALSE
+)
+  
+
 attr(spillover_designer, "shiny_arguments") <- list(
   N_groups = c(50, 100, 500),
   N_i_group = c(10, 50, 100),
   sd_i = c(0, .5, 1),
   gamma = c(-2, 2)
 )
-
-attr(spillover_designer, "tips") <-
-  list(
-    N_groups = "Number of groups",
-    N_i_group = "Number of units in each group",
-    sd_i = "Standard deviation of individual-level shock",
-    gamma = "Parameter that controls whether spillovers within groups substitute or complement each other"
-  )
 
 attr(spillover_designer, "description") <- "
 <p> A spillover design with <code>N_groups</code> groups each containing 
