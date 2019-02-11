@@ -27,7 +27,9 @@ Depends:
     estimatr (>= 0.14.0)
 Imports:
     generics,
-    rlang
+    rlang,
+    broom (>= 0.5.0.9)
 Suggests: 
-    testthat
+    testthat,
+    mediation
 RoxygenNote: 6.1.1
