@@ -188,6 +188,7 @@ attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
             "Average outcome in treatment",
             "If TRUE, prints intra-cluster correlation"),
   class = c(rep("integer", 4), rep("numeric", 10), "logical"),
+  vector = c(FALSE, FALSE, TRUE, TRUE, rep(FALSE, 6), TRUE, rep(FALSE, 4)),
   min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA),
   max = c(rep(Inf, 9), 1, 1, Inf, Inf, Inf, NA),
   inspector_min = c(100, 1, 100, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, NA),

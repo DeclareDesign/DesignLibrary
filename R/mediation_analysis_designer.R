@@ -128,6 +128,7 @@ attr(mediation_analysis_designer,"definitions") <- data.frame(
             "Direct effect of treatment (Z) on outcome (Y)",
             "Correlation of mediator (M) and outcome (Y) error terms"),
   class = c("integer", rep("numeric", 5)),
+  vector = c(rep(FALSE, 6)),
   min = c(1, rep(-Inf, 4), -1),
   max = c(1, rep(Inf, 4), 1),
   inspector_min = c(100, rep(0, 4), -1),

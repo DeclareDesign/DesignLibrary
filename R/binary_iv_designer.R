@@ -138,7 +138,7 @@ binary_iv_designer <- function(N = 100,
   
 }
 
-attr(binary_iv_designer, "shiny_arguments") <- list(N = c(10, 20, 50), b_Y = c(0,1), d_Y = c(0,1)) 
+attr(binary_iv_designer, "shiny_arguments") <- list(N = c(80, 120, 160), b_Y = c(0,1), d_Y = c(0,1)) 
 
 attr(binary_iv_designer, "definitions") <- data.frame(
   names         = c("N", "type_probs", "assignment_probs", "a_Y", "b_Y", "d_Y",
@@ -154,6 +154,7 @@ attr(binary_iv_designer, "definitions") <- data.frame(
                     "Slope on X in Y equation for each complier type", 
                     "Slope on Z in Y equation for each complier type"),
   class         = c("integer", rep("numeric", 9)),
+  vector = c(FALSE, TRUE, TRUE, rep(FALSE, 4), TRUE, TRUE, TRUE),
   min           = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3)),
   max           = c(Inf, 1, 1, rep(Inf, 7)),
   inspector_min = c(100, .1, .1, rep(0, 7)),

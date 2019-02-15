@@ -198,6 +198,7 @@ attr(multi_arm_designer, "definitions") <- data.frame(
             "Names of each arm",
             "Names of arguments to be fixed"),
   class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
+  vector = c(FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE),
   min   = c(6, 2, -Inf, 0, 0, NA, NA),
   max   = c(Inf, Inf, Inf, Inf, Inf, NA, NA),
   inspector_min = c(120, 2, 0, 0, 0, NA, NA),

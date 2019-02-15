@@ -93,6 +93,7 @@ attr(cluster_sampling_designer, "definitions") <- data.frame(
             "Number of units to sample in each cluster",
             "Intra-cluster Correlation"),
   class = c(rep("integer", 5), "numeric"),
+  vector = c(FALSE, TRUE, TRUE, TRUE, TRUE, FALSE),
   min = c(rep(1, 5), 0),
   max = c(rep(Inf, 5), 1),
   inspector_min = c(rep(1,5), 0),

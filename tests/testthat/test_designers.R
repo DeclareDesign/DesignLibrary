@@ -101,6 +101,14 @@ for(designer in designers){
         expect_true(all(classes %in% c("character", "numeric", "integer", "logical")))
       }
     )
+    
+    test_that(
+      desc = paste0("Definitions attribute of ", designer, " contains all columns."),
+      code= {
+        expect_length(setdiff(names(designer_attr$definitions), c("names", "tips", "class", "vector", "min", 
+                                                                  "max", "inspector_min", "inspector_step")), 0)
+      }
+    )
   }
 }
 

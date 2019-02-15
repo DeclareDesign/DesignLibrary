@@ -99,6 +99,7 @@ attr(pretest_posttest_designer, "definitions") <- data.frame(
             "Correlation in outcomes between pre- and post-test",
             "Proportion of respondents lost when using pre-test data"),
   class = c("integer", rep("numeric", 5)),
+  vector = c(rep(FALSE, 6)),
   min = c(2, -Inf, 0, 0, -1, 0),
   max = c(Inf, Inf, Inf, Inf, 1, 1),
   inspector_min = c(100, 0, 0, 0, -1, 0),
