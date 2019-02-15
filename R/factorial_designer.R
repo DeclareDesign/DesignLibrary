@@ -95,6 +95,7 @@ factorial_designer <- function(
   if(any(grepl(" ", fixed = TRUE, outcome_name))) stop("Please remove spaces from `outcome_name' strings.")
   if(length(outcome_means) != 2^k || length(outcome_sds) != 2^k) stop("`outcome_means' and `outcome_sds` arguments must be the same as length of 2^(k).")
   if(length(assignment_probs) != k) stop("`assignment_probs` must be the same as length of k.")
+  if(!is.null(treatment_names) && length(treatment_names) != k) stop("Length of `treatment_names` must be the same as length of k.")
   if(k < 2 || !is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(assignment_probs <= 0)) stop("`assignment_probs' should have positive values only.")
