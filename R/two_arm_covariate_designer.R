@@ -124,6 +124,7 @@ attr(two_arm_covariate_designer, "definitions") <- data.frame(
            "Correlation between shock on Y and W",
            "Correlation between shock on Y and latent variable for Z assignment"),
   class = c("integer", rep("numeric", 8)),
+  vector = c(rep(FALSE, 9)),
   min = c(4, 1/10, -Inf, 0, rep(-Inf, 3), -1, -1),
   max = c(Inf, 9/10, rep(Inf, 5), 1, 1),
   inspector_min = c(100, 1/10, rep(0, 5), -1, -1),

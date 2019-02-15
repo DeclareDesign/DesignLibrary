@@ -289,6 +289,7 @@ attr(factorial_designer,"definitions") <- data.frame(
                     "Name of treatment factors variable",
                     "Names of arguments to be fixed"),
   class         = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
+  vector = c(FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE),
   min           = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
   max           = c(rep(Inf, 5), 1, rep(NA, 3)),
   inspector_min = c(100, 2, 0, 0, 0, 0.1, NA, NA, NA),

@@ -154,6 +154,7 @@ attr(binary_iv_designer, "definitions") <- data.frame(
                     "Slope on X in Y equation for each complier type", 
                     "Slope on Z in Y equation for each complier type"),
   class         = c("integer", rep("numeric", 9)),
+  vector = c(FALSE, TRUE, TRUE, rep(FALSE, 4), TRUE, TRUE, TRUE),
   min           = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3)),
   max           = c(Inf, 1, 1, rep(Inf, 7)),
   inspector_min = c(100, .1, .1, rep(0, 7)),

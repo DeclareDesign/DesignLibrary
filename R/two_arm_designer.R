@@ -90,6 +90,7 @@ attr(two_arm_designer, "definitions") <- data.frame(
             "Standard deviation in treatment",
             "Correlation between treatment and control outcomes"),
   class = c("integer", rep("numeric", 7)),
+  vector = c(rep(FALSE, 8)),
   min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1),
   max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1),
   inspector_min = c(100, rep(0, 6), -1),

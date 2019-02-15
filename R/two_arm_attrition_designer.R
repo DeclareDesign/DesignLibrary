@@ -106,6 +106,7 @@ attr(two_arm_attrition_designer, "definitions") <- data.frame(
             "Slope coefficient in equation relating treatment to outcome",
             "Correlation between reporting error term and outcome error term"),
   class = c("integer", rep("numeric", 5)),
+  vector = c(rep(FALSE, 6)),
   min = c(6, rep(-Inf, 4), 0),
   max = c(rep(Inf, 5), 1),
   inspector_min = c(100, rep(0, 5)),

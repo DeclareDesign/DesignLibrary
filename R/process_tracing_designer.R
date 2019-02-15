@@ -244,6 +244,7 @@ attr(process_tracing_designer, "definitions") <- data.frame(
             "Label for the first piece of evidence",
             "Label for the second piece of evidence"),
   class = c("integer", rep("numeric", 9), rep("character", 2)), 
+  vector = c(FALSE, FALSE, TRUE, rep(FALSE, 9)),
   min = c(6, rep(0, 7), -1, -1, rep(NA, 2)),
   max = c(Inf, rep(1, 9), rep(NA, 2)),
   inspector_min = c(100, rep(0, 7), -1, -1, NA, NA),
