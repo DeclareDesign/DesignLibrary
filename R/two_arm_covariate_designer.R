@@ -131,7 +131,7 @@ attr(two_arm_covariate_designer, "definitions") <- data.frame(
   inspector_step = c(50, rep(0.1, 6), rep(.5, 2)),
   stringsAsFactors = FALSE
 )
-attr(two_arm_covariate_designer, "shiny_arguments") <- list(N = c(10, 20, 50), ate = c(0, .5), 
+attr(two_arm_covariate_designer, "shiny_arguments") <- list(N = c(100, 120, 150), ate = c(0, .5), 
                                                             rho_WZ = c(0, .5), rho_WY = c(0, .5)) 
 attr(two_arm_covariate_designer, "description") <- "
 <p> A simple two arm designer with covariate <code>W</code>,  sample size <code>N</code>, independent assignment, and constant average treatment effect equal to <code>ate</code>.
