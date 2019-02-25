@@ -49,7 +49,8 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 # Internal helpers for {{{ }}} approach -----------------------------------
 
-# Author: Hadley Wickam 
+#' Author: Hadley Wickam
+#' @import rlang ensyms
 cement <- function(...) {
   args <- ensyms(...)
   paste(purrr::map(args, as_string), collapse = " ")
