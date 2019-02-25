@@ -15,6 +15,7 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param treatment_sd  A nonnegative number. Standard deviation in treatment. By default equals \code{control_sd}.
 #' @param rho A number in [-1,1]. Correlation between treatment and control outcomes.
+#' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -30,7 +31,6 @@
 #' # Generate a simple two-arm design using default arguments
 #' two_arm_design <- two_arm_designer()
 
-
 two_arm_designer <- function(N = 100,
                              assignment_prob = .5,
                              control_mean = 0,
@@ -38,8 +38,10 @@ two_arm_designer <- function(N = 100,
                              ate = 1,
                              treatment_mean = control_mean + ate,
                              treatment_sd = control_sd,
-                             rho = 1
+                             rho = 1,
+                             fixed = NULL
 ){
+  if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
   if(control_sd < 0 ) stop("control_sd must be non-negative")
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
@@ -72,15 +74,15 @@ two_arm_designer <- function(N = 100,
   attr(two_arm_design, "code") <-
     construct_design_code(designer = two_arm_designer,
                           args = match.call.defaults(),
-                          exclude_args = "ate",
+                          fixed = fixed,
+                          exclude_args = union(c("ate", "fixed"), fixed),
                           arguments_as_values = TRUE)
-  
   two_arm_design
 }
 
 attr(two_arm_designer, "definitions") <- data.frame(
   names = c("N", "assignment_prob", "control_mean", "control_sd", 
-            "ate", "treatment_mean", "treatment_sd", "rho"),
+            "ate", "treatment_mean", "treatment_sd", "rho", "fixed"),
   tips  = c("Sample size",
             "Probability of assignment to treatment",
             "Average outcome in control",
@@ -88,13 +90,14 @@ attr(two_arm_designer, "definitions") <- data.frame(
             "Average treatment effect",
             "Average outcome in treatment",
             "Standard deviation in treatment",
-            "Correlation between treatment and control outcomes"),
-  class = c("integer", rep("numeric", 7)),
-  vector = c(rep(FALSE, 8)),
-  min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1),
-  max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1),
-  inspector_min = c(100, rep(0, 6), -1),
-  inspector_step = c(50, rep(.2, 7)),
+            "Correlation between treatment and control outcomes",
+            "Arguments to fix in design"),
+  class = c("integer", rep("numeric", 7), "character"),
+  vector = c(rep(FALSE, 8), TRUE),
+  min   = c(4, 0, -Inf, 0, -Inf, -Inf, 0, -1, NA),
+  max   = c(Inf, 1, Inf, Inf, Inf, Inf, Inf, 1, NA),
+  inspector_min = c(100, rep(0, 6), -1, NA),
+  inspector_step = c(50, rep(.2, 7), NA),
   stringsAsFactors = FALSE
 )
 

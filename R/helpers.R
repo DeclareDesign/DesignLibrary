@@ -49,6 +49,27 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 # Internal helpers for {{{ }}} approach -----------------------------------
 
+# Author: Hadley Wickam 
+cement <- function(...) {
+  args <- ensyms(...)
+  paste(purrr::map(args, as_string), collapse = " ")
+}
+
+#' Replaces argument symbol in design code character vector with argument's value
+#' @param argument A string. Design argument name.
+#' @param replacement Design argument value.
+#' @param string_vector A string vector.
+#' @details It only replaces "N" argument for its value when N appears in the format "N = N". In these cases, the replacement is "N = 100" when the value of N is 100.
+gsub_code_vector <- function(argument, replacement, string_vector){
+  if(pattern == "N"){
+    replacement <- paste0("N = ", replacement)
+    sapply(string_vector, function(s) gsub("N = N", replacement, s, fixed = TRUE), USE.NAMES = FALSE)
+  } else {
+    pattern <- paste0("\\b", pattern, "\\b(?!\\s*={1})")
+    sapply(string_vector, function(s) gsub(pattern, replacement, s, perl = TRUE), USE.NAMES = FALSE)
+  }
+}
+
 # This is the core function for grabbing code when using the {{{ }}} approach:
 
 #' Generates clean code string that reproduces design
@@ -59,7 +80,7 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 #' @param arguments_as_values Logical. Whether to replace argument names for value.
 #' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
 
-construct_design_code <- function(designer, args, arguments_as_values = FALSE, exclude_args = NULL){
+construct_design_code <- function(designer, args, fixed = NULL, arguments_as_values = FALSE, exclude_args = NULL){
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
@@ -79,19 +100,45 @@ construct_design_code <- function(designer, args, arguments_as_values = FALSE, e
   
   code <- sub(indentation, "", txt)
   
-  # Get names of arguments   
+  # Get names of arguments
   arg_names <- names(args[-1])
   
-  # If true, arguments are parsed as values -- be careful with functions
+  # the following evaluates arguments all passed onto the function
+  # it also allows evaluation of arguments of class `language` when contained 
+  # symbols were defined in previous arguments
+  eval_envir <- new.env()
+  
+  args_eval <- lapply(1:length(arg_names), function(a){
+    evaluated_arg <- invisible(eval(args[[arg_names[a]]], envir = eval_envir))
+    invisible(assign(x = arg_names[a], value = evaluated_arg, envir = eval_envir))
+    hold <- invisible(get(arg_names[a], envir = eval_envir))
+    return(hold)
+  })
+  names(args_eval) <- arg_names
+  
+  # If `arguments_as_values = TRUE`, assignment code replaces argument symbol with its (evaluated) value
   if(arguments_as_values){
-    # Evaluate args in order provided in formals
-    for(j in 1:length(arg_names)) eval(parse(text = paste(arg_names[j], " <- ", gsub("[(][)]$", "", quo_text(expr(!!args[arg_names[j]]))))))  
-    arg_vals <- sapply(arg_names, function(x) eval(parse(text = paste0("c(", paste(x, collapse = ","), ")"))))
-    # convert args to text
-    args_text <- paste(sapply(arg_names, function(x) paste(x, " <- ", arg_vals[x])))
+    args_text <- sapply(1:length(args_eval), function(a){
+      # if the argument is of class character and length 1, keep quotation marks
+      # e.g., `name <- Y` is `name <- "Y"` 
+      if (is.character(args_eval[[a]]) && length(args_eval[[a]]) == 1){
+        arg_quoted <- paste0("\"", as.character(args_eval)[[a]], "\"")
+        cement(!!(arg_names)[a], " <- ", !!arg_quoted)
+      } else {
+        cement(!!(arg_names)[a], " <- ", !!(as.character(args_eval)[[a]]))
+      } 
+    })
+    
   } else {
-    # convert args to text
+    # convert (unevaluated) args to text
     args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
+  }
+  
+  #optionally fix arguments by replacing it with its (evaluated value)
+  if(!is.null(fixed)){
+    for(i in 1:length(fixed)){
+        code <- gsub_code_vector(fixed[i], args_eval[[fixed[i]]], code)
+    }
   }
   
   # optionally exclude arguments
