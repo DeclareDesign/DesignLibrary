@@ -75,7 +75,7 @@ gsub_code_vector <- function(argument, replacement, string_vector){
 
 #' Generates clean code string that reproduces design
 #' @importFrom utils getSrcref
-#' @importFrom rlang expr quo_text
+#' @importFrom rlang expr quo_text expr_text
 #' @param designer Designer function.
 #' @param args Named list of arguments to be passed to designer function.
 #' @param fixed Vector of strings. Designer arguments to fix in design code.
@@ -141,7 +141,9 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   if(!is.null(fixed)){
     fixed <- setdiff(fixed, "fixed")
     for(i in 1:length(fixed)){
-      code <- gsub_code_vector(fixed[i], args_eval[[fixed[i]]], code)
+      replacement <- args_eval[[fixed[i]]]
+      if(length(replacement) > 1) replacement <- expr_text(expr(!!replacement))
+      code <- gsub_code_vector(fixed[i], replacement, code)
     }
   }
   
