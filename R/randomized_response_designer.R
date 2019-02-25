@@ -76,22 +76,29 @@ randomized_response_designer <- function(N = 1000,
       estimator_randomized_response + estimator_direct_question
     
     randomized_response_design <- set_diagnosands(
-      design = randomized_response_design,
-      diagnosands = declare_diagnosands(select = bias)
-      )
+      randomized_response_design,
+      declare_diagnosands(select = bias)
+    )
     
   }}}
   attr(randomized_response_design, "code") <- 
     construct_design_code(randomized_response_designer, match.call.defaults())
   randomized_response_design
 }
-attr(randomized_response_designer,"tips") <-
-  list(
-    N = "Size of sample",
-    prob_forced_yes = "Probability of forced 'yes' response",
-    prevalence_rate = "True rate of sensitive trait presence in population",
-    withholding_rate = "Rate at which those with sensitive trait conceal it when asked directly"
-  )
+attr(randomized_response_designer,"definitions") <- data.frame(
+  names = c("N", "prob_forced_yes", "prevalence_rate", "withholding_rate"),
+  tips  = c("Size of sample",
+            "Probability of forced 'yes' response",
+            "True rate of sensitive trait presence in population",
+            "Rate at which those with sensitive trait conceal it when asked directly"),
+  class = c("integer", rep("numeric",3)), 
+  vector = c(FALSE, FALSE, FALSE, FALSE),
+  min   = c(1, 0, 0, 0),
+  max   = c(Inf,1, 1, 1),
+  inspector_min = c(100, 0, 0, 0),
+  inspector_step = c(50, rep(.2, 3)),
+  stringsAsFactors = FALSE
+)
 attr(randomized_response_designer,"shiny_arguments") <-
   list(
     N = c(1000, 1500, 2000, 2500),

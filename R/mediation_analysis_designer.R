@@ -119,6 +119,23 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
   mediation_analysis_design
 }
 
+attr(mediation_analysis_designer,"definitions") <- data.frame(
+  names = c("N",  "a",  "b",  "c",  "d",  "rho"),
+  tips  = c("Size of sample",
+            "Effect of treatment (Z) on mediator (M)",
+            "Effect of mediator (M) on outcome (Y)",
+            "Interaction between mediator (M) and (Z) for outcome (Y)",
+            "Direct effect of treatment (Z) on outcome (Y)",
+            "Correlation of mediator (M) and outcome (Y) error terms"),
+  class = c("integer", rep("numeric", 5)),
+  vector = c(rep(FALSE, 6)),
+  min = c(1, rep(-Inf, 4), -1),
+  max = c(1, rep(Inf, 4), 1),
+  inspector_min = c(100, rep(0, 4), -1),
+  inspector_step = c(50, 0.1, .2),
+  stringsAsFactors = FALSE
+)
+
 attr(mediation_analysis_designer,"shiny_arguments") <- list(
   N = c(100, 50, 1000),
   a = seq(from = .5, to = -.5, by = -.5),
@@ -126,13 +143,7 @@ attr(mediation_analysis_designer,"shiny_arguments") <- list(
   d = seq(from = .5, to = -.5, by = -.5),
   rho = c(.2, seq(from = -1, to = 1, by = .5))
 )
-attr(mediation_analysis_designer,"tips") <- c(
-  N = "Size of sample",
-  a = "Effect of treatment (Z) on mediator (M)",
-  b = "Effect of mediator (M) on outcome (Y)",
-  d = "Direct effect of treatment (Z) on outcome (Y)",
-  rho = "Correlation of mediator (M) and outcome (Y) error terms"
-)
+
 attr(mediation_analysis_designer,"description") <- "
 <p> A mediation analysis design with sample size <code>N</code> that examines
 the effect of treatment (Z) on mediator (M) and the effect of mediator (M) on 

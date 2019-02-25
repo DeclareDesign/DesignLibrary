@@ -95,6 +95,7 @@ factorial_designer <- function(
   if(any(grepl(" ", fixed = TRUE, outcome_name))) stop("Please remove spaces from `outcome_name' strings.")
   if(length(outcome_means) != 2^k || length(outcome_sds) != 2^k) stop("`outcome_means' and `outcome_sds` arguments must be the same as length of 2^(k).")
   if(length(assignment_probs) != k) stop("`assignment_probs` must be the same as length of k.")
+  if(!is.null(treatment_names) && length(treatment_names) != k) stop("Length of `treatment_names` must be the same as length of k.")
   if(k < 2 || !is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(assignment_probs <= 0)) stop("`assignment_probs' should have positive values only.")
@@ -275,15 +276,32 @@ factorial_designer <- function(
   
 }
 
+attr(factorial_designer,"definitions") <- data.frame(
+  names         = c("N", "k", "outcome_means", "sd", "outcome_sds", 
+                    "assignment_probs", "outcome_name", "treatment_names",
+                    "fixed"),
+  tips          = c("Size of sample",
+                    "The number of factors in the design",
+                    "Means for each of the treatment combinations",
+                    "Standard deviation for outcomes",
+                    "Standard deviations for each of the treatment combinations",
+                    "Independent probability of assignment to each treatment",
+                    "Name of outcome variable",
+                    "Name of treatment factors variable",
+                    "Names of arguments to be fixed"),
+  class         = c("integer", "integer", rep("numeric", 4), rep("character", 3)),
+  vector = c(FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE),
+  min           = c(2, 2, -Inf, rep(0, 3), rep(NA, 3)),
+  max           = c(rep(Inf, 5), 1, rep(NA, 3)),
+  inspector_min = c(100, 2, 0, 0, 0, 0.1, NA, NA, NA),
+  inspector_step= c(100, 1, rep(.2, 4), rep(NA, 3)),
+  stringsAsFactors = FALSE
+)
+
 attr(factorial_designer,"shiny_arguments") <-
   list(
     N = c(50, 100, 500, 1000),
     k = c(2, 3, 4)
-  )
-
-attr(factorial_designer,"tips") <-
-  c(N = "Size of sample",
-    k = "The number of factors in the design"
   )
 
 attr(factorial_designer,"description") <- "

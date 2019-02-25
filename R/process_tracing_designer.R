@@ -28,8 +28,8 @@
 #' @param p_E2_not_H A number in [0,1]. Probability of observing second piece of evidence given hypothesis that X caused Y is not true. 
 #' @param cor_E1E2_H A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is true. 
 #' @param cor_E1E2_not_H A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is not true. 
-#' @param label_E1 A string. Label for the first piece of evidence (e.g., "Smoking Gun").
-#' @param label_E2 A string. Label for the second piece of evidence (e.g., "Straw in the Wind").
+#' @param label_E1 A string. Label for the first piece of evidence (e.g., "Straw in the Wind").
+#' @param label_E2 A string. Label for the second piece of evidence (e.g., "Smoking Gun").
 #' @return A process-tracing design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
@@ -70,17 +70,16 @@
 process_tracing_designer <- function(
   N = 100,
   prob_X = .5,
-  process_proportions = c('X_causes_Y' = .25, 'Y_regardless' = .25,
-                          'X_causes_not_Y' = .25, 'not_Y_regardless' = .25),
+  process_proportions = c(.25, .25, .25, .25),
   prior_H = .5,
-  p_E1_H = .3,
-  p_E1_not_H = 0,
-  p_E2_H = .8,
-  p_E2_not_H = .2,
+  p_E1_H = .8,
+  p_E1_not_H = .2,
+  p_E2_H = .3,
+  p_E2_not_H = 0,
   cor_E1E2_H = 0,
   cor_E1E2_not_H = 0,
-  label_E1 = "Smoking Gun",
-  label_E2 = "Straw in the Wind"
+  label_E1 = "Straw in the Wind",
+  label_E2 = "Smoking Gun"
 ){
   if(!is_integerish(N) || N < 1) stop("N must be a positive integer.")
   if(prob_X < 0 || prob_X > 1) stop("prob_X must be in [0,1].")
@@ -229,15 +228,35 @@ process_tracing_designer <- function(
   process_tracing_design
 }
 
+attr(process_tracing_designer, "definitions") <- data.frame(
+  names = c("N",  "prob_X",  "process_proportions",  "prior_H",  "p_E1_H",  "p_E1_not_H",  
+            "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2"),
+  tips  = c("Size of population of cases selected",
+            "Probability that X = 1 for a given case",
+            "Simplex denoting the proportion of cases in the population",
+            "Prior probability that X indeed causes Y",
+            "Probability of observing the first piece of evidence given X indeed causes Y",
+            "Probability of observing first piece of evidence given that X caused Y is not true",
+            "Probability of observing second piece of evidence given X indeed caused Y ",
+            "Probability of observing second piece of evidence given that X caused Y is not true.",
+            "Correlation in first and second pieces of evidence given X indeed causes Y",
+            "Correlation in first and second pieces of evidence given that X caused Y is not true",
+            "Label for the first piece of evidence",
+            "Label for the second piece of evidence"),
+  class = c("integer", rep("numeric", 9), rep("character", 2)), 
+  vector = c(FALSE, FALSE, TRUE, rep(FALSE, 9)),
+  min = c(6, rep(0, 7), -1, -1, rep(NA, 2)),
+  max = c(Inf, rep(1, 9), rep(NA, 2)),
+  inspector_min = c(100, rep(0, 7), -1, -1, NA, NA),
+  inspector_step = c(50, rep(.2, 9), NA, NA),
+  stringsAsFactors = FALSE
+)
+
 attr(process_tracing_designer,"shiny_arguments") <- list(
   prior_H = c(.25,.5),
   p_E1_H = c(.3,.8),
   cor_E1E2_H = c(0,.32)
 )
-attr(process_tracing_designer,"tips") <- c(
-  prior_H = "Prior probability that the hypothesis that X causes Y is true.",
-  p_E1_H = "Probability of observing the first piece of evidence given X indeed causes Y.",
-  cor_E1E2_H = "Correlation in first and second pieces of evidence given X indeed causes Y."
-)
+
 attr(process_tracing_designer,"description") <- "A process-tracing design in which two pieces of evidence are sought and used to update about whether X caused Y using Bayes' rule."
 

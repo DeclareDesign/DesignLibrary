@@ -17,7 +17,7 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-Block cluster designs involve units that are grouped into clusters which are in turn grouped into blocks. 
+Blocked cluster designs involve units that are grouped into clusters which are in turn grouped into blocks. 
 
 The clusters are assigned as a group to either treatment or control. When the clusters are of equal size the difference-in-means estimator yields unbiased but possibly imprecise estimates, especially when individuals are very similar within clusters and share characteristics that can potentially influence outcomes. 
 
@@ -28,25 +28,31 @@ As a rule of thumb having blocks improves precision but having clusters weakens 
 
 ## Design Declaration
 
-- **M**odel:  We specify a population of `N`  units partitioned into `N_blocks` (regions, say). Each block has `N_clusters_in_block` clusters (cities, say) and within each cluster there are `N_in_cluster` individuals.  The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. 
+- **M**odel:  
+
+    We specify a population of `N`  units partitioned into `N_blocks` (regions, say). Each block has `N_clusters_in_block` clusters (cities, say) and within each cluster there are `N_in_cluster` individuals.  The variance of an individual's outcomes has three components: the block's variance, the cluster's variance and the subject's variance. 
   
-- **I**nquiry: We are interested in the average difference in individuals' treatment and control outcomes. Formally, $E[Y_i(Z = 1) - Y_i(Z = 0)]$.
+- **I**nquiry: 
 
-- **D**ata strategy:  The units of randomization are cities (clusters). Cities are blocked by region so that we ensure that equal numbers of cities from each region are included in control and in treatment. All individuals belonging to the same city are either treated or assigned to control.
+    We are interested in the average difference in individuals' treatment and control outcomes, $E[Y_i(Z = 1) - Y_i(Z = 0)]$.
 
-- **A**nswer strategy: We estimate the average treatment effect using a linear model that accounts for block structure and clusters.
+- **D**ata strategy:  
 
-In code:
+    The units of randomization are cities (clusters). Cities are blocked by region so that we ensure that equal numbers of cities from each region are included in control and in treatment. All individuals belonging to the same city are either treated or assigned to control.
+
+- **A**nswer strategy: 
+
+    We estimate the average treatment effect using a linear model that accounts for block structure and clusters.
 
 ```{r, code = get_design_code(block_cluster_two_arm_designer(N_blocks = 4, N_clusters_in_block = 4, N_i_in_cluster = 5,sd_cluster = 2)), eval=TRUE}
 
 ```
 
-## Diagnosis
+## Takeaways
 
 To better illustrate how different sources of variance differentially affect our power, we compare three designs. Each of them features a design with 50 blocks featuring two clusters each, with 10 individuals per cluster. In each design the effect size is .25 and the standard deviation in the outcome is 1 (when possible the designer defaults to a variance for the individual shock such that total variance =1). In the first, all of the variance derives from differences between individuals, in the second it derives from differences between clusters, and in the third it derives from variance between blocks.  
 
-```{r,eval = TRUE}
+```{r,eval = TRUE,message=FALSE}
 individual_var <- block_cluster_two_arm_designer(N_blocks = 50, 
                                                  N_clusters_in_block = 2, 
                                                  N_i_in_cluster = 10, 
@@ -76,34 +82,4 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6, 13,14)], digits = 2)
 
 Diagnosis reveals that the efficiency is greatest when variance comes from blocks, and lowest when it comes from clusters. The reason for this is that our estimator models block-level variance, and can estimate the treatment effect independently from block-level effects because treatment assignment is orthogonal to blocks. However, any variance at the cluster level covaries with our treatment, and thus makes it harder to estimate the treatment effect. 
 
-
-## Using the Block Cluster Designer
-
-In R, you can generate a block_cluster_two_arm design using the template function `block_cluster_two_arm_designer()` in the `DesignLibrary` package by running the following lines, which load the package:
-
-```{r, eval=FALSE}
-library(DesignLibrary)
-```
-
-We can then create specific designs by defining values for each argument. For example, we create a design called `my_block_cluster_two_arm_design` with our own parameter specifications by running the lines below.
-
-```{r, eval=FALSE}
-block_cluster_two_arm_design <- block_cluster_two_arm_designer(N_blocks = 50,
-                                                               N_clusters_in_block = 30,
-                                                               N_i_in_cluster = 200,
-                                                               sd_block = .5,
-                                                               sd_cluster = .5,
-                                                               sd_i_0 = .3,
-                                                               sd_i_1 = .6,
-                                                               prob = .5,
-                                                               control_mean = 0,
-                                                               treatment_mean = .2)
-```
-
-You can see more details on the `block_cluster_two_arm_designer()` function and its arguments by running the following line of code:
-
-```{r, eval=FALSE}
-??block_cluster_two_arm_designer
-```
-
-## Further reading 
+## References

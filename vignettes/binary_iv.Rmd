@@ -1,0 +1,122 @@
+---
+title: "Binary Instrumental Variable"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+nocite: |
+  @imbens2014instrumental
+vignette: >
+  %\VignetteIndexEntry{Binary Instrumental Variable}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(knitr)
+```
+
+Instrumental variables methods are often used in experimental or observational settings where we *cannot* credibly assume the treatment of interest is randomly assigned, but can assume the treatment is assigned my some third variable that's unrelated to the outcome of interest.
+
+Take two examples of causal relationships researchers might be interested in observing: the effect of distributive benefits on voter turnout and the effect of fertilizer use on farmers' crop yield. In both cases, the distribution of resources or the use of fertilizer may depend on the outcome we wish to study --- on the one hand, politicians may disburse funds according to local electoral characteristics, and on the other, famers with higher crop yield might be both more likely to use fertilizers. Instrumental variables can be a useful approach in these contexts where a treatment $X$ is endogenous to an outcome $Y$.
+
+Strong instrumental variables satisfy four key assumptions:
+
+* *Relevance*: The instrument $Z$ has a causal effect on the treatment $X$.
+* *Exclusion restriction*: The instrument $Z$ affects the outcome $Y$ only through the treatment $X$.
+* *Exchangeability* (or *independence*): The instrument $Z$ is as good as randomly assigned (i.e., there is no confounding for the effect of $Z$ on $Y$).
+* *Monotonicity*: For all units $i$, $X_i(z_1) \geqslant X_i(x_2)$ when $z_1 \geqslant z_2$ (i.e., there are no units that always defy their assignment).
+
+Using the examples above, researchers could choose to instrument distributive benefits with a naturally occurring disaster --- the occurence of a hurricane is correlated with the disbursement of relief aid by the government but may be independent of voter turnout. Similarly, researchers might randomly assign some farmers fertilizer vouchers as an instrument for fertilizer use.
+
+The `binary_iv_designer()` function allows researchers to declare a design of a single instrument $Z$ to estimate the effect of an endogenous treatment $X$ on an outcome $Y$, all of which are binary variables. Below we declare a design using the fertilizer example.
+
+## Design Declaration
+
+* **M**odel: 
+    
+    We assume our sample has three out of four possible compliance types in a sample of $N$ farmers: always-takers, never-takers, and compliers. In order for the monotonicy assumption to hold, we assume there are no defiers in our sample (no farmers who will adopt fertilizer use if not given the voucher, and who will not adopt it if given the voucher). Below is how we define $X(Z)$ with $Z \in {0,1}$ for each type:
+  
+  | Type       | $X_i(0)$ | $X_i(1)$ |
+  |:-----------|---------:|---------:|
+  |Always-taker| 1        | 1        |
+  |Never-taker | 0        | 0        |
+  |Complier    | 0        | 1        |
+  |Defier      | 1        | 0        |
+  
+
+    We consider a population of size $N$ and we define potential outcome $Y$ (in this case crop yield) as a linear function of the form $Y_{i,type} = \alpha_{type} + \beta_{type} * X_i + \delta_{type} * Z_i + u_y$, where $u_y$ is a normally distributed individual-level shock. We consider the treatment to have heterogeneous effects among different complier types.
+
+* **I**nquiry:
+
+    Firstly, we define the first-stage effect of $Z$ on $X$ as $E[X(Z=1) - X(Z=0)]$.
+
+    Our second estimand of interest is the average effect of fertilizer use (our endogenous treatment, $X$), on crop productivity: $ATE = E[Y(X = 1) - Y(X = 0)]$.
+
+    Thirdly, we are interested in the average treatment effect among compliers (farmers who use fertilizers when awarded the vouchers but who will not use it if not given voucher): $LATE = E[Y(X = 1) - Y(X = 0) | type_i = complier]$. 
+  
+    Lastly, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a weighted average of treatment effects for compliers and defiers: $LATE_{het} = \frac{Pr(type = c)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = c] - \frac{Pr(type = d)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = d]$, where $c$ and $d$ are compliers and defiers, respectively [see @imbens2014instrumental: 34].
+
+* **D**ata strategy: 
+    
+    We collect survey data on a representative sample of 400 farmers and randomly assign  fertilizer vouchers with a probability of 0.5.
+
+* **A**nswer strategy: 
+
+    We estimate the first-stage effect by calculating the difference-in-means estimator of the function $X ~ Z$. For an estimation of the $ATE$, $LATE$, and $LATE_{het}$ we estimate the effect of endogenous treatment $X$ on $Y$ and use a two-stage least squares (2SLS) estimation.
+
+```{r,eval = TRUE, code = get_design_code(binary_iv_designer(type_probs = c(0,0,1,0), b_Y = .5))}
+
+```
+
+## Takeaways
+
+We now diagnose the design above and compare our estimates with those of designs that violate the first three assumptions one by one.
+
+```{r}
+# Violate relevance of instrument for treatment (no first-stage effects)
+iv_nonrelevant <- binary_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
+
+# Violate relevance of instrument for treatment (no first-stage effects)
+iv_nonrandom   <- binary_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
+
+# Violate exclusion restriction
+iv_nonexcl     <- binary_iv_designer(d_Y = .1)
+```
+
+We also compare estimates across designs in which we assume violation of the monotonicity assumption with homogeneous and heterogeneous treatment effects across complier types.
+
+```{r, warning=FALSE}
+# Violates monotonicity with homogeneous treatment effects
+iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2))
+
+# Violates monotonicity with heterogeneous treatment effects
+iv_het     <- binary_iv_designer(type_probs = c(0,0,.8,.2), 
+                                 b = c(0.5, 0.5, 0.5, 0))
+diagnoses <- diagnose_designs(binary_iv_design, iv_nonrelevant, iv_nonrandom, 
+                              iv_nonexcl, iv_defiers, iv_het)
+```
+
+```{r, echo=FALSE}
+diagnoses_table <- reshape_diagnosis(diagnoses)
+```
+
+We highlight a few takeaways. Firstly, our estimates are unbiased when all assumption hold. We show that violating any of the first three assumptions yields biased estimates.
+
+```{r, echo=FALSE}
+kable(diagnoses_table[
+  diagnoses_table$`Estimand Label` %in% c("late", "ate") &
+    diagnoses_table$`Design Label` %in% c("binary_iv_design","iv_nonrelevant", 
+                                          "iv_nonrandom", "iv_nonexcl"),
+  c(1:3, 6, 8,14)], digits = 2)
+```
+
+In the absence of the monotonicity assumption, our IV estimates are less biased for the LATE than the ATE estimand in the presence of heterogeneous treatment effects. Moreover, in these cases, the IV is best at estimating the weighted average of treatment effects for compliers and defiers ($LATE_{het}$).
+
+```{r, echo=FALSE}
+kable(diagnoses_table[diagnoses_table$`Estimand Label` %in% c("ate", "late", "late_het") &
+                        diagnoses_table$`Design Label` %in% c("iv_defiers", "iv_het") &
+                        diagnoses_table$Bias!= "NA",c(1:3, 6, 8,14)], digits = 2)
+```
+
+
+## References

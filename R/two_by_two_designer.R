@@ -134,21 +134,36 @@ two_by_two_designer <- function(N = 100,
   two_by_two_design
 }
 
+attr(two_by_two_designer, "definitions") <- data.frame(
+  names  = c("N",  "prob_A",  "prob_B",  "weight_A",  "weight_B",  
+             "outcome_means",  "mean_A0B0",  "mean_A0B1",  "mean_A1B0",  
+             "mean_A1B1",  "sd_i",  "outcome_sds"),
+  tips  = c("Sample size",
+            "Probability of assignment to treatment A",
+            "Probability of assignment to treatment B",
+            "Weight on B=1 condition for effect of A estimand", 
+            "Weight on A=1 condition for effect of B estimand", 
+            "Average outcome in each A,B condition",
+            "Mean outcome for A=1, B=0",
+            "Mean outcome for A=0, B=1",
+            "Mean outcome for A=1, B=0",
+            "Mean outcome for A=1, B=1",
+            "Standard deviation of individual-level shock",
+            "Standard deviation of unit level shock in each condition"),
+  class = c("integer", rep("numeric", 11)),
+  vector = c(rep(FALSE, 11), TRUE),
+  min = c(1, 0, 0, 1/10000, 1/10000, rep(-Inf, 5), 0, 0), 
+  max = c(Inf, 1, 1, rep(Inf, 9)),
+  inspector_min = c(100, 0, 0, 1/10, 1/10, -1),
+  inspector_step = c(50, .2, .2, 1/2, 1/2, rep(.2, 7)),
+  stringsAsFactors = FALSE
+)
 
 attr(two_by_two_designer, "shiny_arguments") <- list(
   N = c(16, 32, 64), weight_A = c(0, .5), 
   mean_A0B1 = 0:1, 
   mean_A1B0 = 0:1, 
   mean_A1B1 = -1:3) 
-
-attr(two_by_two_designer, "tips") <-
-  list(
-    N = "Sample size",
-    weight_A = "Weight on B=1 condition for effect of A estimand",
-    mean_A1B0 = "Mean outcome for A=1, B=0",
-    mean_A0B1 = "Mean outcome for A=0, B=1",
-    mean_A1B1 = "Mean outcome for A=1, B=1"
-  )
 
 attr(two_by_two_designer, "description") <- "
 <p> A 2x2 factorial design of sample size <code>N</code> with independent treatment assignment.
