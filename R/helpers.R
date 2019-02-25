@@ -106,15 +106,16 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   # the following evaluates arguments all passed onto the function
   # it also allows evaluation of arguments of class `language` when contained 
   # symbols were defined in previous arguments
-  eval_envir <- new.env()
-  
-  args_eval <- lapply(1:length(arg_names), function(a){
-    evaluated_arg <- invisible(eval(args[[arg_names[a]]], envir = eval_envir))
-    invisible(assign(x = arg_names[a], value = evaluated_arg, envir = eval_envir))
-    hold <- invisible(get(arg_names[a], envir = eval_envir))
-    return(hold)
-  })
-  names(args_eval) <- arg_names
+  if(!is.null(arg_names)) {
+    eval_envir <- new.env()
+    args_eval <- lapply(1:length(arg_names), function(a){
+      evaluated_arg <- invisible(eval(args[[arg_names[a]]], envir = eval_envir))
+      invisible(assign(x = arg_names[a], value = evaluated_arg, envir = eval_envir))
+      hold <- invisible(get(arg_names[a], envir = eval_envir))
+      return(hold)
+    })
+    names(args_eval) <- arg_names
+  }
   
   # If `arguments_as_values = TRUE`, assignment code replaces argument symbol with its (evaluated) value
   if(arguments_as_values){
