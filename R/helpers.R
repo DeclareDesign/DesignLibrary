@@ -139,8 +139,9 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   
   #optionally fix arguments by replacing it with its (evaluated value)
   if(!is.null(fixed)){
+    fixed <- setdiff(fixed, "fixed")
     for(i in 1:length(fixed)){
-        code <- gsub_code_vector(fixed[i], args_eval[[fixed[i]]], code)
+      code <- gsub_code_vector(fixed[i], args_eval[[fixed[i]]], code)
     }
   }
   
