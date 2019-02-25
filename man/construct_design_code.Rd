@@ -12,6 +12,8 @@ construct_design_code(designer, args, fixed = NULL,
 
 \item{args}{Named list of arguments to be passed to designer function.}
 
+\item{fixed}{Vector of strings. Designer arguments to fix in design code.}
+
 \item{arguments_as_values}{Logical. Whether to replace argument names for value.}
 
 \item{exclude_args}{Vector of strings. Name of arguments to be excluded from argument definition at top of design code.}

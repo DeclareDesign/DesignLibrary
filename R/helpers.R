@@ -62,12 +62,12 @@ cement <- function(...) {
 #' @param string_vector A string vector.
 #' @details It only replaces "N" argument for its value when N appears in the format "N = N". In these cases, the replacement is "N = 100" when the value of N is 100.
 gsub_code_vector <- function(argument, replacement, string_vector){
-  if(pattern == "N"){
+  if(argument == "N"){
     replacement <- paste0("N = ", replacement)
     sapply(string_vector, function(s) gsub("N = N", replacement, s, fixed = TRUE), USE.NAMES = FALSE)
   } else {
-    pattern <- paste0("\\b", pattern, "\\b(?!\\s*={1})")
-    sapply(string_vector, function(s) gsub(pattern, replacement, s, perl = TRUE), USE.NAMES = FALSE)
+    argument <- paste0("\\b", argument, "\\b(?!\\s*={1})")
+    sapply(string_vector, function(s) gsub(argument, replacement, s, perl = TRUE), USE.NAMES = FALSE)
   }
 }
 
@@ -103,10 +103,10 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   code <- sub(indentation, "", txt)
   
   # Get names of arguments
-  arg_names <- names(args[-1])
+  arg_names <- setdiff(names(args), "")
   
   # the following evaluates arguments all passed onto the function
-  # it also allows evaluation of arguments of class `language` when contained 
+  # it also allows evaluation of arguments of class `language` when they contain 
   # symbols were defined in previous arguments
   if(!is.null(arg_names)) {
     eval_envir <- new.env()
@@ -134,7 +134,7 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
     
   } else {
     # convert (unevaluated) args to text
-    args_text <- as.character(sapply(names(args[2:length(args)]), function(x) paste0(x, " <- ", deparse(args[[x]]))))
+    args_text <- as.character(sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]]))))
   }
   
   #optionally fix arguments by replacing it with its (evaluated value)
