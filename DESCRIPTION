@@ -27,7 +27,8 @@ Depends:
     estimatr (>= 0.14.0)
 Imports:
     generics,
-    rlang
+    rlang,
+    glue
 Suggests: 
     testthat
 RoxygenNote: 6.1.1
