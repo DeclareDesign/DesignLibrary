@@ -85,7 +85,7 @@ factorial_designer <- function(
   sd = 1, 
   outcome_sds = rep(sd, 2^k),
   assignment_probs = rep(.5, k),
-  outcome_name = c("Y"),
+  outcome_name = "Y",
   treatment_names = NULL,
   fixed = NULL
 ){
