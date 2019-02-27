@@ -151,7 +151,7 @@ attr(two_by_two_designer, "definitions") <- data.frame(
             "Standard deviation of individual-level shock",
             "Standard deviation of unit level shock in each condition"),
   class = c("integer", rep("numeric", 11)),
-  vector = c(rep(FALSE, 11), TRUE),
+  vector = c(rep(FALSE, 5), TRUE, rep(FALSE, 5), TRUE),
   min = c(1, 0, 0, 1/10000, 1/10000, rep(-Inf, 5), 0, 0), 
   max = c(Inf, 1, 1, rep(Inf, 9)),
   inspector_min = c(100, 0, 0, 1/10, 1/10, -1),
