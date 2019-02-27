@@ -1,0 +1,79 @@
+---
+title: "Two-Arm Experiment with a Covariate"
+output: rmarkdown::html_vignette
+bibliography: bib.bib
+vignette: >
+  %\VignetteIndexEntry{Two-Arm Experiment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r MIDA, echo = FALSE,include = FALSE}
+library(DesignLibrary)
+library(tidyverse)
+library(knitr)
+```
+
+We are often told to "control" for various different variables that might be related to our independent or dependent variables. Does it always make sense to control? Or are there instances when we better estimate the effect of our explanatory variable on our dependent variable by ignoring potential control variables?   
+
+We declare a design in which a researcher seeks to understand the causal effect of explanatory variable, $Z$, on outcome variable $Y$. A covariate, $W$, might be correlated with either or neither of these variables.
+
+In this particular setup, you do better by controlling -- even in an experiment -- except when the covariate is correlated with the explanatory variable but not with the outcome.
+
+
+## Design Declaration
+
+- **M**odel: 
+    
+    Our model of the world specifies a population of $N$ units that have three observable variables. The binary treatment variable, $Z$, is potentially correlated with the covariate, $W$. The outcome variable, $Y$, is a function of the treatment variable, and may also be correlated with $W$. We refer to the correlations between $W$ and $Z$ and between $W$ and $Y$ as $\rho_{WZ}$ and $\rho_{WY}$, respectively.
+  
+- **I**nquiry: 
+    
+    We want to know the average of all units' differences in treated and untreated potential outcomes -- the average treatment effect on the outcome of interest: $E[Y_i(Z = 1) - Y_i(Z = 0)]$. 
+
+- **D**ata strategy: 
+    
+    The variable $Z$ is not assigned to units by researchers -- rather, it is assigned by the unobservable process, $U_Z$, which may be correlated with $U_W$.
+
+- **A**nswer strategy: 
+    
+    We consider three answer strategies. The first does not control for $W$ when estimating the effect of $Z$ on $Y$. The second controls for the average effect of $W$ on $Y$ when estimating the effect of $Z$ on $Y$. The third uses an estimator that averages over differences in the effect of $Z$ on $Y$ for different levels of $W$. 
+
+```{r, code = get_design_code(two_arm_attrition_designer()), eval=TRUE}
+```
+
+## Takeaways
+
+```{r}
+designs <- expand_design(
+  designer = two_arm_covariate_designer,
+  N = 30, rho_WY = c(0,.8), rho_WZ = c(0,.8), h = .5)
+diagnoses <- diagnose_designs(designs)
+```
+
+```{r,eval = TRUE, echo = FALSE}
+get_diagnosands(diagnoses) %>% 
+  arrange(design_label,match(estimator_label,c("No controls","With controls","Lin"))) %>% 
+  select(c("estimator_label","rho_WZ","rho_WY","bias","rmse")) %>% 
+  kable(digits = 2)
+```
+
+- When $W$ is independent of both $Z$ and $Y$, it really doesn't make much of a difference if you control or not
+
+- When $W$ is predictive of $Y$ but not correlated with $Z$, you do strictly better by controlling for $W$. This is the case, for example, of experiments with prognostic covariates.
+
+- When $W$ is correlated with $Z$ but not with $Y$, we can actually minimize root mean square error by not controlling. We're better off leaving $W$ out because, while controlling provides no information on $Y$, it introduces colinearity between $W$ and $Z$. 
+
+- In the final three rows, we have a case of confounding: $W$ is correlated with both sides of the regression equation. Here the bias when we don't control is very high; controlling helps a lot.
+
+
+
+
+
+
+
+
+
+
+
