@@ -13,6 +13,7 @@
 #' @param sd_2 Nonnegative number. Standard deviation of period 2 shocks.
 #' @param rho A number in [-1,1]. Correlation in outcomes between pre- and post-test.
 #' @param attrition_rate A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.
+#' @param fixed A character vector. Names of arguments to be fixed in design.
 #' @return A pretest-posttest design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -32,7 +33,8 @@ pretest_posttest_designer <- function(N = 100,
                                       sd_1 = 1,
                                       sd_2 = 1,
                                       rho = .5,
-                                      attrition_rate = .1)
+                                      attrition_rate = .1,
+                                      fixed = NULL)
 {
   if(rho < -1 || rho > 1) stop("'rho' must be a value in [-1, 1]")
   if(any(sd_1 < 0, sd_2 < 0)) stop("'sd_1' and 'sd_2' must be nonnegative")
@@ -53,9 +55,11 @@ pretest_posttest_designer <- function(N = 100,
     
     # D: Data Strategy
     assignment <- declare_assignment()
+    
     report     <- declare_assignment(prob = 1 - attrition_rate,
                                      assignment_variable = R)
     reveal_t2 <- declare_reveal(Y_t2) 
+    
     manipulation <- declare_step(difference = (Y_t2 - Y_t1), handler = fabricate)  
     
     # A: Answer Strategy
@@ -66,6 +70,7 @@ pretest_posttest_designer <- function(N = 100,
       subset = R == 1,
       label = "Change score"
     )
+    
     pretest_rhs <- declare_estimator(
       Y_t2 ~ Z + Y_t1,
       model = lm_robust,
@@ -73,6 +78,7 @@ pretest_posttest_designer <- function(N = 100,
       subset = R == 1,
       label = "Condition on pretest"
     )
+    
     posttest_only <- declare_estimator(
       Y_t2 ~ Z,
       model = lm_robust,
@@ -86,24 +92,25 @@ pretest_posttest_designer <- function(N = 100,
   }}}
   
   attr(pretest_posttest_design, "code") <- 
-    construct_design_code(pretest_posttest_designer, match.call.defaults())
+    construct_design_code(pretest_posttest_designer, fixed = fixed, match.call.defaults())
   
   pretest_posttest_design
 }
 attr(pretest_posttest_designer, "definitions") <- data.frame(
-  names = c("N",  "ate",  "sd_1",  "sd_2",  "rho",  "attrition_rate"),
+  names = c("N",  "ate",  "sd_1",  "sd_2",  "rho",  "attrition_rate", "fixed"),
   tips  = c("Size of sample",
             "Average treatment effect",
             "Standard deviation of period 1 shocks",
             "Standard deviation of period 2 shocks",
             "Correlation in outcomes between pre- and post-test",
-            "Proportion of respondents lost when using pre-test data"),
-  class = c("integer", rep("numeric", 5)),
-  vector = c(rep(FALSE, 6)),
-  min = c(2, -Inf, 0, 0, -1, 0),
-  max = c(Inf, Inf, Inf, Inf, 1, 1),
-  inspector_min = c(100, 0, 0, 0, -1, 0),
-  inspector_step = c(50, rep(.2, 4), .2),
+            "Proportion of respondents lost when using pre-test data",
+            "Names of arguments to be fixed"),
+  class = c("integer", rep("numeric", 5), "character"),
+  vector = c(rep(FALSE, 6), TRUE),
+  min = c(2, -Inf, 0, 0, -1, 0, NA),
+  max = c(Inf, Inf, Inf, Inf, 1, 1, NA),
+  inspector_min = c(100, 0, 0, 0, -1, 0, NA),
+  inspector_step = c(50, rep(.2, 4), .2, NA),
   stringsAsFactors = FALSE
 )
 attr(pretest_posttest_designer, "shiny_arguments") <- list(

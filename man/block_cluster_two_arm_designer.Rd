@@ -11,7 +11,7 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
   sd_cluster = max(0, (sd^2 - sd_block^2)/2)^0.5, sd_i_0 = max(0, sd^2
   - sd_block^2 - sd_cluster^2)^0.5, sd_i_1 = sd_i_0, rho = 1,
   assignment_probs = 0.5, control_mean = 0, ate = 0,
-  treatment_mean = control_mean + ate, verbose = TRUE)
+  treatment_mean = control_mean + ate, verbose = TRUE, fixed = NULL)
 }
 \arguments{
 \item{N}{An integer. Total number of units. Usually not specified as \code{N} is determined by \code{N_blocks}, \code{N_clusters_in_block}, and \code{N_i_in_cluster}. If \code{N_blocks}, and  \code{N_clusters_in_block}, and \code{N_i_in_cluster} are specified then \code{N} is overridden. If these are not specified and \code{N} is specified then designer attempts to guess sizes of levels to approximate \code{N}, with preference for a design without blocks or clusters.}
@@ -43,6 +43,8 @@ block_cluster_two_arm_designer(N = NULL, N_blocks = 1,
 \item{treatment_mean}{A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used.}
 
 \item{verbose}{Logical. If TRUE, prints intra-cluster correlation implied by design parameters.}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design.}
 }
 \value{
 A block cluster two-arm design.

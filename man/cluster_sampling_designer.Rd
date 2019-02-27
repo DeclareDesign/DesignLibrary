@@ -6,7 +6,7 @@
 \usage{
 cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
   N_i_in_cluster = 50, n_clusters_in_block = 100,
-  n_i_in_cluster = 10, icc = 0.2)
+  n_i_in_cluster = 10, icc = 0.2, fixed = NULL)
 }
 \arguments{
 \item{N_blocks}{An integer. Number of blocks (strata). Defaults to 1 for no blocks.}
@@ -20,6 +20,8 @@ cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
 \item{n_i_in_cluster}{An integer. Number of units to sample in each cluster.}
 
 \item{icc}{A number in [0,1]. Intra-cluster Correlation Coefficient (ICC).}
+
+\item{fixed}{A character vector. Names of arguments to be fixed in design.}
 }
 \value{
 A stratified cluster sampling design.
