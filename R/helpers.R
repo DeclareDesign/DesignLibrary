@@ -49,21 +49,6 @@ match.call.defaults <- function(definition = sys.function(sys.parent()),
 
 # Internal helpers for {{{ }}} approach -----------------------------------
 
-#' Replaces argument symbol in design code character vector with argument's value
-#' @param argument A string. Design argument name.
-#' @param replacement Design argument value.
-#' @param string_vector A string vector.
-#' @details It only replaces "N" argument for its value when N appears in the format "N = N". In these cases, the replacement is "N = 100" when the value of N is 100.
-gsub_code_vector <- function(argument, replacement, string_vector){
-  if(argument == "N"){
-    replacement <- paste0("N = ", replacement)
-    sapply(string_vector, function(s) gsub("N = N", replacement, s, fixed = TRUE), USE.NAMES = FALSE)
-  } else {
-    argument <- paste0("\\b", argument, "\\b(?!\\s*={1})")
-    sapply(string_vector, function(s) gsub(argument, replacement, s, perl = TRUE), USE.NAMES = FALSE)
-  }
-}
-
 group_code_lines <- function(code_string){
   # determine line spaces separating expressions
   # note: this means there must be a line space between expressions
@@ -89,12 +74,46 @@ group_code_lines <- function(code_string){
   expr_i
 }
 
+#' Generates string of assignment of value to argument
+#' @importFrom glue glue
+#' @param arg_name A string. Label of assignment object.
+#' @param arg_value A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.
+#' @value A vector of strings of the form \code{"arg_name <- arg_value"} where \code{arg_value} is in its evaluated format.
+assignment_string <- function(arg_name, arg_value){
+  if (length(arg_value) == 1){
+    print(arg_value)
+    glue({arg_name}, " <- ", {arg_value})
+  } else {
+    arg_quoted <- as.character(arg_value)
+    glue({arg_name}, " <- ", arg_quoted) 
+  }
+}
+
+#' Takes substring between matched strings. Avoids dependency on stringr package.
+#' @param string A string. String from which substring is extracted.
+#' @param pattern A regular expression that matches the beggining and end of a substring
+#' @value Substring within \code{string} surrounded by matched \code{pattern}.
+str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
+  if(length(string) > 1) string <- paste(string, collapse = " ")
+  matches <- gregexpr(pattern, string)[[1]]
+  match.length <- attr(matches,"match.length")
+  start <- matches[1] + match.length[1]
+  stop <- matches[2] - 1
+  substr(string, start, stop)
+}
+
+#' Substitute approach
+code_fixer <- function(design_expr, list_fixed_str, eval_envir){
+  e <- paste0("substitute({", design_expr, "},", list_fixed_str, ")")
+  t_e <- expr_text(eval(parse_expr(e), envir = eval_envir))
+  gsub("^[{][\n]|[}]$", "", t_e)
+}
+
 # This is the core function for grabbing code when using the {{{ }}} approach:
 
 #' Generates clean code string that reproduces design
 #' @importFrom utils getSrcref
 #' @importFrom rlang expr quo_text expr_text
-#' @importFrom glue glue
 #' @param designer Designer function.
 #' @param args Named list of arguments to be passed to designer function.
 #' @param fixed Vector of strings. Designer arguments to fix in design code.
@@ -102,6 +121,9 @@ group_code_lines <- function(code_string){
 #' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
 
 construct_design_code <- function(designer, args, fixed = NULL, arguments_as_values = FALSE, exclude_args = NULL){
+  if(is.null(exclude_args) && !is.null(fixed)) exclude_args <- fixed
+  exclude_args <- union(fixed, exclude_args)
+  
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
   if(length(txt)==0){
@@ -123,74 +145,48 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   # Get names of arguments
   arg_names <- setdiff(names(args), c("", "fixed"))
   
+  if(!is.null(arg_names)) {
   # the following evaluates arguments all passed onto the function
   # it also allows evaluation of arguments of class `language` when they contain 
   # symbols were defined in previous arguments
-  if(!is.null(arg_names)) {
-    eval_envir <- new.env()
-    args_eval <- lapply(1:length(arg_names), function(a){
-      evaluated_arg <- invisible(eval(args[[arg_names[a]]], envir = eval_envir))
-      invisible(assign(x = arg_names[a], value = evaluated_arg, envir = eval_envir))
-      hold <- invisible(get(arg_names[a], envir = eval_envir))
-      return(hold)
-    })
-    names(args_eval) <- arg_names
+  ee <- new.env() #shorter than eval_envir
+  for(i in arg_names) {
+    invisible(assign(i, eval(args[[i]], envir=ee), ee))
   }
-  
+  args_eval <- mget(arg_names, envir = ee)
+
   # for each of the expressions separated by new
   # line turn from string to expression
   # substitute the arguments for their (evaluated)
   # values if they are set to fixed
-  
   expr_i <- group_code_lines(code)
-
+  
   #if any arguments are set to fixed
   if(!is.null(fixed)){
     #list of fixed arguments
     list_fixed <- lapply(fixed, function(w) args[[w]])
-    names(list_fixed) <- fixed
-    # create string of list of fixed arguments
-    # there may be a neater way of turning list to string without structure wrap
-    list_fixed_str <- expr_text(expr(!!list_fixed))
-    list_fixed_str <- gsub("structure(", "", list_fixed_str, fixed = TRUE)
-    list_fixed_str <- gsub(", \\.Names =.+((\n)|.)+", "", list_fixed_str, perl = TRUE)
-    # bundle code lines related to same function together
+    list_fixed <- setNames(list_fixed, fixed)
+    # create string of list of arguments to substitute
+    list_fixed_str <- str_within(deparse(expr(!!list_fixed), width.cutoff = 60L))
+    # bundle code lines related to same assignment function together
     design_exprs <- lapply(expr_i, function(e) paste0(code[e], collapse = " "))
-    
-    # evaluate a parsed expression where we substitute fixed arguments 
-    # for their values
-    fixed_code_lines <- lapply(design_exprs, function(e){
-      e <- paste0("substitute({", e, "},", list_fixed_str, ")")
-      t_e <- expr_text(eval(parse_expr(e), envir = eval_envir))
-      gsub("^[{][\n]|[}]$", "", t_e)
-    })
+
+    # evaluate a parsed expression where we substitute fixed arguments for their values
+    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str, ee)
     
     code_fixed <- code
-    for(i in 1:length(expr_i)){
+    for(i in seq_along(expr_i)){
       code_fixed[expr_i[[i]]] <- fixed_code_lines[[i]]
     }
     
     code <- unique(code_fixed)
   }
+  }
 
   # If `arguments_as_values = TRUE`, assignment code replaces argument symbol with its (evaluated) value
   if(arguments_as_values && !is.null(args_eval)){
-    args_text <- sapply(1:length(args_eval), function(a){
-      # if the argument is of class character and length 1, keep quotation marks
-      # e.g., `name <- Y` is `name <- "Y"` 
-      if (length(args_eval[[a]]) == 1){
-        if(is.character(args_eval[[a]])){
-          arg_quoted <- as.character(args_eval)[[a]]
-          glue({arg_names[a]}, " <- ", arg_quoted)
-        } else {
-          glue({arg_names[a]}, " <- ", {args_eval[[a]]})
-        }
-      } else {
-        arg_quoted <- as.character(args_eval)[[a]]
-        glue({arg_names[a]}, " <- ", arg_quoted) 
-      }
-    })
-    
+    print(args_eval)
+    args_text <- mapply(FUN = assignment_string, arg_names, args_eval)
   } else {
     # convert (unevaluated) args to text
     args_text <- as.character(sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]]))))
