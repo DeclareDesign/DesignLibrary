@@ -10,7 +10,8 @@ vignette: >
 
 
 ```{r MIDA, echo = FALSE,include = FALSE}
-library(DesignLibrary)
+library(devtools)
+install_github("DeclareDesign/DesignLibrary")
 library(tidyverse)
 library(knitr)
 ```
