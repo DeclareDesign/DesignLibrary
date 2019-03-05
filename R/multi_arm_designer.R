@@ -170,18 +170,11 @@ multi_arm_designer <- function(N = 30,
       arguments_as_values = TRUE,
       exclude_args = union(c("m_arms", "fixed", "conditions"), fixed))
   
-  design_code <-
-    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
-  design_code <- gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
-  design_code <- gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
-  
-  #  Add  code plus argments as attributes
+  design_code <- sub_expr_text(design_code, population_expr, estimand_expr,
+                               potential_outcomes_expr, assignment_expr,
+                               estimator_expr)
+
   attr(multi_arm_design, "code") <- design_code
-  
   
   # Return design
   return(multi_arm_design)

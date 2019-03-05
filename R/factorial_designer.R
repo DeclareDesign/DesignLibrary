@@ -248,27 +248,16 @@ factorial_designer <- function(
     
   }}}
   
-  design_code <- construct_design_code(factorial_designer,
+  design_code <- DesignLibrary:::construct_design_code(factorial_designer,
                                        match.call.defaults(),
                                        # rlang = TRUE,
                                        arguments_as_values = TRUE,
                                        exclude_args = c("k", "assignment_probs", "outcome_name", "treatment_names", "sd", fixed, "fixed"))
   
   
-  design_code <-
-    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(reveal_expr\\)", quo_text(reveal_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
-  design_code <- 
-    gsub("eval_bare\\(assignment_expr1\\)", quo_text(assignment_expr1), design_code)
-  design_code <- 
-    gsub("eval_bare\\(assignment_expr2\\)", quo_text(assignment_expr2), design_code)
-  design_code <- 
-    gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
+  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr,
+                               reveal_expr, estimand_expr, assignment_expr1, 
+                               assignment_expr2, estimator_expr)
   
   attr(factorial_design, "code") <- design_code
   
