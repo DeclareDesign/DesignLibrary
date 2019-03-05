@@ -77,7 +77,7 @@ group_code_lines <- function(code_string){
 #' Generates string of assignment of value to argument
 #' @importFrom glue glue
 #' @param arg_name A string. Label of assignment object.
-#' @param arg_value A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.
+#' @param arg_values A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.
 #' @value A vector of strings of the form \code{"arg_name <- arg_value"} where \code{arg_value} is in its evaluated format.
 assignment_string <- function(arg_name, arg_values){
   if (length(arg_values[[arg_name]]) == 1){
@@ -102,6 +102,9 @@ str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
 }
 
 #' Substitute approach
+#' @param design_expr A string. The text of the expression in which you wish to substitute symbols for their set values.
+#' @param list_fixed_str A string. The string of code that generates a named list of arguments that will be substituted in the evaluated \code{design_expr}.
+#' @param eval_envir The evaluation environment. Defaults to environment in which design arguments are already evaluated.
 code_fixer <- function(design_expr, list_fixed_str, eval_envir){
   e <- paste0("substitute({", design_expr, "},", list_fixed_str, ")")
   t_e <- expr_text(eval(parse_expr(e), envir = eval_envir))
