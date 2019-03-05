@@ -30,7 +30,7 @@
 #' @param control_mean A number. Average outcome in control.
 #' @param ate A number. Average treatment effect. Alternative to specifying \code{treatment_mean}. Note that \code{ate} is an argument for the designer but it does not appear as an argument in design code (design code uses \code{control_mean} and \code{treatment_mean} only).
 #' @param treatment_mean A number. Average outcome in treatment. If \code{treatment_mean} is not provided then it is calculated as \code{control_mean + ate}. If both \code{ate} and  \code{treatment_mean} are provided then only  \code{treatment_mean} is used. 
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @param verbose Logical. If TRUE, prints intra-cluster correlation implied by design parameters.
 #' @return A block cluster two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -72,7 +72,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
                                            ate = 0,
                                            treatment_mean = control_mean + ate,
                                            verbose = TRUE,
-                                           fixed = NULL
+                                           args_to_fix = NULL
 ){  
   
   if(any(N_blocks < 1, N_clusters_in_block < 1, N_i_in_cluster < 1) ||
@@ -164,7 +164,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
   
   attr(block_cluster_two_arm_design, "code") <- 
     construct_design_code(block_cluster_two_arm_designer, match.call.defaults(),
-                          fixed = fixed,
+                          args_to_fix = args_to_fix,
                           exclude_args = c("ate", "sd", "N"),
                           arguments_as_values = TRUE)
   
@@ -175,7 +175,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
 attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
   names = c("N","N_blocks","N_clusters_in_block","N_i_in_cluster","sd","sd_block",
             "sd_cluster","sd_i_0","sd_i_1","rho","assignment_probs","control_mean",
-            "ate","treatment_mean","verbose","fixed"),
+            "ate","treatment_mean","verbose","args_to_fix"),
   tips  = c("Total number of units",
             "Number of blocks",
             "Number of clusters in each block",
@@ -191,7 +191,7 @@ attr(block_cluster_two_arm_designer, "definitions") <- data.frame(
             "Average treatment effect",
             "Average outcome in treatment",
             "If TRUE, prints intra-cluster correlation",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c(rep("integer", 4), rep("numeric", 10), "logical", "character"),
   vector = c(FALSE, FALSE, TRUE, TRUE, rep(FALSE, 6), TRUE, rep(FALSE, 4), TRUE),
   min = c(2, rep(1, 3), rep(0, 5), -1, 0, -Inf, -Inf, -Inf, NA, NA),

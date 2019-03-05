@@ -12,7 +12,7 @@
 #' @param control_coefs A vector of numbers. Coefficients for polynomial regression function that generates control potential outcomes. Order of polynomial is equal to length.
 #' @param treatment_coefs A vector of numbers. Coefficients for polynomial regression function that generates treatment potential outcomes. Order of polynomial is equal to length.
 #' @param poly_reg_order Integer greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A regression discontinuity design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
@@ -37,7 +37,7 @@ regression_discontinuity_designer <- function(
   control_coefs = c(.5,.5),
   treatment_coefs = c(-5,1),
   poly_reg_order = 4,
-  fixed = NULL
+  args_to_fix = NULL
 ){
   if(cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0,1).")
   if(poly_reg_order < 1) stop("poly_reg_order must be at least 1.")
@@ -92,7 +92,7 @@ regression_discontinuity_designer <- function(
 
 attr(regression_discontinuity_designer, "definitions") <- data.frame(
   names = c("N","tau","outcome_sd","cutoff","bandwidth","control_coefs",
-            "treatment_coefs","poly_reg_order","fixed"),
+            "treatment_coefs","poly_reg_order","args_to_fix"),
   tips  = c("Size of population to sample from",
             "Difference in potential outcomes functions at the threshold",
             "Standard deviation of the outcome",
@@ -101,7 +101,7 @@ attr(regression_discontinuity_designer, "definitions") <- data.frame(
             "Coefficients for polynomial regression function that generates control potential outcomes",
             "Coefficients for polynomial regression function that generates treatment potential outcomes",
             "Order of the polynomial regression used to estimate the jump at the cutoff",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", rep("numeric", 6), "integer","character"), 
   vector = c(rep(FALSE, 5), TRUE, TRUE, FALSE, TRUE),
   min = c(2, -Inf, 0, 0, rep(-Inf, 3), 1, NA),

@@ -4,12 +4,12 @@
 \alias{assignment_string}
 \title{Generates string of assignment of value to argument}
 \usage{
-assignment_string(arg_name, arg_value)
+assignment_string(arg_name, arg_values)
 }
 \arguments{
 \item{arg_name}{A string. Label of assignment object.}
 
-\item{arg_value}{A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.}
+\item{arg_values}{A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.}
 }
 \description{
 Generates string of assignment of value to argument

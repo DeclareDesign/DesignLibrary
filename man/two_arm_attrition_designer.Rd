@@ -5,7 +5,7 @@
 \title{Create design with risk of attrition or post treatment conditioning}
 \usage{
 two_arm_attrition_designer(N = 100, a_R = 0, b_R = 1, a_Y = 0,
-  b_Y = 1, rho = 0, fixed = NULL)
+  b_Y = 1, rho = 0, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -20,7 +20,7 @@ two_arm_attrition_designer(N = 100, a_R = 0, b_R = 1, a_Y = 0,
 
 \item{rho}{A number in [0,1]. Correlation between shocks in equations for R and Y.}
 
-\item{fixed}{A character vector. Names of arguments to be fixed in design.}
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A post-treatment design.

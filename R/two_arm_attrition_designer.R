@@ -19,7 +19,7 @@
 #' @param a_Y A number. Constant in equation relating treatment to outcome.
 #' @param b_Y A number. Slope coefficient in equation relating treatment to outcome.
 #' @param rho A number in [0,1]. Correlation between shocks in equations for R and Y.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
@@ -52,7 +52,7 @@ two_arm_attrition_designer <- function(N = 100,
                                        a_Y = 0,
                                        b_Y = 1,
                                        rho = 0,
-                                       fixed = NULL
+                                       args_to_fix = NULL
 ){
   if(rho < 0 || rho > 1) stop("rho must be in [0,1]")
   {{{
@@ -100,20 +100,20 @@ two_arm_attrition_designer <- function(N = 100,
   }}}
   
   attr(two_arm_attrition_design, "code") <- 
-    construct_design_code(two_arm_attrition_designer, fixed = fixed, match.call.defaults())
+    construct_design_code(two_arm_attrition_designer, args_to_fix = args_to_fix, match.call.defaults())
   
   two_arm_attrition_design
 }
 
 attr(two_arm_attrition_designer, "definitions") <- data.frame(
-  names = c("N",  "a_R",  "b_R",  "a_Y",  "b_Y",  "rho", "fixed"),
+  names = c("N",  "a_R",  "b_R",  "a_Y",  "b_Y",  "rho", "args_to_fix"),
   tips  = c("Size of sample",
             "Constant in equation relating treatment to responses",
             "How reporting is related to treatment",
             "Constant in equation relating treatment to outcome",
             "Slope coefficient in equation relating treatment to outcome",
             "Correlation between reporting error term and outcome error term",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", rep("numeric", 5),"character"),
   vector = c(rep(FALSE, 6), TRUE),
   min = c(6, rep(-Inf, 4), 0, NA),

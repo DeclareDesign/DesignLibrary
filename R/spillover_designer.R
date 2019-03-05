@@ -15,7 +15,7 @@
 #' @param N_i_group Number of units in each group. Can be scalar or vector of length \code{N_groups}.
 #' @param sd_i A nonnegative number. Standard deviation of individual-level shock.
 #' @param gamma A number. Parameter that controls whether spillovers within groups substitute or complement each other. See `Details`.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A simple spillover design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -36,7 +36,7 @@ spillover_designer <- function(N_groups = 80,
                                N_i_group = 3, 
                                sd_i = .2,
                                gamma = 2,
-                               fixed = NULL
+                               args_to_fix = NULL
                                )
 {
   if(sd_i < 0) stop("sd_i must be nonnegative")
@@ -70,18 +70,18 @@ spillover_designer <- function(N_groups = 80,
     
   }}}
   attr(spillover_design, "code") <- 
-    construct_design_code(spillover_designer, fixed = fixed, match.call.defaults())
+    construct_design_code(spillover_designer, args_to_fix = args_to_fix, match.call.defaults())
   
   spillover_design
 }
 
 attr(spillover_designer, "definitions") <- data.frame(
-  names = c("N_groups", "N_i_group", "sd_i", "gamma", "fixed"),
+  names = c("N_groups", "N_i_group", "sd_i", "gamma", "args_to_fix"),
   tips  = c("Number of groups",
             "Number of units in each group",
             "Standard deviation of individual-level shock",
             "Parameter that controls whether spillovers within groups substitute or complement each other",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", "integer", "numeric", "numeric","character"),
   vector = c(FALSE, TRUE, FALSE, FALSE, TRUE),
   min = c(1, 1, 0, 0, NA),

@@ -115,13 +115,13 @@ code_fixer <- function(design_expr, list_fixed_str, eval_envir){
 #' @importFrom rlang expr quo_text expr_text
 #' @param designer Designer function.
 #' @param args Named list of arguments to be passed to designer function.
-#' @param fixed Vector of strings. Designer arguments to fix in design code.
+#' @param args_to_fix Vector of strings. Designer arguments to fix in design code.
 #' @param arguments_as_values Logical. Whether to replace argument names for value.
 #' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
 
-construct_design_code <- function(designer, args, fixed = NULL, arguments_as_values = FALSE, exclude_args = NULL){
-  if(is.null(exclude_args) && !is.null(fixed)) exclude_args <- fixed
-  exclude_args <- union(fixed, exclude_args)
+construct_design_code <- function(designer, args, args_to_fix = NULL, arguments_as_values = FALSE, exclude_args = NULL){
+  if(is.null(exclude_args) && !is.null(args_to_fix)) exclude_args <- args_to_fix
+  exclude_args <- union(args_to_fix, exclude_args)
   
   # get the code for the design 
   txt <- as.character(getSrcref(designer))
@@ -142,7 +142,7 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   
   code <- sub(indentation, "", txt)
   # Get names of arguments
-  arg_names <- setdiff(names(args), c("", "fixed"))
+  arg_names <- setdiff(names(args), c("", "args_to_fix"))
   
   if(!is.null(arg_names)) {
   # the following evaluates arguments all passed onto the function
@@ -157,13 +157,13 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   # for each of the expressions separated by new
   # line turn from string to expression
   # substitute the arguments for their (evaluated)
-  # values if they are set to fixed
+  # values if they are set in args_to_fix
   expr_i <- group_code_lines(code)
   
   #if any arguments are set to fixed
-  if(!is.null(fixed)){
+  if(!is.null(args_to_fix)){
     #list of fixed arguments
-    list_fixed <- setNames(mapply(function(fixed) args[[fixed]], fixed), fixed)
+    list_fixed <- setNames(mapply(function(arg_to_fix) args[[arg_to_fix]], args_to_fix), args_to_fix)
     # create string of list of arguments to substitute
     list_fixed_str <- str_within(deparse(expr(!!list_fixed), width.cutoff = 60L))
     # bundle code lines related to same assignment function together

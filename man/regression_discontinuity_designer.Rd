@@ -7,7 +7,7 @@
 regression_discontinuity_designer(N = 1000, tau = 0.15,
   outcome_sd = 0.1, cutoff = 0.5, bandwidth = 0.5,
   control_coefs = c(0.5, 0.5), treatment_coefs = c(-5, 1),
-  poly_reg_order = 4, fixed = NULL)
+  poly_reg_order = 4, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of population to sample from.}
@@ -26,7 +26,7 @@ regression_discontinuity_designer(N = 1000, tau = 0.15,
 
 \item{poly_reg_order}{Integer greater than or equal to 1. Order of the polynomial regression used to estimate the jump at the cutoff.}
 
-\item{fixed}{A character vector. Names of arguments to be fixed in design.}
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A regression discontinuity design.

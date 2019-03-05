@@ -21,7 +21,7 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param rho_WZ A number in [-1,1]. Correlation between W and Z.
 #' @param rho_WY A number in [-1,1]. Correlation between W and Y.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A simple two-arm design with covariate W.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -65,7 +65,7 @@ two_arm_covariate_designer <- function(N = 100,
                                        treatment_mean = control_mean + ate,
                                        rho_WY = 0,
                                        rho_WZ = 0,
-                                       fixed= NULL
+                                       args_to_fix= NULL
 ){
   if(sd < 0 ) stop("sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
@@ -111,7 +111,7 @@ two_arm_covariate_designer <- function(N = 100,
   attr(two_arm_covariate_design, "code") <- 
     construct_design_code(designer = two_arm_covariate_designer, 
                           args = match.call.defaults(), 
-                          fixed = fixed,
+                          args_to_fix = args_to_fix,
                           exclude_args = "ate",
                           arguments_as_values = TRUE)
   
@@ -119,7 +119,7 @@ two_arm_covariate_designer <- function(N = 100,
 }
 
 attr(two_arm_covariate_designer, "definitions") <- data.frame(
-  names = c("N", "prob", "control_mean", "sd", "ate", "h", "treatment_mean", "rho_WY", "rho_WZ","fixed"),
+  names = c("N", "prob", "control_mean", "sd", "ate", "h", "treatment_mean", "rho_WY", "rho_WZ","args_to_fix"),
   tips = c("Sample size",
            "Probability of assignment to treatment",
            "Average outcome in control",
@@ -129,7 +129,7 @@ attr(two_arm_covariate_designer, "definitions") <- data.frame(
            "Average outcome in treatment. Overrides ate if both specified",
            "Correlation between shock on Y and W",
            "Correlation between shock on Y and latent variable for Z assignment",
-           "Names of arguments to be fixed"),
+           "Names of arguments to be args_to_fix"),
   class = c("integer", rep("numeric", 8),"character"),
   vector = c(rep(FALSE, 9), TRUE),
   min = c(4, 1/10, -Inf, 0, rep(-Inf, 3), -1, -1, NA),

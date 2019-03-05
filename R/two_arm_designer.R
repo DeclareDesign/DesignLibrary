@@ -15,7 +15,7 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param treatment_sd  A nonnegative number. Standard deviation in treatment. By default equals \code{control_sd}.
 #' @param rho A number in [-1,1]. Correlation between treatment and control outcomes.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -39,7 +39,7 @@ two_arm_designer <- function(N = 100,
                              treatment_mean = control_mean + ate,
                              treatment_sd = control_sd,
                              rho = 1,
-                             fixed = NULL
+                             args_to_fix = NULL
 ){
   if(treatment_mean != ate + control_mean) warning("`treatment_mean` is not consistent with `ate`+`control_mean`. Value provided in `treatment_mean` will override `ate` value.")
   if(control_sd < 0 ) stop("control_sd must be non-negative")
@@ -74,15 +74,15 @@ two_arm_designer <- function(N = 100,
   attr(two_arm_design, "code") <-
     construct_design_code(designer = two_arm_designer,
                           args = match.call.defaults(),
-                          fixed = fixed,
-                          exclude_args = union(c("ate", "fixed"), fixed),
+                          args_to_fix = args_to_fix,
+                          exclude_args = union(c("ate", "args_to_fix"), args_to_fix),
                           arguments_as_values = TRUE)
   two_arm_design
 }
 
 attr(two_arm_designer, "definitions") <- data.frame(
   names = c("N", "assignment_prob", "control_mean", "control_sd", 
-            "ate", "treatment_mean", "treatment_sd", "rho", "fixed"),
+            "ate", "treatment_mean", "treatment_sd", "rho", "args_to_fix"),
   tips  = c("Sample size",
             "Probability of assignment to treatment",
             "Average outcome in control",

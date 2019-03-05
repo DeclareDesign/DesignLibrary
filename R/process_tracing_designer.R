@@ -30,7 +30,7 @@
 #' @param cor_E1E2_not_H A number in [-1,1]. Correlation between first and second pieces of evidence given hypothesis that X caused Y is not true. 
 #' @param label_E1 A string. Label for the first piece of evidence (e.g., "Straw in the Wind").
 #' @param label_E2 A string. Label for the second piece of evidence (e.g., "Smoking Gun").
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A process-tracing design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
@@ -81,7 +81,7 @@ process_tracing_designer <- function(
   cor_E1E2_not_H = 0,
   label_E1 = "Straw in the Wind",
   label_E2 = "Smoking Gun",
-  fixed = NULL
+  args_to_fix = NULL
 ){
   if(!is_integerish(N) || N < 1) stop("N must be a positive integer.")
   if(prob_X < 0 || prob_X > 1) stop("prob_X must be in [0,1].")
@@ -223,7 +223,7 @@ process_tracing_designer <- function(
   }}}
   
   attr(process_tracing_design, "code") <- 
-    construct_design_code(process_tracing_designer, fixed = fixed, match.call.defaults())
+    construct_design_code(process_tracing_designer, args_to_fix = args_to_fix, match.call.defaults())
   
   process_tracing_design <- set_diagnosands(
     process_tracing_design,
@@ -241,7 +241,7 @@ process_tracing_designer <- function(
 
 attr(process_tracing_designer, "definitions") <- data.frame(
   names = c("N",  "prob_X",  "process_proportions",  "prior_H",  "p_E1_H",  "p_E1_not_H",  
-            "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2", "fixed"),
+            "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2", "args_to_fix"),
   tips  = c("Size of population of cases selected",
             "Probability that X = 1 for a given case",
             "Simplex denoting the proportion of cases in the population",
@@ -254,7 +254,7 @@ attr(process_tracing_designer, "definitions") <- data.frame(
             "Correlation in first and second pieces of evidence given that X caused Y is not true",
             "Label for the first piece of evidence",
             "Label for the second piece of evidence",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", rep("numeric", 9), rep("character", 3)), 
   vector = c(FALSE, FALSE, TRUE, rep(FALSE, 9), NA),
   min = c(6, rep(0, 7), -1, -1, rep(NA, 2), NA),

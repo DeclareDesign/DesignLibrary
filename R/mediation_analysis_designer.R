@@ -14,7 +14,7 @@
 #' @param c A number. Interaction between mediator (M) and (Z) for outcome (Y).
 #' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
 #' @param rho A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A mediation analysis design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -39,7 +39,7 @@
 #' diagnose_design(mediation_2, sims = 1000)
 #' }
 #'
-mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0, fixed = NULL)
+mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0, args_to_fix = NULL)
 {
   
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
@@ -127,20 +127,20 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     
   }}}
   attr(mediation_analysis_design, "code") <- 
-    construct_design_code(mediation_analysis_designer, fixed = fixed, match.call.defaults())
+    construct_design_code(mediation_analysis_designer, args_to_fix = args_to_fix, match.call.defaults())
   
   mediation_analysis_design
 }
 
 attr(mediation_analysis_designer,"definitions") <- data.frame(
-  names = c("N",  "a",  "b",  "c",  "d",  "rho", "fixed"),
+  names = c("N",  "a",  "b",  "c",  "d",  "rho", "args_to_fix"),
   tips  = c("Size of sample",
             "Effect of treatment (Z) on mediator (M)",
             "Effect of mediator (M) on outcome (Y)",
             "Interaction between mediator (M) and (Z) for outcome (Y)",
             "Direct effect of treatment (Z) on outcome (Y)",
             "Correlation of mediator (M) and outcome (Y) error terms",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", rep("numeric", 5), "character"),
   vector = c(rep(FALSE, 6), TRUE),
   min = c(1, rep(-Inf, 4), -1, NA),

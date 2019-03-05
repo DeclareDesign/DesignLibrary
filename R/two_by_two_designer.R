@@ -24,7 +24,7 @@
 #' @param mean_A1B1 A number. Mean outcome in A=1, B=1 condition.
 #' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative vector of length 4. Standard deviation of (additional) unit level shock in each condition, in order AB = 00, 01, 10, 11.
-#' @param fixed A character vector. Names of arguments to be fixed in design.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @aliases simple_factorial_designer
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
@@ -72,7 +72,7 @@ two_by_two_designer <- function(N = 100,
                                 mean_A1B1 = outcome_means[4],
                                 sd_i = 1,
                                 outcome_sds = rep(0,4),
-                                fixed = NULL
+                                args_to_fix = NULL
 ){
   if((weight_A < 0) || (weight_B < 0) || (weight_A > 1) || (weight_B > 1)) stop("weight_A and weight_B must be in [0,1]")
   if(max(c(sd_i, outcome_sds) < 0) )      stop("sd_i and outcome_sds must be nonnegative")
@@ -133,7 +133,7 @@ two_by_two_designer <- function(N = 100,
   attr(two_by_two_design, "code") <- 
     construct_design_code(designer = two_by_two_designer, 
                           args = match.call.defaults(),
-                          fixed = fixed,
+                          args_to_fix = args_to_fix,
                           exclude_args = "outcome_means",
                           arguments_as_values = TRUE)
   
@@ -143,7 +143,7 @@ two_by_two_designer <- function(N = 100,
 attr(two_by_two_designer, "definitions") <- data.frame(
   names  = c("N",  "prob_A",  "prob_B",  "weight_A",  "weight_B",  
              "outcome_means",  "mean_A0B0",  "mean_A0B1",  "mean_A1B0",  
-             "mean_A1B1",  "sd_i",  "outcome_sds", "fixed"),
+             "mean_A1B1",  "sd_i",  "outcome_sds", "args_to_fix"),
   tips  = c("Sample size",
             "Probability of assignment to treatment A",
             "Probability of assignment to treatment B",
@@ -156,7 +156,7 @@ attr(two_by_two_designer, "definitions") <- data.frame(
             "Mean outcome for A=1, B=1",
             "Standard deviation of individual-level shock",
             "Standard deviation of unit level shock in each condition",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", rep("numeric", 11),"character"),
   vector = c(rep(FALSE, 11), TRUE, TRUE),
   min = c(1, 0, 0, 1/10000, 1/10000, rep(-Inf, 5), 0, 0, NA), 
