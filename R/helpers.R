@@ -228,25 +228,6 @@ pred <- function(expr, depth=3) {
   )
 }
 
-#' Clean code for method substitute
-#' @param code A string. Design code
-#' @return clean code 
-clean_code <- function(code) {
-  out <- strsplit(code, "\n")
-  out <- out[-1]
-  out <- gsub("#", " \n #", out)
-  out
-}
-
-#' Substitute text from expressions in design code
-#' @importFrom rlang get_expr quo_text list2 quos
-#' @param argument_names Names of arguments that can be fixed in designer.
-fixed_expr <- function(argument_names){
-  txt1 <- paste0(argument_names, "_ <- ", argument_names, collapse = ";")
-  txt2 <- paste0("if(!\"", argument_names, "\" %in% fixed) ", argument_names, "_ <- expr(", argument_names, ")", collapse = ";")
-  return(c(txt1, txt2))
-}
-
 #' Substitute text from expressions in design code
 #' @importFrom rlang get_expr quo_text list2 quos
 #' @param code List contaitining design code.
