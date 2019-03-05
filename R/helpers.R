@@ -79,12 +79,11 @@ group_code_lines <- function(code_string){
 #' @param arg_name A string. Label of assignment object.
 #' @param arg_value A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.
 #' @value A vector of strings of the form \code{"arg_name <- arg_value"} where \code{arg_value} is in its evaluated format.
-assignment_string <- function(arg_name, arg_value){
-  if (length(arg_value) == 1){
-    print(arg_value)
-    glue({arg_name}, " <- ", {arg_value})
+assignment_string <- function(arg_name, arg_values){
+  if (length(arg_values[[arg_name]]) == 1){
+    glue({arg_name}, " <- ", {arg_values[[arg_name]]})
   } else {
-    arg_quoted <- as.character(arg_value)
+    arg_quoted <- as.character(arg_values)[names(arg_values) == arg_name]
     glue({arg_name}, " <- ", arg_quoted) 
   }
 }
@@ -164,12 +163,11 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
   #if any arguments are set to fixed
   if(!is.null(fixed)){
     #list of fixed arguments
-    list_fixed <- lapply(fixed, function(w) args[[w]])
-    list_fixed <- setNames(list_fixed, fixed)
+    list_fixed <- setNames(mapply(function(fixed) args[[fixed]], fixed), fixed)
     # create string of list of arguments to substitute
     list_fixed_str <- str_within(deparse(expr(!!list_fixed), width.cutoff = 60L))
     # bundle code lines related to same assignment function together
-    design_exprs <- lapply(expr_i, function(e) paste0(code[e], collapse = " "))
+    design_exprs <- mapply(function(lines) paste0(code[lines], collapse = " "), expr_i)
 
     # evaluate a parsed expression where we substitute fixed arguments for their values
     fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str, ee)
@@ -185,11 +183,11 @@ construct_design_code <- function(designer, args, fixed = NULL, arguments_as_val
 
   # If `arguments_as_values = TRUE`, assignment code replaces argument symbol with its (evaluated) value
   if(arguments_as_values && !is.null(args_eval)){
-    print(args_eval)
-    args_text <- mapply(FUN = assignment_string, arg_names, args_eval)
+    # print(args_eval)
+    args_text <- vapply(arg_names, function(arg_name) assignment_string(arg_name, args_eval), FUN.VALUE = character(1))
   } else {
     # convert (unevaluated) args to text
-    args_text <- as.character(sapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]]))))
+    args_text <- as.character(vapply(arg_names, function(x) paste0(x, " <- ", deparse(args[[x]])), FUN.VALUE = character(1)))
   }
   
   # optionally exclude arguments
@@ -256,14 +254,9 @@ fixed_expr <- function(argument_names){
 #' @return Code with expression text.
 sub_expr_text <- function(code, ...){
   dots <- list2(...)
-  qdots <- quos(...)
-  exs <- sapply(1:length(dots), function(e) {
-    ex <- get_expr(qdots[[e]])
-    deparse(substitute(ex))
-  })
-  
+  deparsed_dots <- sapply(substitute(list(...))[-1], deparse)
   for(i in 1:length(dots)){
-    to_sub <- paste0("eval_bare\\(", exs[i], "\\)")
+    to_sub <- paste0("eval_bare\\(", deparsed_dots[i], "\\)")
     code <- gsub(to_sub, quo_text(dots[[i]]), code)
   }
   code
