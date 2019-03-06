@@ -155,6 +155,7 @@ test_that(desc = "two_arm_designer errors when it should",
             expect_error(two_arm_designer(control_sd = -1))
             expect_error(two_arm_designer(assignment_prob = 10))
             expect_error(two_arm_designer(rho = 10))
+            expect_warning(two_arm_designer(ate = 1, control_mean = 1, treatment_mean = 1))
           })
 
 test_that(desc = "mediation_analysis_designer errors when it should",

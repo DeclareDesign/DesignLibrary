@@ -45,13 +45,26 @@ test_that(desc = "construct_design_code works as it should when using rlang func
           code = {
             test_function <- function(){
               {{{
-                t1 <- rlang::quo(
-                  paste0(!!letters[1])
-                )
+                t1 <- rlang::expr(paste0(!!letters[1]))
               }}}
+              
+              DesignLibrary:::construct_design_code(designer = test_function, 
+                                                    args = DesignLibrary:::match.call.defaults(),
+                                                    arguments_as_values = FALSE,
+                                                    exclude_args = NULL,
+                                                    fixed = NULL)
             }
-            expect_is(DesignLibrary:::construct_design_code(designer = function(x) {{{x}}}, args = c("x"),arguments_as_values = F,exclude_args = NULL),"character")
+            expect_equal(test_function(), c("", "t1 <- rlang::expr(paste0(!!letters[1]))"))
           }) 
+
+test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args != NULL",
+          code = expect_is(get_design_code(binary_iv_designer(args_to_fix = "N")), "character")
+)
+
+test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args = NULL",
+          code = expect_is(get_design_code(two_arm_attrition_designer(args_to_fix = "N")), "character")
+)
+
 
 test_that(desc = "match.call.defaults has all cases tested",
           code = {
