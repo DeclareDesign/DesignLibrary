@@ -52,7 +52,7 @@ test_that(desc = "construct_design_code works as it should when using rlang func
                                                     args = DesignLibrary:::match.call.defaults(),
                                                     arguments_as_values = FALSE,
                                                     exclude_args = NULL,
-                                                    fixed = NULL)
+                                                    args_to_fix = NULL)
             }
             expect_equal(test_function(), c("", "t1 <- rlang::quo(paste0(!!letters[1]))"))
           }) 
