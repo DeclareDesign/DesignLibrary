@@ -45,7 +45,7 @@ test_that(desc = "construct_design_code works as it should when using rlang func
           code = {
             test_function <- function(){
               {{{
-                t1 <- rlang::expr(paste0(!!letters[1]))
+                t1 <- rlang::quo(paste0(!!letters[1]))
               }}}
               
               DesignLibrary:::construct_design_code(designer = test_function, 
@@ -54,7 +54,7 @@ test_that(desc = "construct_design_code works as it should when using rlang func
                                                     exclude_args = NULL,
                                                     fixed = NULL)
             }
-            expect_equal(test_function(), c("", "t1 <- rlang::expr(paste0(!!letters[1]))"))
+            expect_equal(test_function(), c("", "t1 <- rlang::quo(paste0(!!letters[1]))"))
           }) 
 
 test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args != NULL",
