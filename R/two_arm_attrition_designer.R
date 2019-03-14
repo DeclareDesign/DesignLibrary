@@ -82,15 +82,15 @@ two_arm_attrition_designer <- function(N = 100,
     observed   <- declare_step(Y_obs = ifelse(R, Y, NA), handler = fabricate)    
     
     # A: Answer Strategy
-    estimator_1 <-
-      declare_estimator(R ~ Z, term = "Z", 
-                        estimand = estimand_1, label = "DIM on R")
-    estimator_2 <-
-      declare_estimator(Y_obs ~ Z, term = "Z", 
-                        estimand = c(estimand_2, estimand_3), label = "DIM on Y_obs")
-    estimator_3 <-
-      declare_estimator(Y ~ Z, term = "Z", 
-                        estimand = c(estimand_2, estimand_3), label = "DIM on Y")
+    estimator_1 <- declare_estimator(
+      R ~ Z, term = "Z", estimand = estimand_1, label = "DIM on R")
+    
+    estimator_2 <- declare_estimator(
+      Y_obs ~ Z, term = "Z", 
+      estimand = c(estimand_2, estimand_3), label = "DIM on Y_obs")
+    
+    estimator_3 <- declare_estimator(
+      Y ~ Z, term = "Z", estimand = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
     two_arm_attrition_design <- population + potential_outcomes_R +  potential_outcomes_Y +
@@ -100,7 +100,8 @@ two_arm_attrition_designer <- function(N = 100,
   }}}
   
   attr(two_arm_attrition_design, "code") <- 
-    construct_design_code(two_arm_attrition_designer, args_to_fix = args_to_fix, match.call.defaults())
+    construct_design_code(two_arm_attrition_designer, match.call.defaults(),
+                          args_to_fix = args_to_fix)
   
   two_arm_attrition_design
 }
