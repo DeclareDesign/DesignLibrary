@@ -95,11 +95,10 @@ assignment_string <- function(arg_name, arg_values){
 str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
   if(any(grepl(".Names", string, fixed = TRUE))){
     if(length(string) > 1) string <- paste(string, collapse = " ")
-    matches <- gregexpr(pattern, string)[[1]]
-    match.length <- attr(matches,"match.length")
-    start <- matches[1] + match.length[1]
-    stop <- matches[2] - 1
-    return(substr(string, start, stop))
+    matches <- gregexpr(pattern, string)
+    substr_out <- regmatches(string, matches, invert = TRUE)[[1]]
+    substr_out <- substr_out[grepl("list", substr_out, fixed = TRUE)]
+    return(substr_out)
   } else {
    return(string) 
   }
