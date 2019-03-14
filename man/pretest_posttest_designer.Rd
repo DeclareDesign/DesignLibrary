@@ -5,7 +5,7 @@
 \title{Create a pretest-posttest design}
 \usage{
 pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
-  rho = 0.5, attrition_rate = 0.1)
+  rho = 0.5, attrition_rate = 0.1, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -19,6 +19,8 @@ pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
 \item{rho}{A number in [-1,1]. Correlation in outcomes between pre- and post-test.}
 
 \item{attrition_rate}{A number in [0,1]. Proportion of respondents in pre-test data that appear in post-test data.}
+
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A pretest-posttest design.

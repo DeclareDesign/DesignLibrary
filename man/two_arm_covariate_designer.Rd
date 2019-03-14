@@ -6,7 +6,7 @@
 \usage{
 two_arm_covariate_designer(N = 100, prob = 0.5, control_mean = 0,
   sd = 1, ate = 1, h = 0, treatment_mean = control_mean + ate,
-  rho_WY = 0, rho_WZ = 0)
+  rho_WY = 0, rho_WZ = 0, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -26,6 +26,8 @@ two_arm_covariate_designer(N = 100, prob = 0.5, control_mean = 0,
 \item{rho_WY}{A number in [-1,1]. Correlation between W and Y.}
 
 \item{rho_WZ}{A number in [-1,1]. Correlation between W and Z.}
+
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A simple two-arm design with covariate W.

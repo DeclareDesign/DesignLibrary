@@ -21,6 +21,7 @@
 #' @param treatment_mean A number. Average outcome in treatment. Overrides \code{ate} if both specified.
 #' @param rho_WZ A number in [-1,1]. Correlation between W and Z.
 #' @param rho_WY A number in [-1,1]. Correlation between W and Y.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A simple two-arm design with covariate W.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -63,7 +64,8 @@ two_arm_covariate_designer <- function(N = 100,
                                        h = 0,
                                        treatment_mean = control_mean + ate,
                                        rho_WY = 0,
-                                       rho_WZ = 0
+                                       rho_WZ = 0,
+                                       args_to_fix= NULL
 ){
   if(sd < 0 ) stop("sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
@@ -88,13 +90,16 @@ two_arm_covariate_designer <- function(N = 100,
     
     # D: Data Strategy
     assignment  <- declare_step(Z = 1 * (u_Z <  qnorm(prob)), handler = fabricate)
+    
     reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(Y ~ Z,   estimand = estimand, 
                                      label = "No controls")
+    
     estimator_2 <- declare_estimator(Y ~ Z + W, estimand = estimand, model = lm_robust, 
                                      label = "With controls")
+    
     estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, estimand = estimand, model = lm_lin,
                                      label = "Lin")
     
@@ -106,6 +111,7 @@ two_arm_covariate_designer <- function(N = 100,
   attr(two_arm_covariate_design, "code") <- 
     construct_design_code(designer = two_arm_covariate_designer, 
                           args = match.call.defaults(), 
+                          args_to_fix = args_to_fix,
                           exclude_args = "ate",
                           arguments_as_values = TRUE)
   
@@ -113,7 +119,7 @@ two_arm_covariate_designer <- function(N = 100,
 }
 
 attr(two_arm_covariate_designer, "definitions") <- data.frame(
-  names = c("N", "prob", "control_mean", "sd", "ate", "h", "treatment_mean", "rho_WY", "rho_WZ"),
+  names = c("N", "prob", "control_mean", "sd", "ate", "h", "treatment_mean", "rho_WY", "rho_WZ","args_to_fix"),
   tips = c("Sample size",
            "Probability of assignment to treatment",
            "Average outcome in control",
@@ -122,13 +128,14 @@ attr(two_arm_covariate_designer, "definitions") <- data.frame(
            "Heterogeneous treatment effects by covariate (W)",
            "Average outcome in treatment. Overrides ate if both specified",
            "Correlation between shock on Y and W",
-           "Correlation between shock on Y and latent variable for Z assignment"),
-  class = c("integer", rep("numeric", 8)),
-  vector = c(rep(FALSE, 9)),
-  min = c(4, 1/10, -Inf, 0, rep(-Inf, 3), -1, -1),
-  max = c(Inf, 9/10, rep(Inf, 5), 1, 1),
-  inspector_min = c(100, 1/10, rep(0, 5), -1, -1),
-  inspector_step = c(50, rep(0.1, 6), rep(.5, 2)),
+           "Correlation between shock on Y and latent variable for Z assignment",
+           "Names of arguments to be args_to_fix"),
+  class = c("integer", rep("numeric", 8),"character"),
+  vector = c(rep(FALSE, 9), TRUE),
+  min = c(4, 1/10, -Inf, 0, rep(-Inf, 3), -1, -1, NA),
+  max = c(Inf, 9/10, rep(Inf, 5), 1, 1, NA),
+  inspector_min = c(100, 1/10, rep(0, 5), -1, -1, NA),
+  inspector_step = c(50, rep(0.1, 6), rep(.5, 2), NA),
   stringsAsFactors = FALSE
 )
 attr(two_arm_covariate_designer, "shiny_arguments") <- list(N = c(100, 120, 150), ate = c(0, .5), 

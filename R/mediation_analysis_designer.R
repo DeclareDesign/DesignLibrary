@@ -14,6 +14,7 @@
 #' @param c A number. Interaction between mediator (M) and (Z) for outcome (Y).
 #' @param d A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.
 #' @param rho A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A mediation analysis design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -38,7 +39,7 @@
 #' diagnose_design(mediation_2, sims = 1000)
 #' }
 #'
-mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0)
+mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, rho = 0, args_to_fix = NULL)
 {
   
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
@@ -49,12 +50,16 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       e1 = rnorm(N),
       e2 = rnorm(n = N, mean = rho * e1, sd = sqrt(1 - rho^2))
     )
+    
     POs_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
+    
     POs_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
                                         conditions = list(M = 0:1, Z = 0:1))
+    
     POs_Y_nat_0 <- declare_potential_outcomes(
       Y_nat0_Z_0 = b * M_Z_0 + e2,
       Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
+    
     POs_Y_nat_1 <- declare_potential_outcomes(
       Y_nat1_Z_0 = b * M_Z_1 + e2,
       Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
@@ -72,10 +77,15 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     
     # D: Data strategy 
     assignment <- declare_assignment()
+    
     reveal_M <- declare_reveal(M, Z)
+    
     reveal_Y <- declare_reveal(Y, assignment_variable = c("M","Z"))
+    
     reveal_nat0 <- declare_reveal(Y_nat0)
+    
     reveal_nat1 <- declare_reveal(Y_nat1)
+    
     manipulation <- declare_step(Not_M = 1 - M, handler = fabricate)
     
     # A: Answer Strategy
@@ -84,6 +94,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       model = lm_robust,
       estimand = "FirstStage",
       label = "Stage 1")
+    
     stage2_1 <- declare_estimator(
       Y ~ Z * M,
       model = lm_robust,
@@ -91,6 +102,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       estimand = c("Indirect_0"),
       label = "Stage 2"
     )
+    
     stage2_2 <- declare_estimator(
       Y ~ Z * M,
       model = lm_robust,
@@ -98,6 +110,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       estimand = c("Controlled_Direct_0", "Natural_Direct_0"),
       label = "Direct_0"
     )
+    
     stage2_3 <- declare_estimator(
       Y ~ Z * Not_M,
       model = lm_robust,
@@ -114,25 +127,26 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     
   }}}
   attr(mediation_analysis_design, "code") <- 
-    construct_design_code(mediation_analysis_designer, match.call.defaults())
+    construct_design_code(mediation_analysis_designer, args_to_fix = args_to_fix, match.call.defaults())
   
   mediation_analysis_design
 }
 
 attr(mediation_analysis_designer,"definitions") <- data.frame(
-  names = c("N",  "a",  "b",  "c",  "d",  "rho"),
+  names = c("N",  "a",  "b",  "c",  "d",  "rho", "args_to_fix"),
   tips  = c("Size of sample",
             "Effect of treatment (Z) on mediator (M)",
             "Effect of mediator (M) on outcome (Y)",
             "Interaction between mediator (M) and (Z) for outcome (Y)",
             "Direct effect of treatment (Z) on outcome (Y)",
-            "Correlation of mediator (M) and outcome (Y) error terms"),
-  class = c("integer", rep("numeric", 5)),
-  vector = c(rep(FALSE, 6)),
-  min = c(1, rep(-Inf, 4), -1),
-  max = c(1, rep(Inf, 4), 1),
-  inspector_min = c(100, rep(0, 4), -1),
-  inspector_step = c(50, 0.1, .2),
+            "Correlation of mediator (M) and outcome (Y) error terms",
+            "Names of arguments to be args_to_fix"),
+  class = c("integer", rep("numeric", 5), "character"),
+  vector = c(rep(FALSE, 6), TRUE),
+  min = c(1, rep(-Inf, 4), -1, NA),
+  max = c(1, rep(Inf, 4), 1, NA),
+  inspector_min = c(100, rep(0, 4), -1, NA),
+  inspector_step = c(50, 0.1, rep(.2, 3), .5, NA),
   stringsAsFactors = FALSE
 )
 

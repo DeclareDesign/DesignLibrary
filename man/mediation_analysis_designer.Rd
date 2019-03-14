@@ -5,7 +5,7 @@
 \title{Create a design for mediation analysis}
 \usage{
 mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
-  d = 0.5, rho = 0)
+  d = 0.5, rho = 0, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -19,6 +19,8 @@ mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
 \item{d}{A number. Direct effect of treatment (Z) on outcome (Y), when M = 0.}
 
 \item{rho}{A number in [-1,1]. Correlation between mediator (M) and outcome (Y) error terms. Non zero correlation implies a violation of sequential ignorability.}
+
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A mediation analysis design.

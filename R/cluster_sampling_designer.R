@@ -3,7 +3,7 @@
 #' Builds a cluster sampling design for an ordinal outcome variable for a population with \code{N_blocks} strata, each with \code{N_clusters_in_block} clusters, each of which contains \code{N_i_in_cluster} units. The sampling strategy involves sampling \code{n_clusters_in_block} clusters in each stratum, and then sampling \code{n_i_in_cluster} units in each cluster. Outcomes within clusters have intra-cluster correlation approximately equal to \code{ICC}.
 #'
 #' @details 
-#' Key limitations: The design assumes a fixed number of clusters drawn in each stratum and a fixed number of individuals drawn from each cluster.
+#' Key limitations: The design assumes a args_to_fix number of clusters drawn in each stratum and a args_to_fix number of individuals drawn from each cluster.
 #' 
 #' See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
 #' 
@@ -13,6 +13,7 @@
 #' @param n_clusters_in_block An integer. Number of clusters to sample in each block (stratum).
 #' @param n_i_in_cluster An integer. Number of units to sample in each cluster.
 #' @param icc A number in [0,1]. Intra-cluster Correlation Coefficient (ICC). 
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A stratified cluster sampling design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept clusters
@@ -37,7 +38,8 @@ cluster_sampling_designer <- function(N_blocks = 1,
                                       N_i_in_cluster = 50,
                                       n_clusters_in_block = 100,
                                       n_i_in_cluster = 10,
-                                      icc = 0.2
+                                      icc = 0.2,
+                                      args_to_fix = NULL
 ){
   if(n_clusters_in_block > min(N_clusters_in_block)) stop(paste0("n_clusters_in_block sampled must be smaller than the total number of ", N_clusters_in_block, " clusters."))
   if(n_i_in_cluster > min(N_i_in_cluster)) stop(paste0("n_i_in_cluster must be smaller than or equal to the minimum of ", N_i_in_cluster, " subjects per cluster."))
@@ -63,6 +65,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
     stage_1_sampling <- declare_sampling(strata = block, 
                                          clusters = cluster, n = n_clusters_in_block, 
                                          sampling_variable = "Cluster_Sampling_Prob")
+    
     stage_2_sampling <- declare_sampling(strata = cluster,   n = n_i_in_cluster, 
                                          sampling_variable = "Within_Cluster_Sampling_Prob")
     
@@ -79,25 +82,26 @@ cluster_sampling_designer <- function(N_blocks = 1,
   }}}
   
   attr(cluster_sampling_design, "code") <- 
-    construct_design_code(cluster_sampling_designer, match.call.defaults())
+    construct_design_code(cluster_sampling_designer, args_to_fix = args_to_fix, match.call.defaults())
   
   cluster_sampling_design 
 }
 attr(cluster_sampling_designer, "definitions") <- data.frame(
   names = c("N_blocks",  "N_clusters_in_block",  "N_i_in_cluster",  
-            "n_clusters_in_block",  "n_i_in_cluster",  "icc"),
+            "n_clusters_in_block",  "n_i_in_cluster",  "icc", "args_to_fix"),
   tips  = c("Number of blocks",
             "Number of clusters in each block",
             "Number of units per cluster sampled",
             "Number of clusters to sample in each block",
             "Number of units to sample in each cluster",
-            "Intra-cluster Correlation"),
-  class = c(rep("integer", 5), "numeric"),
-  vector = c(FALSE, TRUE, TRUE, TRUE, TRUE, FALSE),
-  min = c(rep(1, 5), 0),
-  max = c(rep(Inf, 5), 1),
-  inspector_min = c(rep(1,5), 0),
-  inspector_step = c(1, 5, 10, 10, 10, 0.2),
+            "Intra-cluster Correlation",
+            "Names of arguments to be args_to_fix"),
+  class = c(rep("integer", 5), "numeric", "character"),
+  vector = c(FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE),
+  min = c(rep(1, 5), 0, NA),
+  max = c(rep(Inf, 5), 1, NA),
+  inspector_min = c(rep(1,5), 0, NA),
+  inspector_step = c(1, 5, 10, 10, 10, 0.2, NA),
   stringsAsFactors = FALSE
 )
 

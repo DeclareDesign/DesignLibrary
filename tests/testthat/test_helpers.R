@@ -45,13 +45,26 @@ test_that(desc = "construct_design_code works as it should when using rlang func
           code = {
             test_function <- function(){
               {{{
-                t1 <- rlang::quo(
-                  paste0(!!letters[1])
-                )
+                t1 <- rlang::quo(paste0(!!letters[1]))
               }}}
+              
+              DesignLibrary:::construct_design_code(designer = test_function, 
+                                                    args = DesignLibrary:::match.call.defaults(),
+                                                    arguments_as_values = FALSE,
+                                                    exclude_args = NULL,
+                                                    args_to_fix = NULL)
             }
-            expect_is(DesignLibrary:::construct_design_code(designer = function(x) {{{x}}}, args = c("x"),arguments_as_values = F,exclude_args = NULL),"character")
+            expect_equal(test_function(), c("", "t1 <- rlang::quo(paste0(!!letters[1]))"))
           }) 
+
+test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args != NULL",
+          code = expect_is(get_design_code(binary_iv_designer(args_to_fix = "N")), "character")
+)
+
+test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args = NULL",
+          code = expect_is(get_design_code(two_arm_attrition_designer(args_to_fix = "N")), "character")
+)
+
 
 test_that(desc = "match.call.defaults has all cases tested",
           code = {
@@ -66,10 +79,9 @@ test_that(desc = "return_args works fine",
             expect_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5),fixes = LETTERS[1:2]),NA)
           })
 
-
-test_that(desc = "clean_code works OK", 
+test_that(desc = "str_within() works fine",
           code = {
-            expect_error(DesignLibrary:::clean_code("{#"),NA)
+            expect_identical(DesignLibrary:::str_within("structure(list(a = 1), .Names = \"N\")"), "list(a = 1)")
+            expect_identical(DesignLibrary:::str_within("list(a = 1)"), "list(a = 1)")
+            expect_identical(DesignLibrary:::str_within(c("structure(list(a = 1,", "b = 1), .Names = c(\"a\", \"b\"))")), "list(a = 1, b = 1)")
           })
-
-

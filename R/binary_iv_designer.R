@@ -18,6 +18,7 @@
 #' @param d_Y A real number. Effect of Z on Y. Assumed constant across types. Overridden by \code{d} if specified.
 #' @param d A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).
 #' @param outcome_sd A real number. The standard deviation of the outcome.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design.
 #' @return A simple instrumental variables design with binary instrument, treatment, and outcome variables.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -71,7 +72,8 @@ binary_iv_designer <- function(N = 100,
                                outcome_sd = 1,
                                a = c(1,0,0,0) * a_Y, 
                                b = rep(b_Y, 4), 
-                               d = rep(d_Y, 4)
+                               d = rep(d_Y, 4),
+                               args_to_fix = NULL
 ){
   if(min(assignment_probs) < 0 ) stop("assignment_probs must be non-negative.")
   if(max(assignment_probs) > 1 ) stop("assignment_probs must be < 1.")
@@ -113,10 +115,12 @@ binary_iv_designer <- function(N = 100,
     estimator_1 <- declare_estimator(X ~ Z, 
                                      estimand = "first_stage", 
                                      label = "d-i-m")
+    
     estimator_2 <- declare_estimator(Y ~ X, 
                                      estimand = c("ate", "late","late_het"), 
                                      model = lm_robust, 
                                      label = "lm_robust")
+    
     estimator_3 <- declare_estimator(Y ~ X | Z, 
                                      estimand = c("ate", "late", "late_het"), 
                                      model = iv_robust, 
@@ -130,8 +134,9 @@ binary_iv_designer <- function(N = 100,
   
   attr(binary_iv_design, "code") <- 
     construct_design_code(designer = binary_iv_designer, 
-                          args = match.call.defaults(), 
-                          exclude_args = c("a_Y", "b_Y", "d_Y"),
+                          args = match.call.defaults(),
+                          args_to_fix = args_to_fix,
+                          exclude_args = union(c("a_Y", "b_Y", "d_Y", "args_to_fix"), args_to_fix),
                           arguments_as_values = TRUE)
   
   binary_iv_design 
@@ -142,7 +147,7 @@ attr(binary_iv_designer, "shiny_arguments") <- list(N = c(80, 120, 160), b_Y = c
 
 attr(binary_iv_designer, "definitions") <- data.frame(
   names         = c("N", "type_probs", "assignment_probs", "a_Y", "b_Y", "d_Y",
-                    "outcome_sd", "a", "b", "d"),
+                    "outcome_sd", "a", "b", "d", "args_to_fix"),
   tips          = c("Sample size",
                     "Probability of each complier type",
                     "Probability of assignment to encouragement", 
@@ -152,13 +157,14 @@ attr(binary_iv_designer, "definitions") <- data.frame(
                     "Standard deviation of the outcome.",
                     "Constant in Y equation", 
                     "Slope on X in Y equation for each complier type", 
-                    "Slope on Z in Y equation for each complier type"),
-  class         = c("integer", rep("numeric", 9)),
-  vector = c(FALSE, TRUE, TRUE, rep(FALSE, 4), TRUE, TRUE, TRUE),
-  min           = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3)),
-  max           = c(Inf, 1, 1, rep(Inf, 7)),
-  inspector_min = c(100, .1, .1, rep(0, 7)),
-  inspector_step= c(100, .1, .1, rep(.1, 7)),
+                    "Slope on Z in Y equation for each complier type",
+                    "Names of arguments to be args_to_fix"),
+  class         = c("integer", rep("numeric", 9), "character"),
+  vector = c(FALSE, TRUE, TRUE, rep(FALSE, 4), TRUE, TRUE, TRUE, TRUE),
+  min           = c(4, 0, 0, rep(-Inf, 3), 0, rep(-Inf, 3), NA),
+  max           = c(Inf, 1, 1, rep(Inf, 7), NA),
+  inspector_min = c(100, .1, .1, rep(0, 7), NA),
+  inspector_step= c(100, .1, .1, rep(.1, 7), NA),
   stringsAsFactors = FALSE
 )
 

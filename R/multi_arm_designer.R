@@ -12,7 +12,7 @@
 #' @param sd_i A nonnegative scalar. Standard deviation of individual-level shock (common across arms).
 #' @param outcome_sds A nonnegative numeric vector of length \code{m_arms}. Standard deviations for condition-level shocks.
 #' @param conditions A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces). 
-#' @param fixed A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.
+#' @param args_to_fix A character vector. Names of arguments to be args_to_fix in design. By default, \code{m_arms} and \code{conditions} are always args_to_fix.
 #' @return A function that returns a design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
@@ -33,9 +33,9 @@
 #' # A design with different means and standard deviations in each arm
 #' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
 #'
-# A design with fixed sds and means. N is the sole modifiable argument.
+# A design with args_to_fix sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
-#'                              fixed = c("outcome_means", "outcome_sds"))
+#'                              args_to_fix = c("outcome_means", "outcome_sds"))
 #'
 
 multi_arm_designer <- function(N = 30,
@@ -44,7 +44,7 @@ multi_arm_designer <- function(N = 30,
                                sd_i = 1,
                                outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
-                               fixed = NULL) {
+                               args_to_fix = NULL) {
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
   N_ <- N; sd_i_ <- sd_i
@@ -57,10 +57,10 @@ multi_arm_designer <- function(N = 30,
   if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
   
-  if (!"outcome_sds" %in% fixed) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
-  if (!"outcome_means" %in% fixed) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
-  if (!"N" %in% fixed) N_ <- expr(N)
-  if (!"sd_i" %in% fixed) sd_i_ <- expr(sd_i)
+  if (!"outcome_sds" %in% args_to_fix) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
+  if (!"outcome_means" %in% args_to_fix) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
+  if (!"N" %in% args_to_fix) N_ <- expr(N)
+  if (!"sd_i" %in% args_to_fix) sd_i_ <- expr(sd_i)
   
   # Create helper vars to be used in design
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
@@ -168,20 +168,13 @@ multi_arm_designer <- function(N = 30,
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = union(c("m_arms", "fixed", "conditions"), fixed))
+      exclude_args = union(c("m_arms", "args_to_fix", "conditions"), args_to_fix))
   
-  design_code <-
-    gsub("eval_bare\\(population_expr\\)", quo_text(population_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(estimand_expr\\)", quo_text(estimand_expr), design_code)
-  design_code <-
-    gsub("eval_bare\\(potential_outcomes_expr\\)", quo_text(potential_outcomes_expr), design_code)
-  design_code <- gsub("eval_bare\\(assignment_expr\\)", quo_text(assignment_expr), design_code)
-  design_code <- gsub("eval_bare\\(estimator_expr\\)", quo_text(estimator_expr), design_code)
-  
-  #  Add  code plus argments as attributes
+  design_code <- sub_expr_text(design_code, population_expr, estimand_expr,
+                               potential_outcomes_expr, assignment_expr,
+                               estimator_expr)
+
   attr(multi_arm_design, "code") <- design_code
-  
   
   # Return design
   return(multi_arm_design)
@@ -189,14 +182,14 @@ multi_arm_designer <- function(N = 30,
 
 attr(multi_arm_designer, "definitions") <- data.frame(
   names = c("N", "m_arms", "outcome_means", "sd_i", 
-            "outcome_sds", "conditions", "fixed"),
+            "outcome_sds", "conditions", "args_to_fix"),
   tips  = c("Sample size",
             "Number of arms",
             "Average outcome in each arm",
             "Standard deviation of individual-level shock",
             "Standard deviations for condition-level shocks",
             "Names of each arm",
-            "Names of arguments to be fixed"),
+            "Names of arguments to be args_to_fix"),
   class = c("integer", "integer", rep("numeric", 3), rep("character", 2)),
   vector = c(FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE),
   min   = c(6, 2, -Inf, 0, 0, NA, NA),

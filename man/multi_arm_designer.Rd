@@ -6,7 +6,7 @@
 \usage{
 multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
   m_arms), sd_i = 1, outcome_sds = rep(0, m_arms),
-  conditions = 1:m_arms, fixed = NULL)
+  conditions = 1:m_arms, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -21,7 +21,7 @@ multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
 
 \item{conditions}{A vector of length \code{m_arms}. The names of each arm. It can be given as numeric or character class (without blank spaces).}
 
-\item{fixed}{A character vector. Names of arguments to be fixed in design. By default, \code{m_arms} and \code{conditions} are always fixed.}
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design. By default, \code{m_arms} and \code{conditions} are always args_to_fix.}
 }
 \value{
 A function that returns a design.
@@ -42,7 +42,7 @@ design <- multi_arm_designer()
 design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
 
 design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
-                             fixed = c("outcome_means", "outcome_sds"))
+                             args_to_fix = c("outcome_means", "outcome_sds"))
 
 }
 \author{

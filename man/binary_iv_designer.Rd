@@ -8,7 +8,7 @@
 binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
   assignment_probs = c(0.5, 0.5, 0.5, 0.5), a_Y = 1, b_Y = 0,
   d_Y = 0, outcome_sd = 1, a = c(1, 0, 0, 0) * a_Y, b = rep(b_Y,
-  4), d = rep(d_Y, 4))
+  4), d = rep(d_Y, 4), args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Sample size.}
@@ -30,6 +30,8 @@ binary_iv_designer(N = 100, type_probs = c(1/3, 1/3, 1/3, 0),
 \item{b}{A vector of four numbers. Slope on X in Y equation for each complier type (always-taker, never-taker, complier, defier).}
 
 \item{d}{A vector of four numbers. Slope on Z in Y equation for each complier type (non zero implies violation of exclusion restriction).}
+
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A simple instrumental variables design with binary instrument, treatment, and outcome variables.

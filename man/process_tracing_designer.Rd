@@ -8,7 +8,7 @@ process_tracing_designer(N = 100, prob_X = 0.5,
   process_proportions = c(0.25, 0.25, 0.25, 0.25), prior_H = 0.5,
   p_E1_H = 0.8, p_E1_not_H = 0.2, p_E2_H = 0.3, p_E2_not_H = 0,
   cor_E1E2_H = 0, cor_E1E2_not_H = 0, label_E1 = "Straw in the Wind",
-  label_E2 = "Smoking Gun")
+  label_E2 = "Smoking Gun", args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of population of cases from which a single case is selected.}
@@ -34,6 +34,8 @@ process_tracing_designer(N = 100, prob_X = 0.5,
 \item{label_E1}{A string. Label for the first piece of evidence (e.g., "Straw in the Wind").}
 
 \item{label_E2}{A string. Label for the second piece of evidence (e.g., "Smoking Gun").}
+
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A process-tracing design.

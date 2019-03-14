@@ -4,13 +4,15 @@
 \alias{construct_design_code}
 \title{Generates clean code string that reproduces design}
 \usage{
-construct_design_code(designer, args, arguments_as_values = FALSE,
-  exclude_args = NULL)
+construct_design_code(designer, args, args_to_fix = NULL,
+  arguments_as_values = FALSE, exclude_args = NULL)
 }
 \arguments{
 \item{designer}{Designer function.}
 
 \item{args}{Named list of arguments to be passed to designer function.}
+
+\item{args_to_fix}{Vector of strings. Designer arguments to fix in design code.}
 
 \item{arguments_as_values}{Logical. Whether to replace argument names for value.}
 

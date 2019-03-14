@@ -5,7 +5,7 @@
 \title{Create a randomized response design}
 \usage{
 randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
-  prevalence_rate = 0.1, withholding_rate = 0.5)
+  prevalence_rate = 0.1, withholding_rate = 0.5, args_to_fix = NULL)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
@@ -15,6 +15,8 @@ randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
 \item{prevalence_rate}{A number in [0,1]. Probability that individual has the sensitive trait.}
 
 \item{withholding_rate}{A number in [0,1]. Probability that an individual with the sensitive trait hides it.}
+
+\item{args_to_fix}{A character vector. Names of arguments to be args_to_fix in design.}
 }
 \value{
 A randomized response design.
@@ -23,7 +25,7 @@ A randomized response design.
 Produces a (forced) randomized response design that measures the share of individuals with a given trait \code{prevalence_trait} in a population of size \code{N}. Probability of forced response ("Yes") is given by \code{prob_forced_yes}, and rate at which individuals with trait lie is given by \code{withholding_rate}.
 }
 \details{
-\code{randomized_response_designer} employs a specific variation of randomized response designs in which respondents are required to report a fixed answer to the sensitive question with a given probability (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
+\code{randomized_response_designer} employs a specific variation of randomized response designs in which respondents are required to report a args_to_fix answer to the sensitive question with a given probability (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 
 See \href{https://declaredesign.org/library/articles/randomized_response.html}{vignette online}.
 }
