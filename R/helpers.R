@@ -93,12 +93,16 @@ assignment_string <- function(arg_name, arg_values){
 #' @param pattern A regular expression that matches the beggining and end of a substring
 #' @value Substring within \code{string} surrounded by matched \code{pattern}.
 str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
-  if(length(string) > 1) string <- paste(string, collapse = " ")
-  matches <- gregexpr(pattern, string)[[1]]
-  match.length <- attr(matches,"match.length")
-  start <- matches[1] + match.length[1]
-  stop <- matches[2] - 1
-  substr(string, start, stop)
+  if(grepl("structure", string, fixed = TRUE)){
+    if(length(string) > 1) string <- paste(string, collapse = " ")
+    matches <- gregexpr(pattern, string)[[1]]
+    match.length <- attr(matches,"match.length")
+    start <- matches[1] + match.length[1]
+    stop <- matches[2] - 1
+    return(substr(string, start, stop))
+  } else {
+   return(string) 
+  }
 }
 
 #' Substitute approach
@@ -122,7 +126,8 @@ code_fixer <- function(design_expr, list_fixed_str, eval_envir){
 #' @param arguments_as_values Logical. Whether to replace argument names for value.
 #' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
 
-construct_design_code <- function(designer, args, args_to_fix = NULL, arguments_as_values = FALSE, exclude_args = NULL){
+construct_design_code <- function(designer, args, args_to_fix = NULL, 
+                                  arguments_as_values = FALSE, exclude_args = NULL){
   if(is.null(exclude_args) && !is.null(args_to_fix)) exclude_args <- args_to_fix
   exclude_args <- union(args_to_fix, exclude_args)
   
@@ -167,13 +172,14 @@ construct_design_code <- function(designer, args, args_to_fix = NULL, arguments_
   if(!is.null(args_to_fix)){
     #list of fixed arguments
     list_fixed <- setNames(mapply(function(arg_to_fix) args[[arg_to_fix]], args_to_fix), args_to_fix)
+    if(!is.list(list_fixed)) list_fixed <- as.list(list_fixed)
     # create string of list of arguments to substitute
     list_fixed_str <- str_within(deparse(expr(!!list_fixed), width.cutoff = 60L))
     # bundle code lines related to same assignment function together
     design_exprs <- mapply(function(lines) paste0(code[lines], collapse = " "), expr_i)
 
     # evaluate a parsed expression where we substitute fixed arguments for their values
-    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str, ee)
+    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str = list_fixed_str, eval_envir = ee)
     
     code_fixed <- code
     for(i in seq_along(expr_i)){
