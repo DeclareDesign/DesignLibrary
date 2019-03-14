@@ -37,6 +37,7 @@ globalVariables(
     "R_Z_0",
     "R_Z_1",
     "sensitive_trait",
+    "setNames",
     "test_results",
     "type",
     "u",
