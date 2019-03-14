@@ -93,7 +93,7 @@ assignment_string <- function(arg_name, arg_values){
 #' @param pattern A regular expression that matches the beggining and end of a substring
 #' @value Substring within \code{string} surrounded by matched \code{pattern}.
 str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
-  if(grepl("structure", string, fixed = TRUE)){
+  if(any(grepl(".Names", string, fixed = TRUE))){
     if(length(string) > 1) string <- paste(string, collapse = " ")
     matches <- gregexpr(pattern, string)[[1]]
     match.length <- attr(matches,"match.length")

@@ -79,3 +79,9 @@ test_that(desc = "return_args works fine",
             expect_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5),fixes = LETTERS[1:2]),NA)
           })
 
+test_that(desc = "str_within() works fine",
+          code = {
+            expect_identical(DesignLibrary:::str_within("structure(list(a = 1), .Names = \"N\")"), "list(a = 1)")
+            expect_identical(DesignLibrary:::str_within("list(a = 1)"), "list(a = 1)")
+            expect_identical(DesignLibrary:::str_within(c("structure(list(a = 1,", "b = 1), .Names = c(\"a\", \"b\"))")), "list(a = 1, b = 1)")
+          })
