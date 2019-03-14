@@ -97,10 +97,10 @@ str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
     if(length(string) > 1) string <- paste(string, collapse = " ")
     matches <- gregexpr(pattern, string)
     substr_out <- regmatches(string, matches, invert = TRUE)[[1]]
-    substr_out <- substr_out[grepl("list", substr_out, fixed = TRUE)]
+    substr_out <- grep("list", substr_out, fixed = TRUE, value = TRUE)
     return(substr_out)
   } else {
-   return(string) 
+    return(string) 
   }
 }
 
