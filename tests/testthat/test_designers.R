@@ -109,6 +109,18 @@ for(designer in designers){
                                                                   "max", "inspector_min", "inspector_step")), 0)
       }
     )
+    
+    test_that(
+      # Testing that `diagnose_design(expand_design())` works when calling every 
+      # possible design parameter by checking if estimator column names overlap with
+      # designer terms
+      desc = paste0("`expand_design()` works with ", designer, " (DDWizard requirement)"),
+      code = {
+        params <- designer_attr$definitions$names
+        estimator <- draw_estimates(the_designer())
+        expect_length(intersect(params, names(estimator)), 0)
+      }
+    )
   }
 }
 
