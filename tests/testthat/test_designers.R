@@ -114,7 +114,7 @@ for(designer in designers){
       # Testing that `diagnose_design(expand_design())` works when calling every 
       # possible design parameter by checking if estimator column names overlap with
       # designer terms
-      desc = paste0("`expand_design()` works with ", designer, " (DDWizard requirement)"),
+      desc = paste0("No column names in estimator data.frame conflict with parameters in ", designer),
       code = {
         params <- designer_attr$definitions$names
         estimator <- draw_estimates(the_designer())
