@@ -19,7 +19,7 @@ install.packages("RCurl")
 
 Load the packages:
 
-```{r,message=FALSE}
+```{r,message=FALSE, eval = FALSE}
 library(systemfit)
 library(DeclareDesign)
 library(knitr)
@@ -28,7 +28,7 @@ library(RCurl)
 
 Here is one way to load external data for use in the design:
 
-```{r,warning = FALSE}
+```{r,warning = FALSE, eval = FALSE}
 online_data <- read.csv(file = "https://declaredesign.org/example_data.csv",
                         header = TRUE)
 
@@ -61,7 +61,7 @@ You may want to give an overview of the design, and provide any background info.
 
 Very often, designs require custom functions and data cleaning. You may want to do that separately from your design declaration. Here we make a custom `sur()` function to use the seemingly unrelated regression estimator in `systemfit::systemfit`. 
 
-```{r}
+```{r, eval = FALSE}
 sur <- function(data){
   fit <- data.frame(summary(systemfit(formula = list(YA ~ ZA, 
                                                      YB ~ ZB),
@@ -84,7 +84,7 @@ sur <- function(data){
 
 Now we declare the design in code.
 
-```{r}
+```{r, eval = FALSE}
 my_design <- 
   # Model
   declare_population(N = 100,
@@ -112,7 +112,7 @@ my_design <-
 
 You may want to display features of the design here.
 
-```{r}
+```{r, eval = FALSE}
 my_design_cor <- redesign(design = my_design, rho = .8)
 diagnosis <- diagnose_design(my_design, my_design_cor)
 kable(reshape_diagnosis(diagnosis), digits = 2)
