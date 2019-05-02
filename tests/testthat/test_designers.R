@@ -247,6 +247,7 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(outcome_name = c("Y ")))
             expect_error(factorial_designer(outcome_means = 1, k = 2))
             expect_error(factorial_designer(outcome_sds = 1, k = 2))
+            expect_error(factorial_designer(treatment_names = "A", k = 2))
             expect_error(factorial_designer(assignment_probs = .5, k = 2))
             expect_error(factorial_designer(assignment_probs = .5, k = 1))
             expect_error(factorial_designer(k = .5))
@@ -289,7 +290,7 @@ test_that(desc = "binary_iv_designer errors when it should",
 
 # Test `args_to_fix` argument works ---------------------------------------------
 
-test_that(desc = "`args_to_fix` argument works",
+test_that(desc = "args_to_fix argument works",
           code = {
             expect_error(factorial_designer(args_to_fix = names(formals(factorial_designer))), NA)
             expect_error(multi_arm_designer(args_to_fix = names(formals(multi_arm_designer))), NA)

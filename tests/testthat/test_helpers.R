@@ -57,13 +57,13 @@ test_that(desc = "construct_design_code works as it should when using rlang func
             expect_equal(test_function(), c("", "t1 <- rlang::quo(paste0(!!letters[1]))"))
           }) 
 
-test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args != NULL",
-          code = expect_is(get_design_code(binary_iv_designer(args_to_fix = "N")), "character")
-)
-
-test_that(desc = "construct_design_code works when `args_to_fix != NULL` & exclude_args = NULL",
-          code = expect_is(get_design_code(two_arm_attrition_designer(args_to_fix = "N")), "character")
-)
+# test_that(desc = "construct_design_code works when args_to_fix is not NULL and exclude_args is not NULL",
+# code = expect_is(get_design_code(binary_iv_designer(args_to_fix = "N")), "character")
+# )
+# 
+# test_that(desc = "construct_design_code works when args_to_fix is not NULL and exclude_args is NULL",
+# code = expect_is(get_design_code(two_arm_attrition_designer(args_to_fix = "N")), "character")
+# )
 
 
 test_that(desc = "match.call.defaults has all cases tested",
