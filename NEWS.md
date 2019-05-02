@@ -1,3 +1,24 @@
+# DesignLibrary 0.1.3
+
+* updated code to be compatible to new DeclareDesign version on CRAN (fixes 
+  a few bugs that were breaking CRAN checks)
+
+* added dependency on `glue` for better and less `rlang`- heavy handling of strings
+
+* `construct_design_code()` vastly improved
+
+* changed `fixed` to `args_to_fix` and made it possible for every designer
+
+* added definitions and other attributes to all designers to integrate better
+  with external shiny app
+
+* added some new error handling for cases that weren't handled before
+
+* improved correlation handling in  `block_cluster_two_arm_designer()`, 
+  `mediation_analysis_designer()`, and `pretest_posttest_designer()`
+
+* updated estimands in `binary_iv_designer()`
+
 # DesignLibrary 0.1.2
 
 * Renamed and deprecated `simple_*` designers: 

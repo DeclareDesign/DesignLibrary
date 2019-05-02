@@ -74,10 +74,6 @@ block_cluster_uneven <- block_cluster_two_arm_designer(
 # A design in which number of clusters of cluster size is not specified
 # but N and block size are:        
 block_cluster_guess <- block_cluster_two_arm_designer(N = 24, N_blocks = 3)
-# A design in which cluster size is not specified but N and block size are 
-# and target N is not met returns an error:        
-\dontrun{block_cluster_guess_2 <- block_cluster_two_arm_designer(N = 24,
-N_blocks = 3, N_clusters_in_block = 3)}
 
 }
 \author{

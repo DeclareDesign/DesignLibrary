@@ -51,10 +51,6 @@
 #' # A design in which number of clusters of cluster size is not specified
 #' # but N and block size are:        
 #' block_cluster_guess <- block_cluster_two_arm_designer(N = 24, N_blocks = 3)
-#' # A design in which cluster size is not specified but N and block size are 
-#' # and target N is not met returns an error:        
-#' \dontrun{block_cluster_guess_2 <- block_cluster_two_arm_designer(N = 24,
-#' N_blocks = 3, N_clusters_in_block = 3)}
 #'
 
 block_cluster_two_arm_designer <- function(N = NULL,
@@ -89,7 +85,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
     if(length(assignment_probs) == 1) assignment_probs <- rep(assignment_probs, N_blocks)
     else stop("assignment_probs must either be a scalar, or of length N_blocks.")
   }
-  if(any(assignment_probs <= 0 || assignment_probs >= 1)) stop("all assignment_probs must be in (0,1)")
+  if(any(assignment_probs <= 0) || any(assignment_probs >= 1)) stop("all assignment_probs must be in (0,1)")
   
   if(rho< -1 || rho > 1) stop("correlation must be in [-1,1]")
   if(!is.null(N)) {design_N <- ifelse(length(N_i_in_cluster)>1, sum(N_i_in_cluster), sum(N_i_in_cluster*N_blocks*N_clusters_in_block))
@@ -103,7 +99,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
           stop(paste0("You specified ",N_blocks," blocks with ",length(N_clusters_in_block)," clusters in them. Therefore N_i_in_cluster should be of length 1 or of length ",length(N_clusters_in_block)*N_blocks))
         }
       } else {
-        if(N_clusters_in_block*N_blocks != length(N_i_in_cluster)){
+        if(length(N_clusters_in_block*N_blocks) != length(N_i_in_cluster)){
           stop(paste0("You specified ",N_blocks," blocks with ",N_clusters_in_block," clusters in them. Therefore N_i_in_cluster should be of length 1 or of length ",N_clusters_in_block*N_blocks))
         }
       }
