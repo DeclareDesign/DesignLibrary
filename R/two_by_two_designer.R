@@ -150,7 +150,7 @@ attr(two_by_two_designer, "definitions") <- data.frame(
             "Weight on B=1 condition for effect of A estimand", 
             "Weight on A=1 condition for effect of B estimand", 
             "Average outcome in each A,B condition",
-            "Mean outcome for A=1, B=0",
+            "Mean outcome for A=0, B=0",
             "Mean outcome for A=0, B=1",
             "Mean outcome for A=1, B=0",
             "Mean outcome for A=1, B=1",
