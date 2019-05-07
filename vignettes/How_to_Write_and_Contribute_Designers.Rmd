@@ -20,7 +20,7 @@ devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 
 A designer is a function that returns designs. For example, `two_arm_designer()` generates simple two-arm designs as `DeclareDesign` objects. 
 
-In addition to using our pre-made designers, you can contribute your own designers to the `DesignLibrary`, using the following guidelines. 
+In addition to using our pre-made designers, you can contribute your own designers to the `DesignLibrary` using the following guidelines. 
 
 ## Essential and Optional Features
 
@@ -31,13 +31,20 @@ At a bare minimum, your designer must:
   - be [well-documented][How to Document your Designer]
   - pass all of the tests and checks in the `DesignLibrary` package
   
-Optionally, if you want your designer to work with [our online shiny inspector](https://eos.wzb.eu/ipi/DDinspector/) then you will need to [add the following attributes to your designer][Including Code in Design Attributes]:
-  
-  - `shiny_arguments` - the parameters the shiny app should be able to show diagnoses for 
-  
-  - `tips` - explanations of the optional parameters, given through shiny_arguments
+Optionally, if you want your designer to work with [our DDWizard Shiny App](https://eos.wzb.eu/ipi/DDWizard), then you will need to [add the following attributes to your designer][Including Code in Design Attributes]:
   
   - `description` - a brief description of the design in html code
+
+  - `definitions` - a `data.frame` with the following columns:
+  
+  | - `names` - names of each and every design argument
+  | - `tips` - short description of each design argument (in order of `names`)
+  | - `class` - class of argument value (e.g., "character", "logical", "integer", "numeric")
+  | - `vector` - logical vector for whether argument value is a vector
+  | - `min` - minimum possible numeric value of each argument (`NA` if not numeric or integer) 
+  | - `max` - minimum possible numeric value of each argument (`NA` if not numeric or integer) 
+  | - `inspector_min` - minimum (reasonable) value of each argument (these are used as preset fill-ins in the app and cannot include `Inf` values)
+  | - `inspector_step` - amount by which arguments should reasonably vary (this allows preset argument variations in the app)
 
 ## A Minimal Example
 
@@ -63,7 +70,7 @@ my_designer <- function(N = 100,
       estimator
   }}}
   attr(my_design, "code") <- DesignLibrary:::construct_design_code(designer = my_designer,
-                                                   args =  match.call.defaults())
+                                                                   args =  match.call.defaults())
   my_design
 }
 ```
@@ -148,27 +155,23 @@ Methods like this can be helpful when you need to build long strings of code on 
 
 If you want your designer to work with our shiny app, there are three attributes you should give to your **designer** (note: these are not attributes in the **design** -- they get added after to the designer function after it is defined).
 
-First, you need to provide the `shiny_arguments` -- a list of scalar-valued vectors whose names correspond to some subset of the arguments in your designer. These will be the parameters that the shiny app varies over:
+First, you need to provide the `shiny_arguments` -- a list of scalar-valued vectors whose names correspond to some subset of the arguments in your designer. These will be the parameters that the DDWizard will allow inputs for:
 
 ```{r, eval=FALSE}
-attr(my_designer,"shiny_arguments") <-
-  list(
-    N = c(50, 100, 10000),
-    prob = c(.25, .50, .75)
+attr(my_designer,"definitions") <-
+  data.frame(
+    names = c("N", "prob"),
+    tips = c("Sample size", "Probability of assignment to treatment"),
+    class = c("integer", "numeric"),
+    vector = c(FALSE, FALSE),
+    min = c(4, 0),
+    max = c(Inf, ),
+    inspector_min = c(100, .1),
+    inspector_step = c(10, .2)
     )
 ```
 
-Next, we need to provide the `tips`, which will be descriptions that pop up and explain to users what the different parameters correspond to. This should list be the same length and have the same names as `shiny_arguments`. 
-
-```{r, eval=FALSE}
-attr(my_designer, "tips") <-
-  list(
-    N = "Sample size",
-    prob = "Probability of assignment to treatment"
-  )
-```
-
-Finally, you can add a brief description in html that will sit atop the shiny app. 
+You can add a brief description in html that will sit atop the shiny app.
 
 ```{r, eval=FALSE}
 attr(my_designer, "description") <- "
