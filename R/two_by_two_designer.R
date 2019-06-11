@@ -149,7 +149,7 @@ attr(two_by_two_designer, "definitions") <- data.frame(
             "Probability of assignment to treatment B",
             "Weight on B=1 condition for effect of A estimand", 
             "Weight on A=1 condition for effect of B estimand", 
-            "Average outcome in each A,B condition",
+            "Average outcome in each A,B condition, in order: A0B0, A0B1, A1B0, A1B1.",
             "Mean outcome for A=0, B=0",
             "Mean outcome for A=0, B=1",
             "Mean outcome for A=1, B=0",

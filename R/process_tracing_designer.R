@@ -244,7 +244,7 @@ attr(process_tracing_designer, "definitions") <- data.frame(
             "p_E2_H",  "p_E2_not_H",  "cor_E1E2_H",  "cor_E1E2_not_H",  "label_E1",  "label_E2", "args_to_fix"),
   tips  = c("Size of population of cases selected",
             "Probability that X = 1 for a given case",
-            "Simplex denoting the proportion of cases in the population",
+            "Simplex denoting the proportion of cases in the population. Order: 1) X causes Y; 2) Y occurs regardless of X; 3) X causes the absence of Y; 4) Y is absent regardless of X.",
             "Prior probability that X indeed causes Y",
             "Probability of observing the first piece of evidence given X indeed causes Y",
             "Probability of observing first piece of evidence given that X caused Y is not true",
