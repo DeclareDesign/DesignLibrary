@@ -136,7 +136,7 @@ binary_iv_designer <- function(N = 100,
     construct_design_code(designer = binary_iv_designer, 
                           args = match.call.defaults(),
                           args_to_fix = args_to_fix,
-                          exclude_args = c("a_Y", "b_Y", "d_Y", "args_to_fix"),
+                          exclude_args = union(c("a_Y", "b_Y", "d_Y", "args_to_fix"), args_to_fix),
                           arguments_as_values = TRUE)
   
   binary_iv_design 
