@@ -173,12 +173,12 @@ construct_design_code <- function(designer, args, args_to_fix = NULL,
     list_fixed <- setNames(mapply(function(arg_to_fix) args[[arg_to_fix]], args_to_fix), args_to_fix)
     if(!is.list(list_fixed)) list_fixed <- as.list(list_fixed)
     # create string of list of arguments to substitute
-    list_fixed_str <- str_within(deparse(expr(!!list_fixed), width.cutoff = 60L))
+    list_fixed_str <- str_within(deparse(expr(!!list_fixed)))
     # bundle code lines related to same assignment function together
     design_exprs <- mapply(function(lines) paste0(code[lines], collapse = " "), expr_i)
 
     # evaluate a parsed expression where we substitute fixed arguments for their values
-    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str = list_fixed_str, eval_envir = ee)
+    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str = paste0(list_fixed_str, collapse = ""), eval_envir = ee)
     
     code_fixed <- code
     for(i in seq_along(expr_i)){
