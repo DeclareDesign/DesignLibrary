@@ -37,6 +37,13 @@ for(designer in designers){
     })
   
   testthat::test_that(
+    desc = paste0(designer, " works when all arguments are fixed in `args_to_fix`"),
+    code = {
+      expect_error(eval(expr(paste0("", designer, 
+                                    "(args_to_fix = names(formals(", designer, ")))"))), NA)
+    })
+  
+  testthat::test_that(
     desc = paste0(designer, " should return designs that have code as a character string in attributes"),
     code = {
       expect_true(class(design_attr$code) == "character")
@@ -286,16 +293,6 @@ test_that(desc = "binary_iv_designer errors when it should",
             expect_error(binary_iv_designer(b = -20))
             expect_error(binary_iv_designer(d = -20))
           })
-
-
-# Test `args_to_fix` argument works ---------------------------------------------
-
-test_that(desc = "args_to_fix argument works",
-          code = {
-            expect_error(factorial_designer(args_to_fix = names(formals(factorial_designer))), NA)
-            expect_error(multi_arm_designer(args_to_fix = names(formals(multi_arm_designer))), NA)
-          })
-
 
 test_that(desc = "block_cluster designer handles reports ICC with verbose = TRUE",
           code = {
