@@ -39,8 +39,8 @@ for(designer in designers){
   testthat::test_that(
     desc = paste0(designer, " works when all arguments are fixed in `args_to_fix`"),
     code = {
-      expect_error(eval(expr(paste0("", designer, 
-                                    "(args_to_fix = names(formals(", designer, ")))"))), NA)
+      expect_error(eval(parse_expr(paste0("", designer, 
+                                          "(args_to_fix = names(formals(", designer, ")))"))), NA)
     })
   
   testthat::test_that(
