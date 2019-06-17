@@ -1,3 +1,9 @@
+# DesignLibrary 0.1.4
+
+* updated tests to be compatible with rlang 0.3.0
+
+* fixed a bug in designers that resulted from holding all args fixed
+
 # DesignLibrary 0.1.3
 
 * updated code to be compatible to new DeclareDesign version on CRAN (fixes 

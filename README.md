@@ -10,7 +10,7 @@ Status](https://coveralls.io/repos/github/DeclareDesign/DesignLibrary/badge.svg?
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/DesignLibrary)](https://cran.r-project.org/package=DesignLibrary)
 [![minimal R
 version](https://img.shields.io/badge/R%3E%3D-3.4.0-6666ff.svg)](https://cran.r-project.org/)
-[![packageversion](https://img.shields.io/badge/Package%20version-0.1.3.9999-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/Package%20version-0.1.4.9999-orange.svg?style=flat-square)](commits/master)
 
 **DesignLibrary** provides simple interface to build designs using the
 package **DeclareDesign**. In one line of code users can specify the
