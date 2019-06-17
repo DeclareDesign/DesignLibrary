@@ -160,25 +160,24 @@ construct_design_code <- function(designer, args, args_to_fix = NULL,
     invisible(assign(i, eval(args[[i]], envir=ee), ee))
   }
   args_eval <- mget(arg_names, envir = ee)
-
-  # for each of the expressions separated by new
-  # line turn from string to expression
-  # substitute the arguments for their (evaluated)
-  # values if they are set in args_to_fix
-  expr_i <- group_code_lines(code)
   
   #if any arguments are set to fixed
   if(!is.null(args_to_fix)){
+    
+    # for each of the expressions separated by new line turn from string to 
+    # expression substitute the arguments for their (evaluated) values if they are 
+    # set in args_to_fix
+    expr_i <- group_code_lines(code)
     #list of fixed arguments
     list_fixed <- setNames(mapply(function(arg_to_fix) args[[arg_to_fix]], args_to_fix), args_to_fix)
     if(!is.list(list_fixed)) list_fixed <- as.list(list_fixed)
     # create string of list of arguments to substitute
-    list_fixed_str <- str_within(deparse(expr(!!list_fixed), width.cutoff = 60L))
+    list_fixed_str <- str_within(deparse(expr(!!list_fixed)))
     # bundle code lines related to same assignment function together
-    design_exprs <- mapply(function(lines) paste0(code[lines], collapse = " "), expr_i)
-
+    design_exprs <- mapply(function(lines) paste0(code[lines], collapse = "\n"), expr_i)
+    
     # evaluate a parsed expression where we substitute fixed arguments for their values
-    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str = list_fixed_str, eval_envir = ee)
+    fixed_code_lines <- lapply(design_exprs, code_fixer, list_fixed_str = paste0(list_fixed_str, collapse = ""), eval_envir = ee)
     
     code_fixed <- code
     for(i in seq_along(expr_i)){
@@ -186,6 +185,11 @@ construct_design_code <- function(designer, args, args_to_fix = NULL,
     }
     
     code <- unique(code_fixed)
+    # if(length(with_comments)>1L){
+    #   for(i in 1:nrow(paste_comments)){
+    #     code <- gsub(paste_comments[i,1], paste_comments[i,2], code)
+    #   }
+    # }
   }
   }
 

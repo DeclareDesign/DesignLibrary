@@ -2,12 +2,12 @@
 context(desc = "Testing that designers in the library work as they should")
 
 functions <- ls("package:DesignLibrary")
-designers <- functions[grepl("_designer\\b",functions)]
-designers <- designers[!grepl("simple",designers)]
+designer_names <- functions[grepl("_designer\\b",functions)]
+designer_names <- designer_names[!grepl("simple",designer_names)]
 
-for(designer in designers){
+for(designer_name in designer_names){
   
-  the_designer <- get(x = designer)
+  the_designer <- get(x = designer_name)
   has_shiny <- !is.null(attributes(the_designer)$shiny_arguments)
   has_definition <- !is.null(attributes(the_designer)$definitions)
   
@@ -17,42 +17,49 @@ for(designer in designers){
   design_attr <- attributes(one_design)
   
   testthat::test_that(
-    desc = paste0("designs returned by ", designer," should have a code attribute"),
+    desc = paste0("designs returned by ", designer_name," should have a code attribute"),
     code = {
       expect_true("code" %in% names(design_attr)) 
     }
   )
   
   testthat::test_that(
-    desc = paste0(designer," returns a DD-type design."),
+    desc = paste0(designer_name," returns a DD-type design."),
     code = {
       expect_true("design" %in% class(one_design))
     })
   
   
   testthat::test_that(
-    desc = paste0(designer,"'s default design runs."),
+    desc = paste0(designer_name,"'s default design runs."),
     code = {
       expect_is( DeclareDesign::diagnose_design(one_design, sims = 10, bootstrap_sims = FALSE)$diagnosands_df, "data.frame" )
     })
   
   testthat::test_that(
-    desc = paste0(designer, " should return designs that have code as a character string in attributes"),
+    desc = paste0(designer_name, " works when all arguments are fixed in `args_to_fix`"),
+    code = {
+      expect_error(eval(parse_expr(paste0("", designer_name, 
+                                          "(args_to_fix = names(formals(", designer_name, ")))"))), NA)
+    })
+  
+  testthat::test_that(
+    desc = paste0(designer_name, " should return designs that have code as a character string in attributes"),
     code = {
       expect_true(class(design_attr$code) == "character")
     })
   
   testthat::test_that(
-    desc = paste0(designer, "'s default design code runs without errors"),
+    desc = paste0(designer_name, "'s default design code runs without errors"),
     code = {
       expect_error(eval(parse(text = get_design_code(one_design))), NA)
     })
   
   testthat::test_that(
-    desc = paste0("Code inside ",designer, " runs and creates an appropriately named design object."),
+    desc = paste0("Code inside ",designer_name, " runs and creates an appropriately named design object."),
     code = {
       eval(parse(text = design_attr$code))
-      expect_true(exists(x = gsub("_designer\\b","_design",designer)))
+      expect_true(exists(x = gsub("_designer\\b","_design",designer_name)))
     })
   
   
@@ -62,7 +69,7 @@ for(designer in designers){
     shiny_tips <- designer_attr$definitions$names
     
     testthat::test_that(
-      desc = paste0("Any shiny_arguments in the attributes of ",designer," should all be in the its formals."),
+      desc = paste0("Any shiny_arguments in the attributes of ",designer_name," should all be in the its formals."),
       code = {
         expect_true(
           all(names(shiny_arguments) %in% names(designer_args))
@@ -70,7 +77,7 @@ for(designer in designers){
       }
     )
     testthat::test_that(
-      desc = paste0("All shiny_arguments in the attributes of ",designer," have a tip."),
+      desc = paste0("All shiny_arguments in the attributes of ",designer_name," have a tip."),
       code = {
         expect_true(all(names(shiny_arguments) %in% shiny_tips))
       }
@@ -79,7 +86,7 @@ for(designer in designers){
   
   if(has_definition){
     test_that(
-      desc = paste0("Definitions attribute of ", designer," has the same row number as its formals."),
+      desc = paste0("Definitions attribute of ", designer_name," has the same row number as its formals."),
       code = {
         definitions <- designer_attr$definitions
         expect_equal(nrow(definitions), length(designer_args)
@@ -88,14 +95,14 @@ for(designer in designers){
     )
     
     test_that(
-      desc = paste0("All 'names' in definitions attribute of ", designer," are contained in its formals."),
+      desc = paste0("All 'names' in definitions attribute of ", designer_name," are contained in its formals."),
       code = {
         definitions <- designer_attr$definitions
         expect_true(all(definitions$names %in% names(designer_args)))
       }
     )
     test_that(
-      desc = paste0("All 'class' values in  definitions attribute of ", designer," exist."),
+      desc = paste0("All 'class' values in  definitions attribute of ", designer_name," exist."),
       code = {
         classes <- designer_attr$definitions[["class"]]
         expect_true(all(classes %in% c("character", "numeric", "integer", "logical")))
@@ -103,7 +110,7 @@ for(designer in designers){
     )
     
     test_that(
-      desc = paste0("Definitions attribute of ", designer, " contains all columns."),
+      desc = paste0("Definitions attribute of ", designer_name, " contains all columns."),
       code= {
         expect_length(setdiff(names(designer_attr$definitions), c("names", "tips", "class", "vector", "min", 
                                                                   "max", "inspector_min", "inspector_step")), 0)
@@ -114,7 +121,7 @@ for(designer in designers){
       # Testing that `diagnose_design(expand_design())` works when calling every 
       # possible design parameter by checking if estimator column names overlap with
       # designer terms
-      desc = paste0("No column names in estimator data.frame conflict with parameters in ", designer),
+      desc = paste0("No column names in estimator data.frame conflict with parameters in ", designer_name),
       code = {
         params <- designer_attr$definitions$names
         estimator <- draw_estimates(the_designer())
@@ -286,16 +293,6 @@ test_that(desc = "binary_iv_designer errors when it should",
             expect_error(binary_iv_designer(b = -20))
             expect_error(binary_iv_designer(d = -20))
           })
-
-
-# Test `args_to_fix` argument works ---------------------------------------------
-
-test_that(desc = "args_to_fix argument works",
-          code = {
-            expect_error(factorial_designer(args_to_fix = names(formals(factorial_designer))), NA)
-            expect_error(multi_arm_designer(args_to_fix = names(formals(multi_arm_designer))), NA)
-          })
-
 
 test_that(desc = "block_cluster designer handles reports ICC with verbose = TRUE",
           code = {
