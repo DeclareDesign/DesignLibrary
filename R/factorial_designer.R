@@ -99,7 +99,7 @@ factorial_designer <- function(
   if(k < 2 || !is_integerish(k)) stop("`k' should be a positive integer > 1.")
   if(any(outcome_sds<0)) stop("`outcome_sds' should be nonnegative.")
   if(any(assignment_probs <= 0)) stop("`assignment_probs' should have positive values only.")
-  if(!is.null(sd) && !is.null(outcome_sds) && outcome_sds != rep(sd, k^2))
+  if(!is.null(sd) && !is.null(outcome_sds) && !identical(outcome_sds, rep(sd, 2^k)))
     warning("Both `sd` and `outcome_sd` are specified and have different values. Taking value of `outcome_sds`.")
   
   # pre-objects -------------------------------------------------------------
