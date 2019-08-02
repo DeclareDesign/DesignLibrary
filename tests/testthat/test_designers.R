@@ -249,7 +249,7 @@ test_that(desc = "two_arm_covariate_designer errors when it should",
             expect_error(two_arm_covariate_designer(rho_WZ = 10))
           })
 
-test_that(desc = "factorial_designer errors when it should",
+test_that(desc = "factorial_designer errors or warns when it should",
           code = {
             expect_error(factorial_designer(outcome_name = c("Y ")))
             expect_error(factorial_designer(outcome_means = 1, k = 2))
@@ -260,6 +260,7 @@ test_that(desc = "factorial_designer errors when it should",
             expect_error(factorial_designer(k = .5))
             expect_error(factorial_designer(outcome_sds = c(-1,-1,-1,-1), k = 2))
             expect_error(factorial_designer(assignment_probs = c(-.5,.5), k = 2))
+            expect_warning(factorial_designer(k = 2, sd = 1, outcome_sds = rep(.5, 4)))
           })
 
 test_that(desc = "process_tracing_designer errors when it should",
