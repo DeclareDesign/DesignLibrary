@@ -60,7 +60,7 @@ We assume our sample has different shares of possible compliance types in a samp
    *  First, we define the first-stage effect of $Z$ on $X$ as $E[X(Z=1) - X(Z=0)]$.
    *  Our second estimand of interest is the average effect of fertilizer use (our endogenous treatment, $X$), on crop productivity: $ATE = E[Y(X = 1) - Y(X = 0)]$.
    *  Third, we are interested in the average treatment effect among compliers (farmers who use fertilizers when awarded the vouchers but who will not use it if not given voucher): $LATE = E[Y(X = 1) - Y(X = 0) | type_i = complier]$. 
-   *  Fourth, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a linear combination of treatment effects for compliers and defiers: $LATE_{het} = \frac{\Pr(C)}{\Pr(C) - \Pr(D)}E[Y_i(1)-Y_i(0)| D] - \frac{\Pr(D)}{\Pr(C) - \Pr(D)}E[Y_i(1)-Y_i(0)| D]$, where $C$ and $D$ indicate compliers and defiers, respectively [see @imbens2014instrumental: 34].
+   *  Fourth, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a linear combination of treatment effects for compliers and defiers: $LATE_{het} = \frac{\Pr(C)}{\Pr(C) - \Pr(D)}E[Y_i(1)-Y_i(0)| C] - \frac{\Pr(D)}{\Pr(C) - \Pr(D)}E[Y_i(1)-Y_i(0)| D]$, where $C$ and $D$ indicate compliers and defiers, respectively [see @imbens2014instrumental: 34].
    *  Last we define the "intent to treat" estimand which gives up on assessing the effect of $X$ on $Y$ and instead seeks only to look at the effect of $Z$ on $Y$. 
 
 * **D**ata strategy: 
@@ -81,25 +81,29 @@ We assume our sample has different shares of possible compliance types in a samp
 We now diagnose the design above and compare our estimates with those of designs that violate the first three assumptions one by one.
 
 ```{r, warning=FALSE, message = FALSE}
-# Violate relevance of instrument for treatment (no first-stage effects)
-iv_nonrelevant <- binary_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
 
-# Violate relevance of instrument for treatment (no first-stage effects)
-iv_nonrandom   <- binary_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
+# No first-stage effects
+iv_nonrelevant   <- binary_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5,
+                                   a = c(1, 0, 0, 0))
 
 # Violate exclusion restriction
-iv_nonexcl     <- binary_iv_designer(d_Y = .1)
+iv_nonexcl     <- binary_iv_designer(d_Y = .1, a = c(1, 0, 0, 0))
+
+# Encouragement not randomly assigned
+iv_nonrandom <- binary_iv_designer(N = 1000, 
+                                   assignment_probs = c(.2, .3, .7, .5), b_Y = .5,
+                                   a = c(1, 0, 0, 0))
+
 ```
 
 We also compare estimates across designs in which we assume violation of the monotonicity assumption with homogeneous and heterogeneous treatment effects across complier types.
 
 ```{r, warning=FALSE, message = FALSE}
 # Violates monotonicity with homogeneous treatment effects
-iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2))
+iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2), a = c(1, 0, 0, 0))
 
 # Violates monotonicity with heterogeneous treatment effects
-iv_het     <- binary_iv_designer(type_probs = c(0,0,.8,.2), 
-                                 b = c(0.5, 0.5, 0.5, 0))
+iv_het     <- binary_iv_designer(type_probs = c(0,0,.8,.2), b = c(0.5, 0.5, 0.5, 0))
 diagnoses <- diagnose_designs(binary_iv_design, iv_nonrelevant, iv_nonrandom, 
                               iv_nonexcl, iv_defiers, iv_het)
 ```
