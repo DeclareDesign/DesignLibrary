@@ -15,14 +15,16 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-Instrumental variables methods are often used in experimental or observational settings where we *cannot* credibly assume the treatment of interest is as-if randomly assigned, but we can assume the treatment assignment is influenced by a third variable that is unrelated to the outcome of interest (except through the treatment of interest).
+Instrumental variables methods are often used in experimental or observational settings where we cannot credibly assume that the treatment of interest is as-if randomly assigned, but we can assume the treatment assignment is influenced by a third variable that is unrelated to the outcome of interest (except through the treatment of interest).
 
-Take two examples of causal relationships researchers might be interested in observing: 
+Two examples:
 
-* the effect of distributive benefits on voter turnout and 
-* the effect of fertilizer use on farmers' crop yield
+* what is the effect of distributive benefits on voter turnout? 
+* what is the effect of fertilizer use on farmers' crop yield?
 
-In both cases, the treatments of interest may be confounded with the outcomes of interest. For instance politicians might disburse funds to areas with higher turnouts; farmers in places with higher crop yield might have more resources to use fertilizers in the first place. This confounding makes it difficult to learn about the effect of the treatment on the outcome. However, instrumental variables can be a useful approach in these contexts.
+In both cases, the treatments of interest may be confounded with the outcomes of interest. For instance politicians might disburse funds to areas with higher turnouts; farmers in places with higher crop yield might have more resources to use fertilizers in the first place. This confounding makes it difficult to learn about the effect of the treatment on the outcome. 
+
+However, instrumental variables can be a useful approach in these contexts.
 
 Strong instrumental variables satisfy four key assumptions:
 
@@ -41,7 +43,7 @@ The `binary_iv_designer()` function allows researchers to declare a design of a 
 
 * **M**odel: 
     
-    We assume our sample has three out of four possible compliance types in a sample of $N$ farmers: always-takers, never-takers, and compliers. In order for the monotonicy assumption to hold, we assume there are no defiers in our sample (no farmers who will adopt fertilizer use if not given the voucher, and who will not adopt it if given the voucher). Below is how we define $X(Z)$ with $Z \in {0,1}$ for each type:
+We assume our sample has different shares of possible compliance types in a sample of size $N$: always-takers, never-takers, compliers, and defiers. In order for the monotonicity assumption to hold, we assume there are no defiers in our sample (e.g. no farmers who will adopt fertilizer if and only if they are not encouraged to do so). Below is how we define $X(Z)$ with $Z \in {0,1}$ for each type:
   
   | Type       | $X_i(0)$ | $X_i(1)$ |
   |:-----------|---------:|---------:|
@@ -51,23 +53,19 @@ The `binary_iv_designer()` function allows researchers to declare a design of a 
   |Defier      | 1        | 0        |
   
 
-    We consider a population of size $N$ and we define potential outcome $Y$ (in this case crop yield) as a linear function of the form $Y_{i,type} = \alpha_{type} + \beta_{type} * X_i + \delta_{type} * Z_i + u_y$, where $u_y$ is a normally distributed individual-level shock. We consider the treatment to have heterogeneous effects among different complier types.
+    We define potential outcome $Y$ (in this case crop yield) as a linear function of the form $Y_{i,type} = \alpha_{type} + \beta_{type} * X_i + \delta_{type} * Z_i + u_y$, where $u_y$ is a normally distributed individual-level shock. We consider the treatment to have heterogeneous effects among different complier types.
 
 * **I**nquiry:
 
-    Firstly, we define the first-stage effect of $Z$ on $X$ as $E[X(Z=1) - X(Z=0)]$.
-
-    Our second estimand of interest is the average effect of fertilizer use (our endogenous treatment, $X$), on crop productivity: $ATE = E[Y(X = 1) - Y(X = 0)]$.
-
-    Thirdly, we are interested in the average treatment effect among compliers (farmers who use fertilizers when awarded the vouchers but who will not use it if not given voucher): $LATE = E[Y(X = 1) - Y(X = 0) | type_i = complier]$. 
-  
-    Fourth, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a weighted average of treatment effects for compliers and defiers: $LATE_{het} = \frac{Pr(type = c)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = c] - \frac{Pr(type = d)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = d]$, where $c$ and $d$ are compliers and defiers, respectively [see @imbens2014instrumental: 34].
-    
-    Last we define the "intent to treat" estimand which gives up on assessing the effect of $X$ on $Y$ and instead seeks only to look at the effect of $Z$ on $Y$. 
+   *  First, we define the first-stage effect of $Z$ on $X$ as $E[X(Z=1) - X(Z=0)]$.
+   *  Our second estimand of interest is the average effect of fertilizer use (our endogenous treatment, $X$), on crop productivity: $ATE = E[Y(X = 1) - Y(X = 0)]$.
+   *  Third, we are interested in the average treatment effect among compliers (farmers who use fertilizers when awarded the vouchers but who will not use it if not given voucher): $LATE = E[Y(X = 1) - Y(X = 0) | type_i = complier]$. 
+   *  Fourth, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a linear combination of treatment effects for compliers and defiers: $LATE_{het} = \frac{\Pr(C)}{\Pr(C) - \Pr(D)}E[Y_i(1)-Y_i(0)| D] - \frac{\Pr(D)}{\Pr(C) - \Pr(D)}E[Y_i(1)-Y_i(0)| D]$, where $C$ and $D$ indicate compliers and defiers, respectively [see @imbens2014instrumental: 34].
+   *  Last we define the "intent to treat" estimand which gives up on assessing the effect of $X$ on $Y$ and instead seeks only to look at the effect of $Z$ on $Y$. 
 
 * **D**ata strategy: 
     
-    We collect survey data on a representative sample of 400 farmers and randomly assign  fertilizer vouchers with a probability of 0.5.
+    We collect data on a representative sample of subjects and randomly assign  an encouragement ($Z$) with probability of 0.5.
 
 * **A**nswer strategy: 
 
@@ -82,7 +80,7 @@ The `binary_iv_designer()` function allows researchers to declare a design of a 
 
 We now diagnose the design above and compare our estimates with those of designs that violate the first three assumptions one by one.
 
-```{r}
+```{r, warning=FALSE, message = FALSE}
 # Violate relevance of instrument for treatment (no first-stage effects)
 iv_nonrelevant <- binary_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
 
@@ -95,7 +93,7 @@ iv_nonexcl     <- binary_iv_designer(d_Y = .1)
 
 We also compare estimates across designs in which we assume violation of the monotonicity assumption with homogeneous and heterogeneous treatment effects across complier types.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message = FALSE}
 # Violates monotonicity with homogeneous treatment effects
 iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2))
 
@@ -120,7 +118,7 @@ kable(diagnoses_table[
   c(1:3, 6, 8,14)], digits = 2)
 ```
 
-In the absence of the monotonicity assumption, our IV estimates are less biased for the LATE than the ATE estimand in the presence of heterogeneous treatment effects. Moreover, in these cases, the IV is best at estimating the weighted average of treatment effects for compliers and defiers ($LATE_{het}$). The difference in means estimate for the ITT estimand always performs well.
+In the absence of the monotonicity assumption, our IV estimates are less biased for the LATE than the ATE estimand in the presence of heterogeneous treatment effects. Moreover, in these cases, the IV is best at estimating $LATE_{het}$. The difference in means estimate for the ITT estimand always performs well.
 
 ```{r, echo=FALSE}
 kable(diagnoses_table[diagnoses_table$`Estimand Label` %in% c("ate", "late", "late_het") &
