@@ -15,9 +15,14 @@ library(DesignLibrary)
 library(knitr)
 ```
 
-Instrumental variables methods are often used in experimental or observational settings where we *cannot* credibly assume the treatment of interest is randomly assigned, but can assume the treatment is assigned my some third variable that's unrelated to the outcome of interest.
+Instrumental variables methods are often used in experimental or observational settings where we *cannot* credibly assume the treatment of interest is as-if randomly assigned, but we can assume the treatment assignment is influenced by a third variable that is unrelated to the outcome of interest (except through the treatment of interest).
 
-Take two examples of causal relationships researchers might be interested in observing: the effect of distributive benefits on voter turnout and the effect of fertilizer use on farmers' crop yield. In both cases, the distribution of resources or the use of fertilizer may depend on the outcome we wish to study --- on the one hand, politicians may disburse funds according to local electoral characteristics, and on the other, famers with higher crop yield might be both more likely to use fertilizers. Instrumental variables can be a useful approach in these contexts where a treatment $X$ is endogenous to an outcome $Y$.
+Take two examples of causal relationships researchers might be interested in observing: 
+
+* the effect of distributive benefits on voter turnout and 
+* the effect of fertilizer use on farmers' crop yield
+
+In both cases, the treatments of interest may be confounded with the outcomes of interest. For instance politicians might disburse funds to areas with higher turnouts; farmers in places with higher crop yield might have more resources to use fertilizers in the first place. This confounding makes it difficult to learn about the effect of the treatment on the outcome. However, instrumental variables can be a useful approach in these contexts.
 
 Strong instrumental variables satisfy four key assumptions:
 
@@ -26,7 +31,9 @@ Strong instrumental variables satisfy four key assumptions:
 * *Exchangeability* (or *independence*): The instrument $Z$ is as good as randomly assigned (i.e., there is no confounding for the effect of $Z$ on $Y$).
 * *Monotonicity*: For all units $i$, $X_i(z_1) \geqslant X_i(x_2)$ when $z_1 \geqslant z_2$ (i.e., there are no units that always defy their assignment).
 
-Using the examples above, researchers could choose to instrument distributive benefits with a naturally occurring disaster --- the occurence of a hurricane is correlated with the disbursement of relief aid by the government but may be independent of voter turnout. Similarly, researchers might randomly assign some farmers fertilizer vouchers as an instrument for fertilizer use.
+A weather shock might be an example of an instrument that could be used for studying the effects of distributive benefits on voting. The shock might induce the disbursement of relief aid by the government but not have any other effects on voter turnout. 
+
+A campaign that distributes vouchers for fertilizers might provide  an instrument to understand the effects of fertilizer use on production.
 
 The `binary_iv_designer()` function allows researchers to declare a design of a single instrument $Z$ to estimate the effect of an endogenous treatment $X$ on an outcome $Y$, all of which are binary variables. Below we declare a design using the fertilizer example.
 
@@ -54,7 +61,9 @@ The `binary_iv_designer()` function allows researchers to declare a design of a 
 
     Thirdly, we are interested in the average treatment effect among compliers (farmers who use fertilizers when awarded the vouchers but who will not use it if not given voucher): $LATE = E[Y(X = 1) - Y(X = 0) | type_i = complier]$. 
   
-    Lastly, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a weighted average of treatment effects for compliers and defiers: $LATE_{het} = \frac{Pr(type = c)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = c] - \frac{Pr(type = d)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = d]$, where $c$ and $d$ are compliers and defiers, respectively [see @imbens2014instrumental: 34].
+    Fourth, when monotonicity does not hold, but independence and exclusion restriction do, we define the estimand as a weighted average of treatment effects for compliers and defiers: $LATE_{het} = \frac{Pr(type = c)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = c] - \frac{Pr(type = d)}{Pr(type = c) - Pr(type = d)}*E[Y_i(1)-Y_i(0)| type = d]$, where $c$ and $d$ are compliers and defiers, respectively [see @imbens2014instrumental: 34].
+    
+    Last we define the "intent to treat" estimand which gives up on assessing the effect of $X$ on $Y$ and instead seeks only to look at the effect of $Z$ on $Y$. 
 
 * **D**ata strategy: 
     
@@ -62,8 +71,9 @@ The `binary_iv_designer()` function allows researchers to declare a design of a 
 
 * **A**nswer strategy: 
 
-    We estimate the first-stage effect by calculating the difference-in-means estimator of the function $X ~ Z$. For an estimation of the $ATE$, $LATE$, and $LATE_{het}$ we estimate the effect of endogenous treatment $X$ on $Y$ and use a two-stage least squares (2SLS) estimation.
-
+    We estimate the first-stage effect by calculating the effect of $Z$ on $X$ using differences-in-means. For an estimation of the $ATE$, $LATE$, and $LATE_{het}$ we estimate the effect of endogenous treatment $X$ on $Y$ and use a two-stage least squares (2SLS) estimation.
+    For the ITT we  calculate the effect of $Z$ on $Y$ using differences-in-means.
+    
 ```{r,eval = TRUE, code = get_design_code(binary_iv_designer(type_probs = c(0,0,1,0), b_Y = .5))}
 
 ```
@@ -104,13 +114,13 @@ We highlight a few takeaways. Firstly, our estimates are unbiased when all assum
 
 ```{r, echo=FALSE}
 kable(diagnoses_table[
-  diagnoses_table$`Estimand Label` %in% c("late", "ate") &
+  diagnoses_table$`Estimand Label` %in% c("late", "ate", "itt") &
     diagnoses_table$`Design Label` %in% c("binary_iv_design","iv_nonrelevant", 
                                           "iv_nonrandom", "iv_nonexcl"),
   c(1:3, 6, 8,14)], digits = 2)
 ```
 
-In the absence of the monotonicity assumption, our IV estimates are less biased for the LATE than the ATE estimand in the presence of heterogeneous treatment effects. Moreover, in these cases, the IV is best at estimating the weighted average of treatment effects for compliers and defiers ($LATE_{het}$).
+In the absence of the monotonicity assumption, our IV estimates are less biased for the LATE than the ATE estimand in the presence of heterogeneous treatment effects. Moreover, in these cases, the IV is best at estimating the weighted average of treatment effects for compliers and defiers ($LATE_{het}$). The difference in means estimate for the ITT estimand always performs well.
 
 ```{r, echo=FALSE}
 kable(diagnoses_table[diagnoses_table$`Estimand Label` %in% c("ate", "late", "late_het") &

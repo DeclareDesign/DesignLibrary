@@ -70,7 +70,7 @@ binary_iv_designer <- function(N = 100,
                                b_Y = 0,
                                d_Y = 0,
                                outcome_sd = 1,
-                               a = c(1,0,0,0) * a_Y, 
+                               a = c(0,0,0,0) * a_Y, 
                                b = rep(b_Y, 4), 
                                d = rep(d_Y, 4),
                                args_to_fix = NULL
@@ -88,14 +88,22 @@ binary_iv_designer <- function(N = 100,
     population <- declare_population(
       N = N,
       type = sample(1:4, N, replace = TRUE, prob = type_probs),
-      type_label = c("Always", "Never", "Complier", "Defier")[type],
+      Always = type== 1,
+      Never = type == 2,
+      Complier = type == 3,
+      Defier = type == 4,
       u_Z = runif(N),
       u_Y = rnorm(N) * outcome_sd,
       Z = (u_Z < assignment_probs[type]),
-      X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z)
+      X = Always + Z*Complier + (1 - Z)*Defier
     )
     
-    potential_outcomes <-
+    potential_outcomes_YZ <-
+      declare_potential_outcomes(
+        Y ~ a[type] + b[type] * (Always + Z*Complier + (1 - Z)*Defier) + d[type] * Z + u_Y,
+        assignment_variables = "Z")
+    
+    potential_outcomes_YX <-
       declare_potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + u_Y,
                                  assignment_variables = "X")
     
@@ -104,17 +112,20 @@ binary_iv_designer <- function(N = 100,
     
     # I: Inquiry
     estimand <- declare_estimand(
-      first_stage = mean((type == 3) - (type == 4)),
+      first_stage = mean(Complier - Defier),
       ate = mean(Y_X_1 - Y_X_0),
-      late = mean(Y_X_1[type == 3] - Y_X_0[type == 3]),
-      late_het = (mean(type == 3)*mean(Y_X_1[type == 3] - Y_X_0[type == 3]) -
-                         mean(type == 4)*mean(Y_X_1[type == 4] - Y_X_0[type == 4]))/(mean(type == 3) - mean(type == 4))
-    )
+      late = mean(Y_X_1[Complier] - Y_X_0[Complier]),
+      late_het = (
+        ifelse(mean(Complier)== 0, 0, mean(Complier)*mean((Y_X_1 - Y_X_0)[Complier])) -
+        ifelse(mean(Defier)  == 0, 0, mean(Defier)*  mean((Y_X_1 - Y_X_0)[Defier])) ) /
+        (mean(Complier) - mean(Defier)),
+      itt = mean(Y_Z_1 - Y_Z_0)
+      )
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(X ~ Z, 
                                      estimand = "first_stage", 
-                                     label = "d-i-m")
+                                     label = "d-i-m XZ")
     
     estimator_2 <- declare_estimator(Y ~ X, 
                                      estimand = c("ate", "late","late_het"), 
@@ -126,9 +137,13 @@ binary_iv_designer <- function(N = 100,
                                      model = iv_robust, 
                                      label = "iv_robust")
     
+    estimator_4 <- declare_estimator(Y ~ Z, 
+                                     estimand = "itt", 
+                                     label = "d-i-m YZ")
     
-    binary_iv_design <- population + potential_outcomes + reveal + 
-      estimand + estimator_1 + estimator_2 + estimator_3
+    
+    binary_iv_design <- population + potential_outcomes_YZ + potential_outcomes_YX + reveal + 
+      estimand + estimator_1 + estimator_2 + estimator_3 + estimator_4  
     
   }}}
   
