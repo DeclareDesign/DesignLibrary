@@ -47,11 +47,8 @@ regression_discontinuity_designer <- function(
   if(outcome_sd < 0) stop("outcome_sd must be positive.")
   {{{
     # M: Model
-    control <- function(X) {
-      as.vector(poly(X, length(control_coefs), raw = T) %*% control_coefs)}
-    
-    treatment <- function(X) {
-      as.vector(poly(X, length(treatment_coefs), raw = T) %*% treatment_coefs) + tau}
+    po_function <- function(X, coefs, tau) {
+      as.vector(poly(X, length(coefs), raw = T) %*% coefs) + tau}
     
     population <- declare_population(
       N = N,
@@ -60,13 +57,15 @@ regression_discontinuity_designer <- function(
       Z = 1 * (X > 0))
     
     potential_outcomes <- declare_potential_outcomes(
-      Y_Z_0 = control(X) + noise,
-      Y_Z_1 = treatment(X) + noise)
+      Y_Z_0 = po_function(X, tau = 0, coefs = control_coefs) + noise,
+      Y_Z_1 = po_function(X, tau = tau, coefs = treatment_coefs) + noise)
     
     reveal_Y <- declare_reveal(Y)
     
     # I: Inquiry
-    estimand <- declare_estimand(LATE = treatment(0) - control(0))
+    estimand <- declare_estimand(
+      LATE = po_function(X = 0, coefs = treatment_coefs, tau = tau) - 
+        po_function(X = 0, coefs = control_coefs, tau = 0))
     
     # D: Data Strategy
     sampling <- declare_sampling(handler = function(data){
