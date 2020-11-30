@@ -25,7 +25,7 @@
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design tidy_estimator
+#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design label_estimator
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr tidy lm_robust
@@ -211,7 +211,7 @@ factorial_designer <- function(
   
   estimator_expr <- expr(
     declare_estimator(
-      handler = tidy_estimator(function(data){
+      handler = label_estimator(function(data){
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
         mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/Z_cond_prob)
         estimate_df <- tidy(mod)

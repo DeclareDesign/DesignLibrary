@@ -190,25 +190,25 @@ process_tracing_designer <- function(
       ))}
     
     prior_only_estimator <- declare_estimator(
-      handler = tidy_estimator(prior_only),
+      handler = label_estimator(prior_only),
       label = "No tests (Prior)",
       estimand = estimand
     )
     
     E1_only_estimator <- declare_estimator(
-      handler = tidy_estimator(E1_only),
+      handler = label_estimator(E1_only),
       label = label_E1,
       estimand = estimand
     )
     
     E2_only_estimator <- declare_estimator(
-      handler = tidy_estimator(E2_only),
+      handler = label_estimator(E2_only),
       label = label_E2,
       estimand = estimand
     )
     
     E1_and_E2_estimator <- declare_estimator(
-      handler = tidy_estimator(E1_and_E2),
+      handler = label_estimator(E1_and_E2),
       label = paste(label_E1, "and", label_E2),
       estimand = estimand
     )
