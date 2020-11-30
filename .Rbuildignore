@@ -8,3 +8,4 @@ README.Rmd
 ^cran-comments\.md$
 vignettes
 ^\.github
+^CRAN-RELEASE$
