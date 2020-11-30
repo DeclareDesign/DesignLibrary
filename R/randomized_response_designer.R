@@ -16,7 +16,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept descriptive
-#' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal set_diagnosands tidy_estimator
+#' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal set_diagnosands label_estimator
 #' @importFrom fabricatr fabricate draw_binary
 #' @importFrom randomizr conduct_ra 
 #' @export
@@ -58,7 +58,7 @@ randomized_response_designer <- function(N = 1000,
     
     # A: Answer Strategy
     estimator_randomized_response <- declare_estimator(
-      handler = tidy_estimator(
+      handler = label_estimator(
         function(data) with(
           data,
           data.frame(estimate = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
@@ -67,7 +67,7 @@ randomized_response_designer <- function(N = 1000,
     )
     
     estimator_direct_question <- declare_estimator(
-      handler = tidy_estimator(function(data) with(
+      handler = label_estimator(function(data) with(
         data,
         data.frame(estimate = mean(direct_answer)))),
       estimand = estimand,
@@ -81,7 +81,8 @@ randomized_response_designer <- function(N = 1000,
     
     randomized_response_design <- set_diagnosands(
       randomized_response_design,
-      declare_diagnosands(select = bias)
+      declare_diagnosands(bias = mean(estimate - estimand)
+)
     )
     
   }}}
