@@ -81,7 +81,8 @@ randomized_response_designer <- function(N = 1000,
     
     randomized_response_design <- set_diagnosands(
       randomized_response_design,
-      declare_diagnosands(select = bias)
+      declare_diagnosands(bias = mean(estimate - estimand)
+)
     )
     
   }}}
