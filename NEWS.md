@@ -1,3 +1,9 @@
+# DesignLibrary 0.1.5
+
+* fixed bug in randomized_response_designer diagnosands
+
+* deprecated `tidy_estimator()`
+
 # DesignLibrary 0.1.4
 
 * updated tests to be compatible with rlang 0.3.0
