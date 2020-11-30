@@ -23,6 +23,7 @@ globalVariables(
     "clusters",
     "e1",
     "e2",
+    "estimate",
     "G",
     "latent",
     "M",
