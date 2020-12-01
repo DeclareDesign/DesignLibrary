@@ -4,8 +4,13 @@
 \alias{randomized_response_designer}
 \title{Create a randomized response design}
 \usage{
-randomized_response_designer(N = 1000, prob_forced_yes = 0.6,
-  prevalence_rate = 0.1, withholding_rate = 0.5, args_to_fix = NULL)
+randomized_response_designer(
+  N = 1000,
+  prob_forced_yes = 0.6,
+  prevalence_rate = 0.1,
+  withholding_rate = 0.5,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}

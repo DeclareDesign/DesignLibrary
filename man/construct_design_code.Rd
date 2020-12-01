@@ -4,8 +4,13 @@
 \alias{construct_design_code}
 \title{Generates clean code string that reproduces design}
 \usage{
-construct_design_code(designer, args, args_to_fix = NULL,
-  arguments_as_values = FALSE, exclude_args = NULL)
+construct_design_code(
+  designer,
+  args,
+  args_to_fix = NULL,
+  arguments_as_values = FALSE,
+  exclude_args = NULL
+)
 }
 \arguments{
 \item{designer}{Designer function.}

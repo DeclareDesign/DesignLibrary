@@ -4,10 +4,17 @@
 \alias{regression_discontinuity_designer}
 \title{Create a regression discontinuity design}
 \usage{
-regression_discontinuity_designer(N = 1000, tau = 0.15,
-  outcome_sd = 0.1, cutoff = 0.5, bandwidth = 0.5,
-  control_coefs = c(0.5, 0.5), treatment_coefs = c(-5, 1),
-  poly_reg_order = 4, args_to_fix = NULL)
+regression_discontinuity_designer(
+  N = 1000,
+  tau = 0.15,
+  outcome_sd = 0.1,
+  cutoff = 0.5,
+  bandwidth = 0.5,
+  control_coefs = c(0.5, 0.5),
+  treatment_coefs = c(-5, 1),
+  poly_reg_order = 4,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of population to sample from.}

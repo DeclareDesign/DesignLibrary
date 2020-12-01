@@ -4,9 +4,17 @@
 \alias{factorial_designer}
 \title{Create a factorial design}
 \usage{
-factorial_designer(N = 256, k = 3, outcome_means = rep(0, 2^k),
-  sd = 1, outcome_sds = rep(sd, 2^k), assignment_probs = rep(0.5, k),
-  outcome_name = "Y", treatment_names = NULL, args_to_fix = NULL)
+factorial_designer(
+  N = 256,
+  k = 3,
+  outcome_means = rep(0, 2^k),
+  sd = 1,
+  outcome_sds = rep(sd, 2^k),
+  assignment_probs = rep(0.5, k),
+  outcome_name = "Y",
+  treatment_names = NULL,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}

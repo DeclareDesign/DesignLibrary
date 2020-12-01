@@ -1,8 +1,12 @@
+# DesignLibrary 0.1.5.5
+
+* Removed broken URL in package documentation
+
 # DesignLibrary 0.1.5
 
 * fixed bug in randomized_response_designer diagnosands
 
-* deprecated `tidy_estimator()`
+* deprecated `label_estimator()`
 
 # DesignLibrary 0.1.4
 

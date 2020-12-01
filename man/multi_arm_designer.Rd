@@ -4,9 +4,15 @@
 \alias{multi_arm_designer}
 \title{Create a design with multiple experimental arms}
 \usage{
-multi_arm_designer(N = 30, m_arms = 3, outcome_means = rep(0,
-  m_arms), sd_i = 1, outcome_sds = rep(0, m_arms),
-  conditions = 1:m_arms, args_to_fix = NULL)
+multi_arm_designer(
+  N = 30,
+  m_arms = 3,
+  outcome_means = rep(0, m_arms),
+  sd_i = 1,
+  outcome_sds = rep(0, m_arms),
+  conditions = 1:m_arms,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Sample size.}

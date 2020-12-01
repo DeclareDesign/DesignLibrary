@@ -4,9 +4,15 @@
 \alias{cluster_sampling_designer}
 \title{Create a design for cluster random sampling}
 \usage{
-cluster_sampling_designer(N_blocks = 1, N_clusters_in_block = 1000,
-  N_i_in_cluster = 50, n_clusters_in_block = 100,
-  n_i_in_cluster = 10, icc = 0.2, args_to_fix = NULL)
+cluster_sampling_designer(
+  N_blocks = 1,
+  N_clusters_in_block = 1000,
+  N_i_in_cluster = 50,
+  n_clusters_in_block = 100,
+  n_i_in_cluster = 10,
+  icc = 0.2,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N_blocks}{An integer. Number of blocks (strata). Defaults to 1 for no blocks.}

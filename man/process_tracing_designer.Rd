@@ -4,11 +4,21 @@
 \alias{process_tracing_designer}
 \title{Create a process-tracing design}
 \usage{
-process_tracing_designer(N = 100, prob_X = 0.5,
-  process_proportions = c(0.25, 0.25, 0.25, 0.25), prior_H = 0.5,
-  p_E1_H = 0.8, p_E1_not_H = 0.2, p_E2_H = 0.3, p_E2_not_H = 0,
-  cor_E1E2_H = 0, cor_E1E2_not_H = 0, label_E1 = "Straw in the Wind",
-  label_E2 = "Smoking Gun", args_to_fix = NULL)
+process_tracing_designer(
+  N = 100,
+  prob_X = 0.5,
+  process_proportions = c(0.25, 0.25, 0.25, 0.25),
+  prior_H = 0.5,
+  p_E1_H = 0.8,
+  p_E1_not_H = 0.2,
+  p_E2_H = 0.3,
+  p_E2_not_H = 0,
+  cor_E1E2_H = 0,
+  cor_E1E2_not_H = 0,
+  label_E1 = "Straw in the Wind",
+  label_E2 = "Smoking Gun",
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of population of cases from which a single case is selected.}

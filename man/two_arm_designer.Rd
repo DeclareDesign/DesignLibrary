@@ -5,9 +5,17 @@
 \alias{simple_two_arm_designer}
 \title{Create a one-level two-arm design}
 \usage{
-two_arm_designer(N = 100, assignment_prob = 0.5, control_mean = 0,
-  control_sd = 1, ate = 1, treatment_mean = control_mean + ate,
-  treatment_sd = control_sd, rho = 1, args_to_fix = NULL)
+two_arm_designer(
+  N = 100,
+  assignment_prob = 0.5,
+  control_mean = 0,
+  control_sd = 1,
+  ate = 1,
+  treatment_mean = control_mean + ate,
+  treatment_sd = control_sd,
+  rho = 1,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Sample size.}

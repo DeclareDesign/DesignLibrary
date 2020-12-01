@@ -4,9 +4,18 @@
 \alias{two_arm_covariate_designer}
 \title{Create a simple two arm design with a possibly prognostic covariate}
 \usage{
-two_arm_covariate_designer(N = 100, prob = 0.5, control_mean = 0,
-  sd = 1, ate = 1, h = 0, treatment_mean = control_mean + ate,
-  rho_WY = 0, rho_WZ = 0, args_to_fix = NULL)
+two_arm_covariate_designer(
+  N = 100,
+  prob = 0.5,
+  control_mean = 0,
+  sd = 1,
+  ate = 1,
+  h = 0,
+  treatment_mean = control_mean + ate,
+  rho_WY = 0,
+  rho_WZ = 0,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Sample size.}

@@ -4,8 +4,15 @@
 \alias{mediation_analysis_designer}
 \title{Create a design for mediation analysis}
 \usage{
-mediation_analysis_designer(N = 200, a = 1, b = 0.4, c = 0,
-  d = 0.5, rho = 0, args_to_fix = NULL)
+mediation_analysis_designer(
+  N = 200,
+  a = 1,
+  b = 0.4,
+  c = 0,
+  d = 0.5,
+  rho = 0,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}

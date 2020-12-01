@@ -5,8 +5,13 @@
 \alias{simple_spillover_designer}
 \title{Create a design with spillovers}
 \usage{
-spillover_designer(N_groups = 80, N_i_group = 3, sd_i = 0.2,
-  gamma = 2, args_to_fix = NULL)
+spillover_designer(
+  N_groups = 80,
+  N_i_group = 3,
+  sd_i = 0.2,
+  gamma = 2,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N_groups}{An integer. Number of groups.}

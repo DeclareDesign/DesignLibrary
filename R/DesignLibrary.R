@@ -6,6 +6,8 @@
 #' 
 #' @name DesignLibrary
 #' 
+#' @description Library of Research Designs
+#' 
 #' @importFrom utils globalVariables
 #' 
 #' 

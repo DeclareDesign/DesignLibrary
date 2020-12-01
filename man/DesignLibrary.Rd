@@ -3,8 +3,7 @@
 \docType{package}
 \name{DesignLibrary}
 \alias{DesignLibrary}
-\alias{DesignLibrary-package}
 \title{DesignLibrary: A package for creating designs}
 \description{
-DesignLibrary: A package for creating designs
+Library of Research Designs
 }

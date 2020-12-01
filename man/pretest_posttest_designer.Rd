@@ -4,8 +4,15 @@
 \alias{pretest_posttest_designer}
 \title{Create a pretest-posttest design}
 \usage{
-pretest_posttest_designer(N = 100, ate = 0.25, sd_1 = 1, sd_2 = 1,
-  rho = 0.5, attrition_rate = 0.1, args_to_fix = NULL)
+pretest_posttest_designer(
+  N = 100,
+  ate = 0.25,
+  sd_1 = 1,
+  sd_2 = 1,
+  rho = 0.5,
+  attrition_rate = 0.1,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}

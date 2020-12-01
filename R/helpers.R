@@ -19,7 +19,6 @@ get_design_code <- function(design) attr(design, "code")
 #' @return An object of class call.
 #' 
 #' @author Neal Fultz
-#' @references \url{http://stackoverflow.com/questions/14397364/match-call-with-default-arguments/}
 #' @export
 #' 
 #' @examples 

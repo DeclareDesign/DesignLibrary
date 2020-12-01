@@ -4,8 +4,15 @@
 \alias{two_arm_attrition_designer}
 \title{Create design with risk of attrition or post treatment conditioning}
 \usage{
-two_arm_attrition_designer(N = 100, a_R = 0, b_R = 1, a_Y = 0,
-  b_Y = 1, rho = 0, args_to_fix = NULL)
+two_arm_attrition_designer(
+  N = 100,
+  a_R = 0,
+  b_R = 1,
+  a_Y = 0,
+  b_Y = 1,
+  rho = 0,
+  args_to_fix = NULL
+)
 }
 \arguments{
 \item{N}{An integer. Size of sample.}
