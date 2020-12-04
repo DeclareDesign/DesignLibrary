@@ -3,7 +3,7 @@ title: "Two-Arm Experiment with a Covariate"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-  %\VignetteIndexEntry{Two-Arm Experiment}
+  %\VignetteIndexEntry{Two-Arm Experiment with a Covariate}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

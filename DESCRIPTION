@@ -30,5 +30,8 @@ Imports:
     rlang,
     glue
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr

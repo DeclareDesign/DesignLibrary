@@ -3,7 +3,7 @@ title: "Pre-Test Post-Test Design"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-  %\VignetteIndexEntry{Pre-Test Post-Test}
+  %\VignetteIndexEntry{Pre-Test Post-Test Design}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
