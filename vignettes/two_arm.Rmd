@@ -51,7 +51,7 @@ This logic does not guarantee that an answer is *correct.* A two arm trial does 
 ## Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(two_arm_design)
+diagnosis <- diagnose_design(two_arm_design, sims = 25)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}

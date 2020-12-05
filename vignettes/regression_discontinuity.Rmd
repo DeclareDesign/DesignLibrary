@@ -109,7 +109,7 @@ ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) +
 We now diagnose the design:
 
 ```{r}
-diagnosis <- diagnose_design(regression_discontinuity_design)
+diagnosis <- diagnose_design(regression_discontinuity_design, sims = 25)
 ```
 
 ```{r, echo=FALSE}

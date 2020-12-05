@@ -47,7 +47,7 @@ Below we consider the example of a pre-test post-test applied to a study that se
 ## Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(pretest_posttest_design)
+diagnosis <- diagnose_design(pretest_posttest_design, sims = 25)
 ```
 
 ```{r, echo=FALSE}
