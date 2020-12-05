@@ -17,52 +17,37 @@ designers can also be used to compare performance of a given design
 across a range of combinations of parameters, such as effect size,
 sample size, assignment probabilities and more.
 
-[Check out the online version of the library
-here](https://declaredesign.org/library/).
-
 -----
 
 ## Designs
 
-<table id="design_library_list" class="table table-striped">
+<table class="table" style="margin-left: auto; margin-right: auto;">
 
 <thead>
 
 <tr>
 
-<th>
+<th style="text-align:left;">
 
 Design
 
 </th>
 
-<th>
+<th style="text-align:center;">
 
 Vignette
 
 </th>
 
-<th>
+<th style="text-align:center;">
 
 Designer
 
 </th>
 
-<th>
+<th style="text-align:center;">
 
 Design Inspector
-
-</th>
-
-<th>
-
-Contributor
-
-</th>
-
-<th>
-
-Keywords
 
 </th>
 
@@ -74,39 +59,27 @@ Keywords
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Block Cluster Two Arm Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/block_cluster_two_arm.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/block_cluster_two_arm_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/block_cluster_two_arm.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=block_cluster_two_arm" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/block_cluster_two_arm_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-blocking, experiment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=block_cluster_two_arm_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -114,39 +87,27 @@ blocking, experiment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Cluster Sampling Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/cluster_sampling.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/cluster_sampling_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/cluster_sampling.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=cluster_sampling" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/cluster_sampling_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-clusters, measurement, observational
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=cluster_sampling_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -154,39 +115,27 @@ clusters, measurement, observational
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Factorial Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/factorial.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/factorial_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/factorial.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=factorial" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/factorial_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-factorial
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=factorial_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -194,39 +143,27 @@ factorial
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Mediation Analysis Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/mediation_analysis.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/mediation_analysis_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/mediation_analysis.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=mediation_analysis" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/mediation_analysis_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment, mediation
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=mediation_analysis_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -234,39 +171,27 @@ experiment, mediation
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Multi Arm Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/multi_arm.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/multi_arm_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/multi_arm.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=multi_arm" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/multi_arm_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment, multiarm trial
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=multi_arm_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -274,39 +199,27 @@ experiment, multiarm trial
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Pretest Posttest Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/pretest_posttest.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/pretest_posttest_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/pretest_posttest.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=pretest_posttest" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/pretest_posttest_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-baseline, difference-in-differences, experiment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=pretest_posttest_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -314,39 +227,27 @@ baseline, difference-in-differences, experiment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Randomized Response Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/randomized_response.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/randomized_response_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/randomized_response.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=randomized_response" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/randomized_response_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-descriptive, experiment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=randomized_response_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -354,39 +255,27 @@ descriptive, experiment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Regression Discontinuity Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/regression_discontinuity.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/regression_discontinuity_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/regression_discontinuity.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=regression_discontinuity" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/regression_discontinuity_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-observational, regression discontinuity
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=regression_discontinuity_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -394,39 +283,27 @@ observational, regression discontinuity
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Spillover Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/spillover.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/spillover_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/spillover.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=spillover" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/spillover_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment, spillovers
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=spillover_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -434,39 +311,27 @@ experiment, spillovers
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Two Arm Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/two_arm.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/two_arm_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/two_arm.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_arm" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/two_arm_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_arm_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -474,39 +339,27 @@ experiment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
-Two by Two Design
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/articles/two_by_two.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
+Two By Two Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/reference/two_by_two_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_by_two" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/two_by_two.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/two_by_two_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment factorial
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_by_two_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -514,37 +367,27 @@ experiment factorial
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Two Arm Attrition Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/two_arm_attrition.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/two_arm_attrition_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/two_arm_attrition.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
+
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/two_arm_attrition_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
-
-</td>
-
-<td>
-
-post-treatment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_arm_attrition_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -552,39 +395,27 @@ post-treatment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Process Tracing Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/process_tracing.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/process_tracing_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/process_tracing.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=process_tracing" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/process_tracing_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-process tracing, qualitative
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=process_tracing_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -592,39 +423,27 @@ process tracing, qualitative
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Binary IV Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/binary_iv.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/binary_iv_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/binary_iv.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=binary_iv_design" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/binary_iv_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=binary_iv_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -632,39 +451,27 @@ experiment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 Two Arm Covariate Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/two_arm_covariate.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td class="text-center">
-
-<a href="/library/reference/two_arm_covariate_designer.html" data-toggle="tooltip" title="Open designer function documentation"><span class="fas fa-pencil-alt fa-lg"></span></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/two_arm_covariate.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_arm_covariate" data-toggle="tooltip" title="Go to design inspector"><span class="fas fa-info-circle fa-lg"></span></a>
-
-</td>
-
-<td>
-
-<a href="https://declaredesign.org/about/">DeclareDesign</a>
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/two_arm_covariate_designer.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-experiment
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=two_arm_covariate_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
@@ -672,33 +479,27 @@ experiment
 
 <tr>
 
-<td>
+<td style="text-align:left;">
 
 My Design
 
 </td>
 
-<td class="text-center">
+<td style="text-align:center;">
 
-<a href="/library/articles/example_design.html" data-toggle="tooltip" title="Read description of design"><span class="fab fa-readme fa-lg"></span></a>
-
-</td>
-
-<td>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/example_design.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 576 512"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
+
+<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/NA.html"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
 
 </td>
 
-<td>
+<td style="text-align:center;">
 
-<a href="https://en.wikipedia.org/wiki/Joe_Bloggs">Joe Bloggs</a>
-
-</td>
-
-<td>
+<a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=my_design"><svg style="height:25;fill:#2860F6;" viewbox="0 0 512 512"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
 
 </td>
 
