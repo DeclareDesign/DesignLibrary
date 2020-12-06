@@ -15,7 +15,7 @@ Description:
     designs and diagnose their properties. The designers can also be used 
     to compare performance of a given design across a range of combinations 
     of parameters, such as effect size, sample size, and assignment probabilities.
-URL: https://declaredesign.org/library/, https://github.com/DeclareDesign/DesignLibrary
+URL: https://declaredesign.org/r/designlibrary/, https://github.com/DeclareDesign/DesignLibrary
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
