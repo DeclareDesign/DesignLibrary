@@ -16,8 +16,6 @@ navbar:
   - text: "Help"
     href: http://discuss.declaredesign.org
   right:
-  - text: DesignLibrary home
-    href: https://declaredesign.org/r/designlibrary/
   - text: Reference
     href: reference/index.html
   - text: Articles
@@ -26,3 +24,5 @@ navbar:
       href: articles/How_to_Write_and_Contribute_Designers.html 
     - text: How to Write and Contribute Designs
       href: articles/How_to_Write_and_Contribute_Designs.html 
+  - text: DesignLibrary home
+    href: https://declaredesign.org/r/designlibrary/
