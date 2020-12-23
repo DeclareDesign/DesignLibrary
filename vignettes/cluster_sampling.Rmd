@@ -51,7 +51,7 @@ Assuming enough variation in the outcome of interest, the random assignment of e
 ## Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(cluster_sampling_design)
+diagnosis <- diagnose_design(cluster_sampling_design, sims = 25)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}
@@ -61,12 +61,11 @@ kable(reshape_diagnosis(diagnosis)[, -c(1:2, 4:6)], digits = 2)
 To appreciate the role of clustering better we also plot simulated values of our estimand with standard errors not clustered and with clustered standard errors. To do this we first add an additional estimator to the design that does not take account of clusters. 
 
 ```{r plot setup, echo=TRUE, warning=FALSE}
-
 new_design <- cluster_sampling_design + declare_estimator(Y ~ 1,
                                         model = lm_robust,
                                         estimand = estimand,
                                         label = "Naive Standard Errors")
-diagnosis <- diagnose_design(new_design)
+diagnosis <- diagnose_design(new_design, sims = 25)
 ```
 
 ```{r plot, echo=FALSE, warning=FALSE}

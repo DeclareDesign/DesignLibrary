@@ -114,7 +114,7 @@ You may want to display features of the design here.
 
 ```{r, eval = FALSE}
 my_design_cor <- redesign(design = my_design, rho = .8)
-diagnosis <- diagnose_design(my_design, my_design_cor)
+diagnosis <- diagnose_design(my_design, my_design_cor, sims = 25)
 kable(reshape_diagnosis(diagnosis), digits = 2)
 ```
 

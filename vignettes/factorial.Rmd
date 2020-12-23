@@ -1,9 +1,9 @@
 ---
-title: "$2^k$ Factorial Design"
+title: "Factorial Designs"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-  %\VignetteIndexEntry{2^k Factorial Design}
+  %\VignetteIndexEntry{Factorial Designs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -44,7 +44,7 @@ Let's say you set out to study how incentives and managerial practices affect em
 # Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(factorial_design)
+diagnosis <- diagnose_design(factorial_design, sims = 25)
 ```
 
 ```{r,echo = FALSE}

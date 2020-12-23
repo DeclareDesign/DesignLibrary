@@ -5,3 +5,5 @@
 vignettes/*.html
 vignettes/*.R
 .DS_Store
+docs
+inst/doc

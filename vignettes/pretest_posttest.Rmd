@@ -3,7 +3,7 @@ title: "Pre-Test Post-Test Design"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-  %\VignetteIndexEntry{Pre-Test Post-Test}
+  %\VignetteIndexEntry{Pre-Test Post-Test Design}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -47,7 +47,7 @@ Below we consider the example of a pre-test post-test applied to a study that se
 ## Takeaways
 
 ```{r}
-diagnosis <- diagnose_design(pretest_posttest_design)
+diagnosis <- diagnose_design(pretest_posttest_design, sims = 25)
 ```
 
 ```{r, echo=FALSE}

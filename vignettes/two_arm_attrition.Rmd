@@ -3,7 +3,7 @@ title: "Two-Arm Experiment with Attrition"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-  %\VignetteIndexEntry{Two-Arm Experiment}
+  %\VignetteIndexEntry{Two-Arm Experiment with Attrition}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -46,7 +46,7 @@ These features of attrition are fairly well-known. But how much attrition is too
 ```{r}
 designs <- expand_design(designer = two_arm_attrition_designer, 
                          rho = c(0,.2,.8))
-diagnoses <- diagnose_designs(designs)
+diagnoses <- diagnose_designs(designs, sims = 25)
 ```
 
 ```{r,eval = TRUE}

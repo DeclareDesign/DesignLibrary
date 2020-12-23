@@ -71,7 +71,7 @@ block_var     <- block_cluster_two_arm_designer(N_blocks = 50,
                                                  sd_block = .99,
                                                  sd_cluster = 0,
                                                  ate = .25)
-diagnosis <- diagnose_design(individual_var, cluster_var, block_var)
+diagnosis <- diagnose_design(individual_var, cluster_var, block_var, sims = 25)
 ```
 
 

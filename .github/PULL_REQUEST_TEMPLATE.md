@@ -19,4 +19,3 @@ Please note, designers are functions that generate designs, and will be added to
 - [ ] Meta-data added to overview.csv
 - [ ] Any data that is required is sourced in from public URLs
 - [ ] Branch is passing devtools::check() with 0 errors, warnings, or notes
-

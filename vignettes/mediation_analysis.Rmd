@@ -71,7 +71,7 @@ We diagnose two versions of this design: one in which the correlation between th
 
 ```{r,eval = TRUE}
 designs <- expand_design(mediation_analysis_designer, rho = c(0,.5))
-diagnosis <- diagnose_design(designs)
+diagnosis <- diagnose_design(designs, sims = 25)
 ```
 
 

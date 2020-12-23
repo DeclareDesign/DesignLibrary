@@ -2,6 +2,7 @@
 output:
   github_document
 title: "DesignLibrary: A Library of Common Research Designs"
+always_allow_html: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -13,9 +14,52 @@ title: "DesignLibrary: A Library of Common Research Designs"
 
 **DesignLibrary** provides simple interface to build designs using the package **DeclareDesign**. In one line of code users can specify the parameters of individual designs and diagnose their properties. The designers can also be used to compare performance of a given design across a range of combinations of parameters, such as effect size, sample size, assignment probabilities and more.
 
-[Check out the online version of the library here](https://declaredesign.org/library/).
-
 ---
+
+## Designs
+
+```{r, echo=FALSE, message=FALSE}
+library(fontawesome)
+library(knitr)
+library(tidyverse)
+library(kableExtra)
+
+add_link <- function(url, fa_string, tooltip) {
+  paste0(
+    "<a data-toggle = 'tooltip' title = '",
+    tooltip,
+    "' href=\"",
+    url,
+    "\">",
+    as.character(fa(fa_string, height = 15, fill = "#2860F6")),
+    "</a>"
+  )
+}
+
+overview <- read_csv("inst/extdata/overview.csv")
+
+overview <-
+  overview %>%
+  mutate(Vignette = add_link(url = paste0("https://declaredesign.org/r/designlibrary/articles/", vignette, ".html"), 
+                                  fa_string = "fab fa-readme", 
+                                  "Read description of design"),
+         Designer = add_link(url = paste0("https://declaredesign.org/r/designlibrary/reference/", designer, ".html"), 
+                                  fa_string = "fas fa-pencil-alt", 
+                                  "Open designer documentation"),
+         `Design Inspector` = add_link(url = paste0("https://eos.wzb.eu/ipi/DDinspector/?import_library=", design), 
+                                       fa_string = "fas fa-info-circle", 
+                                       "Open in DeclareDesign Inspector"),
+         design_title = str_replace_all(design, "_", " "),
+         design_title = str_to_title(design_title),
+         Design = str_replace(design_title, "Iv", "IV"))
+
+
+overview %>%
+  select(Design, Vignette, Designer, `Design Inspector`) %>%
+  kable(escape = F, align = c("l", "c", "c", "c")) %>%
+  kable_styling()
+```
+
 
 ## Installing the design library
 
@@ -35,8 +79,8 @@ devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 
 We welcome contributions to the library! 
 
-- You can [submit static designs](https://declaredesign.org/library/articles/how_to_write_and_contribute_designs.html) made in `DeclareDesign`, which will live as properly attributed entries in the library on our website
-- Or you can [submit designer functions that generate designs](https://declaredesign.org/library/articles/how_to_write_and_contribute_designers.html), which may be added to the CRAN version of the package
+- You can [submit static designs](https://declaredesign.org/r/designlibrary/articles/how_to_write_and_contribute_designs.html) made in `DeclareDesign`, which will live as properly attributed entries in the library on our website
+- Or you can [submit designer functions that generate designs](https://declaredesign.org/r/designlibrary/articles/how_to_write_and_contribute_designers.html), which may be added to the CRAN version of the package
 
 ---
 

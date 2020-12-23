@@ -3,7 +3,7 @@ title: "Two-Arm Experiment with a Covariate"
 output: rmarkdown::html_vignette
 bibliography: bib.bib
 vignette: >
-  %\VignetteIndexEntry{Two-Arm Experiment}
+  %\VignetteIndexEntry{Two-Arm Experiment with a Covariate}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -51,7 +51,7 @@ In this particular setup, you do better by controlling -- even in an experiment 
 designs <- expand_design(
   designer = two_arm_covariate_designer,
   N = 30, rho_WY = c(0,.8), rho_WZ = c(0,.8), h = .5)
-diagnoses <- diagnose_designs(designs)
+diagnoses <- diagnose_designs(designs, sims = 25)
 ```
 
 ```{r,eval = TRUE, echo = FALSE}

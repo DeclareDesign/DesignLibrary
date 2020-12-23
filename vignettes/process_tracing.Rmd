@@ -67,7 +67,7 @@ We'll look at how the four approaches (no tests, SIW only, SMG only, SIW + SMG) 
 ```{r}
 designs <- expand_design(designer = process_tracing_designer,cor_E1E2_H = c(-.32, 0, .32))
 
-diagnose_designs(designs) %>% 
+diagnose_designs(designs, sims = 25) %>% 
   get_diagnosands() %>% 
   ggplot(aes(cor_E1E2_H, rmse, color = estimator_label, group = estimator_label)) +
   geom_point() + geom_line() + theme_bw() 

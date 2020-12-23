@@ -74,7 +74,7 @@ We now diagnose the design above and compare our estimates with those of designs
 
 ```{r}
 # Violate relevance of instrument for treatment (no first-stage effects)
-iv_nonrelevant <- binary_iv_designer(N = 1000, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
+iv_nonrelevant <- binary_iv_designer(N = 500, assignment_probs = c(.2, .3, .7, .5), b_Y = .5)
 
 # Violate relevance of instrument for treatment (no first-stage effects)
 iv_nonrandom   <- binary_iv_designer(type_probs = c(.5,.5, 0, 0), b_Y = .5)
@@ -93,7 +93,7 @@ iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2))
 iv_het     <- binary_iv_designer(type_probs = c(0,0,.8,.2), 
                                  b = c(0.5, 0.5, 0.5, 0))
 diagnoses <- diagnose_designs(binary_iv_design, iv_nonrelevant, iv_nonrandom, 
-                              iv_nonexcl, iv_defiers, iv_het)
+                              iv_nonexcl, iv_defiers, iv_het, sims = 25)
 ```
 
 ```{r, echo=FALSE}

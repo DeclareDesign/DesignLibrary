@@ -63,7 +63,7 @@ $$Y_i = \left(\frac{1}{n_{G[i]}} \sum_{j\in G[i]}Z_j \right)^\gamma + \epsilon_i
 
 
 ```{r,eval = TRUE}
-diagnosis <- diagnose_design(spillover_design)
+diagnosis <- diagnose_design(spillover_design, sims = 25)
 ```
 
 
