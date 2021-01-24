@@ -71,7 +71,7 @@ We specify as diagnosands for this design the bias, RMSE, mean(estimand), mean(e
 \examples{
 # Generate a process-tracing design using default arguments:
 pt_1 <- process_tracing_designer()
-draw_estimands(pt_1)
+draw_inquiries(pt_1)
 draw_estimates(pt_1)
 draw_data(pt_1)
 \dontrun{
