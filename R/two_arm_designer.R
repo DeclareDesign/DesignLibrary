@@ -19,7 +19,7 @@
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom stats rnorm
@@ -57,7 +57,7 @@ two_arm_designer <- function(N = 100,
         Z     * (u_1*treatment_sd + treatment_mean))
     
     # I: Inquiry
-    estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+    estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
     assignment <- declare_assignment(prob = assignment_prob)
@@ -65,7 +65,7 @@ two_arm_designer <- function(N = 100,
     reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
-    estimator <- declare_estimator(Y ~ Z, estimand = estimand)
+    estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
     
     # Design
     two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator

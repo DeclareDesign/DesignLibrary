@@ -17,7 +17,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr difference_in_means
@@ -112,7 +112,7 @@ multi_arm_designer <- function(N = 30,
     x = all_po_pairs[,1],
     y = all_po_pairs[,2])
   names(estimand_list) <- estimand_names
-  estimand_expr <- expr(declare_estimands(!!!estimand_list))
+  estimand_expr <- expr(declare_inquiries(!!!estimand_list))
   
   estimators <- mapply(
     FUN = function(x,y){
@@ -133,7 +133,7 @@ multi_arm_designer <- function(N = 30,
       estimates <- rbind.data.frame(!!!estimators)
       names(estimates)[names(estimates) == "N"] <- "N_DIM"
       estimates$estimator_label <- !!estimator_labels
-      estimates$estimand_label <- rownames(estimates)
+      estimates$inquiry_label <- rownames(estimates)
       estimates$estimate <- estimates$coefficients
       estimates$term <- NULL
       return(estimates)

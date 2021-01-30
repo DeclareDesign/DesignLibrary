@@ -25,7 +25,7 @@
 #' @return A simple two-arm design with covariate W.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_lin lm_robust difference_in_means 
@@ -86,7 +86,7 @@ two_arm_covariate_designer <- function(N = 100,
         Z         * (u_Y * sd + treatment_mean + h * u_W))
     
     # I: Inquiry
-    estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+    estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
     assignment  <- declare_step(Z = 1 * (u_Z <  qnorm(prob)), handler = fabricate)
@@ -94,13 +94,13 @@ two_arm_covariate_designer <- function(N = 100,
     reveal_Y    <- declare_reveal()
     
     # A: Answer Strategy
-    estimator_1 <- declare_estimator(Y ~ Z,   estimand = estimand, 
+    estimator_1 <- declare_estimator(Y ~ Z,   inquiry = estimand, 
                                      label = "No controls")
     
-    estimator_2 <- declare_estimator(Y ~ Z + W, estimand = estimand, model = lm_robust, 
+    estimator_2 <- declare_estimator(Y ~ Z + W, inquiry = estimand, model = lm_robust, 
                                      label = "With controls")
     
-    estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, estimand = estimand, model = lm_lin,
+    estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, inquiry = estimand, model = lm_lin,
                                      label = "Lin")
     
     # Design

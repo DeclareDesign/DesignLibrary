@@ -19,7 +19,7 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
@@ -51,7 +51,7 @@ pretest_posttest_designer <- function(N = 100,
     potential_outcomes <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
     
     # I: Inquiry
-    estimand <- declare_estimand(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
+    estimand <- declare_inquiry(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
     
     # D: Data Strategy
     assignment <- declare_assignment()
@@ -66,7 +66,7 @@ pretest_posttest_designer <- function(N = 100,
     pretest_lhs <- declare_estimator(
       difference ~ Z,
       model = lm_robust,
-      estimand = estimand,
+      inquiry = estimand,
       subset = R == 1,
       label = "Change score"
     )
@@ -74,7 +74,7 @@ pretest_posttest_designer <- function(N = 100,
     pretest_rhs <- declare_estimator(
       Y_t2 ~ Z + Y_t1,
       model = lm_robust,
-      estimand = estimand,
+      inquiry = estimand,
       subset = R == 1,
       label = "Condition on pretest"
     )
@@ -82,7 +82,7 @@ pretest_posttest_designer <- function(N = 100,
     posttest_only <- declare_estimator(
       Y_t2 ~ Z,
       model = lm_robust,
-      estimand = estimand,
+      inquiry = estimand,
       label = "Posttest only"
     )
     # Design

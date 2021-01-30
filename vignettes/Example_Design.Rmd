@@ -75,7 +75,7 @@ sur <- function(data){
                fit, 
                df = NA, 
                outcome = "YA",
-               estimand_label = "ate_YA")
+               inquiry_label = "ate_YA")
   row.names(fit) <- NULL
   fit <- subset(fit, term == "eq1_ZA")
   return(fit)
@@ -95,7 +95,7 @@ my_design <-
   declare_potential_outcomes(YB ~ YB_0 + ZB * tau_B,
                              assignment_variable = "ZB") +
   # Inquiry
-  declare_estimand(ate_YA = mean(YA_ZA_1 - YA_ZA_0)) +
+  declare_inquiry(ate_YA = mean(YA_ZA_1 - YA_ZA_0)) +
   # Data Strategy
   declare_assignment(m = 50, assignment_variable = "ZA") +
   declare_assignment(m = 50, assignment_variable = "ZB") +
@@ -103,7 +103,7 @@ my_design <-
   declare_reveal(YB,ZB) +
   # Answer Strategy
   declare_estimator(YA ~ ZA, model = lm_robust, 
-                    estimand = "ate_YA", label = "lm_robust") +
+                    inquiry = "ate_YA", label = "lm_robust") +
   declare_estimator(handler = sur) 
 ```
 

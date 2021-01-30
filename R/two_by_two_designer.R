@@ -29,7 +29,7 @@
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment factorial
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design redesign
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design redesign
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
@@ -91,13 +91,13 @@ two_by_two_designer <- function(N = 100,
     
     
     # I: Inquiry
-    estimand_1 <- declare_estimand(
+    estimand_1 <- declare_inquiry(
       ate_A = weight_B*mean(Y_A_1_B_1 - Y_A_0_B_1) + (1-weight_B)*mean(Y_A_1_B_0 - Y_A_0_B_0))
     
-    estimand_2 <- declare_estimand(
+    estimand_2 <- declare_inquiry(
       ate_B = weight_A*mean(Y_A_1_B_1 - Y_A_1_B_0) + (1-weight_A)*mean(Y_A_0_B_1 - Y_A_0_B_0))
     
-    estimand_3 <- declare_estimand(
+    estimand_3 <- declare_inquiry(
       interaction = mean((Y_A_1_B_1 - Y_A_1_B_0) - (Y_A_0_B_1 - Y_A_0_B_0)))
     
     # D: Data Strategy
@@ -113,13 +113,13 @@ two_by_two_designer <- function(N = 100,
     estimator_1 <- declare_estimator(Y ~ A + B,
                                      model = lm_robust,
                                      term = c("A", "B"),
-                                     estimand = c("ate_A", "ate_B"), 
+                                     inquiry = c("ate_A", "ate_B"), 
                                      label = "No_Interaction")
     
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
                                      model = lm_robust,
                                      term = "A:B", 
-                                     estimand = "interaction", 
+                                     inquiry = "interaction", 
                                      label = "Interaction")
     
     # Design

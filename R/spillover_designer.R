@@ -20,7 +20,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_reveal
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_reveal
 #' @importFrom fabricatr fabricate add_level fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
@@ -49,7 +49,7 @@ spillover_designer <- function(N_groups = 80,
     dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd_i
     
     # I: Inquiry
-    estimand <- declare_estimand(Treat_1 = mean(
+    estimand <- declare_inquiry(Treat_1 = mean(
       sapply(1:length(G), function(i) {
         Z_i <- (1:length(G)) == i
         dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
@@ -62,7 +62,7 @@ spillover_designer <- function(N_groups = 80,
                                Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
     
     # A: Answer Strategy
-    estimator <- declare_estimator(Y ~ Z, estimand = estimand, 
+    estimator <- declare_estimator(Y ~ Z, inquiry = estimand, 
                                    model = lm_robust, label = "naive")
     
     # Design

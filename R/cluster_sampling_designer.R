@@ -19,7 +19,7 @@
 #' @concept clusters
 #' @concept observational
 #' @concept measurement
-#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_sampling
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_population declare_sampling
 #' @importFrom fabricatr fabricate add_level draw_normal_icc draw_ordered
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom estimatr lm_robust
@@ -59,7 +59,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
     population <- declare_population(data = fixed_pop)
     
     # I: Inquiry
-    estimand <- declare_estimand(mean(Y), label = "Ybar")
+    estimand <- declare_inquiry(mean(Y), label = "Ybar")
     
     # D: Data Strategy
     stage_1_sampling <- declare_sampling(strata = block, 
@@ -73,7 +73,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
     clustered_ses <- declare_estimator(Y ~ 1,
                                        model = lm_robust,
                                        clusters = cluster,
-                                       estimand = estimand,
+                                       inquiry = estimand,
                                        label = "Clustered Standard Errors")
 
     # Design

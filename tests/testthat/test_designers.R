@@ -5,6 +5,7 @@ functions <- ls("package:DesignLibrary")
 designer_names <- functions[grepl("_designer\\b",functions)]
 designer_names <- designer_names[!grepl("simple",designer_names)]
 
+
 for(designer_name in designer_names){
   
   the_designer <- get(x = designer_name)
