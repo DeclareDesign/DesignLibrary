@@ -35,7 +35,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
-#' @importFrom DeclareDesign declare_diagnosands declare_estimand declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
+#' @importFrom DeclareDesign declare_diagnosands declare_inquiry declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_inquiries draw_estimates set_diagnosands
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom stats rbinom
@@ -45,7 +45,7 @@
 #' @examples
 #' # Generate a process-tracing design using default arguments:
 #' pt_1 <- process_tracing_designer()
-#' draw_estimands(pt_1)
+#' draw_inquiries(pt_1)
 #' draw_estimates(pt_1)
 #' draw_data(pt_1)
 #' \dontrun{
@@ -122,7 +122,7 @@ process_tracing_designer <- function(
       strata_n = c("X0Y0" = 0, "X0Y1" = 0, "X1Y0" = 0, "X1Y1" = 1))
     # I: Inquiry
     estimand <-
-      declare_estimand(did_X_cause_Y = causal_process == 'X_causes_Y')
+      declare_inquiry(did_X_cause_Y = causal_process == 'X_causes_Y')
     # D: Data Strategy 2
     # Calculate bivariate probabilities given correlation
     
@@ -192,25 +192,25 @@ process_tracing_designer <- function(
     prior_only_estimator <- declare_estimator(
       handler = label_estimator(prior_only),
       label = "No tests (Prior)",
-      estimand = estimand
+      inquiry = estimand
     )
     
     E1_only_estimator <- declare_estimator(
       handler = label_estimator(E1_only),
       label = label_E1,
-      estimand = estimand
+      inquiry = estimand
     )
     
     E2_only_estimator <- declare_estimator(
       handler = label_estimator(E2_only),
       label = label_E2,
-      estimand = estimand
+      inquiry = estimand
     )
     
     E1_and_E2_estimator <- declare_estimator(
       handler = label_estimator(E1_and_E2),
       label = paste(label_E1, "and", label_E2),
-      estimand = estimand
+      inquiry = estimand
     )
     
     # Design
@@ -230,7 +230,7 @@ process_tracing_designer <- function(
     diagnosands = declare_diagnosands(
       bias = mean(posterior_H - estimand),
       rmse = sqrt(mean((posterior_H - estimand)^2)),
-      mean_estimand = mean(estimand),
+      mean_inquiry = mean(estimand),
       mean_posterior = mean(posterior_H),
       sd_posterior = sd(posterior_H),
       keep_defaults = FALSE

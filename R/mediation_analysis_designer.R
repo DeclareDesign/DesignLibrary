@@ -19,7 +19,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept mediation
-#' @importFrom DeclareDesign declare_assignment declare_estimands declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design draw_estimands
+#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design draw_inquiries
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
@@ -27,14 +27,14 @@
 #' @examples
 #' # Generate a mediation analysis design using default arguments:
 #' mediation_1 <- mediation_analysis_designer()
-#' draw_estimands(mediation_1)
+#' draw_inquiries(mediation_1)
 #' \dontrun{
 #' diagnose_design(mediation_1, sims = 1000)
 #' }
 #' 
 #' # A design with a violation of sequential ignorability and heterogeneous effects:
 #' mediation_2 <- mediation_analysis_designer(a = 1, rho = .5, c = 1, d = .75)
-#' draw_estimands(mediation_2)
+#' draw_inquiries(mediation_2)
 #' \dontrun{
 #' diagnose_design(mediation_2, sims = 1000)
 #' }
@@ -65,7 +65,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
     
     # I: Inquiry
-    estimands <- declare_estimands(
+    estimands <- declare_inquiries(
       FirstStage = mean(M_Z_1 - M_Z_0), 
       Indirect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
       Indirect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
@@ -76,7 +76,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     )
     
     # D: Data strategy 
-    assignment <- declare_assignment()
+    assignment <- declare_assignment(prob = 0.5)
     
     reveal_M <- declare_reveal(M, Z)
     
@@ -92,14 +92,14 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     mediator_regression <- declare_estimator(
       M ~ Z,
       model = lm_robust,
-      estimand = "FirstStage",
+      inquiry = "FirstStage",
       label = "Stage 1")
     
     stage2_1 <- declare_estimator(
       Y ~ Z * M,
       model = lm_robust,
       term = c("M"),
-      estimand = c("Indirect_0"),
+      inquiry = c("Indirect_0"),
       label = "Stage 2"
     )
     
@@ -107,7 +107,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       Y ~ Z * M,
       model = lm_robust,
       term = c("Z"),
-      estimand = c("Controlled_Direct_0", "Natural_Direct_0"),
+      inquiry = c("Controlled_Direct_0", "Natural_Direct_0"),
       label = "Direct_0"
     )
     
@@ -115,7 +115,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       Y ~ Z * Not_M,
       model = lm_robust,
       term = c("Z"),
-      estimand = c("Controlled_Direct_1", "Natural_Direct_1"),
+      inquiry = c("Controlled_Direct_1", "Natural_Direct_1"),
       label = "Direct_1"
     )
     # Design

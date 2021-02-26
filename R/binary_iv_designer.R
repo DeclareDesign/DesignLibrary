@@ -22,7 +22,7 @@
 #' @return A simple instrumental variables design with binary instrument, treatment, and outcome variables.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom generics tidy
@@ -103,7 +103,7 @@ binary_iv_designer <- function(N = 100,
                              assignment_variables = "X")
     
     # I: Inquiry
-    estimand <- declare_estimand(
+    estimand <- declare_inquiry(
       first_stage = mean((type == 3) - (type == 4)),
       ate = mean(Y_X_1 - Y_X_0),
       late = mean(Y_X_1[type == 3] - Y_X_0[type == 3]),
@@ -113,16 +113,16 @@ binary_iv_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(X ~ Z, 
-                                     estimand = "first_stage", 
+                                     inquiry = "first_stage", 
                                      label = "d-i-m")
     
     estimator_2 <- declare_estimator(Y ~ X, 
-                                     estimand = c("ate", "late","late_het"), 
+                                     inquiry = c("ate", "late","late_het"), 
                                      model = lm_robust, 
                                      label = "lm_robust")
     
     estimator_3 <- declare_estimator(Y ~ X | Z, 
-                                     estimand = c("ate", "late", "late_het"), 
+                                     inquiry = c("ate", "late", "late_het"), 
                                      model = iv_robust, 
                                      label = "iv_robust")
     

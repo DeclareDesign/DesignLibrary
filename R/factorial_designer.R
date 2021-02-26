@@ -25,7 +25,7 @@
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design label_estimator
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design label_estimator
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr tidy lm_robust
@@ -204,7 +204,7 @@ factorial_designer <- function(
   estimand_preexpr <- sapply(1:2^k, function(i) expr(mean(!!parse_expr(estimand_operations[i]))))
   names(estimand_preexpr) <-  names(estimand_operations)
  
-  estimand_expr <- expr(declare_estimand(UQS(estimand_preexpr), label = "ATE"))
+  estimand_expr <- expr(declare_inquiry(UQS(estimand_preexpr), label = "ATE"))
   
   # estimators --------------------------------------------------------------
   estimator_formula <- formula(paste0(outcome_name, " ~ ", paste(treatment_names, collapse = "*")))
@@ -215,8 +215,8 @@ factorial_designer <- function(
         data[, names(data) %in% !!treatment_names] <- data[, names(data) %in% !!treatment_names] - 0.5
         mod <- lm_robust(formula = !!estimator_formula, data = data, weights = 1/Z_cond_prob)
         estimate_df <- tidy(mod)
-        estimate_df$estimand_label <- paste0("te_", estimate_df$term)
-        estimate_df$estimand_label[estimate_df$estimand_label == "te_(Intercept)"] <- "Overall_average"
+        estimate_df$inquiry_label <- paste0("te_", estimate_df$term)
+        estimate_df$inquiry_label[estimate_df$inquiry_label == "te_(Intercept)"] <- "Overall_average"
         estimate_df
       })))
   

@@ -36,7 +36,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
 #' @concept blocking
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal
 #' @importFrom fabricatr fabricate add_level
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
@@ -137,7 +137,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
         Z * (treatment_mean + u_1 + u_b + u_c) )
     
     # I: Inquiry
-    estimand <- declare_estimand(ATE = mean(Y_Z_1 - Y_Z_0))
+    estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
     assignment <- declare_assignment(block_prob = assignment_probs, blocks = blocks, clusters = clusters)
@@ -147,7 +147,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
     # A: Answer Strategy
     estimator <- declare_estimator(
       Y ~ Z,
-      estimand = estimand,
+      inquiry = estimand,
       model = lm_robust,
       fixed_effects = ~ blocks,
       clusters = clusters

@@ -23,7 +23,7 @@
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
-#' @importFrom DeclareDesign declare_assignment declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra 
 #' @importFrom stats rnorm
@@ -67,11 +67,11 @@ two_arm_attrition_designer <- function(N = 100,
     potential_outcomes_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
     
     # I: Inquiry
-    estimand_1 <- declare_estimand(mean(R_Z_1 - R_Z_0), label = "ATE on R")
+    estimand_1 <- declare_inquiry(mean(R_Z_1 - R_Z_0), label = "ATE on R")
     
-    estimand_2 <- declare_estimand(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y")
+    estimand_2 <- declare_inquiry(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y")
     
-    estimand_3 <- declare_estimand(mean((Y_Z_1 - Y_Z_0)[R==1]), 
+    estimand_3 <- declare_inquiry(mean((Y_Z_1 - Y_Z_0)[R==1]), 
                                    label = "ATE on Y (Given R)")
     
     # D: Data Strategy
@@ -83,14 +83,14 @@ two_arm_attrition_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(
-      R ~ Z, term = "Z", estimand = estimand_1, label = "DIM on R")
+      R ~ Z, term = "Z", inquiry = estimand_1, label = "DIM on R")
     
     estimator_2 <- declare_estimator(
       Y_obs ~ Z, term = "Z", 
-      estimand = c(estimand_2, estimand_3), label = "DIM on Y_obs")
+      inquiry = c(estimand_2, estimand_3), label = "DIM on Y_obs")
     
     estimator_3 <- declare_estimator(
-      Y ~ Z, term = "Z", estimand = c(estimand_2, estimand_3), label = "DIM on Y")
+      Y ~ Z, term = "Z", inquiry = c(estimand_2, estimand_3), label = "DIM on Y")
     
     # Design
     two_arm_attrition_design <- population + potential_outcomes_R +  potential_outcomes_Y +

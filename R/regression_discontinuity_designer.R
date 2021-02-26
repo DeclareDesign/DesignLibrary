@@ -17,7 +17,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
-#' @importFrom DeclareDesign declare_estimand declare_estimator declare_population declare_potential_outcomes declare_reveal declare_sampling
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_sampling
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom estimatr lm_robust
@@ -63,7 +63,7 @@ regression_discontinuity_designer <- function(
     reveal_Y <- declare_reveal(Y)
     
     # I: Inquiry
-    estimand <- declare_estimand(
+    estimand <- declare_inquiry(
       LATE = po_function(X = 0, coefs = treatment_coefs, tau = tau) - 
         po_function(X = 0, coefs = control_coefs, tau = 0))
     
@@ -76,7 +76,7 @@ regression_discontinuity_designer <- function(
       formula = Y ~ poly(X, poly_reg_order) * Z,
       model = lm_robust,
       term = "Z",
-      estimand = estimand)
+      inquiry = estimand)
     
     # Design
     regression_discontinuity_design <- 

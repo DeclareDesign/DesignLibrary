@@ -55,7 +55,7 @@ diagnosis <- diagnose_design(two_by_two_design, sims = 25)
 kable(reshape_diagnosis(diagnosis)[,-c(1,3,5)], digits = 2)
 ```
 
-- Wow, the power is really low for our interaction! It's only `r subset(get_diagnosands(diagnosis),estimand_label == "interaction", select = "power")*100`%. That's because our estimator has to take account of the variation in both effects when estimating their difference. Note that the standard deviation of the interaction estimates is twice that of the estimates of the main effects. 
+- Wow, the power is really low for our interaction! It's only `r subset(get_diagnosands(diagnosis),inquiry_label == "interaction", select = "power")*100`%. That's because our estimator has to take account of the variation in both effects when estimating their difference. Note that the standard deviation of the interaction estimates is twice that of the estimates of the main effects. 
 
 - We also see that our estimates of the main effects are biased: we set out to estimate the effect of each treatment when the other was absent, but half the time the other treatment was present, so we get a boost in the *estimated* effect size due to the interaction.
 
