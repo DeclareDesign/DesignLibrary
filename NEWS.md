@@ -1,3 +1,7 @@
+# DesignLibrary 0.1.6
+
+* Update syntax: declare_estimands -> declare_inquiries
+
 # DesignLibrary 0.1.5.5
 
 * Removed broken URL in package documentation
