@@ -26,7 +26,6 @@ A design is an object of class `design`, created by concatenating a series of `d
 
 Your design should be submitted to `DesignLibrary` as an `.Rmd` vignette located in the vignette subfolder of the github repository: [see here](https://github.com/DeclareDesign/DesignLibrary/tree/master/vignettes). 
 
-For an example of how to write such a vignette, see [the example design entry](https://declaredesign.org/library/articles/example_design.html). 
 
 You should submit your design via a pull request to [https://github.com/DeclareDesign/DesignLibrary/](https://github.com/DeclareDesign/DesignLibrary/). This will typically involve [forking the repository](https://guides.github.com/activities/forking/), creating a new branch, adding your design to the vignettes folder, and [then submitting a pull request](https://guides.github.com/activities/forking/) to the `DeclareDesign/DesignLibrary` repository. 
 
@@ -48,7 +47,7 @@ You should add a row with:
 
 ## External data
 
-Very often, more complicated designs will rely on external data. If your design requires external data to run, please make sure that it is sourced into your vignette through a publicly accessible URL. Our [example design entry](https://declaredesign.org/library/articles/example_design.html) gives one example of how you might read in data from an external website. We will not accept any objects in a pull request aside from an `.Rmd` file.
+Very often, more complicated designs will rely on external data. If your design requires external data to run, please make sure that it is sourced into your vignette through a publicly accessible URL.  We will not accept any objects in a pull request aside from an `.Rmd` file.
 
 ## If in doubt...
 

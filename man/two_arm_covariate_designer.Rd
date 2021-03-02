@@ -51,7 +51,7 @@ Nonignorability is specified by a possible correlation, \code{rho_WY},  between 
 \details{
 Units are assigned to treatment using complete random assignment. Potential outcomes are normally distributed according to the mean and sd arguments.
 
-See \href{https://declaredesign.org/library/articles/simple_two_arm.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/two_arm.html}{vignette online}.
 }
 \examples{
 #Generate a simple two-arm design using default arguments

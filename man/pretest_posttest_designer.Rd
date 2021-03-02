@@ -38,7 +38,7 @@ The design allows for individual post-treatment outcomes to be correlated with p
 and for at-random missingness in the observation of post-treatment outcomes.
 }
 \details{
-See \href{https://declaredesign.org/library/articles/pretest_posttest.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/pretest_posttest.html}{vignette online}.
 }
 \examples{
 # Generate a pre-test post-test design using default arguments:

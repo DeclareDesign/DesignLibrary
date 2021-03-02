@@ -36,7 +36,7 @@ A function that returns a design.
 Creates a design with \code{m_arms} experimental arms, each assigned with equal probability.
 }
 \details{
-See \href{https://declaredesign.org/library/articles/multi_arm.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/multi_arm.html}{vignette online}.
 }
 \examples{
 

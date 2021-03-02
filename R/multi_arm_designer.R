@@ -4,7 +4,7 @@
 #' 
 #' @details 
 #' 
-#' See \href{https://declaredesign.org/library/articles/multi_arm.html}{vignette online}.
+#' See \href{https://declaredesign.org/r/designlibrary/articles/multi_arm.html}{vignette online}.
 #' 
 #' @param N An integer. Sample size.
 #' @param m_arms An integer. Number of arms.

@@ -42,7 +42,7 @@ A regression discontinuity design.
 Builds a design with sample from population of size \code{N}. The average treatment effect local to the cutpoint is equal to \code{tau}. It allows for specification of the order of the polynomial regression (\code{poly_reg_order}), cutoff value on the running variable (\code{cutoff}), and size of bandwidth around the cutoff (\code{bandwidth}). By providing a vector of numbers to \code{control_coefs} and \code{treatment_coefs}, users can also specify polynomial regression coefficients that generate the expected control and treatment potential outcomes given the running variable.
 }
 \details{
-See \href{https://declaredesign.org/library/articles/regression_discontinuity.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/regression_discontinuity.html}{vignette online}.
 }
 \examples{
 # Generate a regression discontinuity design using default arguments:

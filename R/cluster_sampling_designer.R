@@ -5,7 +5,7 @@
 #' @details 
 #' Key limitations: The design assumes a args_to_fix number of clusters drawn in each stratum and a args_to_fix number of individuals drawn from each cluster.
 #' 
-#' See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
+#' See \href{https://declaredesign.org/r/designlibrary/articles/cluster_sampling.html}{vignette online}.
 #' 
 #' @param N_blocks An integer. Number of blocks (strata). Defaults to 1 for no blocks. 
 #' @param N_clusters_in_block An integer or vector of integers of length \code{N_blocks}. Number of clusters in each block in the population.

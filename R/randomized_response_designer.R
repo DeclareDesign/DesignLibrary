@@ -5,7 +5,7 @@
 #' @details 
 #' \code{randomized_response_designer} employs a specific variation of randomized response designs in which respondents are required to report a args_to_fix answer to the sensitive question with a given probability (see Blair, Imai, and Zhou (2015) for alternative applications and estimation strategies).
 #' 
-#' See \href{https://declaredesign.org/library/articles/randomized_response.html}{vignette online}.
+#' See \href{https://declaredesign.org/r/designlibrary/articles/randomized_response.html}{vignette online}.
 #' 
 #' @param N An integer. Size of sample.
 #' @param prob_forced_yes A number in [0,1]. Probability of a forced yes.

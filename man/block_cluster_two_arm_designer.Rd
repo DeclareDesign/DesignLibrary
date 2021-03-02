@@ -73,7 +73,7 @@ level variances sum to less than 1, then individual level shocks are set such th
 
 Key limitations: The designer assumes covariance between potential outcomes at the individual level only.
 
-See \href{https://declaredesign.org/library/articles/block_cluster_two_arm.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/block_cluster_two_arm.html}{vignette online}.
 }
 \examples{
 # Generate a design using default arguments:

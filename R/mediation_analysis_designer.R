@@ -6,7 +6,7 @@
 #' 
 #' @details 
 #' 
-#' See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vignette online}.
+#' See \href{https://declaredesign.org/r/designlibrary/articles/mediation_analysis.html}{vignette online}.
 #' 
 #' @param N An integer. Size of sample.
 #' @param a A number. Parameter governing effect of treatment (Z) on mediator (M).

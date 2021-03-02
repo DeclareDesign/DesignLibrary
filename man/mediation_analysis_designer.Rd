@@ -38,7 +38,7 @@ as well as direct effect of treatment (Z) on outcome (Y) (given M=0). Analysis i
 Note this model is not guaranteed to be unbiased despite randomization of Z because of possible violations of sequential ignorability.
 }
 \details{
-See \href{https://declaredesign.org/library/articles/mediation_analysis.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/mediation_analysis.html}{vignette online}.
 }
 \examples{
 # Generate a mediation analysis design using default arguments:

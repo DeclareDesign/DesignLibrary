@@ -5,7 +5,7 @@
 #' and for at-random missingness in the observation of post-treatment outcomes. 
 #' @details 
 #' 
-#' See \href{https://declaredesign.org/library/articles/pretest_posttest.html}{vignette online}.
+#' See \href{https://declaredesign.org/r/designlibrary/articles/pretest_posttest.html}{vignette online}.
 #' 
 #' @param N An integer. Size of sample.
 #' @param ate A number. Average treatment effect.

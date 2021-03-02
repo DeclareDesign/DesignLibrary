@@ -38,7 +38,7 @@ Builds a cluster sampling design for an ordinal outcome variable for a populatio
 \details{
 Key limitations: The design assumes a args_to_fix number of clusters drawn in each stratum and a args_to_fix number of individuals drawn from each cluster.
 
-See \href{https://declaredesign.org/library/articles/cluster_sampling.html}{vignette online}.
+See \href{https://declaredesign.org/r/designlibrary/articles/cluster_sampling.html}{vignette online}.
 }
 \examples{
 # To make a design using default arguments:
