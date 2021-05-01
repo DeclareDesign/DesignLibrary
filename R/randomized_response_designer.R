@@ -52,8 +52,8 @@ randomized_response_designer <- function(N = 1000,
     
     # D: Data Strategy
     assignment <- declare_assignment(
-      prob = prob_forced_yes,
-      conditions = c("Truth","Yes")
+      Z = complete_ra(N, prob = prob_forced_yes,
+      conditions = c("Truth","Yes"))
     )
     
     # A: Answer Strategy

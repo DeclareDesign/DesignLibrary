@@ -87,9 +87,9 @@ multi_arm_designer <- function(N = 30,
   assignment_expr <-
     expr(
       declare_assignment(
-        num_arms = !!m_arms,
-        conditions = !!conditions,
-        assignment_variable = Z
+        Z = complete_ra(N, 
+                        num_arms = !!m_arms,
+                        conditions = !!conditions)
       )
     )
   

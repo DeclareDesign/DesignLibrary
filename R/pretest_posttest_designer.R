@@ -54,10 +54,9 @@ pretest_posttest_designer <- function(N = 100,
     estimand <- declare_inquiry(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment()
+    assignment <- declare_assignment(Z = complete_ra(N))
     
-    report     <- declare_assignment(prob = 1 - attrition_rate,
-                                     assignment_variable = R)
+    report     <- declare_assignment(R = complete_ra(N, prob = 1 - attrition_rate))
     reveal_t2 <- declare_reveal(Y_t2) 
     
     manipulation <- declare_step(difference = (Y_t2 - Y_t1), handler = fabricate)  

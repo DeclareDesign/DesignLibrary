@@ -152,7 +152,8 @@ factorial_designer <- function(
   assignment_given_factor <- sapply(1:length(cond_row), function(i) quos(as.numeric(!!Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
   
-  assignment_expr1 <- expr(declare_assignment(conditions = 1:(2^!!k_), prob_each = !!prob_each))
+  assignment_expr1 <- expr(declare_assignment(Z = complete_ra(N, conditions = 1:(2^!!k_), prob_each = !!prob_each),
+                                              Z_cond_prob = obtain_condition_probabilities(assignment = Z, conditions = 1:(2^!!k_), prob_each = !!prob_each)))
   assignment_expr2 <- expr(declare_step(fabricate, !!!assignment_given_factor))
   
   # reveal outcomes ---------------------------------------------------------

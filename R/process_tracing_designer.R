@@ -118,8 +118,8 @@ process_tracing_designer <- function(
     )
     # D: Data Strategy 1
     select_case <- declare_sampling(
-      strata = paste(X, Y),
-      strata_n = c("X0Y0" = 0, "X0Y1" = 0, "X1Y0" = 0, "X1Y1" = 1))
+      S = strata_rs(strata = paste(X, Y),
+      strata_n = c("X0Y0" = 0, "X0Y1" = 0, "X1Y0" = 0, "X1Y1" = 1)))
     # I: Inquiry
     estimand <-
       declare_inquiry(did_X_cause_Y = causal_process == 'X_causes_Y')

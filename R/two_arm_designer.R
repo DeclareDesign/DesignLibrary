@@ -60,7 +60,7 @@ two_arm_designer <- function(N = 100,
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(prob = assignment_prob)
+    assignment <- declare_assignment(Z = complete_ra(N, prob = assignment_prob))
     
     reveal_Y    <- declare_reveal()
     
