@@ -2,6 +2,7 @@
 # User-facing helpers -----------------------------------------------------
 
 #' Get the code from a design
+#' @importFrom randomizr block_and_cluster_ra strata_and_cluster_rs strata_rs complete_ra obtain_condition_probabilities block_ra
 #' @param design A design that has code as an attribute.
 #' @export
 get_design_code <- function(design) attr(design, "code")
