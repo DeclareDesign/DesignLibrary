@@ -5,7 +5,7 @@ bibliography: bib.bib
 designer: "spillover_designer.Rd"
 example-design: "spillover_design.Rd"
 vignette: >
-  %\VignetteIndexEntry{Spillover design}
+  %\VignetteIndexEntry{Spillover Design}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
