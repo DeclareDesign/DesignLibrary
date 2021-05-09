@@ -56,17 +56,16 @@ my_designer <- function(N = 100,
   if(0 > prob | 1 < prob) stop("prob must be in [0,1]")
   if(1 > N) stop("design must have at least two units")
   {{{ 
-    population <- declare_population(N = N, noise = rnorm(N))
-    potential_outcomes <- declare_potential_outcomes(Y ~ Z + noise)
-    assignment <- declare_assignment(prob = prob)
+    model <- declare_model(N = N, noise = rnorm(N), potential_outcomes(Y ~ Z + noise))
+    assignment <- declare_assignment(Z = complete_ra(N, prob = prob))
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
-    reveal <- declare_reveal(Y,Z)
-    my_design <- population +
-      potential_outcomes +
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+    my_design <- 
+      model +
       estimand +
       assignment +
-      reveal +
+      measurement +
       estimator
   }}}
   attr(my_design, "code") <- DesignLibrary:::construct_design_code(designer = my_designer,
@@ -93,17 +92,16 @@ One easy way to add code to the designs that your designer returns is to use our
 
 ```{r, eval=FALSE}
 {{{ 
-    population <- declare_population(N = N, noise = rnorm(N))
-    potential_outcomes <- declare_potential_outcomes(Y ~ Z + noise)
-    assignment <- declare_assignment(prob = prob)
+    model <- declare_model(N = N, noise = rnorm(N), potential_outcomes(Y ~ Z + noise))
+    assignment <- declare_assignment(Z = complete_ra(N, prob = prob))
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
-    reveal <- declare_reveal(Y,Z)
-    my_design <- population +
-      potential_outcomes +
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+    my_design <- 
+      model +
       estimand +
       assignment +
-      reveal +
+      measurement +
       estimator
 }}}
 ```
@@ -131,17 +129,16 @@ Here's one example of an alternative way to embed the code that created it in a 
 my_designer <- function(N = 100,
                         prob = .5){
   design_code <- paste0(
-    "population <- declare_population(N = ",N,", noise = rnorm(N))
-    potential_outcomes <- declare_potential_outcomes(Y ~ Z + noise)
-    assignment <- declare_assignment(prob = ",prob,")
+    "model <- declare_model(N = ",N,", noise = rnorm(N), potential_outcomes(Y ~ Z + noise))
+    assignment <- declare_assignment(Z = complete_ra(N, prob = ",prob,"))
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
-    reveal <- declare_reveal(Y,Z)
-    my_design <- population +
-      potential_outcomes +
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+    my_design <- 
+      model +
       estimand +
       assignment +
-      reveal +
+      measurement +
       estimator")
   my_design <- eval(parse(text = design_code))
   attr(my_design, "code") <- design_code

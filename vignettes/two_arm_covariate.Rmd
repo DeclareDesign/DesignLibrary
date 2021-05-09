@@ -56,8 +56,8 @@ diagnoses <- diagnose_designs(designs, sims = 25)
 
 ```{r,eval = TRUE, echo = FALSE}
 get_diagnosands(diagnoses) %>% 
-  arrange(design_label,match(estimator_label,c("No controls","With controls","Lin"))) %>% 
-  select(c("estimator_label","rho_WZ","rho_WY","bias","rmse")) %>% 
+  arrange(design,match(estimator,c("No controls","With controls","Lin"))) %>% 
+  select(c("estimator","rho_WZ","rho_WY","bias","rmse")) %>% 
   kable(digits = 2)
 ```
 

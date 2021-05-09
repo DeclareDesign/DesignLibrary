@@ -69,7 +69,7 @@ designs <- expand_design(designer = process_tracing_designer,cor_E1E2_H = c(-.32
 
 diagnose_designs(designs, sims = 25) %>% 
   get_diagnosands() %>% 
-  ggplot(aes(cor_E1E2_H, rmse, color = estimator_label, group = estimator_label)) +
+  ggplot(aes(cor_E1E2_H, rmse, color = estimator, group = estimator)) +
   geom_point() + geom_line() + theme_bw() 
 ```
 

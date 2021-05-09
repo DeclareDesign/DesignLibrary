@@ -88,9 +88,9 @@ dd_theme <-
   }
 
   sims$covered <- factor(1 + (sims$conf.low < sims$estimand & sims$estimand < sims$conf.high), 1:2, labels = c("Estimand not covered by confidence interval", "Estimand covered by confidence interval"))
-  sims$estimator_label <- as.factor(sims$estimator_label)
+  sims$estimator_label <- as.factor(sims$estimator)
   sims$estimator_label <- factor(sims$estimator_label, levels = rev(levels(sims$estimator_label)))
-  sims$inquiry_label  <- as.factor(sims$inquiry_label)
+  sims$inquiry_label  <- as.factor(sims$inquiry)
   
   ggplot(sims, aes(x=estimate)) +
     geom_errorbar(aes(ymin=conf.low, ymax=conf.high, color=covered), alpha=.4) +

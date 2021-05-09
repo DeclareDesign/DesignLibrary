@@ -43,12 +43,12 @@ In settings of multiple treatment arms, we could do a number of pairwise compari
 
 ## Takeaways
 
-```{r}
+```{r, eval = FALSE}
 diagnosis <- diagnose_design(multi_arm_design, sims = 25)
 ```
 
-```{r,eval = TRUE, echo = FALSE}
-kable(reshape_diagnosis(diagnosis)[,c("Bias","Power","Coverage","Mean Estimate","Mean Inquiry")], digits = 2)
+```{r,eval = FALSE, echo = FALSE}
+kable(reshape_diagnosis(diagnosis)[,c("Bias","Power","Coverage","Mean Estimate","Mean Estimand")], digits = 2)
 ```
 
 - The pairwise differences in means provide unbiased estimates of  the average treatment effect (ATE) in each arm. 
