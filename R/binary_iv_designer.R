@@ -113,6 +113,7 @@ binary_iv_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(X ~ Z, 
+                                     model = difference_in_means,
                                      inquiry = "first_stage", 
                                      label = "d-i-m")
     

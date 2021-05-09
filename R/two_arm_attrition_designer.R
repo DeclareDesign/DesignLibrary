@@ -75,7 +75,7 @@ two_arm_attrition_designer <- function(N = 100,
                                    label = "ATE on Y (Given R)")
     
     # D: Data Strategy
-    assignment <- declare_assignment(prob = 0.5)
+    assignment <- declare_assignment(Z = complete_ra(N, prob = 0.5))
     
     reveal     <- declare_reveal(outcome_variables = c("R", "Y")) 
     

@@ -56,7 +56,7 @@ spillover_designer <- function(N_groups = 80,
     ), label = "estimand")
     
     # D: Data Strategy
-    assignment <- declare_assignment()
+    assignment <- declare_assignment(Z = complete_ra(N))
     
     reveal_Y <- declare_reveal(handler=fabricate,
                                Y = sapply(1:N, function(i) dgp(i, Z, G, n)))

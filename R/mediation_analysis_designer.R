@@ -76,7 +76,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     )
     
     # D: Data strategy 
-    assignment <- declare_assignment(prob = 0.5)
+    assignment <- declare_assignment(Z = complete_ra(N, prob = 0.5))
     
     reveal_M <- declare_reveal(M, Z)
     

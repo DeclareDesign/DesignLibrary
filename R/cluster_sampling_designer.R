@@ -62,12 +62,12 @@ cluster_sampling_designer <- function(N_blocks = 1,
     estimand <- declare_inquiry(mean(Y), label = "Ybar")
     
     # D: Data Strategy
-    stage_1_sampling <- declare_sampling(strata = block, 
-                                         clusters = cluster, n = n_clusters_in_block, 
-                                         sampling_variable = "Cluster_Sampling_Prob")
+    stage_1_sampling <- declare_sampling(
+      S1 = strata_and_cluster_rs(strata = block, 
+                                 clusters = cluster, n = n_clusters_in_block), filter = S1 == 1)
     
-    stage_2_sampling <- declare_sampling(strata = cluster,   n = n_i_in_cluster, 
-                                         sampling_variable = "Within_Cluster_Sampling_Prob")
+    stage_2_sampling <- declare_sampling(
+      S2 = strata_rs(strata = cluster, n = n_i_in_cluster), filter = S2 == 1)
     
     # A: Answer Strategy
     clustered_ses <- declare_estimator(Y ~ 1,

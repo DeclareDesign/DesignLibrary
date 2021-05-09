@@ -103,9 +103,9 @@ two_by_two_designer <- function(N = 100,
     # D: Data Strategy
     
     # Factorial assignments
-    assign_A <- declare_assignment(prob = prob_A, assignment_variable = A)
+    assign_A <- declare_assignment(A = complete_ra(N, prob = prob_A))
     
-    assign_B <- declare_assignment(prob = prob_B, assignment_variable = B, blocks = A)
+    assign_B <- declare_assignment(B = block_ra(prob = prob_B, blocks = A))
     
     reveal_Y <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
     

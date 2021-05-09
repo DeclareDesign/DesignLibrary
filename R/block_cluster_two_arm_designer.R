@@ -140,7 +140,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(block_prob = assignment_probs, blocks = blocks, clusters = clusters)
+    assignment <- declare_assignment(Z = block_and_cluster_ra(block_prob = assignment_probs, blocks = blocks, clusters = clusters))
     
     reveal <- declare_reveal(Y, Z)
     
