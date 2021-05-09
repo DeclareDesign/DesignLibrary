@@ -33,6 +33,4 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-Remotes:
-    DeclareDesign@legacy
 RoxygenNote: 7.1.1
