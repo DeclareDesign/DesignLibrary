@@ -43,14 +43,14 @@ See \href{https://declaredesign.org/r/designlibrary/articles/mediation_analysis.
 \examples{
 # Generate a mediation analysis design using default arguments:
 mediation_1 <- mediation_analysis_designer()
-draw_inquiries(mediation_1)
+draw_estimands(mediation_1)
 \dontrun{
 diagnose_design(mediation_1, sims = 1000)
 }
 
 # A design with a violation of sequential ignorability and heterogeneous effects:
 mediation_2 <- mediation_analysis_designer(a = 1, rho = .5, c = 1, d = .75)
-draw_inquiries(mediation_2)
+draw_estimands(mediation_2)
 \dontrun{
 diagnose_design(mediation_2, sims = 1000)
 }

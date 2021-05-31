@@ -35,7 +35,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
-#' @importFrom DeclareDesign declare_diagnosands declare_inquiry declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_inquiries draw_estimates set_diagnosands
+#' @importFrom DeclareDesign declare_diagnosands declare_inquiry declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
 #' @importFrom fabricatr fabricate fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom stats rbinom
@@ -45,7 +45,7 @@
 #' @examples
 #' # Generate a process-tracing design using default arguments:
 #' pt_1 <- process_tracing_designer()
-#' draw_inquiries(pt_1)
+#' draw_estimands(pt_1)
 #' draw_estimates(pt_1)
 #' draw_data(pt_1)
 #' \dontrun{
