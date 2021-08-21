@@ -1,3 +1,7 @@
+## Submission
+
+This is a minor patch for compability with DeclareDesign 0.28.0 now on CRAN.
+
 ## Test environments
 
 * local macOS High Sierra 10.13.6, R 3.5.1

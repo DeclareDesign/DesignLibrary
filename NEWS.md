@@ -1,3 +1,7 @@
+# DesignLibrary 0.1.8
+
+* Update syntax for DeclareDesign v. 0.28.0
+
 # DesignLibrary 0.1.6
 
 * Update syntax: declare_estimands -> declare_inquiries
