@@ -31,7 +31,7 @@ add_link <- function(url, fa_string, tooltip) {
     "' href=\"",
     url,
     "\">",
-    as.character(fa(fa_string, height = 15, fill = "#2860F6")),
+    as.character(fa(fa_string, height = "15px", fill = "#2860F6")),
     "</a>"
   )
 }
