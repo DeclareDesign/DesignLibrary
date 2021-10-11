@@ -59,8 +59,7 @@ kable(reshape_diagnosis(diagnosis)[,-c(1,2,3,5)], digits = 2)
 ```
 
 - As the diagnosis reveals, the estimate of the ATE is unbiased. We could have shown this without simulations using simple algebra. Our estimator, $\hat{\tau}$, can be written $E[Y_i(Z = 1)] - E[Y_i(Z = 0)] = E[Y_i(Z = 1) - Y_i(Z = 0)]$ (via "the linearity of expectation"). Note this implies $\tau = \hat{\tau}$: our estimand is equivalent to our estimator in expectation. 
-
-- But our coverage is above what it should be (95\%) -- suggesting that our unbiased point estimates have biased confidence intervals! This reflects the fact that conventional estimators of the standard error for the difference assume the true covariance in potential outcomes is zero. This conservative rule of thumb leads to standard error estimates that overstate the true variation in the sampling distribution of the point estimator.
+- But our coverage is above what it should be (95\%) This over-coverage reflects the fact that estimators of the standard error for the difference make a worst-case assumption about the covariance of potential outcomes. This conservative approach leads to standard error estimates that overstate the true variation in the sampling distribution of the point estimator.
 
 ## Exercises
 
