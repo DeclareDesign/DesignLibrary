@@ -70,12 +70,12 @@ sur <- function(data){
   names(fit) <- c("estimate","std.error","statistic","p.value")
   fit$conf.low <- with(fit, estimate - 1.96 * std.error)
   fit$conf.high <- with(fit, estimate + 1.96 * std.error)
-  fit <- cbind(estimator_label = "SUR",
+  fit <- cbind(estimator = "SUR",
                term = row.names(fit),
                fit, 
                df = NA, 
                outcome = "YA",
-               inquiry_label = "ate_YA")
+               inquiry = "ate_YA")
   row.names(fit) <- NULL
   fit <- subset(fit, term == "eq1_ZA")
   return(fit)

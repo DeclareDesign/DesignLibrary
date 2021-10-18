@@ -7,4 +7,6 @@ test_that("with and without term",{
   
   expect_true(all(c("design_1", "design_2") %in% dx$diagnosands_df$design))
   
+  reshp <- reshape_diagnosis(dx)
+  
 })
