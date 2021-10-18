@@ -4,7 +4,7 @@ Title: Library of Research Designs
 Version: 0.1.10
 Authors@R: c(
     person("Graeme", "Blair", , "graeme.blair@ucla.edu", role = "aut"),
-    person("Jasper", "Cooper", , "graeme.blair@ucla.edu", role = c("aut", "cre")),
+    person("Jasper", "Cooper", , "jjc2247@columbia.edu", role = c("aut", "cre")),
     person("Alexander", "Coppock", , "alex.coppock@yale.edu", role = "aut"),
     person("Macartan", "Humphreys", , "macartan@gmail.com", role = "aut"),
     person("Clara", "Bicalho", , "clarabmcorreia@gmail.com", role = "aut"),
