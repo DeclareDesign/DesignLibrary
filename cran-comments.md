@@ -1,6 +1,6 @@
 ## Submission
 
-This is a minor patch for compability with DeclareDesign 0.28.0 now on CRAN.
+This is another minor patch for compatibility with DeclareDesign 0.28.0 now on CRAN.
 
 ## Test environments
 
