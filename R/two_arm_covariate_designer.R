@@ -51,7 +51,7 @@
 #'                         N = c(50, 500, 5000), ate = 0, rho_WZ = .2, rho_WY = .2)
 #' \dontrun{
 #' diagnoses <- diagnose_design(curses)
-#' subset(diagnoses$diagnosands_df, estimator_label == "No controls")[,c("N", "power")]
+#' subset(diagnoses$diagnosands_df, estimator == "No controls")[,c("N", "power")]
 #' }
 
 

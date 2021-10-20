@@ -1,14 +1,16 @@
 Package: DesignLibrary
 Type: Package
 Title: Library of Research Designs
-Version: 0.1.8.9999
-Authors@R: c(person("Graeme", "Blair", email = "graeme.blair@ucla.edu", role = c("aut")),
-             person("Jasper", "Cooper", email = "jjc2247@columbia.edu", role = c("aut", "cre")),
-             person("Alexander", "Coppock", email = "alex.coppock@yale.edu", role = c("aut")),
-             person("Macartan", "Humphreys", email = "macartan@gmail.com", role = c("aut")),
-             person("Clara", "Bicalho", email = "clarabmcorreia@gmail.com", role = c("aut")),
-             person("Neal", "Fultz", email = "nfultz@gmail.com", role = c("aut")),
-             person("Lily", "Medina", email = "lilymiru@gmail.com", role = c("aut")))
+Version: 0.1.10
+Authors@R: c(
+    person("Graeme", "Blair", , "graeme.blair@ucla.edu", role = "aut"),
+    person("Jasper", "Cooper", , "jjc2247@columbia.edu", role = c("aut", "cre")),
+    person("Alexander", "Coppock", , "alex.coppock@yale.edu", role = "aut"),
+    person("Macartan", "Humphreys", , "macartan@gmail.com", role = "aut"),
+    person("Clara", "Bicalho", , "clarabmcorreia@gmail.com", role = "aut"),
+    person("Neal", "Fultz", , "nfultz@gmail.com", role = "aut"),
+    person("Lily", "Medina", , "lilymiru@gmail.com", role = "aut")
+  )
 Description: 
     A simple interface to build designs using the package 'DeclareDesign'. 
     In one line of code, users can specify the parameters of individual 
@@ -32,4 +34,4 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

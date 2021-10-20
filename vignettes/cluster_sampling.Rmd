@@ -88,9 +88,9 @@ dd_theme <-
   }
 
   sims$covered <- factor(1 + (sims$conf.low < sims$estimand & sims$estimand < sims$conf.high), 1:2, labels = c("Estimand not covered by confidence interval", "Estimand covered by confidence interval"))
-  sims$estimator_label <- as.factor(sims$estimator)
-  sims$estimator_label <- factor(sims$estimator_label, levels = rev(levels(sims$estimator_label)))
-  sims$inquiry_label  <- as.factor(sims$inquiry)
+  sims$estimator <- as.factor(sims$estimator)
+  sims$estimator <- factor(sims$estimator, levels = rev(levels(sims$estimator)))
+  sims$inquiry  <- as.factor(sims$inquiry)
   
   ggplot(sims, aes(x=estimate)) +
     geom_errorbar(aes(ymin=conf.low, ymax=conf.high, color=covered), alpha=.4) +
@@ -102,7 +102,7 @@ dd_theme <-
                            label=sprintf('  Avg Estimand:\n  %4.3f', mean(df$estimand)),
                            stringsAsFactors = FALSE)
               }, hjust='left') +
-    facet_wrap(inquiry_label~estimator_label) +
+    facet_wrap(inquiry~estimator) +
     ylab("Estimate") +
     scale_x_continuous(labels=NULL, breaks = NULL, name='') +
     scale_color_discrete(drop=FALSE, name = '') +

@@ -132,8 +132,8 @@ multi_arm_designer <- function(N = 30,
     handler = function(data){
       estimates <- rbind.data.frame(!!!estimators)
       names(estimates)[names(estimates) == "N"] <- "N_DIM"
-      estimates$estimator_label <- !!estimator_labels
-      estimates$inquiry_label <- rownames(estimates)
+      estimates$estimator <- !!estimator_labels
+      estimates$inquiry <- rownames(estimates)
       estimates$estimate <- estimates$coefficients
       estimates$term <- NULL
       return(estimates)
