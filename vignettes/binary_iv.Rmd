@@ -92,7 +92,7 @@ iv_defiers <- binary_iv_designer(type_probs = c(0,0,.8,.2))
 # Violates monotonicity with heterogeneous treatment effects
 iv_het     <- binary_iv_designer(type_probs = c(0,0,.8,.2), 
                                  b = c(0.5, 0.5, 0.5, 0))
-diagnoses <- diagnose_designs(binary_iv_design, iv_nonrelevant, iv_nonrandom, 
+diagnoses <- diagnose_designs(iv_nonrelevant, iv_nonrandom, 
                               iv_nonexcl, iv_defiers, iv_het, sims = 25)
 ```
 
@@ -102,19 +102,19 @@ diagnoses_table <- reshape_diagnosis(diagnoses)
 
 We highlight a few takeaways. Firstly, our estimates are unbiased when all assumption hold. We show that violating any of the first three assumptions yields biased estimates.
 
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 kable(diagnoses_table[
-  diagnoses_table$`Estimand Label` %in% c("late", "ate") &
-    diagnoses_table$`Design Label` %in% c("binary_iv_design","iv_nonrelevant", 
+  diagnoses_table$`Inquiry` %in% c("late", "ate") &
+    diagnoses_table$`Design` %in% c("binary_iv_design","iv_nonrelevant", 
                                           "iv_nonrandom", "iv_nonexcl"),
-  c(1:3, 6, 8,14)], digits = 2)
+  c(1:3, 6, 8, 14)], digits = 2)
 ```
 
 In the absence of the monotonicity assumption, our IV estimates are less biased for the LATE than the ATE estimand in the presence of heterogeneous treatment effects. Moreover, in these cases, the IV is best at estimating the weighted average of treatment effects for compliers and defiers ($LATE_{het}$).
 
-```{r, echo=FALSE}
-kable(diagnoses_table[diagnoses_table$`Estimand Label` %in% c("ate", "late", "late_het") &
-                        diagnoses_table$`Design Label` %in% c("iv_defiers", "iv_het") &
+```{r, eval=FALSE}
+kable(diagnoses_table[diagnoses_table$`Inquiry` %in% c("ate", "late", "late_het") &
+                        diagnoses_table$`Design` %in% c("iv_defiers", "iv_het") &
                         diagnoses_table$Bias!= "NA",c(1:3, 6, 8,14)], digits = 2)
 ```
 
