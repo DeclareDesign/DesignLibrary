@@ -91,13 +91,13 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     # A: Answer Strategy
     mediator_regression <- declare_estimator(
       M ~ Z,
-      model = lm_robust,
+      method = lm_robust,
       inquiry = "FirstStage",
       label = "Stage 1")
     
     stage2_1 <- declare_estimator(
       Y ~ Z * M,
-      model = lm_robust,
+      method = lm_robust,
       term = c("M"),
       inquiry = c("Indirect_0"),
       label = "Stage 2"
@@ -105,7 +105,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     
     stage2_2 <- declare_estimator(
       Y ~ Z * M,
-      model = lm_robust,
+      method = lm_robust,
       term = c("Z"),
       inquiry = c("Controlled_Direct_0", "Natural_Direct_0"),
       label = "Direct_0"
@@ -113,7 +113,7 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
     
     stage2_3 <- declare_estimator(
       Y ~ Z * Not_M,
-      model = lm_robust,
+      method = lm_robust,
       term = c("Z"),
       inquiry = c("Controlled_Direct_1", "Natural_Direct_1"),
       label = "Direct_1"

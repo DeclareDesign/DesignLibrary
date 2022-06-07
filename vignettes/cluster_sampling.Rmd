@@ -62,7 +62,7 @@ To appreciate the role of clustering better we also plot simulated values of our
 
 ```{r plot setup, echo=TRUE, warning=FALSE}
 new_design <- cluster_sampling_design + declare_estimator(Y ~ 1,
-                                        model = lm_robust,
+                                        method = lm_robust,
                                         inquiry = estimand,
                                         label = "Naive Standard Errors")
 diagnosis <- diagnose_design(new_design, sims = 25)

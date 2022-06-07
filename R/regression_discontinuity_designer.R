@@ -74,7 +74,7 @@ regression_discontinuity_designer <- function(
     # A: Answer Strategy 
     estimator <- declare_estimator(
       formula = Y ~ poly(X, poly_reg_order) * Z,
-      model = lm_robust,
+      method = lm_robust,
       term = "Z",
       inquiry = estimand)
     

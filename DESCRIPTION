@@ -1,7 +1,7 @@
 Package: DesignLibrary
 Type: Package
 Title: Library of Research Designs
-Version: 0.1.10
+Version: 0.1.11
 Authors@R: c(
     person("Graeme", "Blair", , "graeme.blair@ucla.edu", role = "aut"),
     person("Jasper", "Cooper", , "jjc2247@columbia.edu", role = c("aut", "cre")),
@@ -34,4 +34,4 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0

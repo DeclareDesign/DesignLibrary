@@ -11,6 +11,9 @@ assignment_string(arg_name, arg_values)
 
 \item{arg_values}{A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.}
 }
+\value{
+A vector of strings of the form \code{"arg_name <- arg_value"} where \code{arg_value} is in its evaluated format.
+}
 \description{
 Generates string of assignment of value to argument
 }
