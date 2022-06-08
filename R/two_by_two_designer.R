@@ -111,13 +111,13 @@ two_by_two_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(Y ~ A + B,
-                                     method = lm_robust,
+                                     .method = lm_robust,
                                      term = c("A", "B"),
                                      inquiry = c("ate_A", "ate_B"), 
                                      label = "No_Interaction")
     
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
-                                     method = lm_robust,
+                                     .method = lm_robust,
                                      term = "A:B", 
                                      inquiry = "interaction", 
                                      label = "Interaction")

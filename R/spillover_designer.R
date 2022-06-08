@@ -63,7 +63,7 @@ spillover_designer <- function(N_groups = 80,
     
     # A: Answer Strategy
     estimator <- declare_estimator(Y ~ Z, inquiry = estimand, 
-                                   method = lm_robust, label = "naive")
+                                   .method = lm_robust, label = "naive")
     
     # Design
     spillover_design <- population + estimand + assignment + reveal_Y + estimator

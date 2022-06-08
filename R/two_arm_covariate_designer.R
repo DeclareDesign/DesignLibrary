@@ -97,10 +97,10 @@ two_arm_covariate_designer <- function(N = 100,
     estimator_1 <- declare_estimator(Y ~ Z,   inquiry = estimand, 
                                      label = "No controls")
     
-    estimator_2 <- declare_estimator(Y ~ Z + W, inquiry = estimand, method = lm_robust, 
+    estimator_2 <- declare_estimator(Y ~ Z + W, inquiry = estimand, .method = lm_robust, 
                                      label = "With controls")
     
-    estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, inquiry = estimand, method = lm_lin,
+    estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, inquiry = estimand, .method = lm_lin,
                                      label = "Lin")
     
     # Design

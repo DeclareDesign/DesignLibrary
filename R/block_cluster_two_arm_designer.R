@@ -148,7 +148,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
     estimator <- declare_estimator(
       Y ~ Z,
       inquiry = estimand,
-      method = lm_robust,
+      .method = lm_robust,
       fixed_effects = ~ blocks,
       clusters = clusters
     )

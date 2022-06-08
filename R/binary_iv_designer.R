@@ -113,18 +113,18 @@ binary_iv_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(X ~ Z, 
-                                     method = difference_in_means,
+                                     .method = difference_in_means,
                                      inquiry = "first_stage", 
                                      label = "d-i-m")
     
     estimator_2 <- declare_estimator(Y ~ X, 
                                      inquiry = c("ate", "late","late_het"), 
-                                     method = lm_robust, 
+                                     .method = lm_robust, 
                                      label = "lm_robust")
     
     estimator_3 <- declare_estimator(Y ~ X | Z, 
                                      inquiry = c("ate", "late", "late_het"), 
-                                     method = iv_robust, 
+                                     .method = iv_robust, 
                                      label = "iv_robust")
     
     
