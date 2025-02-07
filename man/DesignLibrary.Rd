@@ -2,6 +2,7 @@
 % Please edit documentation in R/DesignLibrary.R
 \docType{package}
 \name{DesignLibrary}
+\alias{-package}
 \alias{DesignLibrary}
 \title{DesignLibrary: A package for creating designs}
 \description{

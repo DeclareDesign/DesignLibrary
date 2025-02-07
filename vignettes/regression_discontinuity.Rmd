@@ -75,7 +75,7 @@ control_frame <- data.frame(
 plot_frame <- rbind(treatment_frame, control_frame)
 ```
 
-    ```{r,echo=FALSE,warning=FALSE, message=FALSE}
+```{r,echo=FALSE,warning=FALSE, message=FALSE}
 ggplot(plot_frame,aes(x = X, y = Y, color = as.factor(Z))) + 
   geom_line(aes(linetype = observed)) +
   geom_point(data = mock_data, alpha = .2, size = .5) +
