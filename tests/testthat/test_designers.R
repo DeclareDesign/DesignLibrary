@@ -1,3 +1,4 @@
+library(rlang)
 
 context(desc = "Testing that designers in the library work as they should")
 

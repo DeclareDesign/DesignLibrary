@@ -78,7 +78,7 @@ group_code_lines <- function(code_string){
 #' @importFrom glue glue
 #' @param arg_name A string. Label of assignment object.
 #' @param arg_values A list. Values to be assigned to the argument. Can be character, logical or numeric of any length.
-#' @value A vector of strings of the form \code{"arg_name <- arg_value"} where \code{arg_value} is in its evaluated format.
+#' @return A vector of strings of the form \code{"arg_name <- arg_value"} where \code{arg_value} is in its evaluated format.
 assignment_string <- function(arg_name, arg_values){
   if (length(arg_values[[arg_name]]) == 1){
     glue({arg_name}, " <- ", {arg_values[[arg_name]]})
@@ -91,7 +91,7 @@ assignment_string <- function(arg_name, arg_values){
 #' Takes substring between matched strings. Avoids dependency on stringr package.
 #' @param string A string. String from which substring is extracted.
 #' @param pattern A regular expression that matches the beggining and end of a substring
-#' @value Substring within \code{string} surrounded by matched \code{pattern}.
+#' @return Substring within \code{string} surrounded by matched \code{pattern}.
 str_within <- function(string, pattern = "^(structure\\()|(, \\.Names)"){
   if(any(grepl(".Names", string, fixed = TRUE))){
     if(length(string) > 1) string <- paste(string, collapse = " ")
@@ -124,7 +124,6 @@ code_fixer <- function(design_expr, list_fixed_str, eval_envir){
 #' @param args_to_fix Vector of strings. Designer arguments to fix in design code.
 #' @param arguments_as_values Logical. Whether to replace argument names for value.
 #' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
-
 construct_design_code <- function(designer, args, args_to_fix = NULL, 
                                   arguments_as_values = FALSE, exclude_args = NULL){
   if(is.null(exclude_args) && !is.null(args_to_fix)) exclude_args <- args_to_fix

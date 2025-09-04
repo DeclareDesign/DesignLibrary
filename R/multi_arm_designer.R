@@ -17,7 +17,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_population declare_potential_outcomes declare_reveal
+#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_model  declare_reveal
 #' @importFrom fabricatr fabricate 
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr difference_in_means
@@ -39,12 +39,13 @@
 #'
 
 multi_arm_designer <- function(N = 30,
-                               m_arms = 3,
-                               outcome_means = rep(0, m_arms),
+                               m_arms = 4,
+                               outcome_means = rep(1, m_arms),
                                sd_i = 1,
                                outcome_sds = rep(0, m_arms),
                                conditions = 1:m_arms,
                                args_to_fix = NULL) {
+  
   outcome_sds_ <- outcome_sds 
   outcome_means_ <- outcome_means
   N_ <- N; sd_i_ <- sd_i
@@ -57,8 +58,10 @@ multi_arm_designer <- function(N = 30,
   if (sd_i < 0) stop("sd_i should be nonnegative")
   if (any(outcome_sds < 0)) stop("outcome_sds should be nonnegative")
   
-  if (!"outcome_sds" %in% args_to_fix) outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
-  if (!"outcome_means" %in% args_to_fix) outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
+  if (!"outcome_sds" %in% args_to_fix) 
+    outcome_sds_ <-  sapply(1:m_arms, function(i) expr(outcome_sds[!!i]))
+  if (!"outcome_means" %in% args_to_fix) 
+    outcome_means_ <-  sapply(1:m_arms, function(i) expr(outcome_means[!!i]))
   if (!"N" %in% args_to_fix) N_ <- expr(N)
   if (!"sd_i" %in% args_to_fix) sd_i_ <- expr(sd_i)
   
@@ -66,24 +69,42 @@ multi_arm_designer <- function(N = 30,
   errors <- sapply(1:m_arms, function(x) quos(rnorm(!!N_, 0, !!!outcome_sds_[x])))
   error_names <- paste0("u_", 1:m_arms)
   names(errors) <- error_names
-  population_expr <- expr(declare_population(N = !!N_, !!!errors, u = rnorm(!!N_)*!!sd_i_))
+
   
   conditions <- as.character(conditions)
   
-  f_Y <- formula(
-    paste0("Y ~ ", paste0(
-      "(", outcome_means_, " + ", error_names,
-      ")*( Z == '", conditions, "')",
-      collapse = " + "), "+ u"))
-  
-  potential_outcomes_expr <-
-    expr(
-      declare_potential_outcomes(
-        formula = !!f_Y,
-        conditions = !!conditions,
-        assignment_variables = Z
-      )
+
+  # build terms: (outcome_means[i] + u_i) * (Z == "i")
+  # Build RHS as expressions, then a Y ~ RHS quosure (captures outcome_means)
+  terms <- lapply(seq_len(m_arms), function(i) {
+    rlang::expr(
+      ( !!rlang::expr(outcome_means[!!i]) + !!rlang::sym(paste0("u_", i)) ) *
+        (Z == !!as.character(conditions[i]))
     )
+  })
+  rhs <- Reduce(function(a, b) rlang::expr(!!a + !!b), terms)
+  rhs <- rlang::expr( !!rhs + u )
+  
+  f_Y_quo <- rlang::quo( Y ~ !!rhs )
+  
+  # Use declare_potential_outcomes directly (no declare_model wrapper)
+  po_expr <- rlang::expr(
+    declare_potential_outcomes(
+      formula    = !!f_Y_quo,
+      conditions = list(Z = !!as.character(conditions))
+    )
+  )
+  
+  check <<- f_Y_quo
+  
+
+  population_expr <- expr(
+    declare_model(N = !!N_, !!!errors, u = rnorm(!!N_)*!!sd_i_
+                  ))
+  
+
+  po <- rlang::eval_bare(po_expr)
+  
   assignment_expr <-
     expr(
       declare_assignment(
@@ -124,6 +145,7 @@ multi_arm_designer <- function(N = 30,
     x = as.character(all_pairs[,2]),
     y = as.character(all_pairs[,1])
   )
+
   
   estimator_labels <- paste0("DIM (Z_", as.character(all_pairs[,1]), " - Z_", as.character(all_pairs[,2]), ")")
   
@@ -139,12 +161,13 @@ multi_arm_designer <- function(N = 30,
       return(estimates)
     }))
   
-  
+
   {{{
     # M: Model
     population <- eval_bare(population_expr)
-    
-    potential_outcomes <- eval_bare(potential_outcomes_expr)
+
+    # addressing environment issue    
+    po <- eval_bare(po_expr)
     
     # I: Inquiry
     estimand  <- eval_bare(estimand_expr)
@@ -159,20 +182,22 @@ multi_arm_designer <- function(N = 30,
     
     # Design
     multi_arm_design <-
-      population + potential_outcomes + assignment + reveal_Y + estimand +  estimator
+      population + po + 
+      assignment + reveal_Y + estimand +  estimator
     
   }}}
   
-  
+
   design_code <-
     construct_design_code(
       multi_arm_designer,
       match.call.defaults(),
       arguments_as_values = TRUE,
-      exclude_args = union(c("m_arms", "args_to_fix", "conditions"), args_to_fix))
+      exclude_args = union(c("args_to_fix", "conditions"), args_to_fix))
   
   design_code <- sub_expr_text(design_code, population_expr, estimand_expr,
-                               potential_outcomes_expr, assignment_expr,
+                               po_expr, 
+                               assignment_expr,
                                estimator_expr)
 
   attr(multi_arm_design, "code") <- design_code
@@ -205,3 +230,5 @@ attr(multi_arm_designer, "shiny_arguments") <-
 
 attr(multi_arm_designer,"description") <- "
 <p> A design with <code>m_arms</code> experimental arms, each assigned with equal probability."
+
+

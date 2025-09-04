@@ -6,8 +6,8 @@
 \usage{
 multi_arm_designer(
   N = 30,
-  m_arms = 3,
-  outcome_means = rep(0, m_arms),
+  m_arms = 4,
+  outcome_means = rep(1, m_arms),
   sd_i = 1,
   outcome_sds = rep(0, m_arms),
   conditions = 1:m_arms,
