@@ -54,7 +54,7 @@
 #' }
 #' 
 #' # Compare power with and without interactions, given same average effects in each arm
-#' designs <- redesign(two_by_two_designer(), 
+#' designs <- expand_design(two_by_two_designer, 
 #'                     outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 #' \dontrun{
 #' diagnose_design(designs)

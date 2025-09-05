@@ -31,7 +31,10 @@
 #'
 #'
 #' # A design with different means and standard deviations in each arm
-#' design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
+#' design <- multi_arm_designer(
+#'         m_arms = 3,
+#'         outcome_means = c(0, 0.5, 2), 
+#'         outcome_sds =  c(1, 0.1, 0.5))
 #'
 # A design with args_to_fix sds and means. N is the sole modifiable argument.
 #' design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
