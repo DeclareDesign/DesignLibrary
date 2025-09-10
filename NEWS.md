@@ -1,3 +1,9 @@
+# DesignLibrary 0.2
+
+* model -> .method
+* cleaner two arm
+* compatibility with declaredesign updates
+
 # DesignLibrary 0.1.10
 
 * Further updates for syntax for DeclareDesign v. 0.28.0

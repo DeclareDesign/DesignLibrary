@@ -64,7 +64,7 @@ pretest_posttest_designer <- function(N = 100,
     # A: Answer Strategy
     pretest_lhs <- declare_estimator(
       difference ~ Z,
-      model = lm_robust,
+      .method =lm_robust,
       inquiry = estimand,
       subset = R == 1,
       label = "Change score"
@@ -72,7 +72,7 @@ pretest_posttest_designer <- function(N = 100,
     
     pretest_rhs <- declare_estimator(
       Y_t2 ~ Z + Y_t1,
-      model = lm_robust,
+      .method =lm_robust,
       inquiry = estimand,
       subset = R == 1,
       label = "Condition on pretest"
@@ -80,7 +80,7 @@ pretest_posttest_designer <- function(N = 100,
     
     posttest_only <- declare_estimator(
       Y_t2 ~ Z,
-      model = lm_robust,
+      .method =lm_robust,
       inquiry = estimand,
       label = "Posttest only"
     )

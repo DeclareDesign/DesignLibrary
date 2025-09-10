@@ -6,8 +6,8 @@
 \usage{
 multi_arm_designer(
   N = 30,
-  m_arms = 3,
-  outcome_means = rep(0, m_arms),
+  m_arms = 4,
+  outcome_means = rep(1, m_arms),
   sd_i = 1,
   outcome_sds = rep(0, m_arms),
   conditions = 1:m_arms,
@@ -45,7 +45,10 @@ design <- multi_arm_designer()
 
 
 # A design with different means and standard deviations in each arm
-design <- multi_arm_designer(outcome_means = c(0, 0.5, 2), outcome_sds =  c(1, 0.1, 0.5))
+design <- multi_arm_designer(
+        m_arms = 3,
+        outcome_means = c(0, 0.5, 2), 
+        outcome_sds =  c(1, 0.1, 0.5))
 
 design <- multi_arm_designer(N = 80, m_arms = 4, outcome_means = 1:4,
                              args_to_fix = c("outcome_means", "outcome_sds"))

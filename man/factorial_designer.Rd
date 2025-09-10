@@ -89,7 +89,7 @@ outcomes
 # These are exactly the estimands calculated by the designer and returned in 
 # diagnosis.
 factorial_design_3 <- factorial_designer(k = 3, 
-                                         outcome_means = outcome_means,
+                                         outcome_means = rep(1, 8),
                                          outcome_sds = rep(.01, 8))
 \dontrun{
 library(DeclareDesign)

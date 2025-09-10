@@ -30,6 +30,7 @@
 #' @examples
 #' # Generate a simple two-arm design using default arguments
 #' two_arm_design <- two_arm_designer()
+#' two_arm_design <- two_arm_designer(args_to_fix = c("N", "assignment_prob"))
 
 two_arm_designer <- function(N = 100,
                              assignment_prob = .5,
@@ -46,41 +47,42 @@ two_arm_designer <- function(N = 100,
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
   {{{
+    
     # M: Model
-    population <- declare_population(
+    model  <- declare_model(
       N = N,
       u_0 = rnorm(N),
-      u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)))
-    
-    potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1-Z) * (u_0*control_sd + control_mean) + 
-        Z     * (u_1*treatment_sd + treatment_mean))
+      u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)),
+      potential_outcomes(Y ~(1-Z) * (u_0*control_sd + control_mean) + 
+        Z     * (u_1*treatment_sd + treatment_mean))) 
     
     # I: Inquiry
-    estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
+    inquiry <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))  
     
     # D: Data Strategy
-    assignment <- declare_assignment(Z = complete_ra(N, prob = assignment_prob))
-    
-    reveal_Y    <- declare_reveal()
+    data_strategy <- declare_assignment(
+      Z = complete_ra(N, prob = assignment_prob),
+      Y = reveal_outcomes(Y ~ Z)) 
     
     # A: Answer Strategy
-    estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
+    answer_strategy <- declare_estimator(Y ~ Z, inquiry = "ATE")
     
-    # Design
-    two_arm_design <- population + potential_outcomes + estimand + assignment + reveal_Y + estimator
-  }}}
+
+    two_arm_design <- model + inquiry + data_strategy + answer_strategy
+    
+  }}}  
   
   attr(two_arm_design, "code") <-
-    construct_design_code(designer = two_arm_designer,
+    DesignLibrary:::construct_design_code(designer = two_arm_designer,
                           args = match.call.defaults(),
                           args_to_fix = args_to_fix,
-                          exclude_args = union(c("ate", "args_to_fix"), args_to_fix),
+                          exclude_args = union(c("ate", "args_to_fix", "dots"), args_to_fix),
                           arguments_as_values = TRUE)
   two_arm_design
 }
 
-attr(two_arm_designer, "definitions") <- data.frame(
+attr(two_arm_designer, "definitions") <- 
+  data.frame(
   names = c("N", "assignment_prob", "control_mean", "control_sd", 
             "ate", "treatment_mean", "treatment_sd", "rho", "args_to_fix"),
   tips  = c("Sample size",

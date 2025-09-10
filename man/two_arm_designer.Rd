@@ -50,6 +50,7 @@ Units are assigned to treatment using complete random assignment. Potential outc
 \examples{
 # Generate a simple two-arm design using default arguments
 two_arm_design <- two_arm_designer()
+two_arm_design <- two_arm_designer(args_to_fix = c("N", "assignment_prob"))
 }
 \author{
 \href{https://declaredesign.org/}{DeclareDesign Team}

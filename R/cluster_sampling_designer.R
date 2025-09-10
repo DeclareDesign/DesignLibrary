@@ -71,7 +71,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
     
     # A: Answer Strategy
     clustered_ses <- declare_estimator(Y ~ 1,
-                                       model = lm_robust,
+                                       .method =lm_robust,
                                        clusters = cluster,
                                        inquiry = estimand,
                                        label = "Clustered Standard Errors")

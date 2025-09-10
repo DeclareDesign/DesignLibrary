@@ -102,7 +102,7 @@ my_design <-
   declare_reveal(YA,ZA) +
   declare_reveal(YB,ZB) +
   # Answer Strategy
-  declare_estimator(YA ~ ZA, model = lm_robust, 
+  declare_estimator(YA ~ ZA, .method =lm_robust, 
                     inquiry = "ate_YA", label = "lm_robust") +
   declare_estimator(handler = sur) 
 ```

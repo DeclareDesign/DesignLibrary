@@ -124,7 +124,6 @@ code_fixer <- function(design_expr, list_fixed_str, eval_envir){
 #' @param args_to_fix Vector of strings. Designer arguments to fix in design code.
 #' @param arguments_as_values Logical. Whether to replace argument names for value.
 #' @param exclude_args Vector of strings. Name of arguments to be excluded from argument definition at top of design code.
-
 construct_design_code <- function(designer, args, args_to_fix = NULL, 
                                   arguments_as_values = FALSE, exclude_args = NULL){
   if(is.null(exclude_args) && !is.null(args_to_fix)) exclude_args <- args_to_fix

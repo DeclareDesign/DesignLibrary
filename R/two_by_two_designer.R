@@ -54,7 +54,7 @@
 #' }
 #' 
 #' # Compare power with and without interactions, given same average effects in each arm
-#' designs <- redesign(two_by_two_designer(), 
+#' designs <- expand_design(two_by_two_designer, 
 #'                     outcome_means = list(c(0,0,0,1), c(0,.5,.5,1)))
 #' \dontrun{
 #' diagnose_design(designs)
@@ -111,13 +111,13 @@ two_by_two_designer <- function(N = 100,
     
     # A: Answer Strategy
     estimator_1 <- declare_estimator(Y ~ A + B,
-                                     model = lm_robust,
+                                     .method =lm_robust,
                                      term = c("A", "B"),
                                      inquiry = c("ate_A", "ate_B"), 
                                      label = "No_Interaction")
     
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
-                                     model = lm_robust,
+                                     .method =lm_robust,
                                      term = "A:B", 
                                      inquiry = "interaction", 
                                      label = "Interaction")
