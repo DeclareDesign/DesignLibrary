@@ -1,17 +1,10 @@
 #' DesignLibrary: A package for creating designs
 #'
-#' 
-#' 
-#' @docType package
-#' 
-#' @name DesignLibrary
-#' 
-#' @description Library of Research Designs
-#' 
+#' Library of Research Designs
+#'
 #' @importFrom utils globalVariables
-#' 
-#' 
-
+#' @keywords internal
+"_PACKAGE"
 
 globalVariables(
   names = c(
@@ -49,7 +42,7 @@ globalVariables(
     "u_R",
     "u_t1",
     "u_W",
-    "U_Z", 
+    "U_Z",
     "withholder",
     "X",
     "Y",
@@ -71,7 +64,7 @@ globalVariables(
     "Y_t2",
     "Y_t2_Z_0",
     "Y_t2_Z_1",
-    "Y_X_0", 
+    "Y_X_0",
     "Y_X_1",
     "Y_Z_0",
     "Y_Z_1",
@@ -80,6 +73,7 @@ globalVariables(
     "zeros",
     "u_Z",
     "sd",
-    "S1", 
+    "S1",
     "S2"
-    ))
+  )
+)

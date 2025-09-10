@@ -11,6 +11,9 @@ str_within(string, pattern = "^(structure\\\\()|(, \\\\.Names)")
 
 \item{pattern}{A regular expression that matches the beggining and end of a substring}
 }
+\value{
+Substring within \code{string} surrounded by matched \code{pattern}.
+}
 \description{
 Takes substring between matched strings. Avoids dependency on stringr package.
 }
