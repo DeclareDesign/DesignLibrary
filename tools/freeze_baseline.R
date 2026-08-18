@@ -11,7 +11,14 @@
 # fixed. It is not comparable across engines: 1.1.1 and 2.0 do not make the
 # same RNG calls in the same order, so a difference there would mean nothing.
 
+# Load the package from THIS tree, not whatever is installed. The first run of
+# this harness took `library(DesignLibrary)` and got CRAN 0.1.10, which is
+# behind master: master's two_arm_designer is already written in the 2.0 idiom
+# and CRAN's is not, so the baseline described a different package than the one
+# the rewrite starts from. Set DL_LIB to a library holding this tree's build.
+if (nzchar(Sys.getenv("DL_LIB"))) .libPaths(c(Sys.getenv("DL_LIB"), .libPaths()))
 library(DesignLibrary)
+cat("DesignLibrary loaded from:", dirname(getNamespaceInfo("DesignLibrary", "path")), "\n")
 
 engine <- c(
   DeclareDesign = as.character(utils::packageVersion("DeclareDesign")),
