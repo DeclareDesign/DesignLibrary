@@ -7,3 +7,6 @@ vignettes/*.R
 .DS_Store
 docs
 inst/doc
+notes/
+*.Rcheck
+*.tar.gz

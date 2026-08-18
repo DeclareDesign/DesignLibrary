@@ -13,3 +13,6 @@ vignettes
 ^docs$
 ^pkgdown$
 ^README\.Rmd$
+^tools$
+^tests/baseline$
+^notes$
