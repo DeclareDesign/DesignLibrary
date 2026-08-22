@@ -14,10 +14,11 @@ book_link: https://book.declaredesign.org/library/observational-causal.html#def-
 include_in_shiny: true
 ---
 
-N_units <- 20
-N_time_periods <- 20
-
 design <- 
+  declare_parameters(
+    N_units = 20,
+    N_time_periods = 20
+  ) +
   declare_model(
   units = declare_level(
     N = N_units, 

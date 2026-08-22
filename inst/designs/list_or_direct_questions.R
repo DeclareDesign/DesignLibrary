@@ -13,10 +13,11 @@ book_link: https://book.declaredesign.org/library/experimental-descriptive.html#
 include_in_shiny: true
 ---
 
-N <- 1000
-proportion_hiding <- .2
-
 design <- 
+  declare_parameters(
+    N = 1000,
+    proportion_hiding = .2
+  ) +
   declare_model(
     N = N,
     U = rnorm(N),

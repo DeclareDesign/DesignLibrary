@@ -26,9 +26,6 @@ functional: true
 
 
 
-controlled_direct_effect <-  0.02   # keeping indirect = 0 
-controlled_indirect_effect <- 0.01  # keeping direct = 0
-total_effect <- 0.03                # via both direct and indirect  
 
 # Background Data: Adjacency matrix
 adjacency <-
@@ -79,8 +76,12 @@ estimator_AS <-
     )
   }
 
-
 design <-
+  declare_parameters(
+    controlled_direct_effect = 0.02,  # keeping indirect = 0
+    controlled_indirect_effect = 0.01,  # keeping direct = 0
+    total_effect = 0.03  # via both direct and indirect
+  ) +
   declare_model(
     data = select(as_tibble(fairfax), -geometry),
     Y_0_0 = pnorm(scale(SHAPE_LEN), sd = 3),

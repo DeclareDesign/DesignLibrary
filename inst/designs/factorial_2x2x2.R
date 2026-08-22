@@ -24,17 +24,18 @@ params:
 include_in_shiny: true
 ---
 
-N <- 256
-effect_T1 <- 0.5
-effect_T2 <- 0
-effect_T3 <- 0
-interaction_T1_T2 <- 0
-interaction_T1_T3 <- 0
-interaction_T2_T3 <- 0
-interaction_T1_T2_T3 <- 1
-sd <- 1
-
 design <-
+  declare_parameters(
+    N = 256,
+    effect_T1 = 0.5,
+    effect_T2 = 0,
+    effect_T3 = 0,
+    interaction_T1_T2 = 0,
+    interaction_T1_T3 = 0,
+    interaction_T2_T3 = 0,
+    interaction_T1_T2_T3 = 1,
+    sd = 1
+  ) +
   declare_model(
     N = N,
     u = rnorm(N) * sd,

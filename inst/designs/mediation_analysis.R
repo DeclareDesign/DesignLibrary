@@ -25,14 +25,15 @@ params:
 include_in_shiny: true
 ---
 
-N <- 200
-a <- 1
-b <- 0.4
-c <- 0
-d <- 0.5
-rho <- 0
-
 design <-
+  declare_parameters(
+    N = 200,
+    a = 1,
+    b = 0.4,
+    c = 0,
+    d = 0.5,
+    rho = 0
+  ) +
   declare_model(
     N = N,
     e1 = rnorm(N),

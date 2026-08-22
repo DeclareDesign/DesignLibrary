@@ -11,8 +11,10 @@ book_link: https://book.declaredesign.org/declaration-diagnosis-redesign/redesig
 include_in_shiny: true
 ---
 
-N <- 100
 design <-
+  declare_parameters(
+    N = 100
+  ) +
   declare_model(N = N, U = rnorm(N),
                 # this runif(n = 1, min = 0, max = 0.5) generates 1 random ATE between 0 and 0.5
                 potential_outcomes(Y ~ runif(n = 1, min = 0, max = 0.5) * Z + U)) +

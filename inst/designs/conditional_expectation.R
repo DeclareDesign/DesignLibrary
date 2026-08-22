@@ -19,11 +19,11 @@ dip <- function(x) (x <= 1) * x + (x > 1) * (x - 2) ^ 2 + 0.2
 
 x_range <- seq(from = 0, to = 3, length.out = 50)
 
-polynomial_degrees <- 1:6
-
-N <- 100
-
 design <-
+  declare_parameters(
+    polynomial_degrees = 1:6,
+    N = 100
+  ) +
   declare_model(
     N = N,
     X = runif(N, 0, 3)) +

@@ -7,6 +7,7 @@ empty_params_df <- function() {
     value = I(list()),
     step = integer(0),
     kind = character(0),
+    declared = logical(0),
     shiny = logical(0),
     stringsAsFactors = FALSE
   )
@@ -41,7 +42,10 @@ discover_design_params <- function(design, code = NULL) {
     } else {
       character(0)
     }
-    params <- params[params$name %in% knobs, , drop = FALSE]
+    # A `declare_parameters()` step is the design stating its own knobs, so it
+    # outranks the source-text scan: a ported design has no pre-design
+    # assignment left for `extract_pre_design_objects()` to find.
+    params <- params[params$name %in% knobs | params$declared, , drop = FALSE]
     missing <- setdiff(knobs, params$name)
     if (length(missing)) {
       extra <- params_from_pre_assignments(pre, missing)
@@ -181,9 +185,20 @@ filter_modifiable_params <- function(objs) {
   out <- objs[keep, , drop = FALSE]
   values <- values[keep]
   if (nrow(out) && "name" %in% names(out)) {
-    dup <- duplicated(out$name)
-    out <- out[!dup, , drop = FALSE]
-    values <- values[!dup]
+    # A declared parameter appears once for the `declare_parameters()` step and
+    # once for the step that reads it, and only the reading row carries an
+    # environment the value can be read out of. Taking the first row blindly
+    # gives a NULL value, which classifies as "scalar": a vector parameter then
+    # loses its `list()` wrapper and `redesign()` sweeps it instead of setting
+    # it. Keep, per name, the first row whose value is recoverable.
+    keep_i <- vapply(unique(out$name), function(nm) {
+      idx <- which(out$name == nm)
+      with_val <- idx[!vapply(values[idx], is.null, logical(1))]
+      if (length(with_val)) with_val[[1L]] else idx[[1L]]
+    }, integer(1))
+    keep_i <- sort(keep_i)
+    out <- out[keep_i, , drop = FALSE]
+    values <- values[keep_i]
   }
 
   kinds <- vapply(values, classify_param_kind, character(1))
@@ -193,6 +208,7 @@ filter_modifiable_params <- function(objs) {
     value = I(values),
     step = out$step,
     kind = kinds,
+    declared = if ("declared" %in% names(out)) as.logical(out$declared) else FALSE,
     shiny = is_shiny_param_kind(kinds),
     stringsAsFactors = FALSE
   )

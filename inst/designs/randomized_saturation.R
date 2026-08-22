@@ -17,13 +17,14 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-N_groups <- 50
-N_per_group <- 20
-effect_Z <- 0.2
-effect_S_low <- 0.1
-effect_S_high <- 0.5
-
 design <-
+  declare_parameters(
+    N_groups = 50,
+    N_per_group = 20,
+    effect_Z = 0.2,
+    effect_S_low = 0.1,
+    effect_S_high = 0.5
+  ) +
   declare_model(
     group = add_level(N = N_groups, group_shock = rnorm(N)),
     individual = add_level(

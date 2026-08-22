@@ -19,15 +19,16 @@ params:
 include_in_shiny: true
 ---
 
-N <- 100
-assignment_prob <- 0.5
-control_mean <- 0
-control_sd <- 1
-ate <- 1
-treatment_sd <- 1
-rho <- 1
-
 design <-
+  declare_parameters(
+    N = 100,
+    assignment_prob = 0.5,
+    control_mean = 0,
+    control_sd = 1,
+    ate = 1,
+    treatment_sd = 1,
+    rho = 1
+  ) +
   declare_model(
     N = N,
     u_0 = rnorm(N),

@@ -1,4 +1,4 @@
-﻿---
+---
 id: example_declaration
 alias: "5.1"
 label: Example declaration
@@ -11,9 +11,10 @@ book_link: https://book.declaredesign.org/declaration-diagnosis-redesign/declari
 include_in_shiny: false
 ---
 
-N <- 1000
-
 design <-
+  declare_parameters(
+    N = 1000
+  ) +
   declare_model(
     N = N,
     U = rnorm(N),

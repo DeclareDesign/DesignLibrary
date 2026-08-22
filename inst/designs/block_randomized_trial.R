@@ -13,10 +13,11 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-b <- 0.2
-N <- 500
-
 design <-
+  declare_parameters(
+    b = 0.2,
+    N = 500
+  ) +
   declare_model(
     N = N,
     X = rep(c(0, 1), each = N / 2),

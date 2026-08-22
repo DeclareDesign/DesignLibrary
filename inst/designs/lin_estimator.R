@@ -14,12 +14,12 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-prob = 0.5
-control_slope = -1
-
-N <- 100
-
 design <-
+  declare_parameters(
+    prob = 0.5,
+    control_slope = -1,
+    N = 100
+  ) +
   declare_model(N = N,
                 X = runif(N, 0, 1),
                 U = rnorm(N, sd = 0.1),

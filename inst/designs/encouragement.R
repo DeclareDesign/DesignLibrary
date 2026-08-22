@@ -18,15 +18,17 @@ include_in_shiny: true
 ---
 
 # sample size
-N <- 100
 
 # shares of population of different response types (add to 1!)
-share_always_takers <- .2
-share_never_takers <- .2
-share_compliers <- .6
-share_defiers <- 0
 
 design <-
+  declare_parameters(
+    N = 100,
+    share_always_takers = .2,
+    share_never_takers = .2,
+    share_compliers = .6,
+    share_defiers = 0
+  ) +
   declare_model(
     N = N,
     type = 

@@ -36,13 +36,14 @@ likelihood  <- function(n){
 }
 
 n <- 2        # Number of rounds bargaining (design choice)
-delta <- 0.8  # True discount factor (unknown)
-kappa <- 2    # Parameter to govern error in offers (unknown)
-alpha <- 0.5  # Share of behavioral types in the population (unknown)
-
-N <- 200
 
 design <- 
+  declare_parameters(
+    delta = 0.8,  # True discount factor (unknown)
+    kappa = 2,  # Parameter to govern error in offers (unknown)
+    alpha = 0.5,  # Share of behavioral types in the population (unknown)
+    N = 200
+  ) +
   declare_model(
     # Define the population: indicator for behavioral type (norm = 1)
     N = N, 

@@ -12,12 +12,12 @@ params:
 include_in_shiny: true
 ---
 
-
-k <- 3
-block_size <- 10
-b <- .2
-
 design <-
+  declare_parameters(
+    k = 3,
+    block_size = 10,
+    b = .2
+  ) +
   
   declare_model(
     blocks = add_level(N = k, u_block = rnorm(N)),

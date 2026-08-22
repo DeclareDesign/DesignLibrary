@@ -15,10 +15,11 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-ICC <- 0.9
-N_clusters <- 10
-  
 design <-
+  declare_parameters(
+    ICC = 0.9,
+    N_clusters = 10
+  ) +
   declare_model(
     cluster =
       add_level(

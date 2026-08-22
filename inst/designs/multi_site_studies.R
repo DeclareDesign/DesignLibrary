@@ -17,14 +17,17 @@ book_link: https://book.declaredesign.org/library/complex.html#def-ch19num4
 include_in_shiny: true
 ---
 
-study_sizes <- c(500, 1000, 1500, 2000, 2500)
-study_assignment_probabilities <- c(0.5, 0.5, 0.6, 0.7, 0.8)
-study_intercepts <- 1:5
-study_priors <- seq(from = 0, to = 0.3, length = 5)
-study_coordination <- "high" # Change to "low"
 
 # helper function to estimate study level effects
+
 design <-
+  declare_parameters(
+    study_sizes = c(500, 1000, 1500, 2000, 2500),
+    study_assignment_probabilities = c(0.5, 0.5, 0.6, 0.7, 0.8),
+    study_intercepts = 1:5,
+    study_priors = seq(from = 0, to = 0.3, length = 5),
+    study_coordination = "high"  # Change to "low"
+  ) +
   
   declare_model(
     sites = add_level(

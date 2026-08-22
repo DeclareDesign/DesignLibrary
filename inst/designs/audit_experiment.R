@@ -1,4 +1,4 @@
-﻿---
+---
 id: audit_experiment
 alias: "17.1"
 label: audit experiment
@@ -13,9 +13,10 @@ book_link: https://book.declaredesign.org/library/experimental-descriptive.html#
 include_in_shiny: true
 ---
 
-N <- 500
-
 design <-
+  declare_parameters(
+    N = 500
+  ) +
   declare_model(
     N = N,
     type = sample(

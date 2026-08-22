@@ -17,8 +17,6 @@ book_link: https://book.declaredesign.org/library/experimental-descriptive.html#
 include_in_shiny: true
 ---
 
-n_pairs <- 200
-deceive <- FALSE
 
 invested <- function(a_1, a_2) {
   u_a = (1 - a_1) * log(1 - a_1) + a_1 * log(2 * a_1)  # give a1
@@ -37,6 +35,10 @@ average_returned <- function(a_2)
   mean(sapply(seq(0.01, 1, .01), returned, a_2 = a_2))
 
 design <-
+  declare_parameters(
+    n_pairs = 200,
+    deceive = FALSE
+  ) +
   
   declare_model(N = 2 * n_pairs,
                 a = runif(N)) +

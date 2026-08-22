@@ -1,4 +1,4 @@
-﻿---
+---
 id: two_arm_randomized_experiment
 alias: "13.2"
 label: Declaration of two-arm randomized experiment
@@ -11,9 +11,10 @@ book_link: https://book.declaredesign.org/declaration-diagnosis-redesign/declara
 include_in_shiny: false
 ---
 
-N <- 1000
-
 design <-
+  declare_parameters(
+    N = 1000
+  ) +
   declare_model(N = N,
                 U = rnorm(N),
                 X = U + rnorm(N, sd = 0.5),

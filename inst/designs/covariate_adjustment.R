@@ -14,14 +14,16 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-N <- 100
-r_sq <- 0
-prob <- 0.7
 
 # We have three estimators: Lin is the one to use
 # The others are for comparison purposes
 
 design <-
+  declare_parameters(
+    N = 100,
+    r_sq = 0,
+    prob = 0.7
+  ) +
   declare_model(N = N,
                 draw_multivariate(c(U, X) ~ MASS::mvrnorm(
                   n = N,

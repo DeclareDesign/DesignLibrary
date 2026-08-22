@@ -13,9 +13,11 @@ include_in_shiny: false
 ---
 
 # number of streets to treat in each ward
-block_m = c(71, 47, 60, 48, 35, 39, 63, 32, 52)
 
 design <-
+  declare_parameters(
+    block_m = c(71, 47, 60, 48, 35, 39, 63, 32, 52)
+  ) +
   declare_model(data = foos_etal,
                 # this is the sharp null hypothesis
                 potential_outcomes(Y ~ 0 * Z + marked_register_2014)) +

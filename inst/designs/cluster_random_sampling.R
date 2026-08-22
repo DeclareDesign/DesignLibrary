@@ -20,8 +20,6 @@ book_link: https://book.declaredesign.org/library/observational-descriptive.html
 include_in_shiny: true
 ---
 
-se_type <- "stata"
-
 budget_function <- 
   function(cluster_prob){
     budget = 20000
@@ -52,6 +50,7 @@ budget_function <-
 # `cluster_prob` and the shocks themselves all stay reachable.
 design <-
   declare_parameters(
+    se_type = "stata",
     ICC = 0.4,
     state_mean = c(-0.2, 0.2),
     locality_shock = rnorm(500, state_mean, sqrt(ICC)),

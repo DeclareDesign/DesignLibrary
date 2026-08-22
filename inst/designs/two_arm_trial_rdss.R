@@ -15,12 +15,12 @@ book_link: https://book.declaredesign.org/introduction/what-is-a-research-design
 include_in_shiny: true
 ---
 
-
-N <- 1000
-b <- 0
-n <- 150
-
 design <-
+  declare_parameters(
+    N = 1000,
+    b = 0,
+    n = 150
+  ) +
   
   declare_model(
     N = N,

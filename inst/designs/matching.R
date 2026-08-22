@@ -15,8 +15,6 @@ book_link: https://book.declaredesign.org/library/observational-causal.html#def-
 include_in_shiny: true
 ---
 
-N <- 100
-ate <- 0.5
 
 exact_matching <- 
   function(data) { 
@@ -25,6 +23,10 @@ exact_matching <-
   }
 
 design <-
+  declare_parameters(
+    N = 100,
+    ate = 0.5
+  ) +
   declare_model(
     N = N, 
     U = rnorm(N), 

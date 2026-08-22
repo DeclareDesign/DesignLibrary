@@ -12,11 +12,11 @@ diagnosands: [bias, power]
 include_in_shiny: true
 ---
 
-
-N <- 1000
-b <- 0.2
-
 design <-
+  declare_parameters(
+    N = 1000,
+    b = 0.2
+  ) +
   
   declare_model(
     N = N,

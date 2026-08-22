@@ -10,9 +10,10 @@ params:
 include_in_shiny: false
 ---
 
-n <- 150 
-
 design <-
+  declare_parameters(
+    n = 150
+  ) +
   declare_model(
     N = n,
     U = rnorm(N),
@@ -27,4 +28,3 @@ design <-
                       Y2 = reveal_outcomes(Y2 ~ Z)) +
   declare_estimator(Y1 ~ Z, inquiry = "ATE1", label = "DIM1") +
   declare_estimator(Y2 ~ Z, inquiry = "ATE2", label = "DIM2")
-

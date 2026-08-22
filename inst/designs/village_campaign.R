@@ -12,11 +12,12 @@ params:
 include_in_shiny: false
 ---
 
-n_villages <- 192
-citizens_per_village <- 48
-se_type <- "stata"
-
 design  <- 
+  declare_parameters(
+    n_villages = 192,
+    citizens_per_village = 48,
+    se_type = "stata"
+  ) +
   declare_model(
     villages = add_level(N = 660, U_village = rnorm(N, sd = 0.1)),
     citizens = add_level(
@@ -55,4 +56,3 @@ design  <-
                     .method = lm_robust,
                     se_type = se_type,
                     inquiry = c("ATE_personal", "ATE_social"))
-

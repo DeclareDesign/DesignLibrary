@@ -19,14 +19,15 @@ params:
 include_in_shiny: true
 ---
 
-N <- 100
-a_R <- 0
-b_R <- 1
-a_Y <- 0
-b_Y <- 1
-rho <- 0
-
 design <-
+  declare_parameters(
+    N = 100,
+    a_R = 0,
+    b_R = 1,
+    a_Y = 0,
+    b_Y = 1,
+    rho = 0
+  ) +
   declare_model(
     N = N,
     u_R = rnorm(N),

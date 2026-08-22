@@ -1,4 +1,4 @@
-﻿---
+---
 id: linear_regression
 alias: "13.1"
 label: Linear regression
@@ -11,9 +11,10 @@ book_link: https://book.declaredesign.org/declaration-diagnosis-redesign/declara
 include_in_shiny: false
 ---
 
-N <- 100
-
 design <-
+  declare_parameters(
+    N = 100
+  ) +
   declare_model(N = N,
                 U = rnorm(N),
                 potential_outcomes(Y ~ 0.2 * Z + U)) +

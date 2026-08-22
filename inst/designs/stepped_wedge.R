@@ -13,9 +13,10 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-effect_size <- 0.35
-
 design <-
+  declare_parameters(
+    effect_size = 0.35
+  ) +
   declare_model(
     units = declare_level(
       N = 100, 

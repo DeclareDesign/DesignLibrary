@@ -16,12 +16,13 @@ book_link: https://book.declaredesign.org/library/observational-causal.html#def-
 include_in_shiny: true
 ---
 
-N <- 100
-prob <- .5
-a <- 0.25
-b <- 0.1
-  
 design <-
+  declare_parameters(
+    N = 100,
+    prob = .5,
+    a = 0.25,
+    b = 0.1
+  ) +
   declare_model(
     N = N, 
     U = rnorm(N),

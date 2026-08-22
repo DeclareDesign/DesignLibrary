@@ -21,16 +21,17 @@ params:
 include_in_shiny: true
 ---
 
-N <- 100
-prob_A <- 0.5
-prob_B <- 0.5
-weight_A <- 0.5
-weight_B <- 0.5
-outcome_means <- c(0, 0, 0, 0)
-sd_i <- 1
-outcome_sds <- c(0, 0, 0, 0)
-
 design <-
+  declare_parameters(
+    N = 100,
+    prob_A = 0.5,
+    prob_B = 0.5,
+    weight_A = 0.5,
+    weight_B = 0.5,
+    outcome_means = c(0, 0, 0, 0),
+    sd_i = 1,
+    outcome_sds = c(0, 0, 0, 0)
+  ) +
   declare_model(
     N = N,
     u = rnorm(N, sd = sd_i),

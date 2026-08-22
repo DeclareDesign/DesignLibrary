@@ -23,10 +23,11 @@ portola <-
   )
 data <- portola
 
-cuts <- 7
-sample_size <- 100
-
 design <-
+  declare_parameters(
+    cuts = 7,
+    sample_size = 100
+  ) +
   declare_model(data = data) +
   declare_measurement(Y = as.numeric(cut(Y_star, cuts))) +
   declare_inquiry(Y_bar = mean(Y)) +

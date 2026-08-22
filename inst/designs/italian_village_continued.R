@@ -20,9 +20,10 @@ declaration_9.1 <-
   declare_sampling(S = complete_rs(N = N, n = 3)) +
   declare_estimator(age ~ 1, .method = lm_robust) 
 
-linear_hypothesis <- "(Intercept) = 20"
-
 design <-
+  declare_parameters(
+    linear_hypothesis = "(Intercept) = 20"
+  ) +
   declaration_9.1 +
   declare_test(age ~ 1,
                linear_hypothesis = linear_hypothesis,

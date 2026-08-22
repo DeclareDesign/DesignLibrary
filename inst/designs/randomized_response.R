@@ -21,12 +21,13 @@ diagnosands: [bias, rmse]
 include_in_shiny: true
 ---
 
-N <- 1000
-prob_forced_yes <- 0.6
-prevalence_rate <- 0.1
-withholding_rate <- 0.5
-
 design <-
+  declare_parameters(
+    N = 1000,
+    prob_forced_yes = 0.6,
+    prevalence_rate = 0.1,
+    withholding_rate = 0.5
+  ) +
   declare_model(
     N = N,
     sensitive_trait = draw_binary(prob = prevalence_rate, N = N),

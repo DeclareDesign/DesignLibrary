@@ -19,14 +19,15 @@ params:
 include_in_shiny: true
 ---
 
-N <- 100
-ate <- 0.25
-sd_1 <- 1
-sd_2 <- 1
-rho <- 0.5
-attrition_rate <- 0.1
-
 design <-
+  declare_parameters(
+    N = 100,
+    ate = 0.25,
+    sd_1 = 1,
+    sd_2 = 1,
+    rho = 0.5,
+    attrition_rate = 0.1
+  ) +
   declare_model(
     N = N,
     u_t1 = rnorm(N) * sd_1,

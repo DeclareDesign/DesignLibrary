@@ -15,8 +15,6 @@ book_link: https://book.declaredesign.org/library/experimental-descriptive.html#
 include_in_shiny: true
 ---
 
-N_subjects <- 500
-N_tasks <- 3
 
 # Attributes and levels
 levels_list =
@@ -35,6 +33,10 @@ conjoint_utility <-
   }
 
 design <-
+  declare_parameters(
+    N_subjects = 500,
+    N_tasks = 3
+  ) +
   declare_model(
     subject = add_level(N = N_subjects),
     task = add_level(N = N_tasks, task = 1:N_tasks),

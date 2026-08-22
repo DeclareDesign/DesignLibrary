@@ -16,15 +16,16 @@ book_link: https://book.declaredesign.org/library/observational-causal.html#def-
 include_in_shiny: false
 ---
 
-cutoff <- 0.5
 control <- function(X) {
   as.vector(poly(X, 4, raw = TRUE) %*% c(.7, -.8, .5, 1))}
 treatment <- function(X) {
   as.vector(poly(X, 4, raw = TRUE) %*% c(0, -1.5, .5, .8)) + .15}
 
-N <- 500
-
 design <-
+  declare_parameters(
+    cutoff = 0.5,
+    N = 500
+  ) +
   declare_model(
     N = N,
     U = rnorm(N, 0, 0.1),

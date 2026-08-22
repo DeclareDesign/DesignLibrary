@@ -1,4 +1,4 @@
-﻿---
+---
 id: audit_intervention
 alias: "17.2"
 label: audit intervention
@@ -13,9 +13,10 @@ book_link: https://book.declaredesign.org/library/experimental-descriptive.html#
 include_in_shiny: true
 ---
 
-N <- 5000
-
 design <-
+  declare_parameters(
+    N = 5000
+  ) +
   # This part of the design is about causal inference
   declare_model(
     N = N,

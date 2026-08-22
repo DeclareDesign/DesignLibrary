@@ -12,10 +12,11 @@ book_link: https://book.declaredesign.org/declaration-diagnosis-redesign/redesig
 include_in_shiny: false
 ---
 
-N <- 100
-prob <- 0.5
-
 design <-
+  declare_parameters(
+    N = 100,
+    prob = 0.5
+  ) +
   declare_model(N = N, U = rnorm(N),
                 potential_outcomes(Y ~ 0.2 * Z + U)) +
   declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0)) +

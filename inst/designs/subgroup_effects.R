@@ -25,11 +25,13 @@ fixed_pop <-
   )
 data <- fixed_pop
 
-total_n <- 1000
-n_x1 <- 500
 # Note: n_x2 = total_n - n_x1
 
 design <-
+  declare_parameters(
+    total_n = 1000,
+    n_x1 = 500
+  ) +
   declare_model(data = data,
                 TE = (Y_Z_1 - Y_Z_0) ) +  # Individual level effects
   declare_inquiry(

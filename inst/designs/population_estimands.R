@@ -16,12 +16,12 @@ include_in_shiny: true
 # The same estimator might be used for estimands defined with
 # respect to different groups, with implications for coverage
 
-N <- 20
-n <- 10
-
-superpopulation_mean <- 1
-
 design <-
+  declare_parameters(
+    N = 20,
+    n = 10,
+    superpopulation_mean = 1
+  ) +
   declare_model(
     N = N, 
     Y = 1 + rnorm(N)

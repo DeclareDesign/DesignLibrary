@@ -1,4 +1,4 @@
-﻿---
+---
 id: design_10_2
 alias: "10.2"
 label: design 10 2
@@ -10,9 +10,10 @@ params:
 include_in_shiny: false
 ---
 
-N <- 200
-
 design <-
+  declare_parameters(
+    N = 200
+  ) +
   declare_model(
     N = N, U = rnorm(N),
     # this runif(n = 1, min = 0, max = 0.5) 

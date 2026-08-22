@@ -11,10 +11,11 @@ params:
 include_in_shiny: false
 ---
 
-effect_size <- 0.1
-N <- 100
-
 design <-
+  declare_parameters(
+    effect_size = 0.1,
+    N = 100
+  ) +
   declare_model(
     N = N,
     U = rnorm(N),

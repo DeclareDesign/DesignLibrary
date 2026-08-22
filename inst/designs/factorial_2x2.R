@@ -15,12 +15,13 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: true
 ---
 
-CATE_Z1_Z2_0 <- 0.2
-CATE_Z2_Z1_0 <- 0.1
-interaction <- 0.1
-N <- 1000
-
 design <-
+  declare_parameters(
+    CATE_Z1_Z2_0 = 0.2,
+    CATE_Z2_Z1_0 = 0.1,
+    interaction = 0.1,
+    N = 1000
+  ) +
   declare_model(
     N = N,
     U = rnorm(N),

@@ -23,9 +23,10 @@ portola <-
   )
 data <- portola
 
-effort <- 0 # baseline of no extra effort
-
 design <- 
+  declare_parameters(
+    effort = 0  # baseline of no extra effort
+  ) +
   declare_model(data = data) + 
   declare_measurement(Y = as.numeric(cut(Y_star, 7))) + 
   declare_inquiry(Y_bar = mean(Y)) + 

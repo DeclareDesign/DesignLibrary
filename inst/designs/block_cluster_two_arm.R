@@ -23,16 +23,17 @@ params:
 include_in_shiny: true
 ---
 
-N_blocks <- 20
-N_clusters_in_block <- 4
-N_i_in_cluster <- 10
-sd_block <- 0.577
-sd_cluster <- 0.577
-sd_i <- 0.577
-ate <- 0.2
-assignment_prob <- 0.5
-
 design <-
+  declare_parameters(
+    N_blocks = 20,
+    N_clusters_in_block = 4,
+    N_i_in_cluster = 10,
+    sd_block = 0.577,
+    sd_cluster = 0.577,
+    sd_i = 0.577,
+    ate = 0.2,
+    assignment_prob = 0.5
+  ) +
   declare_model(
     blocks = add_level(
       N = N_blocks,

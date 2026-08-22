@@ -13,10 +13,11 @@ book_link: https://book.declaredesign.org/library/experimental-causal.html#def-c
 include_in_shiny: false
 ---
 
-n_units <- 100
-effect_size  <- .5
-
 design <-
+  declare_parameters(
+    n_units = 100,
+    effect_size = .5
+  ) +
   declare_model(
     N = n_units, 
     U_unit = rnorm(N),

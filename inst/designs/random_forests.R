@@ -23,7 +23,6 @@ include_in_shiny: true
 pacman::p_load(rdss, # for helper functions
                grf)  # random forests
 
-covariate_names <- paste0("X.", 1:10)
 
 f_Y <- function(z, X.1, X.2, X.3, X.4, u) 
   z * X.1 + z * X.2 ^ 2 + z * exp(X.3) + z * X.3 * X.4 + u
@@ -32,11 +31,12 @@ get_best_predictor <-
   function(data) select(data, estimate = var_imp) |> 
   dplyr::slice(1)
 
-share_train <- 0.5
-
-N <- 1000
-
 design <- 
+  declare_parameters(
+    covariate_names = paste0("X.", 1:10),
+    share_train = 0.5,
+    N = 1000
+  ) +
   declare_model(
     N = N,  
     X = matrix(rnorm(10 * N), N),

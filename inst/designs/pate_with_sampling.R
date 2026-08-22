@@ -16,13 +16,13 @@ book_link: https://book.declaredesign.org/declaration-diagnosis-redesign/declari
 include_in_shiny: true
 ---
 
-
-N <- 100
-n <- 50
-b <- 0.25
-prob <- 0.5
-
 design <-
+  declare_parameters(
+    N = 100,
+    n = 50,
+    b = 0.25,
+    prob = 0.5
+  ) +
   declare_model(
     N = N,
     U = rnorm(N),

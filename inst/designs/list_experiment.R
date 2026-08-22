@@ -1,4 +1,4 @@
-﻿---
+---
 id: list_experiment
 alias: "17.3"
 label: list experiment
@@ -12,9 +12,10 @@ book_link: https://book.declaredesign.org/library/experimental-descriptive.html#
 include_in_shiny: true
 ---
 
-N <- 500
-
 design <-
+  declare_parameters(
+    N = 500
+  ) +
   declare_model(
     N = N,
     control_count = rbinom(N, size = 3, prob = 0.5),

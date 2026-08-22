@@ -1,4 +1,4 @@
-﻿---
+---
 id: two_outcome_model_b
 alias: "10.3b"
 label: Two-outcome model B
@@ -10,9 +10,10 @@ params:
 include_in_shiny: false
 ---
 
-N <- 200
-
 design  <-
+  declare_parameters(
+    N = 200
+  ) +
   declare_model(
     N = N,
     U = rnorm(N),
@@ -26,4 +27,3 @@ design  <-
                       Y2 = reveal_outcomes(Y2 ~ Z)) +
   declare_estimator(Y1 ~ Z, inquiry = "ATE1", label = "DIM1") +
   declare_estimator(Y2 ~ Z, inquiry = "ATE2", label = "DIM2")
-
