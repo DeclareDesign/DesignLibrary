@@ -43,7 +43,7 @@
 # in a script of top-level assignments.
 
 .libPaths(c(Sys.getenv("SPLIB"), .libPaths()))
-suppressMessages({library(fabricatrZero); library(DeclareDesignZero); library(randomizr); library(estimatr)})
+suppressMessages({library(fabricatr); library(DeclareDesign); library(randomizr); library(estimatr)})
 dl <- Sys.getenv("DL_LIB"); ns <- loadNamespace("DesignLibrary", lib.loc = dl)
 # Read the designers out of this repository rather than a scratch copy.
 files <- list.files("R", pattern = "designer\\.R$", full.names = TRUE)

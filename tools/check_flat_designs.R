@@ -5,14 +5,14 @@
 # diagnosis when redesign() changes it. The fourth is the one a slider UI
 # cannot survive failing silently.
 
-library(fabricatrZero)
-library(DeclareDesignZero)
+library(fabricatr)
+library(DeclareDesign)
 library(randomizr)
-library(estimatrZero)
+library(estimatr)
 library(tidyverse)
 
 # Report which engine answered ----
-for (p in c("DeclareDesignZero", "fabricatrZero", "estimatrZero", "randomizr")) {
+for (p in c("DeclareDesign", "fabricatr", "estimatr", "randomizr")) {
   print(paste0(p, " ", packageDescription(p)$Version, " @ ", dirname(system.file(package = p))))
 }
 

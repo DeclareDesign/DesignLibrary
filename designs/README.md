@@ -59,7 +59,7 @@ the data when `redesign()` changes it**. The last is the failure a slider
 cannot survive quietly, since the control moves, the diagnosis re-runs, and the
 number does not change.
 
-As of 2026-08-18, against DeclareDesignZero 2.0.0 at `e4000ca`: all three
+As of 2026-08-18, against DeclareDesign 2.0.0 at `e4000ca`: all three
 build, 0 orphan inquiries, every parameter live (8/8, 9/9, 5/5), and no bias
 distinguishable from zero at 500 sims.
 
