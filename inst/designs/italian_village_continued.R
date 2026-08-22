@@ -27,4 +27,4 @@ design <-
   declaration_9.1 +
   declare_test(age ~ 1,
                linear_hypothesis = linear_hypothesis,
-               .method = estimatrZero::lh_robust, label = "test")
+               .method = estimatr::lh_robust, label = "test")

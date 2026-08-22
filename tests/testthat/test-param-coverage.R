@@ -1,5 +1,5 @@
 test_that("param coverage: declared+used objects appear in design params (atomic)", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   if (dir.exists("../../inst/designs")) {

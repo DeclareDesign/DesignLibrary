@@ -15,21 +15,21 @@ empty_params_df <- function() {
 
 #' Discover modifiable parameters from a design object
 #'
-#' Uses DeclareDesignZero's object finder. When `code` is supplied, only names
+#' Uses DeclareDesign's object finder. When `code` is supplied, only names
 #' that also appear as top-level assignments before `design <-` are kept — so
 #' literal step arguments like `se_type = "stata"` are not treated as knobs.
 #' Functions assigned before `design <-` are knobs (`kind = "function"`).
 #' Pre-design assignments the finder missed (or an error in the finder) are
 #' still exposed.
 #'
-#' @param design A DeclareDesignZero `design` object.
+#' @param design A DeclareDesign `design` object.
 #' @param code Optional design file code (without YAML) used to restrict to
 #'   author-assigned knobs.
 #' @return Data frame with `name`, `value_str`, `value`, `step`, `kind`, `shiny`.
 #' @noRd
 discover_design_params <- function(design, code = NULL) {
   objs <- tryCatch(
-    DeclareDesignZero:::find_all_objects(design),
+    DeclareDesign:::find_all_objects(design),
     error = function(e) NULL
   )
   params <- filter_modifiable_params(objs)
@@ -415,7 +415,7 @@ symbol_used_in_code <- function(name, code) {
 #'
 #' Runs the design, reads `discover_design_params()`, and compares to top-level
 #' assignments before `design <-`. Flags names that are used in the design body
-#' (or seen by DeclareDesignZero's object finder) but not in the redesignable
+#' (or seen by DeclareDesign's object finder) but not in the redesignable
 #' parameter list.
 #'
 #' Design steps (MIDA pieces built with `declare_*`, etc.) are not parameters
@@ -474,7 +474,7 @@ param_coverage_gaps <- function(design, include_steps = FALSE) {
   }
 
   finder_names <- character(0)
-  objs <- tryCatch(DeclareDesignZero:::find_all_objects(dobj), error = function(e) NULL)
+  objs <- tryCatch(DeclareDesign:::find_all_objects(dobj), error = function(e) NULL)
   if (!is.null(objs) && nrow(objs) && "name" %in% names(objs)) {
     finder_names <- unique(as.character(objs$name))
   }

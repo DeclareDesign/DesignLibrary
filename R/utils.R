@@ -209,18 +209,9 @@ ensure_packages_attached <- function(pkgs) {
 #' Core stack always available when loading designs
 #' @noRd
 core_packages <- function() {
-  # fabricatrZero before DeclareDesignZero (DD imports fabricatr).
-  #
-  # estimatr goes FIRST, and the order is load-bearing. ensure_packages_attached()
-  # calls library() in sequence, so the last package attached sits highest on the
-  # search path. DeclareDesignZero Depends on estimatrZero, so attaching estimatr
-  # last shadowed estimatrZero for all 13 names the two share, and every
-  # lm_robust, difference_in_means and lh_robust in the library resolved to CRAN
-  # estimatr 1.0.6 instead. That is what broke italian_village_continued, whose
-  # single-coefficient lh_robust hits a bug estimatrZero has already fixed.
-  #
-  # estimatr stays in the list only for declaration_to_condition_pr_mat,
-  # gen_pr_matrix_cluster and permutations_to_condition_pr_mat, the three names
-  # estimatrZero does not export. No design currently uses them.
-  c("estimatr", "fabricatrZero", "DeclareDesignZero", "randomizr")
+  # fabricatr before DeclareDesign, which imports it. Attach order used to be
+  # load-bearing here, because the rewrite carried *Zero names and the two
+  # copies of estimatr shadowed each other for the 13 names they shared. Each
+  # package has one name again, so nothing shadows anything.
+  c("fabricatr", "DeclareDesign", "estimatr", "randomizr")
 }

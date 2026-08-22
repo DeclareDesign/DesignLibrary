@@ -1,6 +1,6 @@
 # ResearchDesigns
 
-A prototype for a library of declared designs using DeclareDesignZero.
+A prototype for a library of declared designs using DeclareDesign.
 
 **Versioning:** start at 0.1.0 and bump slowly. Current: 0.1.1.
 
@@ -22,7 +22,7 @@ make_design("2.1", b = 0.5)          # book alias
 get_args("two_arm_trial")
 get_code("two_arm_trial")             # simple make_design() + full source
 run_shiny()
-install_library_dependencies()        # Imports + Shiny Suggests + YAML packages: (+ Zero from GitHub)
+install_library_dependencies()        # Imports + Shiny Suggests + YAML packages: (+ the rewrite branches from GitHub)
 copy_library_shiny("path/to/app")     # standalone Shiny folder for the server
 ```
 
@@ -67,11 +67,11 @@ diagnosands: [rmse, bias]
 # or: diagnosands: rmse, bias
 ```
 
-## Classic DeclareDesign vs DeclareDesignZero
+## Classic DeclareDesign vs DeclareDesign
 
 **Classic DeclareDesign** (and DesignLibrary) often paired a *designer function* with a design: parameters lived on the designer, and tools like `expand_design(two_arm_designer, N = c(50, 100))` swept that function. Reproducible code was glued on with special extraction (`{{{ }}}`).
 
-**DeclareDesignZero** keeps the same declaration verbs (`declare_model`, `+`, `diagnose_design`, …) but treats the **declared design itself** as redesignable. Free symbols in the design (e.g. `b`, `tau`) are found on the object, so:
+**DeclareDesign** keeps the same declaration verbs (`declare_model`, `+`, `diagnose_design`, …) but treats the **declared design itself** as redesignable. Free symbols in the design (e.g. `b`, `tau`) are found on the object, so:
 
 ```r
 designs <- redesign(design, tau = c(0.1, 0.3, 0.5))

@@ -1,14 +1,14 @@
 test_that("DesignLibrary-named designers return designs", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   d <- two_arm_designer(N = 20, ate = 0.5)
   expect_s3_class(d, "design")
-  est <- DeclareDesignZero::draw_estimands(d)
+  est <- DeclareDesign::draw_estimands(d)
   expect_equal(as.numeric(est$estimand[est$inquiry == "ATE"]), 0.5, tolerance = 1e-8)
 
   d2 <- two_arm_designer(N = 20, control_mean = 1, treatment_mean = 3)
-  est2 <- DeclareDesignZero::draw_estimands(d2)
+  est2 <- DeclareDesign::draw_estimands(d2)
   expect_equal(as.numeric(est2$estimand[est2$inquiry == "ATE"]), 2, tolerance = 1e-8)
 
   expect_s3_class(two_arm_attrition_designer(N = 30), "design")
@@ -24,17 +24,17 @@ test_that("DesignLibrary-named designers return designs", {
 })
 
 test_that("multi_arm_designer accepts m_arms = 4", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   d3 <- multi_arm_designer(N = 30)
   expect_s3_class(d3, "design")
-  est3 <- DeclareDesignZero::draw_estimands(d3)
+  est3 <- DeclareDesign::draw_estimands(d3)
   expect_equal(sort(as.character(est3$inquiry)), c("ate_Y_2_1", "ate_Y_3_1"))
 
   d4 <- multi_arm_designer(m_arms = 4)
   expect_s3_class(d4, "design")
-  est4 <- DeclareDesignZero::draw_estimands(d4)
+  est4 <- DeclareDesign::draw_estimands(d4)
   expect_equal(
     sort(as.character(est4$inquiry)),
     c("ate_Y_2_1", "ate_Y_3_1", "ate_Y_4_1")
@@ -46,9 +46,9 @@ test_that("multi_arm_designer accepts m_arms = 4", {
     outcome_means = c(0, 0.5, 1, 2)
   )
   expect_s3_class(d4b, "design")
-  dat <- DeclareDesignZero::draw_data(d4b)
+  dat <- DeclareDesign::draw_data(d4b)
   expect_equal(sort(unique(as.integer(dat$Z))), 1:4)
-  est <- DeclareDesignZero::draw_estimands(d4b)
+  est <- DeclareDesign::draw_estimands(d4b)
   expect_equal(as.numeric(est$estimand[est$inquiry == "ate_Y_2_1"]), 0.5, tolerance = 1e-8)
   expect_equal(as.numeric(est$estimand[est$inquiry == "ate_Y_4_1"]), 2, tolerance = 1e-8)
 
@@ -58,7 +58,7 @@ test_that("multi_arm_designer accepts m_arms = 4", {
   )
 
   d_lib <- make_design("multiarm_trial")
-  est_lib <- DeclareDesignZero::draw_estimands(d_lib)
+  est_lib <- DeclareDesign::draw_estimands(d_lib)
   expect_equal(as.numeric(est_lib$estimand[est_lib$inquiry == "ate_Y_2_1"]), 0, tolerance = 1e-8)
   expect_equal(as.numeric(est_lib$estimand[est_lib$inquiry == "ate_Y_3_1"]), 0, tolerance = 1e-8)
   expect_equal(attr(d_lib, "research_designs_id"), "multiarm_trial")
@@ -73,7 +73,7 @@ test_that("multi_arm_designer accepts m_arms = 4", {
     outcome_sds = c(0, 0, 0, 0),
     conditions = 1:4
   )
-  expect_equal(sort(unique(as.integer(DeclareDesignZero::draw_data(d_make)$Z))), 1:4)
+  expect_equal(sort(unique(as.integer(DeclareDesign::draw_data(d_make)$Z))), 1:4)
 })
 
 test_that("designer argument names match DesignLibrary where we claim them", {

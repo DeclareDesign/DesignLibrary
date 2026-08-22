@@ -42,7 +42,7 @@ test_that("coupled_help_text matches the Shiny / message note", {
 })
 
 test_that("make_design sources at defaults then redesigns", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   expect_false("overlay" %in% names(formals(ResearchDesigns:::eval_design)))
@@ -64,7 +64,7 @@ test_that("make_design sources at defaults then redesigns", {
 })
 
 test_that("design_info print shows coupled notes", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   out <- paste(capture.output(print(design_info("multiarm_trial"))), collapse = "\n")

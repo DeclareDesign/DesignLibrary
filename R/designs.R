@@ -443,7 +443,7 @@ print.research_designs_info <- function(x, ...) {
 #' Build a design, optionally with redesigned parameters
 #'
 #' Loads the declared design at its defaults. Named `...` values are applied
-#' with [DeclareDesignZero::redesign()]. The design object is the source of
+#' with [DeclareDesign::redesign()]. The design object is the source of
 #' truth for which names can be changed; see [get_args()]. Vector parameters
 #' are wrapped so `redesign()` replaces the whole vector instead of sweeping.
 #' YAML `coupled:` drivers (for example `m_arms`) emit a `message()` when
@@ -486,10 +486,10 @@ make_design <- function(design = "two_arm_trial", ...) {
   }
   dots <- prepare_redesign_dots(params, dots)
   shown <- message_coupled_if_needed(parsed$meta, dots, design = d, code = parsed$code)
-  # `.design` since DeclareDesignZero 2.0: an undotted `design` partially
+  # `.design` since DeclareDesign 2.0: an undotted `design` partially
   # matched, so a design with a parameter named `d` (mediation_analysis) had
   # its design object replaced by the parameter's value.
-  d <- do.call(DeclareDesignZero::redesign, c(list(.design = d), dots))
+  d <- do.call(DeclareDesign::redesign, c(list(.design = d), dots))
   if (inherits(d, "design")) {
     extra <- setdiff(
       coupled_issues(parsed$meta, list(), design = d, code = parsed$code),

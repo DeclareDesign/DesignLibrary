@@ -5,7 +5,7 @@ Authors@R: person("Macartan", "Humphreys",
                   email = "macartan.humphreys@wzb.eu",
                   role = c("aut", "cre"))
 Description: A lightweight library of research designs declared with
-    DeclareDesignZero. Designs live as self-contained R files; editable
+    DeclareDesign. Designs live as self-contained R files; editable
     parameters are read from the design itself. Optional YAML metadata
     adds labels, categories, tips, and book aliases. Includes maintainer
     tools to index, audit, and bake small diagnosis previews, plus a
@@ -15,8 +15,8 @@ Encoding: UTF-8
 Depends:
     R (>= 4.1.0)
 Imports:
-    fabricatrZero,
-    DeclareDesignZero,
+    fabricatr,
+    DeclareDesign,
     randomizr,
     estimatr,
     yaml,

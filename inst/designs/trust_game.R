@@ -49,7 +49,7 @@ design <-
 
   declare_assignment(pair = complete_ra(N = N, num_arms = n_pairs),
                      role = 1 + block_ra(blocks = pair)) + 
-  # Quoted column names: DeclareDesignZero evaluates step args as values;
+  # Quoted column names: DeclareDesign evaluates step args as values;
   # tidyr::pivot_wider needs tidyselect (expressions / names). See notes_zero.
   declare_step(
     id_cols = "pair",

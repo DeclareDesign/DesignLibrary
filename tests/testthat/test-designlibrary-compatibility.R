@@ -30,7 +30,7 @@ test_that("DesignLibrary designer names are exported", {
 })
 
 test_that("ported DesignLibrary designers return a design", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   call_small <- function(nm) {
@@ -49,7 +49,7 @@ test_that("ported DesignLibrary designers return a design", {
     expect_true(inherits(d, "design"), info = nm)
     expect_true(length(d) >= 1L, info = paste(nm, "has no steps"))
     dat <- tryCatch(
-      DeclareDesignZero::draw_data(d),
+      DeclareDesign::draw_data(d),
       error = function(e) e
     )
     expect_false(inherits(dat, "error"), info = paste(nm, conditionMessage(dat)))
@@ -88,7 +88,7 @@ wrapper_only_aliases <- list(
 )
 
 test_that("designer formals that are passed through match library knobs", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   ns <- asNamespace("ResearchDesigns")

@@ -93,7 +93,7 @@ Optional frontmatter sits between `---` lines at the top of the file.
 | `description` | One or two sentences on what the design does. Use YAML `>` for a folded block. |
 | `category` | Grouping label. Use `rdss` for book designs; `template` for teaching starters; otherwise a short group name. |
 | `keywords` | List of search terms, e.g. `[experiment, blocking]`. |
-| `packages` | Extra R packages beyond DeclareDesignZero, e.g. `[margins, broom]`. |
+| `packages` | Extra R packages beyond DeclareDesign, e.g. `[margins, broom]`. |
 | `diagnosands` | Preferred display diagnosands, e.g. `[rmse, bias]`. Prefix with `-` to hide one (`rmse, -bias, power`). |
 | `params` | Map parameter names to tip strings. Always quote keys: `"N": "Sample size"`. Names must match redesignable parameters. Data frames and matrices are R-only (`make_design(..., data = ...)`), not Shiny controls. |
 | `coupled` | Optional map from a driver to dependents that must match its length, e.g. `m_arms: [outcome_means, outcome_sds, conditions]`. `make_design()` `message()`s and the Shiny redesign help box always show the note. |

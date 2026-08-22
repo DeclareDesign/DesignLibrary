@@ -3,7 +3,7 @@ template:
   bootstrap: 5
 home:
   title: ResearchDesigns
-  description: A library of declared designs (DeclareDesignZero), with a small API and bundled Shiny browser.
+  description: A library of declared designs (DeclareDesign), with a small API and bundled Shiny browser.
 navbar:
   structure:
     left: [intro, reference, articles]

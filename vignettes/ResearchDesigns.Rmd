@@ -19,7 +19,7 @@ if (dir.exists("../inst/designs")) {
   options(ResearchDesigns.root = normalizePath("..", winslash = "/"))
 }
 library(ResearchDesigns)
-library(DeclareDesignZero)
+library(DeclareDesign)
 library(ggplot2)
 ```
 

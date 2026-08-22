@@ -1,6 +1,6 @@
 #' ResearchDesigns: a library of declared designs
 #'
-#' Lightweight library of research designs declared with DeclareDesignZero.
+#' Lightweight library of research designs declared with DeclareDesign.
 #' Designs live as self-contained R files under `inst/designs/`. Editable
 #' parameters are read from the design object; optional YAML metadata adds
 #' labels, categories, book aliases, `diagnosands:` display defaults, and

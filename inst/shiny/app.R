@@ -434,7 +434,7 @@ contribute_yaml_tips <- function() {
       "One or two sentences on what the design does. Use YAML > for a folded block.",
       "Grouping label. Use rdss for book designs; template for teaching starters; otherwise a short group name.",
       "List of search terms, e.g. [experiment, blocking].",
-      "Extra R packages the design needs beyond DeclareDesignZero, e.g. [margins, broom].",
+      "Extra R packages the design needs beyond DeclareDesign, e.g. [margins, broom].",
       "Preferred display diagnosands, e.g. [rmse, bias]. Prefix with - to hide one (rmse, -bias, power).",
       "Map parameter names to tip strings. Always quote keys: \"N\": \"Sample size\". Only top-level assignments before design <- count (N <- 1000), not literals inside declare_*(N = 1000). No design-step names.",
       "URL to a book section or external docs.",
@@ -1045,7 +1045,7 @@ server <- function(input, output, session) {
     req(!is.na(id))
     out <- tryCatch({
       d <- ResearchDesigns::make_design(id)
-      run <- DeclareDesignZero::run_design(d)
+      run <- DeclareDesign::run_design(d)
       paste(utils::capture.output(print(run)), collapse = "\n")
     }, error = function(e) paste("Error:", conditionMessage(e)))
     run_once_txt(out)
@@ -1083,8 +1083,8 @@ server <- function(input, output, session) {
     withProgress(message = "Diagnosing…", value = 0.3, {
       res <- tryCatch({
         d <- ResearchDesigns::make_design(id)
-        diagnosis <- DeclareDesignZero::diagnose_design(d, sims = sims)
-        summary <- tryCatch(DeclareDesignZero::get_diagnosands(diagnosis), error = function(e) NULL)
+        diagnosis <- DeclareDesign::diagnose_design(d, sims = sims)
+        summary <- tryCatch(DeclareDesign::get_diagnosands(diagnosis), error = function(e) NULL)
         tidy <- tryCatch(generics::tidy(diagnosis), error = function(e) NULL)
         list(id = id, sims = sims, summary = summary, tidy = tidy, diagnosis = diagnosis, live = TRUE)
       }, error = function(e) e)
@@ -1106,7 +1106,7 @@ server <- function(input, output, session) {
     if (!is.null(obj$diagnosis)) {
       tidy <- tryCatch(generics::tidy(obj$diagnosis), error = function(e) NULL)
       if (is.null(tidy)) {
-        tidy <- tryCatch(DeclareDesignZero::tidy.diagnosis(obj$diagnosis), error = function(e) NULL)
+        tidy <- tryCatch(DeclareDesign::tidy.diagnosis(obj$diagnosis), error = function(e) NULL)
       }
       if (!is.null(tidy) && is.data.frame(tidy) && nrow(tidy)) return(tidy)
     }
@@ -1168,7 +1168,7 @@ server <- function(input, output, session) {
     NULL
   }
 
-  # DeclareDesignZero tidy() gives estimate + se(<diagnosand>), not conf.low/high
+  # DeclareDesign tidy() gives estimate + se(<diagnosand>), not conf.low/high
   add_diagnosand_ci <- function(df, z = 1.96) {
     if (is.null(df) || !nrow(df)) return(df)
     if (!"estimate" %in% names(df) && "mean" %in% names(df)) {
@@ -1482,12 +1482,12 @@ server <- function(input, output, session) {
     withProgress(message = "Redesign + diagnosis…", value = 0.2, {
       res <- tryCatch({
         design <- do.call(ResearchDesigns::make_design, c(list(design = id), st$dots))
-        diagnosis <- DeclareDesignZero::diagnose_design(design, sims = sims)
+        diagnosis <- DeclareDesign::diagnose_design(design, sims = sims)
         tidy <- tryCatch(generics::tidy(diagnosis), error = function(e) NULL)
         if (is.null(tidy)) {
-          tidy <- tryCatch(DeclareDesignZero::tidy.diagnosis(diagnosis), error = function(e) NULL)
+          tidy <- tryCatch(DeclareDesign::tidy.diagnosis(diagnosis), error = function(e) NULL)
         }
-        summary <- tryCatch(DeclareDesignZero::get_diagnosands(diagnosis), error = function(e) NULL)
+        summary <- tryCatch(DeclareDesign::get_diagnosands(diagnosis), error = function(e) NULL)
         list(
           id = id,
           sims = sims,

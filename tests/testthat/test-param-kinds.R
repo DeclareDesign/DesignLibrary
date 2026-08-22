@@ -1,5 +1,5 @@
 test_that("get_args classifies scalar, vector, and data", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   args <- get_args("simple_random_sampling")
@@ -17,7 +17,7 @@ test_that("get_args classifies scalar, vector, and data", {
 })
 
 test_that("get_args exposes functions as R-only knobs on multiarm_trial", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   args <- get_args("multiarm_trial")
@@ -35,13 +35,13 @@ test_that("get_args exposes functions as R-only knobs on multiarm_trial", {
     Y = function(Z, u, outcome_sds) as.numeric(Z) + u
   )
   expect_s3_class(d, "design")
-  dat <- DeclareDesignZero::draw_data(make_design("multiarm_trial", N = 24))
+  dat <- DeclareDesign::draw_data(make_design("multiarm_trial", N = 24))
   expect_true("Y" %in% names(dat))
   expect_equal(nrow(dat), 24L)
 })
 
 test_that("get_args succeeds when find_all_objects errors on empty names", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   for (id in c("latent_variables", "multilevel", "multilevel_answer_strategies")) {
@@ -58,7 +58,7 @@ test_that("classify_param_kind treats functions as R-only", {
 })
 
 test_that("make_design replaces a vector parameter as one value", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   d <- make_design(
@@ -69,13 +69,13 @@ test_that("make_design replaces a vector parameter as one value", {
     outcome_means = c(0, 0, 0, 1)
   )
   expect_s3_class(d, "design")
-  est <- DeclareDesignZero::draw_estimands(d)
+  est <- DeclareDesign::draw_estimands(d)
   interaction <- est$estimand[est$inquiry == "interaction"]
   expect_equal(as.numeric(interaction), 1, tolerance = 1e-6)
 })
 
 test_that("conditional_expectation lists dip and polynomial_degrees", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   args <- get_args("conditional_expectation")
@@ -216,7 +216,7 @@ test_that("redesign_kind_help is a short conditional bullet list", {
 })
 
 test_that("redesign_kind_help matches two_arm and multiarm_trial kinds", {
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   html_two <- ResearchDesigns:::redesign_kind_help("two_arm")

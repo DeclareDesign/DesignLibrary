@@ -16,7 +16,7 @@ contributor_checklist <- function() {
     "YAML params map names to tip strings; always quote keys (e.g. \"N\": \"Sample size\", \"b\": \"Effect size\"); names must match those redesignable parameters (no extras). Design steps (model_*, inquiry_*, etc.) are not params.",
     "Optional diagnosands: preferred display diagnosands (e.g. diagnosands: rmse, bias or [rmse, bias]); prefix with - to exclude (rmse, -bias, power). Shiny Diagnosis and Redesign use these defaults.",
     "Extra packages listed under packages: and available to install.",
-    "Design evaluates under DeclareDesignZero; redesign() works for documented parameters. A design that loads but does not run fails the audit.",
+    "Design evaluates under DeclareDesign; redesign() works for documented parameters. A design that loads but does not run fails the audit.",
     "Run refresh_library() from the package source tree after adding or editing designs (or set options(ResearchDesigns.root = \"...\"))."
   )
 }
@@ -454,7 +454,7 @@ audit_designs <- function(
 
     if (!is.null(sims)) {
       sim_res <- tryCatch(
-        DeclareDesignZero::diagnose_design(design, sims = as.integer(sims)),
+        DeclareDesign::diagnose_design(design, sims = as.integer(sims)),
         error = function(e) e
       )
       if (inherits(sim_res, "error")) {
@@ -764,9 +764,9 @@ bake_previews <- function(designs = NULL, sims = 100) {
     # and refresh_library() would report 0 writes after a successful bake.
     result <- tryCatch({
       design <- make_design(id)
-      diagnosis <- DeclareDesignZero::diagnose_design(design, sims = as.integer(sims))
+      diagnosis <- DeclareDesign::diagnose_design(design, sims = as.integer(sims))
       summary <- tryCatch(
-        DeclareDesignZero::get_diagnosands(diagnosis),
+        DeclareDesign::get_diagnosands(diagnosis),
         error = function(e) NULL
       )
       tidy <- tryCatch({

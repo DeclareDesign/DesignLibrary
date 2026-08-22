@@ -1,13 +1,12 @@
 #' GitHub sources for Imports not on CRAN
 #' @noRd
 github_package_sources <- function() {
-  # fabricatrZero before DeclareDesignZero (DD imports fabricatr).
-  # The standalone *Zero repos are archived and private; the rewrite branches of
-  # the parent repos carry the same sources and still build as *Zero, so the
-  # installed package names are unchanged.
+  # fabricatr before DeclareDesign (DD imports fabricatr). These build under the
+  # released names, so installing them REPLACES the CRAN versions rather than
+  # sitting beside them.
   c(
-    fabricatrZero = "DeclareDesign/fabricatr@rewrite",
-    DeclareDesignZero = "DeclareDesign/DeclareDesign@rewrite",
+    fabricatr = "DeclareDesign/fabricatr@rewrite",
+    DeclareDesign = "DeclareDesign/DeclareDesign@rewrite",
     # network_experiment needs this and it has never been on CRAN
     interference = "szonszein/interference"
   )
@@ -61,7 +60,7 @@ design_declared_packages <- function() {
 #'
 #' Installs package Imports (and, by default, Suggests needed for the Shiny
 #' browser), plus any extra packages declared in design YAML `packages:` fields.
-#' GitHub-only stack packages (`DeclareDesignZero`, `fabricatrZero`) are
+#' GitHub-only stack packages (`DeclareDesign`, `fabricatr`) are
 #' installed via `remotes::install_github()`.
 #'
 #' Typical server workflow:
@@ -103,8 +102,8 @@ install_library_dependencies <- function(
   # Never try to install ourselves this way
   pkgs <- setdiff(pkgs, "ResearchDesigns")
 
-  # fabricatrZero before DeclareDesignZero (DD imports fabricatr); others independent
-  prefer <- c("fabricatrZero", "DeclareDesignZero", "randomizr", "estimatr")
+  # fabricatr before DeclareDesign (DD imports fabricatr); others independent
+  prefer <- c("fabricatr", "DeclareDesign", "randomizr", "estimatr")
   pkgs <- unique(c(intersect(prefer, pkgs), setdiff(pkgs, prefer)))
 
   gh <- github_package_sources()

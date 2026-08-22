@@ -89,11 +89,11 @@ test_that("get_code returns simple and full forms", {
 
 test_that("alias and id both resolve", {
   skip_on_cran()
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   d1 <- tryCatch(make_design("two_arm_trial"), error = function(e) e)
   d2 <- tryCatch(make_design("2.1"), error = function(e) e)
   if (inherits(d1, "error") || inherits(d2, "error")) {
-    skip(paste("DeclareDesignZero runtime issue:", conditionMessage(d1)))
+    skip(paste("DeclareDesign runtime issue:", conditionMessage(d1)))
   }
   expect_equal(attr(d1, "research_designs_id"), "two_arm_trial")
   # Book alias 2.1 points at the RDSS chapter port, not the template
@@ -196,7 +196,7 @@ test_that("contributor_checklist is non-empty", {
 
 test_that("bake_previews returns the path it wrote", {
   skip_on_cran()
-  skip_if_not_installed("DeclareDesignZero")
+  skip_if_not_installed("DeclareDesign")
   id <- "two_arm"
   prev_dir <- ResearchDesigns:::package_write_paths()$previews
   orig <- file.path(prev_dir, paste0(id, ".rds"))
