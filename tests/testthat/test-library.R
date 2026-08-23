@@ -24,9 +24,69 @@ test_that("Shiny library table still displays a params column", {
     app <- file.path("inst", "shiny", "app.R")
   }
   lines <- readLines(app, warn = FALSE, encoding = "UTF-8")
-  expect_true(any(grepl('c\\("label", "category", "params", "packages"\\)', lines)))
+  expect_true(any(grepl('c\\("label", "params", "packages"\\)', lines)))
+  expect_false(any(grepl('c\\("label", "category", "params", "packages"\\)', lines)))
   expect_true(any(grepl("list_designs\\(shiny_only = TRUE\\)", lines)))
   expect_false(any(grepl("discover_params\\s*=\\s*TRUE", lines)))
+  expect_true(any(grepl("tabsetPanel", lines)))
+  expect_true(any(grepl("filter_library_browser", lines)))
+  expect_true(any(grepl("library_tab_keys", lines)))
+  expect_false(any(grepl("selectInput\\(\\s*\\n?\\s*\"lib_category\"", lines)))
+  expect_false(any(grepl("All categories", lines)))
+})
+
+test_that("library browser tabs map YAML categories and search globally", {
+  expect_equal(
+    ResearchDesigns:::library_tab_key(c("template", "templates", "rdss", "Other", "")),
+    c("templates", "templates", "rdss", "other", "other")
+  )
+  expect_equal(
+    ResearchDesigns:::library_tab_keys(c("rdss", "template", "survey")),
+    c("templates", "rdss", "survey")
+  )
+  expect_equal(
+    ResearchDesigns:::library_tab_keys(c("rdss", "Other")),
+    c("templates", "rdss", "other")
+  )
+  expect_equal(ResearchDesigns:::library_tab_label("templates"), "Templates")
+  expect_equal(ResearchDesigns:::library_tab_label("rdss"), "RDSS designs")
+  expect_equal(ResearchDesigns:::library_tab_label("other"), "Other")
+
+  idx <- as.data.frame(list_designs(shiny_only = TRUE))
+  if (!nrow(idx)) idx <- as.data.frame(list_designs())
+  skip_if_not(nrow(idx) >= 2L)
+
+  keys <- ResearchDesigns:::library_tab_keys(idx$category)
+  expect_equal(keys[seq_len(min(2L, length(keys)))], c("templates", "rdss")[seq_len(min(2L, length(keys)))])
+
+  templates <- idx[ResearchDesigns:::library_tab_key(idx$category) == "templates", , drop = FALSE]
+  starter <- ResearchDesigns:::starter_design_ids()
+  starter <- starter[starter %in% templates$id]
+  if (length(starter)) {
+    expect_equal(templates$id[seq_along(starter)], starter)
+  }
+
+  browse <- ResearchDesigns:::filter_library_browser(idx, tab = "templates", q = "")
+  expect_equal(browse$tab, "templates")
+  expect_true(all(ResearchDesigns:::library_tab_key(browse$rows$category) == "templates"))
+  expect_false(any(ResearchDesigns:::library_tab_key(browse$rows$category) == "rdss"))
+
+  rdss_only <- idx[ResearchDesigns:::library_tab_key(idx$category) == "rdss", , drop = FALSE]
+  skip_if_not(nrow(rdss_only) >= 1L)
+  q <- rdss_only$id[[1]]
+  hit <- ResearchDesigns:::filter_library_browser(idx, tab = "templates", q = q)
+  expect_true(hit$n_match >= 1L)
+  expect_equal(hit$tab, "rdss")
+  expect_true(q %in% hit$rows$id)
+  expect_true(all(ResearchDesigns:::library_tab_key(hit$rows$category) == "rdss"))
+
+  both_q <- "trial"
+  both <- ResearchDesigns:::filter_library_browser(idx, tab = "templates", q = both_q)
+  if (length(both$match_tabs) > 1L) {
+    expect_equal(both$tab, "templates")
+    expect_true("rdss" %in% both$match_tabs)
+    expect_gt(unname(both$n_match), nrow(both$rows))
+  }
 })
 
 test_that("list_designs print is compact", {

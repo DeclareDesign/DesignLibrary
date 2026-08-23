@@ -115,12 +115,13 @@ starter_design_ids <- function() {
   c(
     "two_arm_simple",         # Simple two-arm trial
     "two_arm_flexible",       # Flexible two-arm trial (library)
-    "multiarm_trial",         # Multi-arm trial
-    "two_arm_with_blocks",    # Two-arm trial with blocks
-    "two_arm_block_cluster",  # Two arm trial with blocks and clusters
-    "two_arm_attrition",      # Two-arm trial with attrition
+    "three_arm",              # Three-arm trial
     "two_by_two",             # 2x2 factorial (library)
+    "two_arm_block_cluster",  # Two arm trial with blocks and clusters
+    "two_arm_with_blocks",    # Two-arm trial with blocks
+    "two_arm_attrition",      # Two-arm trial with attrition
     "factorial_2x2x2",        # 2x2x2 factorial
+    "multiarm_trial",         # Multi-arm trial
     "pretest_posttest",       # Pretest-posttest design
     "randomized_response",    # Randomized response
     "mediation_analysis"      # Mediation analysis
@@ -137,6 +138,100 @@ design_list_group <- function(id, category) {
   template <- catg %in% c("template", "templates")
   rdss <- catg == "rdss"
   ifelse(starter, 1L, ifelse(template, 2L, ifelse(rdss, 3L, 4L)))
+}
+
+#' Map YAML category to a Shiny library-browser tab key.
+#' `template` / `templates` -> templates; `rdss` -> rdss; blank / `Other` -> other.
+#' Any other YAML name is kept (lowercased) so later categories get their own tab.
+#' @noRd
+library_tab_key <- function(category) {
+  catg <- tolower(trimws(as.character(category %||% "")))
+  catg[is.na(catg) | !nzchar(catg)] <- "other"
+  catg[catg %in% c("template", "templates")] <- "templates"
+  catg
+}
+
+#' Library-browser tab keys: templates, then RDSS, then remaining first-seen keys.
+#' @param always Keys that always appear (even if the current index has none).
+#' @noRd
+library_tab_keys <- function(category, always = c("templates", "rdss")) {
+  keys <- library_tab_key(category)
+  seen <- unique(c(as.character(always %||% character(0)), keys))
+  seen <- seen[nzchar(seen)]
+  preferred <- c("templates", "rdss")
+  c(intersect(preferred, seen), setdiff(seen, preferred))
+}
+
+#' Human labels for library-browser tabs.
+#' @noRd
+library_tab_label <- function(key) {
+  key <- as.character(key)
+  known <- c(templates = "Templates", rdss = "RDSS designs", other = "Other")
+  out <- unname(known[key])
+  miss <- is.na(out)
+  if (any(miss)) {
+    raw <- key[miss]
+    out[miss] <- paste0(toupper(substr(raw, 1L, 1L)), substring(raw, 2L))
+  }
+  out
+}
+
+#' Rows matching a library search query (global; not scoped to the visible tab).
+#' @noRd
+library_search_rows <- function(df, q) {
+  n <- if (is.null(df)) 0L else nrow(df)
+  if (!n) return(logical(0))
+  q <- trimws(as.character(q %||% "")[[1]])
+  if (!nzchar(q)) return(rep(TRUE, n))
+  hay <- tolower(paste(
+    df$id, df$alias %||% "", df$label %||% "", df$params %||% "",
+    df$packages %||% "", df$keywords %||% "", df$category %||% "",
+    sep = " "
+  ))
+  grepl(tolower(q), hay, fixed = TRUE)
+}
+
+#' Filter the Shiny library table: search is global, then the selected tab.
+#' If the query matches only other tabs, `tab` is switched to the first match.
+#' Row order is preserved (starter sequence, then other groups).
+#' @return list(rows, tab, match_tabs, n_match)
+#' @noRd
+filter_library_browser <- function(df, tab = "templates", q = "") {
+  df <- as.data.frame(df)
+  hit <- library_search_rows(df, q)
+  matched <- df[hit, , drop = FALSE]
+  keys_all <- library_tab_keys(df$category)
+  if (!length(keys_all)) keys_all <- "templates"
+  tab <- trimws(as.character(tab %||% "")[[1]])
+  if (!nzchar(tab)) tab <- keys_all[[1]]
+  match_tabs <- if (nrow(matched)) library_tab_keys(matched$category, always = NULL) else {
+    character(0)
+  }
+  q <- trimws(as.character(q %||% "")[[1]])
+  if (nzchar(q) && length(match_tabs) && !tab %in% match_tabs) {
+    tab <- match_tabs[[1]]
+  }
+  if (!tab %in% keys_all) tab <- keys_all[[1]]
+  tab_hit <- library_tab_key(matched$category) == tab
+  rows <- matched[tab_hit, , drop = FALSE]
+  rownames(rows) <- NULL
+  match_counts <- if (length(match_tabs)) {
+    stats::setNames(
+      vapply(match_tabs, function(k) {
+        sum(library_tab_key(matched$category) == k)
+      }, integer(1)),
+      match_tabs
+    )
+  } else {
+    integer(0)
+  }
+  list(
+    rows = rows,
+    tab = tab,
+    match_tabs = match_tabs,
+    match_counts = match_counts,
+    n_match = nrow(matched)
+  )
 }
 
 #' List designs in the library

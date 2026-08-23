@@ -5,10 +5,10 @@
 \title{Code for a design: simple \code{make_design()} call and/or full source}
 \usage{
 get_code(
-  design = c("two_arm_simple", "two_arm_flexible", "multiarm_trial",
-    "two_arm_with_blocks", "two_arm_block_cluster", "two_arm_attrition", "two_by_two",
-    "factorial_2x2x2", "pretest_posttest", "randomized_response", "mediation_analysis",
-    "three_arm", "audit_experiment", "audit_intervention", "baseline_over_N",
+  design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
+    "two_arm_block_cluster", "two_arm_with_blocks", "two_arm_attrition",
+    "factorial_2x2x2", "multiarm_trial", "pretest_posttest", "randomized_response",
+    "mediation_analysis", "audit_experiment", "audit_intervention", "baseline_over_N",
     "blocked_and_clustered", "bootstrapped", "cluster_random_sampling",
     "conditional_expectation", "conjoint", "covariate_adjustment",
     "declaration_using_declare", "design_10_2", "design_10_4", "diff_in_diff", 
@@ -52,7 +52,7 @@ A list with \code{simple} and \code{full}, class \code{research_designs_code}.
 \description{
 Returns a list with \verb{$simple} (a one-line \code{make_design()} call) and \verb{$full}
 (the design file source, prefixed with \code{library()} calls for YAML
-\code{packages:} when any are listed). Printing uses \code{\link[=cat]{cat()}} on \verb{$full} so the
+\verb{packages:} when any are listed). Printing uses \code{\link[=cat]{cat()}} on \verb{$full} so the
 console output is copy-paste ready. Use \code{style = "simple"} to print the
 one-liner instead. Programmatic access is unchanged: \code{get_code(id)$simple},
 \code{get_code(id)$full}.

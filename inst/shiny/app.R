@@ -240,6 +240,23 @@ a:hover { color: var(--dd-magenta); }
   color: var(--dd-navy); border-bottom-color: var(--dd-magenta) !important;
 }
 ", DD_NAVY, DD_MAGENTA, DD_BLUE, DD_PRIMARY, DD_LINK, DD_SOFT, DD_SOFT2, DD_SOFT_MAGENTA, DD_BODY, DD_MUTED, DD_BORDER, DD_CODE_BG)
+app_css <- paste0(
+  app_css,
+  "
+.rd-lib-tabs { margin: 0.15rem 0 0.45rem; }
+.rd-lib-tabs .tab-content { display: none; }
+.rd-lib-tabs .nav-tabs { border-bottom-color: var(--dd-border); }
+.rd-lib-tabs .nav-link, .rd-lib-tabs .nav-tabs > li > a {
+  color: var(--dd-navy); padding: 0.35rem 0.8rem; font-weight: 600;
+}
+.rd-lib-tabs .nav-link.active, .rd-lib-tabs .nav-tabs > .active > a {
+  color: var(--dd-magenta) !important; font-weight: 650;
+  border-bottom-color: var(--dd-magenta);
+}
+.rd-lib-search { margin-bottom: 0.35rem; }
+.rd-lib-hint { margin: 0 0 0.55rem; }
+"
+)
 
 brand_title <- function() {
   tags$span(
@@ -278,30 +295,40 @@ theme_obj <- if (has_bslib) {
   NULL
 }
 
+library_category_tabs <- function(categories) {
+  keys <- ResearchDesigns:::library_tab_keys(categories)
+  if (!length(keys)) keys <- c("templates", "rdss")
+  panels <- lapply(keys, function(k) {
+    tabPanel(title = ResearchDesigns:::library_tab_label(k), value = k)
+  })
+  div(
+    class = "rd-lib-tabs",
+    do.call(
+      tabsetPanel,
+      c(list(id = "lib_category", selected = keys[[1]]), panels)
+    )
+  )
+}
+
 library_panel <- function() {
+  idx <- tryCatch({
+    out <- ResearchDesigns::list_designs(shiny_only = TRUE)
+    if (!nrow(out)) ResearchDesigns::list_designs() else out
+  }, error = function(e) NULL)
+  cats <- if (!is.null(idx) && nrow(idx)) as.character(idx$category) else character(0)
   div(
     class = "rd-card",
-    fluidRow(
-      column(
-        6,
-        textInput(
-          "lib_search",
-          NULL,
-          placeholder = "Search id, alias, label, params, keywords…",
-          width = "100%"
-        )
-      ),
-      column(
-        6,
-        selectInput(
-          "lib_category",
-          NULL,
-          choices = c("All categories" = "all"),
-          selected = "all",
-          width = "100%"
-        )
+    div(
+      class = "rd-lib-search",
+      textInput(
+        "lib_search",
+        NULL,
+        placeholder = "Search all categories: id, alias, label, params, keywords…",
+        width = "100%"
       )
     ),
+    library_category_tabs(cats),
+    uiOutput("lib_search_hint"),
     if (has_dt) {
       DT::DTOutput("library_table")
     } else {
@@ -730,35 +757,66 @@ server <- function(input, output, session) {
     list(dots = dots, exprs = exprs, lengths = lengths, range_params = range_params)
   }
 
-  # Category choices follow first appearance in list_designs() (starter
-  # templates, other templates, RDSS, other). Do not alpha-sort.
-  cats <- unique(as.character(idx_all$category %||% "Other"))
-  updateSelectInput(
-    session, "lib_category",
-    choices = c("All categories" = "all", stats::setNames(cats, cats)),
-    selected = "all"
-  )
+  # Tabs: templates first, then RDSS, then any later YAML categories.
+  # Search is global; if the current tab has no hits, switch to the first
+  # matching tab (filter_library_browser).
+  library_browser_state <- reactive({
+    ResearchDesigns:::filter_library_browser(
+      as.data.frame(idx_all),
+      tab = input$lib_category %||% "templates",
+      q = input$lib_search %||% ""
+    )
+  })
+
+  observeEvent(input$lib_search, {
+    res <- library_browser_state()
+    cur <- trimws(as.character(input$lib_category %||% ""))
+    if (nzchar(res$tab) && !identical(cur, res$tab)) {
+      updateTabsetPanel(session, "lib_category", selected = res$tab)
+    }
+  }, ignoreInit = TRUE)
+
+  output$lib_search_hint <- renderUI({
+    q <- trimws(input$lib_search %||% "")
+    if (!nzchar(q)) return(NULL)
+    res <- library_browser_state()
+    if (!res$n_match) {
+      return(div(class = "rd-muted rd-lib-hint", "No matching designs."))
+    }
+    others <- setdiff(names(res$match_counts), res$tab)
+    if (!length(others)) {
+      return(div(
+        class = "rd-muted rd-lib-hint",
+        sprintf(
+          "%d match%s in %s (searched all categories).",
+          res$n_match,
+          if (res$n_match == 1L) "" else "es",
+          ResearchDesigns:::library_tab_label(res$tab)
+        )
+      ))
+    }
+    bits <- vapply(others, function(k) {
+      sprintf(
+        "%d in %s",
+        as.integer(res$match_counts[[k]]),
+        ResearchDesigns:::library_tab_label(k)
+      )
+    }, character(1))
+    div(
+      class = "rd-muted rd-lib-hint",
+      sprintf(
+        "%d match%s across all categories. Showing %s; also %s.",
+        res$n_match,
+        if (res$n_match == 1L) "" else "es",
+        ResearchDesigns:::library_tab_label(res$tab),
+        paste(bits, collapse = ", ")
+      )
+    )
+  })
 
   filtered_idx <- reactive({
-    df <- as.data.frame(idx_all)
-    cat_sel <- trimws(as.character(input$lib_category %||% "all"))
-    if (!nzchar(cat_sel) || identical(cat_sel, "all")) {
-      # keep all
-    } else {
-      df <- df[as.character(df$category) == cat_sel, , drop = FALSE]
-    }
-    q <- trimws(input$lib_search %||% "")
-    if (nzchar(q)) {
-      hay <- tolower(paste(
-        df$id, df$alias %||% "", df$label %||% "", df$params %||% "",
-        df$packages %||% "", df$keywords %||% "", df$category %||% "",
-        sep = " "
-      ))
-      df <- df[grepl(tolower(q), hay, fixed = TRUE), , drop = FALSE]
-    }
-    # Keep list_designs() row order (starter sequence, then other groups).
-    rownames(df) <- NULL
-    df
+    # Keep list_designs() row order (starter sequence within templates).
+    library_browser_state()$rows
   })
 
   # Inline SVG link icon for deep links / share
@@ -794,7 +852,6 @@ server <- function(input, output, session) {
     params_disp[is.na(df$params)] <- ""
     data.frame(
       label = if (has_dt) label_html else labels,
-      category = as.character(df$category %||% ""),
       params = params_disp,
       packages = as.character(df$packages %||% ""),
       stringsAsFactors = FALSE,
@@ -873,7 +930,7 @@ server <- function(input, output, session) {
   if (has_dt) {
     output$library_table <- DT::renderDT({
       disp <- library_display()
-      show <- disp[, c("label", "category", "params", "packages"), drop = FALSE]
+      show <- disp[, c("label", "params", "packages"), drop = FALSE]
       DT::datatable(
         show,
         selection = "single",
@@ -885,16 +942,15 @@ server <- function(input, output, session) {
           lengthChange = FALSE,
           autoWidth = FALSE,
           scrollX = TRUE,
-          # Search/filter is handled by lib_search / lib_category above
+          # Search is global (all tabs); lib_category is the visible tab
           searching = FALSE,
           order = list(),  # keep list_designs() row order from filtered_idx()
           ordering = TRUE,
-          # Must match the 4 columns in `show` (id and alias columns are hidden)
+          # Must match the 3 columns in `show` (id and alias columns are hidden)
           columnDefs = list(
-            list(width = "40%", targets = 0),  # label (+ permalink)
-            list(width = "14%", targets = 1),  # category
-            list(width = "26%", targets = 2),  # params
-            list(width = "20%", targets = 3)   # packages
+            list(width = "46%", targets = 0),  # label (+ permalink)
+            list(width = "32%", targets = 1),  # params
+            list(width = "22%", targets = 2)   # packages
           ),
           # Hide Previous/Next when everything fits on one page
           drawCallback = DT::JS(
@@ -910,7 +966,7 @@ server <- function(input, output, session) {
     })
   } else {
     output$library_table_basic <- renderTable({
-      library_display()[, c("label", "category", "params", "packages"), drop = FALSE]
+      library_display()[, c("label", "params", "packages"), drop = FALSE]
     })
   }
 
