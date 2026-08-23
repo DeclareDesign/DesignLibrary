@@ -20,7 +20,7 @@ design <-
   ) +
   
   # M: model
-  declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1  = Y0 + b) +
+  declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1  = Y_Z_0 + b) +
   
   # I: Inquiry
   declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0)) +
