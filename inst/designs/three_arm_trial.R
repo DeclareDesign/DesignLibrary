@@ -15,7 +15,7 @@ include_in_shiny: true
 
 design <-
   declare_parameters(
-    N = 90,
+    N = 500,
     outcome_means = c(0, .1, .2),
     sd_i = 1,
     prob_each = c(1,1,1)/3
@@ -25,18 +25,26 @@ design <-
     u_i = rnorm(N) * sd_i,
   ) +
   declare_inquiry(
-    ate_2 = as.numeric(outcome_means[2] - outcome_means[1]),
-    ate_3 = as.numeric(outcome_means[3] - outcome_means[1])
-  ) +
+    ate_2 = outcome_means[2] - outcome_means[1],
+    ate_3 = outcome_means[3] - outcome_means[1],
+    difference = outcome_means[3] - outcome_means[2]
+    ) +
   declare_assignment(
     Z = complete_ra(N, conditions = 1:3, prob_each = prob_each)
   ) +
   declare_measurement(
     Y = outcome_means[Z] + u_i,
+    Z1 = 1*(Z==1),
     Z2 = 1*(Z==2),
     Z3 = 1*(Z==3)) +
   declare_estimator(
     Y ~ Z2 + Z3,
     term = c("Z2", "Z3"),
     inquiry = c("ate_2", "ate_3")
+  )+
+  declare_estimator(
+    Y ~ Z1 + Z3,
+    term = "Z3",
+    inquiry = "difference",
+    label = "difference"
   )
