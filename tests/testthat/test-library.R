@@ -86,6 +86,18 @@ test_that("get_code returns simple and full forms", {
   expect_s3_class(code, "research_designs_code")
   expect_match(code$simple, 'make_design\\("two_arm_simple", b = 0\\.2\\)')
   expect_true(grepl("declare_model", code$full))
+  expect_false(grepl("library\\(", code$full))
+})
+
+test_that("get_code prefixes YAML packages as library() in $full", {
+  code <- get_code("process_tracing")
+  expect_equal(code$simple, 'make_design("process_tracing")')
+  expect_match(code$full, "^library\\(rdss\\)\\nlibrary\\(CausalQueries\\)")
+  expect_true(grepl("declare_model", code$full))
+  expect_true(grepl("process_tracing_estimator", code$full))
+  out <- paste(capture.output(print(code)), collapse = "\n")
+  expect_match(out, "^library\\(rdss\\)")
+  expect_match(out, "library\\(CausalQueries\\)")
 })
 
 test_that("get_code print method cats full source", {
@@ -95,7 +107,7 @@ test_that("get_code print method cats full source", {
   expect_false(grepl("\\$full", out))
   expect_false(grepl('\\[1\\] "', out))
   expect_match(out, "declare_parameters")
-  expect_match(out, "declare_estimator\\(Y ~ Z\\)")
+  expect_match(out, "declare_estimator\\(Y ~ Z")
   expect_equal(as.character(code), format(code))
 })
 

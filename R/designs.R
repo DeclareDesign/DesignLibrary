@@ -524,12 +524,27 @@ get_args <- function(design) {
   build_args_table(parsed$meta, d, code = parsed$code)
 }
 
+#' Prefix design source with `library()` for YAML `packages:`
+#'
+#' Only extra packages from the design YAML are included. Core stack
+#' packages are omitted unless they appear in `packages:`.
+#' @noRd
+prefix_yaml_libraries <- function(code, packages) {
+  pkgs <- unique(as_chr(packages))
+  pkgs <- trimws(pkgs)
+  pkgs <- pkgs[!is.na(pkgs) & nzchar(pkgs)]
+  if (!length(pkgs)) return(code)
+  libs <- paste0("library(", pkgs, ")", collapse = "\n")
+  paste0(libs, "\n\n", trim_code_snippet(code))
+}
+
 #' Code for a design: simple `make_design()` call and/or full source
 #'
 #' Returns a list with `$simple` (a one-line `make_design()` call) and `$full`
-#' (the design file source). Printing uses [cat()] on `$full` so the console
-#' output is copy-paste ready. Use `style = "simple"` to print the one-liner
-#' instead. Programmatic access is unchanged: `get_code(id)$simple`,
+#' (the design file source, prefixed with `library()` calls for YAML
+#' `packages:` when any are listed). Printing uses [cat()] on `$full` so the
+#' console output is copy-paste ready. Use `style = "simple"` to print the
+#' one-liner instead. Programmatic access is unchanged: `get_code(id)$simple`,
 #' `get_code(id)$full`.
 #'
 #' @param design Design id or book alias.
@@ -561,7 +576,10 @@ get_code <- function(design, style = c("both", "simple", "full"), ...) {
   simple <- paste0(simple, ")")
 
   structure(
-    list(simple = simple, full = parsed$code),
+    list(
+      simple = simple,
+      full = prefix_yaml_libraries(parsed$code, parsed$meta$packages)
+    ),
     class = c("research_designs_code", "list"),
     style = style
   )

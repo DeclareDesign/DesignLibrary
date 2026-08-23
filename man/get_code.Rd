@@ -51,9 +51,10 @@ A list with \code{simple} and \code{full}, class \code{research_designs_code}.
 }
 \description{
 Returns a list with \verb{$simple} (a one-line \code{make_design()} call) and \verb{$full}
-(the design file source). Printing uses \code{\link[=cat]{cat()}} on \verb{$full} so the console
-output is copy-paste ready. Use \code{style = "simple"} to print the one-liner
-instead. Programmatic access is unchanged: \code{get_code(id)$simple},
+(the design file source, prefixed with \code{library()} calls for YAML
+\code{packages:} when any are listed). Printing uses \code{\link[=cat]{cat()}} on \verb{$full} so the
+console output is copy-paste ready. Use \code{style = "simple"} to print the
+one-liner instead. Programmatic access is unchanged: \code{get_code(id)$simple},
 \code{get_code(id)$full}.
 }
 \examples{

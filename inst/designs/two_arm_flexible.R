@@ -1,6 +1,6 @@
 ---
 id: two_arm_flexible
-label: Flexible two-arm trial (library)
+label: Flexible two-arm trial
 category: template
 keywords: [experiment, two-arm]
 description: >
