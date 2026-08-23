@@ -50,6 +50,7 @@ design <-
     Y ~ X_c * D,
     subset = X_c > -1*bandwidth & X_c < bandwidth,
     .method = lm_robust,
+    term = "D",
     inquiry = "LATE",
     label = "linear"
   )
