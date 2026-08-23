@@ -172,9 +172,12 @@ filter_modifiable_params <- function(objs) {
         val <- tryCatch(eval(val, envir = env), error = function(e) NULL)
       }
     }
-    if (is.null(val) && nzchar(objs$value_str[[i]] %||% "")) {
+    # Last resort: DeclareDesign's `value` is a display snippet (doubles to
+    # three significant digits, long strings cut), so this recovers a value
+    # only when the row carried no environment to read the real one from.
+    if (is.null(val) && nzchar(objs$value[[i]] %||% "")) {
       val <- tryCatch(
-        eval(parse(text = objs$value_str[[i]]), envir = baseenv()),
+        eval(parse(text = objs$value[[i]]), envir = baseenv()),
         error = function(e) NULL
       )
     }
@@ -204,7 +207,7 @@ filter_modifiable_params <- function(objs) {
   kinds <- vapply(values, classify_param_kind, character(1))
   data.frame(
     name = out$name,
-    value_str = out$value_str,
+    value_str = out$value,
     value = I(values),
     step = out$step,
     kind = kinds,
@@ -673,8 +676,13 @@ format_shiny_param_default <- function(value, kind, value_str = "") {
     if (!grepl(";\\s*$", body)) body <- paste0(body, ";")
     return(body)
   }
-  if (!nzchar(vs)) return("")
-  parsed <- tryCatch(eval(parse(text = vs), envir = baseenv()), error = function(e) NULL)
+  # The value itself first: `value_str` is DeclareDesign's display snippet
+  # (three significant digits), so a default read back from it would round.
+  parsed <- value
+  if (is.null(parsed) && nzchar(vs)) {
+    parsed <- tryCatch(eval(parse(text = vs), envir = baseenv()), error = function(e) NULL)
+  }
+  if (is.null(parsed) && !nzchar(vs)) return("")
   if (is.numeric(parsed) && length(parsed) >= 1L) {
     v <- parsed[[1L]]
     if (abs(v - round(v)) < 1e-6) return(as.character(as.integer(round(v))))
