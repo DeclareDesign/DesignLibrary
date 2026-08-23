@@ -6,7 +6,7 @@
 \alias{ResearchDesigns-package}
 \title{ResearchDesigns: a library of declared designs}
 \description{
-Lightweight library of research designs declared with DeclareDesignZero.
+Lightweight library of research designs declared with DeclareDesign.
 Designs live as self-contained R files under \verb{inst/designs/}. Editable
 parameters are read from the design object; optional YAML metadata adds
 labels, categories, book aliases, \verb{diagnosands:} display defaults, and
@@ -44,11 +44,6 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Macartan Humphreys \email{macartan.humphreys@wzb.eu}
-
-Authors:
-\itemize{
-  \item Macartan Humphreys \email{macartan.humphreys@wzb.eu}
-}
 
 }
 \keyword{internal}

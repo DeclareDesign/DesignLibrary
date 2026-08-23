@@ -4,6 +4,8 @@
 
 Library listing in pedagogical order, eight DesignLibrary-named wrappers, parameter kinds for R and Shiny, and a two-simulation run in every audit.
 
+**get_code print.** `get_code()` still returns `$simple` and `$full`. Printing uses `cat()` on `$full` (or `$simple` if `style = "simple"`) so console output is copy-paste ready rather than a quoted list.
+
 **Library listing.** `list_designs()` prints grouped `id (label)` lines under Getting started, Other design templates, Other RDSS designs, and Other designs. Getting started is a fixed pedagogical sequence. Other groups show at most 10 designs unless `list_all = TRUE`. The Shiny library table uses that same row order (it no longer re-sorts by category then label) and no longer shows an alias column. Aliases still resolve in R, for example `make_design("2.1")`. `list_designs()` is metadata-only by default and uses the baked library index with a live-file overlay. The `params` column (and the Shiny library TOC) comes from that index — YAML `params:` keys plus pre-design assignment names — so listing does not evaluate each design.
 
 **Getting started.** YAML labels, in list order: Simple two-arm trial; Flexible two-arm trial (library); Multi-arm trial; Two-arm trial with blocks; Two arm trial with blocks and clusters; Two-arm trial with attrition; 2x2 factorial (library); 2x2x2 factorial; Pretest-posttest design; Randomized response; Mediation analysis.

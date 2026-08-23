@@ -1,5 +1,5 @@
 ---
-id: two_arm_trial_library
+id: two_arm_trial_rdss
 alias: "18.1"
 label: two-arm trial
 category: rdss
@@ -10,7 +10,7 @@ params:
   "N": "Number of units (sample or population size)"
   "b": "Treatment effect (outcome scale)"
 book_link: https://book.declaredesign.org/library/experimental-causal.html#def-ch18num1
-include_in_shiny: true
+include_in_shiny: false
 ---
 
 design <-

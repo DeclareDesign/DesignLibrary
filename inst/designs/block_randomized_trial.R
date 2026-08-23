@@ -1,5 +1,5 @@
 ---
-id: block_randomized_trial
+id: two_arm_block_rdss
 alias: "18.4"
 label: block randomized trial
 category: rdss

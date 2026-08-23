@@ -1,7 +1,7 @@
 ---
-id: two_arm_trial_rdss
+id: two_arm_rdss_1
 alias: "2.1"
-label: Two-arm trial from RDSS
+label: Two-arm trial from RDSS with sampling
 category: rdss
 keywords: [experiment, two-arm, introduction]
 description: >

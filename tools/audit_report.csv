@@ -1,24 +1,50 @@
 "id","alias","file","ok","skipped","issue","error","load_ok","params_ok","yaml_ok","packages","params","extra_yaml","missing_docs","coverage_gaps_atomic","coverage_gaps"
-"conjoint","17.5","conjoint.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, cjoint, dplyr, purrr","N_subjects, N_tasks, conjoint_utility","","conjoint_utility","","levels_list"
-"italian_village_bayes","9.3","italian_village_bayes.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, rstanarm","N, summary_fn","","summary_fn","",""
-"logit_probit_ols","11.5","logit_probit_ols.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"margins, broom","N, b, tidy_margins","","tidy_margins","",""
-"matching","16.2","matching.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"MatchIt","N, ate, exact_matching","","exact_matching","",""
-"network_experiment","18.13","network_experiment.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, spdep, interference, tidyverse","controlled_direct_effect, controlled_indirect_effect, total_effect, adjacency, permutations, estimator_AS","","estimator_AS","","prob_exposure"
-"random_forests","19.1","random_forests.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr, grf","covariate_names, f_Y, get_best_predictor, share_train, N","","f_Y, get_best_predictor","",""
-"regression_discontinuity","16.5","regression_discontinuity.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, rdrobust","cutoff, control, treatment, N","","control, treatment","",""
-"regression_discontinuity_fuzzy","16.6","regression_discontinuity_fuzzy.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, rdrobust","bandwidth, cutoff, control, treatment, N","","control, treatment","",""
-"structural_estimation","19.2","structural_estimation.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"bbmle","offer, likelihood, n, delta, kappa, alpha, N","","offer, likelihood","",""
-"trust_game","17.6","trust_game.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","n_pairs, deceive, invested, average_invested, returned, average_returned","","invested, average_invested, returned, average_returned","",""
-"audit_experiment","17.1","audit_experiment.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","N","","","",""
-"audit_intervention","17.2","audit_intervention.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","N","","","",""
-"bare_bones_two_arm","11.3","bare_bones_two_arm.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, prob","","","",""
-"baseline_over_N","11.1","baseline_over_N.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"broom","N","","","",""
-"block_cluster_two_arm","","block_cluster_two_arm.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N_blocks, N_clusters_in_block, N_i_in_cluster, sd_block, sd_cluster, sd_i, ate, assignment_prob","","","",""
-"block_randomized_trial","18.4","block_randomized_trial.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","b, N","","","",""
-"blocked_and_clustered","18.5","blocked_and_clustered.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","ICC, N_clusters","","","",""
+"audit_experiment","17.1","audit_experiment.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"dplyr","N","","","",""
+"audit_intervention","17.2","audit_intervention.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"dplyr","N","","","",""
+"baseline_over_N","11.1","baseline_over_N.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"broom","N","","","",""
+"blocked_and_clustered","18.5","blocked_and_clustered.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"","ICC, N_clusters","","","",""
+"cluster_random_sampling","15.3","cluster_random_sampling.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"","budget_function, se_type, ICC, state_mean, cluster_prob, locality_shock, individual_shock","","","",""
+"network_experiment","18.13","network_experiment.R",FALSE,FALSE,"missing_packages","Design 'network_experiment' needs packages not installed: interference",FALSE,FALSE,FALSE,"rdss, spdep, interference, tidyverse","","","","",""
+"two_arm_block_cluster","","block_cluster_two_arm.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"","N_blocks, N_clusters_in_block, N_i_in_cluster, sd_block, sd_cluster, sd_i, ate, assignment_prob","","","",""
+"two_arm_block_rdss","18.4","block_randomized_trial.R",FALSE,FALSE,"diagnose_failed","[38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function ""%||%""",TRUE,TRUE,TRUE,"","b, N","","","",""
 "bootstrapped","9.5","bootstrapped.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss","","","","",""
-"cluster_random_sampling","15.3","cluster_random_sampling.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","ICC, state_mean, locality_shock, individual_shock, cluster_prob, budget_function","","","",""
-"conditional_expectation","11.4","conditional_expectation.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"purrr, tibble, dplyr, tidyr, stringr","dip, x_range, polynomial_degrees, N","","","",""
+"conditional_expectation","11.4","conditional_expectation.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"purrr, tibble, dplyr, tidyr, stringr","dip, x_range, N, polynomial_degrees","","","",""
+"conjoint","17.5","conjoint.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, cjoint, dplyr, purrr","conjoint_utility, N_subjects, N_tasks","","","","levels_list"
 "covariate_adjustment","18.2","covariate_adjustment.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, r_sq, prob","","","",""
 "declaration_using_declare","10.1","declaration_using_declare.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
 "design_10_2","10.2","design_10_2.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
@@ -30,12 +56,15 @@
 "factorial_2x2x2","","factorial_2x2x2.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, effect_T1, effect_T2, effect_T3, interaction_T1_T2, interaction_T1_T3, interaction_T2_T3, interaction_T1_T2_T3, sd","","","",""
 "instrumental_variables","16.4","instrumental_variables.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","N, prob, a, b","","","",""
 "italian_village","9.1","italian_village.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
+"italian_village_bayes","9.3","italian_village_bayes.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, rstanarm","summary_fn, N","","","",""
 "italian_village_continued","9.2","italian_village_continued.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, linear_hypothesis","","","",""
 "latent_variables","15.6","latent_variables.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
 "lin_estimator","18.3","lin_estimator.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","prob, control_slope, N","","","",""
 "linear_regression","13.1","linear_regression.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
 "list_experiment","17.3","list_experiment.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
 "list_or_direct_questions","17.4","list_or_direct_questions.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","N, proportion_hiding","","","",""
+"logit_probit_ols","11.5","logit_probit_ols.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"margins, broom","tidy_margins, N, b","","","",""
+"matching","16.2","matching.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"MatchIt","exact_matching, N, ate","","","",""
 "mediation_analysis","","mediation_analysis.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, a, b, c, d, rho","","","",""
 "multi_site_studies","19.4","multi_site_studies.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"metafor, rdss, dplyr, tidyr, broom","study_sizes, study_assignment_probabilities, study_intercepts, study_priors, study_coordination","","","",""
 "multiarm_trial","","multiarm_trial.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, m_arms, outcome_means, outcome_sds, conditions, sd_i, Y","","","",""
@@ -45,24 +74,31 @@
 "population_estimands","7.1","population_estimands.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, n, superpopulation_mean","","","",""
 "pretest_posttest","","pretest_posttest.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, ate, sd_1, sd_2, rho, attrition_rate","","","",""
 "process_tracing","16.1b","process_tracing.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, CausalQueries","strategies, query","","","",""
+"random_forests","19.1","random_forests.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr, grf","f_Y, get_best_predictor, share_train, N, covariate_names","","","",""
 "randomization_inference","9.7","randomization_inference.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, ri2","block_m","","","",""
 "randomized_response","","randomized_response.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, prob_forced_yes, prevalence_rate, withholding_rate","","","",""
 "randomized_saturation","18.12","randomized_saturation.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","N_groups, N_per_group, effect_Z, effect_S_low, effect_S_high","","","",""
+"regression_discontinuity","16.5","regression_discontinuity.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, rdrobust","control, treatment, cutoff, N","","","",""
+"regression_discontinuity_fuzzy","16.6","regression_discontinuity_fuzzy.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"rdss, rdrobust","cutoff, control, treatment, bandwidth, N","","","",""
 "simple_random_sampling","15.1","simple_random_sampling.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","data, cuts, sample_size","","","",""
 "single_period_two_arm","18.11","single_period_two_arm.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","n_units, effect_size","","","",""
 "stepped_wedge","18.10","stepped_wedge.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","effect_size","","","",""
+"structural_estimation","19.2","structural_estimation.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"bbmle","offer, likelihood, n, delta, kappa, alpha, N","","","",""
 "subgroup_effects","18.6","subgroup_effects.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","data, total_n, n_x1","","","",""
 "survey_nonresponse","15.2","survey_nonresponse.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"dplyr","data, effort","","","",""
-"two_arm","","two_arm.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, assignment_prob, control_mean, control_sd, ate, treatment_sd, rho","","","",""
+"three_arm","","three_arm_trial.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, outcome_means, sd_i, prob_each","","","",""
+"trust_game","17.6","trust_game.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","invested, average_invested, returned, average_returned, n_pairs, deceive","","","",""
 "two_arm_attrition","","two_arm_attrition.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, a_R, b_R, a_Y, b_Y, rho","","","",""
-"two_arm_randomized_experiment","13.2","two_arm_randomized_experiment.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
-"two_arm_trial","","two_arm_trial.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, b","","","",""
-"two_arm_trial_library","18.1","two_arm_trial_library.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, b","","","",""
-"two_arm_trial_rdss","2.1","two_arm_trial_rdss.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, b, n","","","",""
+"two_arm_bare_bones","11.3","two_arm_rdss_11.3.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, prob","","","",""
+"two_arm_flexible","","two_arm_flexible.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, assignment_prob, control_mean, control_sd, ate, treatment_sd, rho","","","",""
+"two_arm_rdss_1","2.1","two_arm_rdss_2.1.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, b, n","","","",""
+"two_arm_rdss_2","13.2","two_arm_rdss_13.2.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
+"two_arm_simple","18.1","two_arm_simple.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, b","","","",""
+"two_arm_trial_rdss","18.1","two_arm_rdss_18.1.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, b","","","",""
 "two_arm_with_blocks","","two_arm_with_blocks.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","k, block_size, b","","","",""
 "two_arm_with_blocks_rdss","2.2","two_arm_with_blocks_rdss.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","b, N","","","",""
 "two_by_two","","two_by_two.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N, prob_A, prob_B, weight_A, weight_B, outcome_means, sd_i, outcome_sds","","","",""
 "two_outcome_model_a","10.3a","two_outcome_model_a.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","n","","","",""
 "two_outcome_model_b","10.3b","two_outcome_model_b.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
 "uncertainty_over_effect_size","11.2","uncertainty_over_effect_size.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","N","","","",""
-"village_campaign","12.1a","village_campaign.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","n_villages, citizens_per_village","","","",""
+"village_campaign","12.1a","village_campaign.R",TRUE,FALSE,"","",TRUE,TRUE,TRUE,"","n_villages, citizens_per_village, se_type","","","",""

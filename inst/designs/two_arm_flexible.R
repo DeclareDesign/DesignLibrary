@@ -1,5 +1,5 @@
 ---
-id: two_arm
+id: two_arm_flexible
 label: Flexible two-arm trial (library)
 category: template
 keywords: [experiment, two-arm]
@@ -34,8 +34,8 @@ design <-
     u_0 = rnorm(N),
     u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(pmax(0, 1 - rho^2))),
     potential_outcomes(
-      Y ~ (1 - Z) * (u_0 * control_sd + control_mean) +
-        Z * (u_1 * treatment_sd + control_mean + ate)
+      Y ~ control_mean +
+          (1 - Z) * (u_0 * control_sd) + Z* (u_1 * treatment_sd + ate)
     )
   ) +
   declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0)) +

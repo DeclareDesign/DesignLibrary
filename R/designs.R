@@ -111,11 +111,11 @@ designlibrary_core_ids <- function() {
 #' @noRd
 starter_design_ids <- function() {
   c(
-    "two_arm_trial",          # Simple two-arm trial
-    "two_arm",                # Flexible two-arm trial (library)
+    "two_arm_simple",         # Simple two-arm trial
+    "two_arm_flexible",       # Flexible two-arm trial (library)
     "multiarm_trial",         # Multi-arm trial
     "two_arm_with_blocks",    # Two-arm trial with blocks
-    "block_cluster_two_arm",  # Two arm trial with blocks and clusters
+    "two_arm_block_cluster",  # Two arm trial with blocks and clusters
     "two_arm_attrition",      # Two-arm trial with attrition
     "two_by_two",             # 2x2 factorial (library)
     "factorial_2x2x2",        # 2x2x2 factorial
@@ -465,7 +465,7 @@ print.research_designs_info <- function(x, ...) {
 #' make_design("two_arm_trial", b = 0.5)
 #' make_design("2.1", b = 0.5)  # book alias
 #' }
-make_design <- function(design = "two_arm_trial", ...) {
+make_design <- function(design = "two_arm_simple", ...) {
   # When formals are the full library vector (set in .onLoad for IDE completion),
   # a bare make_design() call receives that vector — use the first id.
   if (length(design) > 1L) design <- design[[1L]]
@@ -524,11 +524,24 @@ get_args <- function(design) {
 
 #' Code for a design: simple `make_design()` call and/or full source
 #'
+#' Returns a list with `$simple` (a one-line `make_design()` call) and `$full`
+#' (the design file source). Printing uses [cat()] on `$full` so the console
+#' output is copy-paste ready. Use `style = "simple"` to print the one-liner
+#' instead. Programmatic access is unchanged: `get_code(id)$simple`,
+#' `get_code(id)$full`.
+#'
 #' @param design Design id or book alias.
-#' @param style `"simple"`, `"full"`, or `"both"`.
+#' @param style `"simple"`, `"full"`, or `"both"`. Controls which snippet
+#'   [print()] and [as.character()] show. `$simple` and `$full` are always
+#'   both present.
 #' @param ... Optional parameter values included in the simple snippet.
-#' @return Character string (or named list if `style = "both"`).
+#' @return A list with `simple` and `full`, class `research_designs_code`.
 #' @export
+#' @examples
+#' \dontrun{
+#' get_code("two_arm_simple")
+#' get_code("two_arm_simple")$simple
+#' }
 get_code <- function(design, style = c("both", "simple", "full"), ...) {
   style <- match.arg(style)
   if (length(design) > 1L) design <- design[[1L]]
@@ -545,9 +558,39 @@ get_code <- function(design, style = c("both", "simple", "full"), ...) {
   }
   simple <- paste0(simple, ")")
 
-  full <- parsed$code
+  structure(
+    list(simple = simple, full = parsed$code),
+    class = c("research_designs_code", "list"),
+    style = style
+  )
+}
 
-  if (identical(style, "simple")) return(simple)
-  if (identical(style, "full")) return(full)
-  list(simple = simple, full = full)
+#' @noRd
+code_snippet <- function(x, style = NULL) {
+  style <- style %||% attr(x, "style") %||% "full"
+  raw <- if (identical(style, "simple")) x$simple else x$full
+  paste(raw, collapse = "\n")
+}
+
+#' Strip surrounding blank lines so console output is copy-paste ready
+#' @noRd
+trim_code_snippet <- function(code) {
+  code <- sub("^\\s*\n", "", code, perl = TRUE)
+  sub("\n\\s*$", "", code, perl = TRUE)
+}
+
+#' @export
+format.research_designs_code <- function(x, ..., style = NULL) {
+  trim_code_snippet(code_snippet(x, style = style))
+}
+
+#' @export
+as.character.research_designs_code <- function(x, ..., style = NULL) {
+  format(x, ..., style = style)
+}
+
+#' @export
+print.research_designs_code <- function(x, ..., style = NULL) {
+  cat(format(x, ..., style = style), "\n", sep = "")
+  invisible(x)
 }

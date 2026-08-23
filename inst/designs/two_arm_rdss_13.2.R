@@ -1,5 +1,5 @@
 ---
-id: two_arm_randomized_experiment
+id: two_arm_rdss_2
 alias: "13.2"
 label: Declaration of two-arm randomized experiment
 category: rdss

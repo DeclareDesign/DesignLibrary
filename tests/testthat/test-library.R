@@ -82,9 +82,27 @@ test_that("YAML-less defaults fill category and object", {
 })
 
 test_that("get_code returns simple and full forms", {
-  code <- get_code("two_arm_trial", style = "both", b = 0.2)
-  expect_match(code$simple, 'make_design\\("two_arm_trial", b = 0\\.2\\)')
+  code <- get_code("two_arm_simple", style = "both", b = 0.2)
+  expect_s3_class(code, "research_designs_code")
+  expect_match(code$simple, 'make_design\\("two_arm_simple", b = 0\\.2\\)')
   expect_true(grepl("declare_model", code$full))
+})
+
+test_that("get_code print method cats full source", {
+  code <- get_code("two_arm_simple")
+  out <- paste(capture.output(print(code)), collapse = "\n")
+  expect_false(grepl("\\$simple", out))
+  expect_false(grepl("\\$full", out))
+  expect_false(grepl('\\[1\\] "', out))
+  expect_match(out, "declare_parameters")
+  expect_match(out, "declare_estimator\\(Y ~ Z\\)")
+  expect_equal(as.character(code), format(code))
+})
+
+test_that("get_code style = 'simple' prints the one-liner", {
+  code <- get_code("two_arm_simple", style = "simple")
+  out <- paste(capture.output(print(code)), collapse = "\n")
+  expect_equal(trimws(out), 'make_design("two_arm_simple")')
 })
 
 test_that("alias and id both resolve", {

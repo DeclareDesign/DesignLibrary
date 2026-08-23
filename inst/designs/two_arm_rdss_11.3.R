@@ -1,5 +1,5 @@
 ---
-id: bare_bones_two_arm
+id: two_arm_bare_bones
 alias: "11.3"
 label: Bare-bones two-arm trial
 category: rdss

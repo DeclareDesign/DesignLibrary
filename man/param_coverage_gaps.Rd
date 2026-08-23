@@ -19,7 +19,7 @@ Data frame of gaps (possibly empty) with columns
 \description{
 Runs the design, reads \code{discover_design_params()}, and compares to top-level
 assignments before \verb{design <-}. Flags names that are used in the design body
-(or seen by DeclareDesignZero's object finder) but not in the redesignable
+(or seen by DeclareDesign's object finder) but not in the redesignable
 parameter list.
 }
 \details{

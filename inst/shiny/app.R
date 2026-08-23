@@ -1016,14 +1016,14 @@ server <- function(input, output, session) {
     id <- selected_id()
     req(!is.na(id), nzchar(id))
     code <- ResearchDesigns::get_code(id, style = "simple")
-    tags$pre(class = "rd-code rd-code-oneline", code)
+    tags$pre(class = "rd-code rd-code-oneline", code$simple)
   })
 
   output$full_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
     code <- ResearchDesigns::get_code(id, style = "full")
-    tags$pre(class = "rd-code", code)
+    tags$pre(class = "rd-code", code$full)
   })
 
   output$args_table <- renderTable({

@@ -44,3 +44,4 @@ BugReports: https://github.com/macartan/ResearchDesigns/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.2

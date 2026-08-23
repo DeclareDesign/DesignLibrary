@@ -1,36 +1,52 @@
-ResearchDesigns audit: 67/67 ok
+ResearchDesigns audit: 60/68 ok, 8 failed
 (Order: FAIL, SKIP/parked, OK-with-notes, OK)
 
- - conjoint: OK
-     no YAML tip (ok): conjoint_utility
- - italian_village_bayes: OK
-     no YAML tip (ok): summary_fn
- - logit_probit_ols: OK
-     no YAML tip (ok): tidy_margins
- - matching: OK
-     no YAML tip (ok): exact_matching
- - network_experiment: OK
-     no YAML tip (ok): estimator_AS
- - random_forests: OK
-     no YAML tip (ok): f_Y, get_best_predictor
- - regression_discontinuity: OK
-     no YAML tip (ok): control, treatment
- - regression_discontinuity_fuzzy: OK
-     no YAML tip (ok): control, treatment
- - structural_estimation: OK
-     no YAML tip (ok): offer, likelihood
- - trust_game: OK
-     no YAML tip (ok): invested, average_invested, returned, average_returned
- - audit_experiment: OK
- - audit_intervention: OK
- - bare_bones_two_arm: OK
- - baseline_over_N: OK
- - block_cluster_two_arm: OK
- - block_randomized_trial: OK
- - blocked_and_clustered: OK
+ - audit_experiment: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
+ - audit_intervention: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
+ - baseline_over_N: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
+ - blocked_and_clustered: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
+ - cluster_random_sampling: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
+ - network_experiment: FAIL [missing_packages] - Design 'network_experiment' needs packages not installed: interference
+ - two_arm_block_cluster: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
+ - two_arm_block_rdss: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
+[36mℹ[38;5;232m With name: design.[39m
+[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
+[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
+[1mCaused by error in `names(data) %||% character(0)`:[22m
+[33m![39m could not find function "%||%"
  - bootstrapped: OK
- - cluster_random_sampling: OK
  - conditional_expectation: OK
+ - conjoint: OK
  - covariate_adjustment: OK
  - declaration_using_declare: OK
  - design_10_2: OK
@@ -42,12 +58,15 @@ ResearchDesigns audit: 67/67 ok
  - factorial_2x2x2: OK
  - instrumental_variables: OK
  - italian_village: OK
+ - italian_village_bayes: OK
  - italian_village_continued: OK
  - latent_variables: OK
  - lin_estimator: OK
  - linear_regression: OK
  - list_experiment: OK
  - list_or_direct_questions: OK
+ - logit_probit_ols: OK
+ - matching: OK
  - mediation_analysis: OK
  - multi_site_studies: OK
  - multiarm_trial: OK
@@ -57,19 +76,26 @@ ResearchDesigns audit: 67/67 ok
  - population_estimands: OK
  - pretest_posttest: OK
  - process_tracing: OK
+ - random_forests: OK
  - randomization_inference: OK
  - randomized_response: OK
  - randomized_saturation: OK
+ - regression_discontinuity: OK
+ - regression_discontinuity_fuzzy: OK
  - simple_random_sampling: OK
  - single_period_two_arm: OK
  - stepped_wedge: OK
+ - structural_estimation: OK
  - subgroup_effects: OK
  - survey_nonresponse: OK
- - two_arm: OK
+ - three_arm: OK
+ - trust_game: OK
  - two_arm_attrition: OK
- - two_arm_randomized_experiment: OK
- - two_arm_trial: OK
- - two_arm_trial_library: OK
+ - two_arm_bare_bones: OK
+ - two_arm_flexible: OK
+ - two_arm_rdss_1: OK
+ - two_arm_rdss_2: OK
+ - two_arm_simple: OK
  - two_arm_trial_rdss: OK
  - two_arm_with_blocks: OK
  - two_arm_with_blocks_rdss: OK
