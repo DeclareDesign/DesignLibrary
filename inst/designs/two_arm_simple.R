@@ -13,17 +13,22 @@ include_in_shiny: true
 ---
 
 design <-
+  
   declare_parameters(
     N = 1000,  # Number of units
     b = 0.2    # ATE
   ) +
   
-  declare_model(N = N, Y0 = rnorm(n()), Y1  = b + rnorm(n())) +
+  # M: model
+  declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1  = Y0 + b) +
+  
+  # I: Inquiry
+  declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0)) +
 
-  declare_inquiry(ATE = b) +
-  
+  # D: Data strategy  
   declare_assignment(Z = complete_ra(n())) +
+
+  declare_measurement(Y = Z*Y_Z_1 + (1-Z)*Y_Z_0) +
   
-  declare_measurement(Y = Z*Y1 + (1-Z)*Y0) +
-  
-  declare_estimator(Y ~ Z)
+  # A: Answer strategy
+  declare_estimator(Y ~ Z, .method = difference_in_means, inquiry = "ATE")
