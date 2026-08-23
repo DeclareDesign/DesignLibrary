@@ -66,7 +66,7 @@ test_that("ported DesignLibrary designers return a design", {
 #     assignment_prob, `...` unused DesignLibrary args
 # args_to_fix is ignored on every designer and is never a file knob.
 designer_to_id <- c(
-  two_arm_designer = "two_arm",
+  two_arm_designer = "two_arm_flexible",
   two_arm_attrition_designer = "two_arm_attrition",
   pretest_posttest_designer = "pretest_posttest",
   randomized_response_designer = "randomized_response",

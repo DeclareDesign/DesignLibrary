@@ -19,6 +19,7 @@ Imports:
     DeclareDesign,
     randomizr,
     estimatr,
+    rlang,
     yaml,
     utils,
     stats

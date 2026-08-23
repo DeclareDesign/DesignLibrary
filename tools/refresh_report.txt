@@ -1,10 +1,16 @@
 ResearchDesigns refresh_library() summary
 Package root: C:/WZB Dropbox/Macartan Humphreys/5_github/ResearchDesigns
-Index designs: 67
-Audit: 67 ok, 0 parked, 0 failed
-Previews written: 0 of 48 targets
+Index designs: 68
+Audit: 66 ok, 0 parked, 2 failed
+Previews written: 45 of 47 targets
 
-No failures.
+Audit failures:
+  - italian_village_bayes
+  - process_tracing
+
+Preview bake failures:
+  - bootstrapped: cannot open the connection
+  - conjoint: cannot open the connection
 
 Audit report:
   C:/WZB Dropbox/Macartan Humphreys/5_github/ResearchDesigns/tools/audit_report.csv

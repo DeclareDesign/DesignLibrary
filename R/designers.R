@@ -17,8 +17,8 @@ call_library_design <- function(id, dots) {
 
 #' Create a one-level two-arm design
 #'
-#' Routes to [make_design()] with id `"two_arm"`:
-#' `make_design("two_arm", N = N, assignment_prob = assignment_prob, ...)`.
+#' Routes to [make_design()] with id `"two_arm_flexible"`:
+#' `make_design("two_arm_flexible", N = N, assignment_prob = assignment_prob, ...)`.
 #'
 #' Builds a design with one treatment and one control arm. Treatment effects
 #' can be specified by `ate` or by `treatment_mean` (which overrides `ate`).
@@ -40,7 +40,7 @@ call_library_design <- function(id, dots) {
 #' @export
 #' @examples
 #' \dontrun{
-#' make_design("two_arm", N = 40, ate = 0.2)
+#' make_design("two_arm_flexible", N = 40, ate = 0.2)
 #' two_arm_designer(N = 40, ate = 0.2)
 #' }
 two_arm_designer <- function(
@@ -57,7 +57,7 @@ two_arm_designer <- function(
   warn_args_to_fix(args_to_fix)
   if (is.null(treatment_sd)) treatment_sd <- control_sd
   if (!is.null(treatment_mean)) ate <- treatment_mean - control_mean
-  call_library_design("two_arm", list(
+  call_library_design("two_arm_flexible", list(
     N = N,
     assignment_prob = assignment_prob,
     control_mean = control_mean,

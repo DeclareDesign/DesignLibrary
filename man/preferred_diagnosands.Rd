@@ -21,6 +21,6 @@ see \code{\link[=excluded_diagnosands]{excluded_diagnosands()}}.
 }
 \examples{
 \dontrun{
-preferred_diagnosands("two_arm_trial")
+preferred_diagnosands("two_arm_simple")
 }
 }

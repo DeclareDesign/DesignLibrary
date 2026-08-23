@@ -32,26 +32,26 @@ For the contribution workflow (fork, add file, refresh, check, pull request), se
 
 # What a design file looks like
 
-Here is the starter design `two_arm_trial`.
+Here is the starter design `two_arm_simple`.
 
 <details>
-<summary><code>inst/designs/two_arm_trial.R</code></summary>
+<summary><code>inst/designs/two_arm_simple.R</code></summary>
 
 ```{r, echo = FALSE, results = "asis"}
-path <- system.file("designs", "two_arm_trial.R", package = "ResearchDesigns")
+path <- system.file("designs", "two_arm_simple.R", package = "ResearchDesigns")
 if (!nzchar(path) || !file.exists(path)) {
   root <- tryCatch(
     ResearchDesigns:::find_package_root(),
     error = function(e) NULL
   )
   if (!is.null(root)) {
-    path <- file.path(root, "inst", "designs", "two_arm_trial.R")
+    path <- file.path(root, "inst", "designs", "two_arm_simple.R")
   }
 }
 code <- if (file.exists(path)) {
   paste(readLines(path, warn = FALSE), collapse = "\n")
 } else {
-  "# two_arm_trial.R not found in this build"
+  "# two_arm_simple.R not found in this build"
 }
 cat("```r\n", code, "\n```\n", sep = "")
 ```
@@ -68,29 +68,29 @@ As soon as that file sits in `inst/designs/`, it is available to `make_design()`
 list_designs()
 ```
 
-Call `list_designs()` to see ids and labels. Use `design_info("two_arm_trial")` or `get_args("two_arm_trial")` for one design, or `as.data.frame(list_designs(discover_params = TRUE))` for the table including redesignable parameters.
+Call `list_designs()` to see ids and labels. Use `design_info("two_arm_simple")` or `get_args("two_arm_simple")` for one design, or `as.data.frame(list_designs(discover_params = TRUE))` for the table including redesignable parameters.
 
 # Use ResearchDesigns to make a design
 
 ```{r make-default}
-my_design <- make_design("two_arm_trial")
+my_design <- make_design("two_arm_simple")
 my_design
 ```
 
 
 # Change parameters and simulate
 
-Parameters are taken from the design itself. Pass new values to `make_design()`; under the hood this uses DeclareDesign's `redesign()`. A core set of designs also keep DesignLibrary names, so `two_arm_designer(N = 40, ate = 0.2)` is the same idea as `make_design("two_arm", N = 40, ate = 0.2)`.
+Parameters are taken from the design itself. Pass new values to `make_design()`; under the hood this uses DeclareDesign's `redesign()`. A core set of designs also keep DesignLibrary names, so `two_arm_designer(N = 40, ate = 0.2)` is the same idea as `make_design("two_arm_flexible", N = 40, ate = 0.2)`.
 
 ```{r make-and-simulate}
-make_design("two_arm_trial", b = 0.3) |>
+make_design("two_arm_simple", b = 0.3) |>
   simulate_design(sims = 2)
 ```
 
 You can now change all parameters in one go.
 
 ```{r make-and-simulate-grid}
-make_design("two_arm_trial", b = c(0, .3, .6), N = c(20, 1000)) |>
+make_design("two_arm_simple", b = c(0, .3, .6), N = c(20, 1000)) |>
   simulate_design(sims = 100) |>
   ggplot(aes(estimate, p.value, color = factor(b))) + 
   geom_point()  + facet_grid(N~.)

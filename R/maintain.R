@@ -7,7 +7,7 @@
 contributor_checklist <- function() {
   c(
     "File lives in inst/designs/ and is self-contained (no source() of other designs).",
-    "Filename matches the substantive id (e.g. two_arm_trial.R).",
+    "Filename matches the substantive id (e.g. two_arm_simple.R).",
     "YAML frontmatter is optional. If present, may set id, alias (book ref), label, category, keywords, packages, diagnosands, include_in_shiny, functional, book_link, params; object: only if the design is not named `design`.",
     "No YAML is fine: id = filename stem, label = humanized id, category = Other, object = design, include_in_shiny = TRUE, functional = TRUE.",
     "Set functional: false to park a design (e.g. unavailable dependencies). Skipped by audit, smoke tests, and dependency install; forces include_in_shiny: false.",

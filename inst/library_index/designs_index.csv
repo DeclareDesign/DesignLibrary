@@ -69,7 +69,7 @@
 ",TRUE,TRUE,"multilevel.R"
 "multilevel_answer_strategies","15.5","Redesign over answer strategies.","rdss","observational, descriptive","rdss, lme4, dplyr, tibble","states","Redesign over answer strategies. (chapter 15).
 ",FALSE,TRUE,"multilevel_answer_strategies.R"
-"network_experiment","18.13","network experiment","rdss","experiment, causal","rdss, spdep, interference, tidyverse","adjacency, permutations, prob_exposure, estimator_AS, controlled_direct_effect, controlled_indirect_effect, total_effect","Experiments over spatial networks design. (chapter 18).
+"network_experiment","18.13","network experiment","rdss","experiment, causal","rdss, spdep, interference, tidyverse","adjacency, permutations, estimator_AS, controlled_direct_effect, controlled_indirect_effect, total_effect","Experiments over spatial networks design. (chapter 18).
 ",TRUE,TRUE,"network_experiment.R"
 "pate_with_sampling","4.1","PATE with sampling","rdss","sampling, experiment, PATE","","N, n, b, prob","Sample from a population, then randomly assign treatment. Inquiry is the population average treatment effect (PATE).
 ",TRUE,TRUE,"pate_with_sampling.R"
@@ -77,7 +77,7 @@
 ",TRUE,TRUE,"population_estimands.R"
 "pretest_posttest",NA,"Pretest-posttest design","template","experiment, causal, panel","","N, ate, sd_1, sd_2, rho, attrition_rate","Two-arm trial measuring the outcome before and after treatment, with attrition at the second measurement. Three answer strategies are compared: a change score, a posttest regression conditioning on the pretest, and a posttest-only difference in means. Flattened from DesignLibrary::pretest_posttest_designer.
 ",TRUE,TRUE,"pretest_posttest.R"
-"process_tracing","16.1b","process tracing","rdss","observational, causal","rdss, CausalQueries","strategies, query","Process tracing design declaration (chapter 16).
+"process_tracing","16.1b","process tracing","rdss","observational, causal","rdss, CausalQueries","query, strategies","Process tracing design declaration (chapter 16).
 ",TRUE,TRUE,"process_tracing.R"
 "random_forests","19.1","random forests","rdss","complex","dplyr, grf","f_Y, get_best_predictor, share_train, N, covariate_names","Random forests design (chapter 19) uses machine learning to study effect heterogeneity. The design targets individual level causal effects and identifies which variables are mostly commonly used to predict causal effects.
 ",TRUE,TRUE,"random_forests.R"
@@ -119,7 +119,7 @@
 ",FALSE,TRUE,"two_arm_rdss_18.1.R"
 "two_arm_rdss_1","2.1","Two-arm trial from RDSS with sampling","rdss","experiment, two-arm, introduction","","N, b, n","Two-arm trial design from RDSS chapter 2. Illustrates MIDA with a simple sampling and complete random assignment step.
 ",TRUE,TRUE,"two_arm_rdss_2.1.R"
-"two_arm_simple","18.1","Simple two-arm trial","template","experiment, two-arm","","N, b","Simple two-arm trial with complete random assignment and a population average treatment effect.
+"two_arm_simple",NA,"Simple two-arm trial","template","experiment, two-arm","","N, b","Simple two-arm trial with complete random assignment and a population average treatment effect.
 ",TRUE,TRUE,"two_arm_simple.R"
 "two_arm_with_blocks",NA,"Two-arm trial with blocks","template","experiment, two-arm, blocking","","k, block_size, b","Simple two arm design with block randomization
 ",TRUE,TRUE,"two_arm_with_blocks.R"

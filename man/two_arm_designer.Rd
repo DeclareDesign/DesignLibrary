@@ -40,8 +40,8 @@ two_arm_designer(
 A design object.
 }
 \description{
-Routes to \code{\link[=make_design]{make_design()}} with id \code{"two_arm"}:
-\code{make_design("two_arm", N = N, assignment_prob = assignment_prob, ...)}.
+Routes to \code{\link[=make_design]{make_design()}} with id \code{"two_arm_flexible"}:
+\code{make_design("two_arm_flexible", N = N, assignment_prob = assignment_prob, ...)}.
 }
 \details{
 Builds a design with one treatment and one control arm. Treatment effects
@@ -50,7 +50,7 @@ Argument names match DesignLibrary \code{two_arm_designer}.
 }
 \examples{
 \dontrun{
-make_design("two_arm", N = 40, ate = 0.2)
+make_design("two_arm_flexible", N = 40, ate = 0.2)
 two_arm_designer(N = 40, ate = 0.2)
 }
 }

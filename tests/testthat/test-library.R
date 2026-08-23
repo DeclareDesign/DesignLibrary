@@ -1,7 +1,7 @@
 test_that("list_designs finds the starter library", {
   idx <- list_designs()
   expect_true(nrow(idx) >= 2)
-  expect_true(all(c("two_arm_trial", "two_arm_with_blocks") %in% idx$id))
+  expect_true(all(c("two_arm_simple", "two_arm_with_blocks") %in% idx$id))
   expect_true("2.1" %in% idx$alias)
   expect_true("2.2" %in% idx$alias)
   expect_s3_class(idx, "research_designs_list")
@@ -12,7 +12,7 @@ test_that("list_designs is metadata-only by default", {
   expect_true("params" %in% names(idx))
   expect_type(idx$params, "character")
   expect_length(idx$params, nrow(idx))
-  two <- idx$params[idx$id %in% c("two_arm", "multiarm_trial")]
+  two <- idx$params[idx$id %in% c("two_arm_simple", "multiarm_trial")]
   expect_true(length(two) >= 1L)
   expect_true(any(nzchar(two)))
   expect_true(any(grepl("(^|, )N(,|$)", two)))
@@ -40,7 +40,7 @@ test_that("list_designs print is compact", {
     expect_match(out, "Other design templates")
   }
   expect_match(out, "Other RDSS designs")
-  expect_match(out, "two_arm \\(")
+  expect_match(out, "two_arm_simple \\(")
   expect_match(out, "design_info")
   expect_false(grepl("include_in_shiny", out))
   expect_false(grepl("\\bparams\\b", out))
@@ -108,14 +108,14 @@ test_that("get_code style = 'simple' prints the one-liner", {
 test_that("alias and id both resolve", {
   skip_on_cran()
   skip_if_not_installed("DeclareDesign")
-  d1 <- tryCatch(make_design("two_arm_trial"), error = function(e) e)
+  d1 <- tryCatch(make_design("two_arm_simple"), error = function(e) e)
   d2 <- tryCatch(make_design("2.1"), error = function(e) e)
   if (inherits(d1, "error") || inherits(d2, "error")) {
     skip(paste("DeclareDesign runtime issue:", conditionMessage(d1)))
   }
-  expect_equal(attr(d1, "research_designs_id"), "two_arm_trial")
+  expect_equal(attr(d1, "research_designs_id"), "two_arm_simple")
   # Book alias 2.1 points at the RDSS chapter port, not the template
-  expect_equal(attr(d2, "research_designs_id"), "two_arm_trial_rdss")
+  expect_equal(attr(d2, "research_designs_id"), "two_arm_rdss_1")
 })
 
 test_that("YAML diagnosands are parsed and preferred_diagnosands works", {
@@ -136,7 +136,7 @@ test_that("YAML diagnosands are parsed and preferred_diagnosands works", {
     parsed <- ResearchDesigns:::parse_design_file("designs/dg_demo.R")
     expect_equal(parsed$meta$diagnosands, c("rmse", "bias"))
   })
-  expect_equal(preferred_diagnosands("two_arm_trial"), c("bias", "power"))
+  expect_equal(preferred_diagnosands("two_arm_simple"), c("bias", "power"))
   expect_equal(preferred_diagnosands("logit_probit_ols"), c("rmse", "bias"))
   info <- design_info("logit_probit_ols")
   expect_equal(info$diagnosands, c("rmse", "bias"))
@@ -215,7 +215,7 @@ test_that("contributor_checklist is non-empty", {
 test_that("bake_previews returns the path it wrote", {
   skip_on_cran()
   skip_if_not_installed("DeclareDesign")
-  id <- "two_arm"
+  id <- "two_arm_simple"
   prev_dir <- ResearchDesigns:::package_write_paths()$previews
   orig <- file.path(prev_dir, paste0(id, ".rds"))
   bak <- tempfile(fileext = ".rds")

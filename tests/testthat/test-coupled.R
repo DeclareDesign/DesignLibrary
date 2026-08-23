@@ -32,12 +32,12 @@ test_that("coupled_help_text matches the Shiny / message note", {
     note
   )
   expect_equal(ResearchDesigns:::coupled_help_text("multiarm_trial"), note)
-  expect_equal(length(ResearchDesigns:::coupled_help_text("two_arm_trial")), 0L)
+  expect_equal(length(ResearchDesigns:::coupled_help_text("two_arm_simple")), 0L)
 
   args <- data.frame(name = "N", kind = "scalar", stringsAsFactors = FALSE)
   html <- ResearchDesigns:::redesign_kind_help("multiarm_trial", args = args)
   expect_match(html, "Note: Changing m_arms requires matching-length")
-  html_plain <- ResearchDesigns:::redesign_kind_help("two_arm", args = args)
+  html_plain <- ResearchDesigns:::redesign_kind_help("two_arm_flexible", args = args)
   expect_false(grepl("Note:", html_plain, fixed = TRUE))
 })
 
@@ -73,6 +73,6 @@ test_that("design_info print shows coupled notes", {
     out,
     "Changing m_arms requires matching-length outcome_means, outcome_sds, and conditions"
   )
-  out_plain <- paste(capture.output(print(design_info("two_arm_trial"))), collapse = "\n")
+  out_plain <- paste(capture.output(print(design_info("two_arm_simple"))), collapse = "\n")
   expect_false(grepl("Coupled parameters", out_plain))
 })

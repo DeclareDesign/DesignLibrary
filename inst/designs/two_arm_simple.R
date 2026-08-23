@@ -1,7 +1,6 @@
 ---
 id: two_arm_simple
 label: Simple two-arm trial
-alias: "18.1"
 category: template
 keywords: [experiment, two-arm]
 description: >

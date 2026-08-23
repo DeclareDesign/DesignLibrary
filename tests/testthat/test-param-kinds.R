@@ -191,7 +191,7 @@ test_that("redesign_kind_help is a short conditional bullet list", {
     stringsAsFactors = FALSE
   )
   two$default <- I(list(100, 1))
-  html_two <- ResearchDesigns:::redesign_kind_help("two_arm", args = two)
+  html_two <- ResearchDesigns:::redesign_kind_help("two_arm_flexible", args = two)
   expect_match(html_two, "^<ul><li>")
   expect_equal(n_li(html_two), 1L)
   expect_match(html_two, "You can change parameter values below")
@@ -215,11 +215,11 @@ test_that("redesign_kind_help is a short conditional bullet list", {
   expect_match(html_m, 'make_design\\("multiarm_trial"')
 })
 
-test_that("redesign_kind_help matches two_arm and multiarm_trial kinds", {
+test_that("redesign_kind_help matches two_arm_flexible and multiarm_trial kinds", {
   skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
-  html_two <- ResearchDesigns:::redesign_kind_help("two_arm")
+  html_two <- ResearchDesigns:::redesign_kind_help("two_arm_flexible")
   expect_equal(n_li(html_two), 1L)
   expect_match(html_two, "You can change parameter values below")
   expect_false(grepl("On a vector parameter", html_two, fixed = TRUE))

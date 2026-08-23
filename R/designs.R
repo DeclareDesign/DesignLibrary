@@ -47,7 +47,7 @@ normalize_design_key <- function(design) {
     return(as.character(design[[1]]))
   }
   # Allow declaration_2.1 style names passed unquoted via substitute in wrappers
-  stop("design must be a character id/alias (e.g. \"two_arm_trial\" or \"2.1\")", call. = FALSE)
+  stop("design must be a character id/alias (e.g. \"two_arm_simple\" or \"2.1\")", call. = FALSE)
 }
 
 #' Source a parsed design file and return the design object
@@ -67,6 +67,8 @@ eval_design <- function(parsed) {
   }
 
   env <- new.env(parent = globalenv())
+  # Design files may use `%||%`; R < 4.4 has it only if rlang is attached.
+  env$`%||%` <- `%||%`
   expr <- parse(text = parsed$code, keep.source = TRUE)
   eval(expr, envir = env)
 
@@ -95,7 +97,7 @@ eval_design <- function(parsed) {
 #' @noRd
 designlibrary_core_ids <- function() {
   c(
-    "two_arm",
+    "two_arm_flexible",
     "two_arm_attrition",
     "pretest_posttest",
     "randomized_response",
@@ -324,7 +326,7 @@ design_info <- function(design) {
 #' @export
 #' @examples
 #' \dontrun{
-#' preferred_diagnosands("two_arm_trial")
+#' preferred_diagnosands("two_arm_simple")
 #' }
 preferred_diagnosands <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
@@ -453,7 +455,7 @@ print.research_designs_info <- function(x, ...) {
 #' `make_design("` and pressing Tab lists installed design ids (and aliases).
 #' See [list_designs()] for the same catalogue in the console.
 #'
-#' @param design Design id or book alias. Defaults to `"two_arm_trial"` (or the
+#' @param design Design id or book alias. Defaults to `"two_arm_simple"` (or the
 #'   first installed design). Tab-completion offers the full library list.
 #' @param ... Named parameter values passed to `redesign()`.
 #' @return A design object (or a list of designs if a parameter is a vector
@@ -462,7 +464,7 @@ print.research_designs_info <- function(x, ...) {
 #' @examples
 #' \dontrun{
 #' make_design()
-#' make_design("two_arm_trial", b = 0.5)
+#' make_design("two_arm_simple", b = 0.5)
 #' make_design("2.1", b = 0.5)  # book alias
 #' }
 make_design <- function(design = "two_arm_simple", ...) {

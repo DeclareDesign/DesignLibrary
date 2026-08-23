@@ -32,8 +32,9 @@ Invisibly, a list with \code{installed}, \code{already_ok}, and \code{failed}.
 \description{
 Installs package Imports (and, by default, Suggests needed for the Shiny
 browser), plus any extra packages declared in design YAML \verb{packages:} fields.
-GitHub-only stack packages (\code{DeclareDesign}, \code{fabricatr}) are
-installed via \code{remotes::install_github()}.
+GitHub-only stack packages (\code{DeclareDesign}, \code{fabricatr}, \code{estimatr})
+come from the rewrite branches via \code{remotes::install_github()}. They
+are never installed from CRAN.
 }
 \details{
 Typical server workflow:

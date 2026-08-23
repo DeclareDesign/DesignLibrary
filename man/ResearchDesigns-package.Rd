@@ -16,10 +16,10 @@ labels, categories, book aliases, \verb{diagnosands:} display defaults, and
 
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{list_designs()
-make_design("two_arm_trial", b = 0.5)
+make_design("two_arm_simple", b = 0.5)
 two_arm_designer(N = 40, ate = 0.2)
-get_args("two_arm_trial")
-get_code("two_arm_trial")
+get_args("two_arm_simple")
+get_code("two_arm_simple")
 run_shiny()
 }\if{html}{\out{</div>}}
 }
@@ -44,6 +44,11 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Macartan Humphreys \email{macartan.humphreys@wzb.eu}
+
+Authors:
+\itemize{
+  \item Macartan Humphreys \email{macartan.humphreys@wzb.eu}
+}
 
 }
 \keyword{internal}

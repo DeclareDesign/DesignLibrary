@@ -1,50 +1,14 @@
-ResearchDesigns audit: 60/68 ok, 8 failed
+ResearchDesigns audit: 66/68 ok, 2 failed
 (Order: FAIL, SKIP/parked, OK-with-notes, OK)
 
- - audit_experiment: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
- - audit_intervention: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
- - baseline_over_N: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
- - blocked_and_clustered: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
- - cluster_random_sampling: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
- - network_experiment: FAIL [missing_packages] - Design 'network_experiment' needs packages not installed: interference
- - two_arm_block_cluster: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
- - two_arm_block_rdss: FAIL [diagnose_failed] - [38;5;232m[36mℹ[38;5;232m In index: 1.
-[36mℹ[38;5;232m With name: design.[39m
-[1mCaused by error in `base_map()` at ]8;line = 24:col = 5;file://C:\WZB Dropbox\Macartan Humphreys\5_github\DeclareDesign\R\helpers.RDeclareDesign/R/helpers.R:24:5]8;;:[22m
-[38;5;232m[36mℹ[38;5;232m In index: 1.[39m
-[1mCaused by error in `names(data) %||% character(0)`:[22m
-[33m![39m could not find function "%||%"
+ - italian_village_bayes: FAIL [missing_packages] - Design 'italian_village_bayes' needs packages not installed: rstanarm
+ - process_tracing: FAIL [missing_packages] - Design 'process_tracing' needs packages not installed: CausalQueries
+ - audit_experiment: OK
+ - audit_intervention: OK
+ - baseline_over_N: OK
+ - blocked_and_clustered: OK
  - bootstrapped: OK
+ - cluster_random_sampling: OK
  - conditional_expectation: OK
  - conjoint: OK
  - covariate_adjustment: OK
@@ -58,7 +22,6 @@ ResearchDesigns audit: 60/68 ok, 8 failed
  - factorial_2x2x2: OK
  - instrumental_variables: OK
  - italian_village: OK
- - italian_village_bayes: OK
  - italian_village_continued: OK
  - latent_variables: OK
  - lin_estimator: OK
@@ -72,10 +35,10 @@ ResearchDesigns audit: 60/68 ok, 8 failed
  - multiarm_trial: OK
  - multilevel: OK
  - multilevel_answer_strategies: OK
+ - network_experiment: OK
  - pate_with_sampling: OK
  - population_estimands: OK
  - pretest_posttest: OK
- - process_tracing: OK
  - random_forests: OK
  - randomization_inference: OK
  - randomized_response: OK
@@ -92,6 +55,8 @@ ResearchDesigns audit: 60/68 ok, 8 failed
  - trust_game: OK
  - two_arm_attrition: OK
  - two_arm_bare_bones: OK
+ - two_arm_block_cluster: OK
+ - two_arm_block_rdss: OK
  - two_arm_flexible: OK
  - two_arm_rdss_1: OK
  - two_arm_rdss_2: OK

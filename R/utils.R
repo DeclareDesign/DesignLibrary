@@ -1,4 +1,8 @@
 #' Null-coalesce helper
+#'
+#' Broader than `rlang::`%||%`` / `base::`%||%``: empty and scalar `NA`
+#' also fall through. The rlang import covers R < 4.4 when design files
+#' or rewrite helpers look up `%||%`.
 #' @noRd
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) == 0L || (length(x) == 1L && is.na(x))) y else x

@@ -6,6 +6,7 @@ github_package_sources <- function() {
   # sitting beside them.
   c(
     fabricatr = "DeclareDesign/fabricatr@rewrite",
+    estimatr = "DeclareDesign/estimatr@rewrite",
     DeclareDesign = "DeclareDesign/DeclareDesign@rewrite",
     # network_experiment needs this and it has never been on CRAN
     interference = "szonszein/interference"
@@ -60,8 +61,9 @@ design_declared_packages <- function() {
 #'
 #' Installs package Imports (and, by default, Suggests needed for the Shiny
 #' browser), plus any extra packages declared in design YAML `packages:` fields.
-#' GitHub-only stack packages (`DeclareDesign`, `fabricatr`) are
-#' installed via `remotes::install_github()`.
+#' GitHub-only stack packages (`DeclareDesign`, `fabricatr`, `estimatr`)
+#' come from the rewrite branches via `remotes::install_github()`. They
+#' are never installed from CRAN.
 #'
 #' Typical server workflow:
 #' ```r
@@ -103,7 +105,7 @@ install_library_dependencies <- function(
   pkgs <- setdiff(pkgs, "ResearchDesigns")
 
   # fabricatr before DeclareDesign (DD imports fabricatr); others independent
-  prefer <- c("fabricatr", "DeclareDesign", "randomizr", "estimatr")
+  prefer <- c("fabricatr", "estimatr", "DeclareDesign", "randomizr")
   pkgs <- unique(c(intersect(prefer, pkgs), setdiff(pkgs, prefer)))
 
   gh <- github_package_sources()
@@ -113,10 +115,28 @@ install_library_dependencies <- function(
 
   say <- function(...) if (isTRUE(verbose)) message(...)
 
+  github_stack_stale <- function(pkg) {
+    if (!requireNamespace(pkg, quietly = TRUE)) return(FALSE)
+    if (identical(pkg, "DeclareDesign")) {
+      return(!("declare_parameters" %in% getNamespaceExports("DeclareDesign")))
+    }
+    if (identical(pkg, "estimatr")) {
+      return(utils::packageVersion("estimatr") < "2.0.0")
+    }
+    if (identical(pkg, "fabricatr")) {
+      return(utils::packageVersion("fabricatr") < "2.0.0")
+    }
+    FALSE
+  }
+
   for (pkg in pkgs) {
-    if (requireNamespace(pkg, quietly = TRUE)) {
+    present <- requireNamespace(pkg, quietly = TRUE)
+    if (present && !github_stack_stale(pkg)) {
       already_ok <- c(already_ok, pkg)
       next
+    }
+    if (present && github_stack_stale(pkg)) {
+      say(pkg, " is a CRAN build; replacing it with the GitHub rewrite.")
     }
 
     ok <- FALSE
@@ -143,6 +163,14 @@ install_library_dependencies <- function(
         say("Failed ", pkg, ": ", conditionMessage(e))
         FALSE
       })
+    } else if (pkg %in% c("DeclareDesign", "fabricatr", "estimatr")) {
+      failed <- c(failed, pkg)
+      say(
+        "Refusing CRAN for ", pkg, "; install the GitHub rewrite ",
+        "(DeclareDesign/fabricatr@rewrite, DeclareDesign/estimatr@rewrite, ",
+        "DeclareDesign/DeclareDesign@rewrite)."
+      )
+      next
     } else {
       say("Installing ", pkg, " from CRAN...")
       ok <- tryCatch({

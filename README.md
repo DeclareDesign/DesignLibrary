@@ -15,12 +15,12 @@ A prototype for a library of declared designs using DeclareDesign.
 
 ```r
 list_designs()
-make_design("two_arm_trial")
-make_design("two_arm_trial", b = 0.5)
+make_design("two_arm_simple")
+make_design("two_arm_simple", b = 0.5)
 two_arm_designer(N = 40, ate = 0.2)  # DesignLibrary name
 make_design("2.1", b = 0.5)          # book alias
-get_args("two_arm_trial")
-get_code("two_arm_trial")             # simple make_design() + full source
+get_args("two_arm_simple")
+get_code("two_arm_simple")             # simple make_design() + full source
 run_shiny()
 install_library_dependencies()        # Imports + Shiny Suggests + YAML packages: (+ the rewrite branches from GitHub)
 copy_library_shiny("path/to/app")     # standalone Shiny folder for the server

@@ -6,7 +6,7 @@ design_completion_choices <- function() {
     list_designs(shiny_only = FALSE, discover_params = FALSE),
     error = function(e) NULL
   )
-  if (is.null(idx) || !nrow(idx)) return("two_arm_trial")
+  if (is.null(idx) || !nrow(idx)) return("two_arm_simple")
   ids <- as.character(idx$id)
   aliases <- as.character(idx$alias)
   aliases <- aliases[!is.na(aliases) & nzchar(aliases)]
