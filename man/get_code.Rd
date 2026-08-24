@@ -12,7 +12,7 @@ get_code(
     "blocked_and_clustered", "bootstrapped", "cluster_random_sampling",
     "conditional_expectation", "conjoint", "covariate_adjustment",
     "declaration_using_declare", "design_10_2", "design_10_4", "diff_in_diff", 
-
+    
     "encouragement", "example_declaration", "factorial_2x2", "instrumental_variables",
     "italian_village", "italian_village_bayes", "italian_village_continued",
     "latent_variables", "lin_estimator", "linear_regression", "list_experiment",
@@ -20,16 +20,16 @@ get_code(
     "multilevel", "multilevel_answer_strategies", "network_experiment",
     "pate_with_sampling", "population_estimands", "process_tracing", "random_forests",
     "randomization_inference", "randomized_saturation", 
- "regression_discontinuity",
+     "regression_discontinuity",
     "regression_discontinuity_fuzzy", "simple_random_sampling", "single_period_two_arm",
     "stepped_wedge", "structural_estimation", "subgroup_effects", "survey_nonresponse",
     "trust_game", "two_arm_bare_bones", "two_arm_block_rdss", "two_arm_rdss_1",
     "two_arm_rdss_2", "two_arm_trial_rdss", "two_arm_with_blocks_rdss",
     "two_outcome_model_a", "two_outcome_model_b", "uncertainty_over_effect_size",
     "village_campaign", "17.1", "17.2", "11.1", "18.5", "9.5", "15.3", "11.4", "17.5", 
-
-    "18.2", "10.1", "10.2", "10.4", "16.3", "18.8", "5.1", "18.7", "16.4", "9.1", "9.3",
-    "9.2", "15.6", "18.3", "13.1", "17.3", "17.4", "11.5", "16.2", "19.4", "15.4",
+ 
+       "18.2", "10.1", "10.2", "10.4", "16.3", "18.8", "5.1", "18.7", "16.4", "9.1",
+    "9.3", "9.2", "15.6", "18.3", "13.1", "17.3", "17.4", "11.5", "16.2", "19.4", "15.4",
     "15.5", "18.13", "4.1", "7.1", "16.1b", "19.1", "9.7", "18.12", "16.5", "16.6",
     "15.1", "18.11", "18.10", "19.2", "18.6", "15.2", "17.6", "11.3", "18.4", "2.1",
     "13.2", "18.1", "2.2", "10.3a", "10.3b", "11.2", "12.1a"),

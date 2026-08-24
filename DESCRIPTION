@@ -25,6 +25,7 @@ Imports:
     stats
 Suggests:
     shiny,
+    generics,
     bslib,
     htmltools,
     markdown,

@@ -13,6 +13,7 @@ params:
   "total_effect": "Total effect size"
   "adjacency": "Adjacency matrix; pass via make_design(..., adjacency = ...). Not edited in the browser."
   "permutations": "Permutation matrix; pass via make_design(..., permutations = ...). Not edited in the browser."
+  "prob_exposure": "List of exposure-probability matrices; pass via make_design(..., prob_exposure = ...). Not edited in the browser."
   "estimator_AS": "Function: Aronow-Samii network exposure estimator (R-only)"
 book_link: https://book.declaredesign.org/library/experimental-causal.html#def-ch18num13
 # adjacency and permutations are package parameters (kind = data), not Shiny

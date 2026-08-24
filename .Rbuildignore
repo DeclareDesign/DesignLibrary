@@ -11,3 +11,4 @@
 ^\.cursor$
 ^vignettes/*\.html$
 ^vignettes/*\.R$
+^.*\.gitkeep$

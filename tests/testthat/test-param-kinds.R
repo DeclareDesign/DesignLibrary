@@ -42,6 +42,10 @@ test_that("get_args exposes functions as R-only knobs on multiarm_trial", {
 
 test_that("get_args succeeds when find_all_objects errors on empty names", {
   skip_if_not_installed("DeclareDesign")
+  # `multilevel` and `multilevel_answer_strategies` declare these in YAML
+  # `packages:`, and eval_design() errors rather than skipping without them.
+  skip_if_not_installed("rdss")
+  skip_if_not_installed("lme4")
   skip_on_cran()
 
   for (id in c("latent_variables", "multilevel", "multilevel_answer_strategies")) {
@@ -232,4 +236,70 @@ test_that("redesign_kind_help matches two_arm_flexible and multiarm_trial kinds"
   expect_match(html_m, "outcome_means")
   expect_match(html_m, "Note: Changing m_arms")
   expect_match(html_m, "Y = \\.\\.\\.")
+})
+
+test_that("classify_param_kind separates a bare list from a classed one", {
+  expect_equal(ResearchDesigns:::classify_param_kind(list(a = 1, b = "x")), "list")
+  expect_true(ResearchDesigns:::is_modifiable_value(list(a = 1)))
+  expect_false(ResearchDesigns:::is_shiny_param_kind("list"))
+  expect_equal(ResearchDesigns:::classify_param_kind(data.frame(a = 1)), "data")
+  expect_equal(ResearchDesigns:::classify_param_kind(y ~ x), "data")
+  expect_false(ResearchDesigns:::is_modifiable_value(y ~ x))
+})
+
+test_that("a list of lists is a sweep and anything else is one value", {
+  expect_true(ResearchDesigns:::is_list_sweep(list(list(a = 1), list(a = 2))))
+  expect_true(ResearchDesigns:::is_list_sweep(list(list(a = 1))))
+  expect_false(ResearchDesigns:::is_list_sweep(list(a = 1, b = 2)))
+  expect_false(ResearchDesigns:::is_list_sweep(list()))
+  expect_false(ResearchDesigns:::is_list_sweep(c(1, 2)))
+  expect_false(ResearchDesigns:::is_list_sweep(list(data.frame(a = 1))))
+})
+
+test_that("conjoint exposes levels_list and redesigns it whole", {
+  skip_if_not_installed("DeclareDesign")
+  skip_if_not_installed("rdss")
+  skip_if_not_installed("cjoint")
+  skip_on_cran()
+
+  args <- get_args("conjoint")
+  expect_true("levels_list" %in% args$name)
+  i <- which(args$name == "levels_list")
+  expect_equal(unname(args$kind[i]), "list")
+  expect_false(isTRUE(args$shiny[i]))
+  expect_true(is.list(args$default[[i]]))
+  expect_true(all(nzchar(args$tip) & !is.na(args$tip)))
+
+  levels_list <- list(
+    gender = c("Man", "Woman", "Nonbinary"),
+    party = c("Left", "Right"),
+    region = c("North", "South", "East", "West")
+  )
+  d <- make_design("conjoint", levels_list = levels_list, N_subjects = 20)
+  expect_s3_class(d, "design")
+  expect_true("Nonbinary" %in% DeclareDesign::draw_data(d)$gender)
+
+  swept <- make_design(
+    "conjoint",
+    levels_list = list(levels_list, levels_list),
+    N_subjects = 20
+  )
+  expect_length(swept, 2L)
+  expect_s3_class(swept[[1]], "design")
+})
+
+test_that("get_args prints a table holding a function and a list", {
+  skip_if_not_installed("DeclareDesign")
+  skip_if_not_installed("rdss")
+  skip_if_not_installed("cjoint")
+  skip_on_cran()
+
+  args <- get_args("conjoint")
+  expect_s3_class(args, "research_designs_args")
+  out <- capture.output(print(args))
+  expect_true(any(grepl("levels_list", out)))
+  expect_true(any(grepl("conjoint_utility", out)))
+  # `I(list())` here made the table unprintable: format.AsIs() runs toString()
+  # over the column and a closure cannot be coerced.
+  expect_false(inherits(args$default, "AsIs"))
 })

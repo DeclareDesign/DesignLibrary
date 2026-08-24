@@ -1405,7 +1405,7 @@ server <- function(input, output, session) {
     if (is.na(id) || !nzchar(id)) return(NULL)
     args <- ResearchDesigns::get_args(id)
     data_args <- if ("kind" %in% names(args) && nrow(args)) {
-      args[args$kind %in% c("data", "function"), , drop = FALSE]
+      args[args$kind %in% c("data", "function", "list"), , drop = FALSE]
     } else {
       args[0, , drop = FALSE]
     }

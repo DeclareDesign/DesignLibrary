@@ -1,16 +1,20 @@
 #' Empty parameter table used by discovery helpers
 #' @noRd
 empty_params_df <- function() {
-  data.frame(
+  out <- data.frame(
     name = character(0),
     value_str = character(0),
-    value = I(list()),
     step = integer(0),
     kind = character(0),
     declared = logical(0),
     shiny = logical(0),
     stringsAsFactors = FALSE
   )
+  # A plain list column, not `I(list())`: `format.AsIs()` calls `toString()` on
+  # every element, which errors on a function, so an AsIs column holding a
+  # function parameter builds fine and then cannot be printed.
+  out$value <- list()
+  out[c("name", "value_str", "value", "step", "kind", "declared", "shiny")]
 }
 
 #' Discover modifiable parameters from a design object
@@ -29,7 +33,9 @@ empty_params_df <- function() {
 #' @noRd
 discover_design_params <- function(design, code = NULL) {
   objs <- tryCatch(
-    DeclareDesign:::find_all_objects(design),
+    # `design_parameters()` is DeclareDesign's exported name for
+    # `find_all_objects()` and returns the same table, `env` column included.
+    DeclareDesign::design_parameters(design),
     error = function(e) NULL
   )
   params <- filter_modifiable_params(objs)
@@ -66,19 +72,24 @@ discover_design_params <- function(design, code = NULL) {
 #' @noRd
 shiny_vector_max <- function() 20L
 
-#' Classify a redesignable value: scalar, vector, data, or function
+#' Classify a redesignable value: scalar, vector, list, data, or function
 #'
 #' `scalar` — length-1 atomic, no dim. Shiny treats comma-separated input as a
 #' sweep (`redesign(N = c(50, 100))`).
 #' `vector` — short atomic vector, no dim. Shiny edits the whole vector as one
 #' value; wrap in `list()` for `redesign()` so it is not expanded as a sweep.
-#' `data` — data frame, matrix/array, or a longer atomic vector. Package
-#' parameter (`make_design(..., data = ...)`); not a Shiny control.
+#' `list`: a bare list (for example a conjoint's `levels_list`). R-only, and
+#' `redesign()` reads a bare list one design per element, so it carries the
+#' same wrapping problem as `vector` and is handled in
+#' [prepare_redesign_dots()].
+#' `data`: data frame, matrix/array, classed object, or a longer atomic
+#' vector. Package parameter (`make_design(..., data = ...)`); not a Shiny
+#' control.
 #' `function` — a function (for example an outcome `Y`). R-only; not a Shiny
 #' control (`make_design(..., Y = ...)`).
 #'
 #' @param val A parameter value.
-#' @return `"scalar"`, `"vector"`, `"data"`, or `"function"`.
+#' @return `"scalar"`, `"vector"`, `"list"`, `"data"`, or `"function"`.
 #' @noRd
 classify_param_kind <- function(val) {
   if (is.function(val)) return("function")
@@ -91,6 +102,7 @@ classify_param_kind <- function(val) {
     if (n <= shiny_vector_max()) return("vector")
     return("data")
   }
+  if (is.list(val) && !is.object(val)) return("list")
   "data"
 }
 
@@ -100,15 +112,22 @@ is_shiny_param_kind <- function(kind) {
   kind %in% c("scalar", "vector")
 }
 
-#' Wrap vector replacements so redesign() does not treat them as a sweep
+#' Wrap vector and list replacements so redesign() does not treat them as a sweep
 #'
-#' DeclareDesign expands an atomic vector of scalars into one design per value.
-#' A parameter whose default is already a vector must be passed as
-#' `list(c(...))` to replace the vector, or `list(v1, v2)` to sweep vectors.
+#' DeclareDesign reads a bare atomic vector, and a bare list, as one design per
+#' element. A parameter whose default is already a vector must therefore be
+#' passed as `list(c(...))` to replace the vector, or `list(v1, v2)` to sweep
+#' vectors.
+#'
+#' A list-valued parameter cannot be told apart from a sweep by type, since
+#' both arrive as a list, so the rule is structural: a list whose every element
+#' is itself a list is a sweep, and anything else replaces the parameter whole.
+#' `list(x)` therefore always means "one design, holding `x`", which is the
+#' escape when the parameter's own value is a list of lists.
 #'
 #' @param params Data frame from discover_design_params().
 #' @param dots Named list of user arguments.
-#' @return `dots` with vector-kind atomics wrapped in `list()`.
+#' @return `dots` with single replacements wrapped in `list()`.
 #' @noRd
 prepare_redesign_dots <- function(params, dots) {
   if (!length(dots) || is.null(params) || !nrow(params)) return(dots)
@@ -119,26 +138,46 @@ prepare_redesign_dots <- function(params, dots) {
     if (is.null(nm) || !nzchar(nm)) next
     i <- match(nm, params$name)
     if (is.na(i)) next
-    if (!identical(kinds[[i]], "vector")) next
     val <- dots[[nm]]
-    if (!is.list(val)) dots[[nm]] <- list(val)
+    if (identical(kinds[[i]], "vector")) {
+      if (!is.list(val)) dots[[nm]] <- list(val)
+    } else if (identical(kinds[[i]], "list")) {
+      if (!is_list_sweep(val)) dots[[nm]] <- list(val)
+    }
   }
   dots
 }
 
+#' Whether a value supplied for a list parameter is a sweep over lists
+#'
+#' A sweep is a non-empty, unclassed list whose every element is itself an
+#' unclassed list. See [prepare_redesign_dots()].
+#' @noRd
+is_list_sweep <- function(val) {
+  if (!is.list(val) || is.object(val) || is.data.frame(val)) return(FALSE)
+  if (!length(val)) return(FALSE)
+  all(vapply(val, function(v) is.list(v) && !is.object(v), logical(1)))
+}
+
 #' Whether a value can be a redesign target
+#'
+#' Bare lists count: a design may be built around one (`levels_list` in the
+#' conjoint), and dropping them here is what kept such a parameter out of
+#' `get_args()` and out of reach of `make_design()`. Classed lists (a fitted
+#' model, a formula) do not.
 #' @noRd
 is_modifiable_value <- function(val) {
   if (is.null(val)) return(TRUE)
   if (is.function(val)) return(TRUE)
   if (is.data.frame(val)) return(TRUE)
+  if (is.list(val) && !is.object(val)) return(TRUE)
   is.atomic(val)
 }
 
 #' Drop non-redesignable objects; dedupe by name
 #'
 #' Keeps atomic values (including matrices and short/long vectors), data
-#' frames, and functions. Other lists are dropped.
+#' frames, bare lists, and functions. Classed objects are dropped.
 #' @noRd
 filter_modifiable_params <- function(objs) {
   empty <- empty_params_df()
@@ -205,16 +244,17 @@ filter_modifiable_params <- function(objs) {
   }
 
   kinds <- vapply(values, classify_param_kind, character(1))
-  data.frame(
+  params <- data.frame(
     name = out$name,
     value_str = out$value,
-    value = I(values),
     step = out$step,
     kind = kinds,
     declared = if ("declared" %in% names(out)) as.logical(out$declared) else FALSE,
     shiny = is_shiny_param_kind(kinds),
     stringsAsFactors = FALSE
   )
+  params$value <- values
+  params[c("name", "value_str", "value", "step", "kind", "declared", "shiny")]
 }
 
 #' Compare YAML-documented params to design params
@@ -354,6 +394,15 @@ describe_param_value_str <- function(val, rhs = "") {
   if (is.data.frame(val)) {
     return(sprintf("<data.frame[%s x %s]>", nrow(val), ncol(val)))
   }
+  if (is.list(val) && !is.object(val)) {
+    # Same form as DeclareDesign's own snippet, so a parameter found here and
+    # one found by the object finder read alike in the same table.
+    nms <- names(val)
+    if (length(nms) && all(nzchar(nms))) {
+      return(paste0("list(", paste(nms, collapse = ", "), ")"))
+    }
+    return(sprintf("<list[%s]>", length(val)))
+  }
   paste0("<", class(val)[[1L]], ">")
 }
 
@@ -396,15 +445,19 @@ params_from_pre_assignments <- function(pre, names) {
   }
   if (!length(keep_names)) return(empty)
   kinds <- vapply(values, classify_param_kind, character(1))
-  data.frame(
+  # `declared` must be here as well as in filter_modifiable_params(): these
+  # rows are rbind()ed onto those, and a missing column errors.
+  params <- data.frame(
     name = keep_names,
     value_str = value_str,
-    value = I(values),
     step = rep(NA_integer_, length(keep_names)),
     kind = kinds,
+    declared = rep(FALSE, length(keep_names)),
     shiny = is_shiny_param_kind(kinds),
     stringsAsFactors = FALSE
   )
+  params$value <- values
+  params[c("name", "value_str", "value", "step", "kind", "declared", "shiny")]
 }
 
 #' Whether a symbol name appears used in design code (word boundary)
@@ -477,7 +530,7 @@ param_coverage_gaps <- function(design, include_steps = FALSE) {
   }
 
   finder_names <- character(0)
-  objs <- tryCatch(DeclareDesign:::find_all_objects(dobj), error = function(e) NULL)
+  objs <- tryCatch(DeclareDesign::design_parameters(dobj), error = function(e) NULL)
   if (!is.null(objs) && nrow(objs) && "name" %in% names(objs)) {
     finder_names <- unique(as.character(objs$name))
   }
@@ -826,14 +879,14 @@ redesign_kind_help <- function(id, args = NULL) {
     items <- c(items, paste0("Note: ", html_escape(coupled)))
   }
 
-  if (length(kinds) && any(kinds %in% c("data", "function"))) {
-    nms <- as.character(args$name[kinds %in% c("data", "function")])
+  if (length(kinds) && any(kinds %in% c("data", "function", "list"))) {
+    nms <- as.character(args$name[kinds %in% c("data", "function", "list")])
     nms <- nms[!is.na(nms) & nzchar(nms)]
     if (length(nms)) {
       items <- c(
         items,
         paste0(
-          "Functions, data frames, and matrices are not edited here — pass them in R with ",
+          "Functions, lists, data frames, and matrices are not edited here. Pass them in R with ",
           "<code>make_design(\"", html_escape(id), "\", ",
           html_escape(paste(sprintf("%s = ...", nms), collapse = ", ")),
           ")</code>."
@@ -859,15 +912,16 @@ build_args_table <- function(meta, design, code = NULL) {
 
   n <- nrow(params)
   if (n == 0L) {
-    return(data.frame(
+    out <- data.frame(
       name = character(0),
-      default = I(list()),
       value_str = character(0),
       tip = character(0),
       kind = character(0),
       shiny = logical(0),
       stringsAsFactors = FALSE
-    ))
+    )
+    out$default <- list()
+    return(as_args_table(out))
   }
 
   defaults <- vector("list", n)
@@ -888,13 +942,71 @@ build_args_table <- function(meta, design, code = NULL) {
     vapply(defaults, classify_param_kind, character(1))
   }
 
-  data.frame(
+  out <- data.frame(
     name = params$name,
-    default = I(defaults),
     value_str = params$value_str,
     tip = tips,
     kind = kinds,
     shiny = is_shiny_param_kind(kinds),
     stringsAsFactors = FALSE
   )
+  # A plain list, not `I(defaults)`: `format.AsIs()` runs `toString()` over the
+  # column, and a function default made the whole table unprintable.
+  out$default <- defaults
+  as_args_table(out)
+}
+
+#' Cut display strings to a column width, marking what was cut
+#' @noRd
+truncate_for_print <- function(x, width) {
+  long <- !is.na(x) & nchar(x) > width
+  x[long] <- paste0(substr(x[long], 1L, width - 3L), "...")
+  x
+}
+
+#' Put the get_args() columns in order and give the table its print class
+#' @noRd
+as_args_table <- function(out) {
+  out <- out[c("name", "default", "value_str", "tip", "kind", "shiny")]
+  rownames(out) <- NULL
+  class(out) <- c("research_designs_args", "data.frame")
+  out
+}
+
+#' Print the parameter table from get_args()
+#'
+#' The `default` column holds the values themselves, and a function or a list
+#' has no one-line form, so the printed table shows `value_str` in its place.
+#'
+#' @param x A `research_designs_args` table.
+#' @param ... Unused.
+#' @return `x`, invisibly.
+#' @export
+print.research_designs_args <- function(x, ...) {
+  if (!nrow(x)) {
+    cat("No modifiable parameters.\n")
+    return(invisible(x))
+  }
+  value <- ifelse(is.na(x$value_str), "", x$value_str)
+  tip <- ifelse(is.na(x$tip), "", x$tip)
+  # Value and tip are the two columns with no natural width, so they split
+  # whatever the console has left rather than wrapping the table onto a second
+  # block. Two spaces per gap, one leading space, and `kind` is at most eight.
+  budget <- max(32L, getOption("width", 80L) -
+                  (max(nchar(x$name)) + 8L + 7L))
+  w_val <- min(max(nchar(value)), max(16L, budget %/% 2L))
+  w_tip <- max(12L, budget - w_val)
+  value <- truncate_for_print(value, w_val)
+  tip <- truncate_for_print(tip, w_tip)
+  shown <- data.frame(
+    name = x$name, value = value, kind = x$kind, tip = tip,
+    stringsAsFactors = FALSE
+  )
+  print(shown, row.names = FALSE, right = FALSE)
+  if (any(!x$shiny)) {
+    nms <- x$name[!x$shiny]
+    cat("\nNot editable as text; pass in R with make_design(..., ",
+        paste(sprintf("%s = ...", nms), collapse = ", "), ").\n", sep = "")
+  }
+  invisible(x)
 }

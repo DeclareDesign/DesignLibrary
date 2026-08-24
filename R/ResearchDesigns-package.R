@@ -27,4 +27,11 @@
 #' @importFrom yaml yaml.load
 #' @importFrom utils write.csv install.packages packageVersion
 #' @importFrom rlang `%||%`
+# The design files call these three by name once `core_packages()` has
+# attached them, so nothing here calls them with `::` and `R CMD check`
+# reports the Imports as unused. Importing one symbol from each says what the
+# DESCRIPTION already says: a design cannot run without them.
+#' @importFrom fabricatr fabricate
+#' @importFrom estimatr lm_robust
+#' @importFrom randomizr complete_ra
 "_PACKAGE"

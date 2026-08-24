@@ -10,6 +10,7 @@ packages: [rdss, cjoint, dplyr, purrr]
 params:
   "N_subjects": "Number of subjects"
   "N_tasks": "Number of conjoint tasks per subject"
+  "levels_list": "Named list of attributes and their levels; pass via make_design(..., levels_list = ...). Not edited in the browser."
   "conjoint_utility": "Function: maps conjoint profile features to utility (R-only)"
 book_link: https://book.declaredesign.org/library/experimental-descriptive.html#def-ch17num5
 include_in_shiny: true

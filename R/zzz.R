@@ -17,7 +17,11 @@ set_design_arg_choices <- function(fun_name, choices, ns) {
   if (!exists(fun_name, envir = ns, inherits = FALSE)) return(invisible())
   f <- get(fun_name, envir = ns, inherits = FALSE)
   if (!is.function(f) || !"design" %in% names(formals(f))) return(invisible())
-  formals(f)$design <- choices
+  # A `c(...)` call rather than the character vector itself: roxygen writes
+  # the default into \usage{} as a call, and `R CMD check`'s codoc compares
+  # the two as language objects, so a vector here is a mismatch on every one
+  # of these five functions. Lazily evaluated, it is the same vector.
+  formals(f)$design <- as.call(c(quote(c), as.list(choices)))
   assign(fun_name, f, envir = ns)
   invisible()
 }

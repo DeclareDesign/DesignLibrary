@@ -473,13 +473,13 @@ print.research_designs_info <- function(x, ...) {
       val <- args$value_str[[i]] %||% ""
       kind <- if ("kind" %in% names(args)) args$kind[[i]] else "scalar"
       line <- sprintf("  %s = %s", args$name[[i]], val)
-      if (identical(kind, "data") || identical(kind, "function")) {
+      if (kind %in% c("data", "function", "list")) {
         line <- paste0(line, " [R only: make_design(..., ", args$name[[i]], " = ...)]")
       } else if (identical(kind, "vector")) {
         line <- paste0(line, " [vector]")
       }
       if (!is.null(tip) && length(tip) && !is.na(tip) && nzchar(tip)) {
-        line <- paste0(line, " — ", tip)
+        line <- paste0(line, ": ", tip)
       }
       cat(line, "\n", sep = "")
     }
@@ -543,6 +543,11 @@ print.research_designs_info <- function(x, ...) {
 #' with [DeclareDesign::redesign()]. The design object is the source of
 #' truth for which names can be changed; see [get_args()]. Vector parameters
 #' are wrapped so `redesign()` replaces the whole vector instead of sweeping.
+#' A list-valued parameter (`kind = "list"`) follows the same rule read
+#' structurally: a bare list replaces the parameter whole, and a list whose
+#' every element is itself a list sweeps over those lists, one design each. So
+#' `make_design("conjoint", levels_list = list(a = "x", b = "y"))` builds one
+#' design, and `make_design("conjoint", levels_list = list(l1, l2))` builds two.
 #' YAML `coupled:` drivers (for example `m_arms`) emit a `message()` when
 #' dependents do not match in length; `redesign()` still runs.
 #'
@@ -564,7 +569,7 @@ print.research_designs_info <- function(x, ...) {
 #' }
 make_design <- function(design = "two_arm_simple", ...) {
   # When formals are the full library vector (set in .onLoad for IDE completion),
-  # a bare make_design() call receives that vector — use the first id.
+  # a bare make_design() call receives that vector, so use the first id.
   if (length(design) > 1L) design <- design[[1L]]
   parsed <- resolve_design(design)
   d <- eval_design(parsed)
@@ -602,16 +607,24 @@ make_design <- function(design = "two_arm_simple", ...) {
 #' Reads parameters from the design object. Optional YAML `params:` entries
 #' only add tips (and never invent new parameter names).
 #'
-#' The `kind` column is `"scalar"`, `"vector"`, `"data"`, or `"function"`.
-#' `shiny` is `TRUE` for scalar and short-vector parameters that the browser
-#' can edit as text. Data frames, matrices, long vectors, and functions stay
-#' redesignable in R (`make_design(..., data = ...)`, `make_design(..., Y = ...)`)
-#' but are not Shiny controls.
+#' The `kind` column is `"scalar"`, `"vector"`, `"list"`, `"data"`, or
+#' `"function"`. `shiny` is `TRUE` for scalar and short-vector parameters that
+#' the browser can edit as text. Data frames, matrices, long vectors, lists,
+#' and functions stay redesignable in R (`make_design(..., data = ...)`,
+#' `make_design(..., Y = ...)`) but are not Shiny controls.
+#'
+#' The `default` column holds the values themselves, so it is a list column and
+#' may contain functions and lists; the printed table shows `value_str` in its
+#' place.
 #'
 #' @param design Design id or book alias.
-#' @return A data frame with `name`, `default`, `value_str`, `tip`, `kind`,
-#'   and `shiny`.
+#' @return A `research_designs_args` data frame with `name`, `default`,
+#'   `value_str`, `tip`, `kind`, and `shiny`.
 #' @export
+#' @examples
+#' \dontrun{
+#' get_args("two_arm_trial")
+#' }
 get_args <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
   parsed <- resolve_design(design)

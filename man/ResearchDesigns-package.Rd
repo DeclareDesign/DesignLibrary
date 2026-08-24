@@ -45,5 +45,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Macartan Humphreys \email{macartan.humphreys@wzb.eu}
 
+Authors:
+\itemize{
+  \item Macartan Humphreys \email{macartan.humphreys@wzb.eu}
+}
+
 }
 \keyword{internal}
