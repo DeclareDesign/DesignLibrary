@@ -59,7 +59,7 @@ my_designer <- function(N = 100,
     model <- declare_model(N = N, noise = rnorm(N), potential_outcomes(Y ~ Z + noise))
     assignment <- declare_assignment(Z = complete_ra(N, prob = prob))
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
-    estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
+    estimator <- declare_estimator(Y ~ Z, inquiry = "ATE")
     measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
     my_design <- 
       model +
@@ -95,7 +95,7 @@ One easy way to add code to the designs that your designer returns is to use our
     model <- declare_model(N = N, noise = rnorm(N), potential_outcomes(Y ~ Z + noise))
     assignment <- declare_assignment(Z = complete_ra(N, prob = prob))
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
-    estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
+    estimator <- declare_estimator(Y ~ Z, inquiry = "ATE")
     measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
     my_design <- 
       model +
@@ -132,7 +132,7 @@ my_designer <- function(N = 100,
     "model <- declare_model(N = ",N,", noise = rnorm(N), potential_outcomes(Y ~ Z + noise))
     assignment <- declare_assignment(Z = complete_ra(N, prob = ",prob,"))
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
-    estimator <- declare_estimator(Y ~ Z, inquiry = estimand)
+    estimator <- declare_estimator(Y ~ Z, inquiry = "ATE")
     measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
     my_design <- 
       model +

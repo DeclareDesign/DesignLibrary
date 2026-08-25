@@ -1,8 +1,9 @@
-# DesignLibrary 0.2
+# DesignLibrary 0.2.0
 
-* model -> .method
-* cleaner two arm
-* compatibility with declaredesign updates
+* Every designer is written for DeclareDesign 2.0: `declare_model()` with `potential_outcomes()` in place of `declare_population()` and `declare_potential_outcomes()`, `declare_measurement()` with `reveal_outcomes()` in place of `declare_reveal()`, and `inquiry = "label"` in place of an inquiry step object. The arguments, defaults, inquiry labels and estimator labels of every designer are unchanged, so a diagnosis has the same rows as before.
+* `expand_design()` is deprecated in DeclareDesign 2.0; the examples and vignettes sweep a designer's arguments with `redesign(designer(...), ...)`. An argument the designer consumes before any step reads it (process tracing's `cor_E1E2_H`) is swept by calling the designer once per value.
+* `model = ` becomes `.method = ` in every estimator.
+* Requires DeclareDesign 2.0.0, fabricatr 2.0.0 and estimatr 2.0.0.
 
 # DesignLibrary 0.1.10
 

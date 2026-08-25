@@ -87,20 +87,18 @@ Now we declare the design in code.
 ```{r, eval = FALSE}
 my_design <- 
   # Model
-  declare_population(N = 100,
-                     YA_0 = rnorm(N),
-                     YB_0 = rnorm(N, YA_0 * rho, sqrt(1 - rho^2))) +
-  declare_potential_outcomes(YA ~ YA_0 + ZA * tau_A,
-                             assignment_variable = "ZA") +
-  declare_potential_outcomes(YB ~ YB_0 + ZB * tau_B,
-                             assignment_variable = "ZB") +
+  declare_model(N = 100,
+                YA_0 = rnorm(N),
+                YB_0 = rnorm(N, YA_0 * rho, sqrt(1 - rho^2)),
+                potential_outcomes(YA ~ YA_0 + ZA * tau_A, conditions = list(ZA = 0:1)),
+                potential_outcomes(YB ~ YB_0 + ZB * tau_B, conditions = list(ZB = 0:1))) +
   # Inquiry
   declare_inquiry(ate_YA = mean(YA_ZA_1 - YA_ZA_0)) +
   # Data Strategy
-  declare_assignment(m = 50, assignment_variable = "ZA") +
-  declare_assignment(m = 50, assignment_variable = "ZB") +
-  declare_reveal(YA,ZA) +
-  declare_reveal(YB,ZB) +
+  declare_assignment(ZA = complete_ra(N, m = 50)) +
+  declare_assignment(ZB = complete_ra(N, m = 50)) +
+  declare_measurement(YA = reveal_outcomes(YA ~ ZA),
+                      YB = reveal_outcomes(YB ~ ZB)) +
   # Answer Strategy
   declare_estimator(YA ~ ZA, .method =lm_robust, 
                     inquiry = "ate_YA", label = "lm_robust") +
@@ -113,7 +111,7 @@ my_design <-
 You may want to display features of the design here.
 
 ```{r, eval = FALSE}
-my_design_cor <- redesign(design = my_design, rho = .8)
+my_design_cor <- redesign(my_design, rho = .8)
 diagnosis <- diagnose_design(my_design, my_design_cor, sims = 25)
 kable(reshape_diagnosis(diagnosis), digits = 2)
 ```

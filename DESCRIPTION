@@ -1,7 +1,7 @@
 Package: DesignLibrary
 Type: Package
 Title: Library of Research Designs
-Version: 0.1.10
+Version: 0.2.0
 Authors@R: c(
     person("Graeme", "Blair", , "graeme.blair@ucla.edu", role = "aut"),
     person("Jasper", "Cooper", , "jjc2247@columbia.edu", role = c("aut", "cre")),
@@ -21,11 +21,15 @@ URL: https://declaredesign.org/r/designlibrary/, https://github.com/DeclareDesig
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: 
-    DeclareDesign (>= 0.17.0),
-    R (>= 3.4.0),
-    randomizr (>= 0.16.1),
-    fabricatr (>= 0.8.0),
-    estimatr (>= 0.16.0)
+    DeclareDesign (>= 2.0.0),
+    R (>= 4.1.0),
+    randomizr (>= 1.0.1),
+    fabricatr (>= 2.0.0),
+    estimatr (>= 2.0.0)
+Remotes:
+    DeclareDesign/DeclareDesign@rewrite,
+    DeclareDesign/fabricatr@rewrite,
+    DeclareDesign/estimatr@rewrite
 Imports:
     generics,
     rlang,
@@ -34,4 +38,4 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
