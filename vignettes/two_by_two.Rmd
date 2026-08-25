@@ -63,7 +63,7 @@ kable(reshape_diagnosis(diagnosis)[,-c(1,3,5)], digits = 2)
 
 1. Alter the answer strategy so that the estimates of the main effects are no longer biased.
 
-2. Use `expand_designs()` with the `two_by_two_designer()` to determine the minimal interaction that can be detected with 80% power, holding other parameters constant.
+2. Use `redesign()` on `two_by_two_designer()` to determine the minimal interaction that can be detected with 80% power, holding other parameters constant.
 
 3. Alter the template so that outcomes are binary instead of normally distibuted. What is the expected standard error for the interaction term for a sample size of 1000? Discuss the implications of your diagnosis for practice.
 

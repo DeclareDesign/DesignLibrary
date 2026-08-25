@@ -48,9 +48,8 @@ In this particular setup, you do better by controlling -- even in an experiment 
 ## Takeaways
 
 ```{r}
-designs <- expand_design(
-  designer = two_arm_covariate_designer,
-  N = 30, rho_WY = c(0,.8), rho_WZ = c(0,.8), h = .5)
+designs <- redesign(two_arm_covariate_designer(N = 30, h = .5),
+                    rho_WY = c(0, .8), rho_WZ = c(0, .8))
 diagnoses <- diagnose_designs(designs, sims = 25)
 ```
 

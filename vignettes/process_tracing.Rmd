@@ -65,10 +65,14 @@ In this design, a researcher evaluates a specific hypothesis, $H$, according to 
 We'll look at how the four approaches (no tests, SIW only, SMG only, SIW + SMG) perform in terms of RMSE across different levels of correlation in clues when $H$ is true.
 
 ```{r}
-designs <- expand_design(designer = process_tracing_designer,cor_E1E2_H = c(-.32, 0, .32))
+# cor_E1E2_H shapes the joint probabilities before any step reads it, so the
+# designer is called once per value rather than redesigned.
+cors <- c(-.32, 0, .32)
+designs <- setNames(lapply(cors, function(r) process_tracing_designer(cor_E1E2_H = r)), cors)
 
 diagnose_designs(designs, sims = 25) %>% 
   get_diagnosands() %>% 
+  mutate(cor_E1E2_H = as.numeric(as.character(design))) %>% 
   ggplot(aes(cor_E1E2_H, rmse, color = estimator, group = estimator)) +
   geom_point() + geom_line() + theme_bw() 
 ```

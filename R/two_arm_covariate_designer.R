@@ -47,8 +47,8 @@
 #' }
 #'
 #' # Curse of power: A biased design may be more likely to mislead the larger it is 
-#' curses <- expand_design(two_arm_covariate_designer, 
-#'                         N = c(50, 500, 5000), ate = 0, rho_WZ = .2, rho_WY = .2)
+#' curses <- redesign(two_arm_covariate_designer(ate = 0, rho_WZ = .2, rho_WY = .2),
+#'                    N = c(50, 500, 5000))
 #' \dontrun{
 #' diagnoses <- diagnose_design(curses)
 #' subset(diagnoses$diagnosands_df, estimator == "No controls")[,c("N", "power")]
