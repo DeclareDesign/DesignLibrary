@@ -19,8 +19,8 @@
 #' @concept experiment
 #' @concept difference-in-differences
 #' @concept baseline
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step
-#' @importFrom fabricatr fabricate fabricate
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
 #' @export
@@ -41,52 +41,53 @@ pretest_posttest_designer <- function(N = 100,
   if(attrition_rate < 0 || attrition_rate > 1) stop("'attrition_rate' must be in [0,1]")
   {{{
     # M: Model
-    population <- declare_population(
+    model <- declare_model(
       N    = N,
-      u_t1 = rnorm(N)*sd_1,
-      u_t2 = rnorm(N, rho * scale(u_t1), sqrt(1 - rho^2))*sd_2,
-      Y_t1 = u_t1
+      u_t1 = rnorm(N) * sd_1,
+      u_t2 = rnorm(N, rho * scale(u_t1), sqrt(1 - rho^2)) * sd_2,
+      Y_t1 = u_t1,
+      potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
     )
-    
-    potential_outcomes <- declare_potential_outcomes(Y_t2 ~ u_t2 + ate * Z)
-    
+
     # I: Inquiry
     estimand <- declare_inquiry(ATE = mean(Y_t2_Z_1 - Y_t2_Z_0))
-    
+
     # D: Data Strategy
     assignment <- declare_assignment(Z = complete_ra(N))
-    
-    report     <- declare_assignment(R = complete_ra(N, prob = 1 - attrition_rate))
-    reveal_t2 <- declare_reveal(Y_t2) 
-    
-    manipulation <- declare_step(difference = (Y_t2 - Y_t1), handler = fabricate)  
-    
+
+    measurement <- declare_measurement(
+      Y_t2 = reveal_outcomes(Y_t2 ~ Z),
+      difference = Y_t2 - Y_t1
+    )
+
+    report <- declare_assignment(R = complete_ra(N, prob = 1 - attrition_rate))
+
     # A: Answer Strategy
     pretest_lhs <- declare_estimator(
       difference ~ Z,
-      .method =lm_robust,
-      inquiry = estimand,
+      .method = lm_robust,
+      inquiry = "ATE",
       subset = R == 1,
       label = "Change score"
     )
-    
+
     pretest_rhs <- declare_estimator(
       Y_t2 ~ Z + Y_t1,
-      .method =lm_robust,
-      inquiry = estimand,
+      .method = lm_robust,
+      inquiry = "ATE",
       subset = R == 1,
       label = "Condition on pretest"
     )
-    
+
     posttest_only <- declare_estimator(
       Y_t2 ~ Z,
-      .method =lm_robust,
-      inquiry = estimand,
+      .method = lm_robust,
+      inquiry = "ATE",
       label = "Posttest only"
     )
+
     # Design
-    pretest_posttest_design <- population + potential_outcomes + estimand + 
-      assignment + reveal_t2 + report + manipulation +
+    pretest_posttest_design <- model + estimand + assignment + measurement + report +
       pretest_lhs + pretest_rhs + posttest_only
   }}}
   

@@ -20,8 +20,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept spillovers
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_reveal
-#' @importFrom fabricatr fabricate add_level fabricate
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement
+#' @importFrom fabricatr fabricate add_level
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
 #' @aliases simple_spillover_designer
@@ -43,31 +43,29 @@ spillover_designer <- function(N_groups = 80,
   if(N_i_group < 1 || N_groups < 1) stop("N_i_group and N_groups must be equal to or greater than 1")
   {{{
     # M: Model
-    population <- declare_population(G = add_level(N = N_groups, n = N_i_group), 
-                                     i = add_level(N = n, zeros = 0, ones = 1))
-    
-    dgp <- function(i, Z, G, n) (sum(Z[G == G[i]])/n[i])^gamma + rnorm(1)*sd_i
-    
+    model <- declare_model(G = add_level(N = N_groups, n = N_i_group),
+                           i = add_level(N = n, zeros = 0, ones = 1))
+
+    dgp <- function(i, Z, G, n) (sum(Z[G == G[i]]) / n[i])^gamma + rnorm(1) * sd_i
+
     # I: Inquiry
     estimand <- declare_inquiry(Treat_1 = mean(
       sapply(1:length(G), function(i) {
         Z_i <- (1:length(G)) == i
-        dgp(i,Z_i,G, n) - dgp(i, zeros, G, n)})
+        dgp(i, Z_i, G, n) - dgp(i, zeros, G, n)})
     ), label = "estimand")
-    
+
     # D: Data Strategy
     assignment <- declare_assignment(Z = complete_ra(N))
-    
-    reveal_Y <- declare_reveal(handler=fabricate,
-                               Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
-    
+
+    measurement <- declare_measurement(Y = sapply(1:N, function(i) dgp(i, Z, G, n)))
+
     # A: Answer Strategy
-    estimator <- declare_estimator(Y ~ Z, inquiry = estimand, 
-                                   .method =lm_robust, label = "naive")
-    
+    estimator <- declare_estimator(Y ~ Z, inquiry = "Treat_1",
+                                   .method = lm_robust, label = "naive")
+
     # Design
-    spillover_design <- population + estimand + assignment + reveal_Y + estimator
-    
+    spillover_design <- model + estimand + assignment + measurement + estimator
   }}}
   attr(spillover_design, "code") <- 
     construct_design_code(spillover_designer, args_to_fix = args_to_fix, match.call.defaults())

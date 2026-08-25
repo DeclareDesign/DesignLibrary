@@ -19,7 +19,7 @@
 #' @concept clusters
 #' @concept observational
 #' @concept measurement
-#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_population declare_sampling
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_model declare_sampling
 #' @importFrom fabricatr fabricate add_level draw_normal_icc draw_ordered
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom estimatr lm_robust
@@ -47,7 +47,7 @@ cluster_sampling_designer <- function(N_blocks = 1,
   {{{
     # M: Model
     fixed_pop <-
-      declare_population(
+      declare_model(
         block = add_level(N = N_blocks),
         cluster = add_level(N = N_clusters_in_block),
         subject = add_level(N = N_i_in_cluster,
@@ -55,29 +55,29 @@ cluster_sampling_designer <- function(N_blocks = 1,
                             Y = draw_ordered(x = latent, breaks = qnorm(seq(0, 1, length.out = 8)))
         )
       )()
-    
-    population <- declare_population(data = fixed_pop)
-    
+
+    model <- declare_model(data = fixed_pop)
+
     # I: Inquiry
     estimand <- declare_inquiry(mean(Y), label = "Ybar")
-    
+
     # D: Data Strategy
     stage_1_sampling <- declare_sampling(
-      S1 = strata_and_cluster_rs(strata = block, 
+      S1 = strata_and_cluster_rs(strata = block,
                                  clusters = cluster, n = n_clusters_in_block), filter = S1 == 1)
-    
+
     stage_2_sampling <- declare_sampling(
       S2 = strata_rs(strata = cluster, n = n_i_in_cluster), filter = S2 == 1)
-    
+
     # A: Answer Strategy
     clustered_ses <- declare_estimator(Y ~ 1,
-                                       .method =lm_robust,
+                                       .method = lm_robust,
                                        clusters = cluster,
-                                       inquiry = estimand,
+                                       inquiry = "Ybar",
                                        label = "Clustered Standard Errors")
 
     # Design
-    cluster_sampling_design <- population + estimand +
+    cluster_sampling_design <- model + estimand +
       stage_1_sampling + stage_2_sampling + clustered_ses
   }}}
   

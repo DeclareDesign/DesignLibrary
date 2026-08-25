@@ -35,8 +35,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
-#' @importFrom DeclareDesign declare_diagnosands declare_inquiry declare_estimator declare_population declare_sampling declare_step diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
-#' @importFrom fabricatr fabricate fabricate
+#' @importFrom DeclareDesign declare_diagnosands declare_inquiry declare_estimator declare_model declare_sampling declare_measurement diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
+#' @importFrom fabricatr fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom stats rbinom
 #' @importFrom rlang is_integerish is_character
@@ -103,11 +103,11 @@ process_tracing_designer <- function(
   if(!is_character(label_E2) || length(label_E2) > 1) stop("label_E2 must be a character of length 1.")
   {{{
     # M: Model
-    population <- declare_population(
+    model <- declare_model(
       N = N,
       causal_process = sample(
-        x = c('X_causes_Y', 'Y_regardless',
-              'X_causes_not_Y', 'not_Y_regardless'),
+        x = c("X_causes_Y", "Y_regardless",
+              "X_causes_not_Y", "not_Y_regardless"),
         size = N,
         replace = TRUE,
         prob = process_proportions),
@@ -116,110 +116,109 @@ process_tracing_designer <- function(
         (!X & causal_process == "X_causes_not_Y") | # 2. Not X causes Y
         (causal_process == "Y_regardless") # 3. Y happens irrespective of X
     )
+
     # D: Data Strategy 1
     select_case <- declare_sampling(
       S = strata_rs(strata = paste(X, Y),
-      strata_n = c("X0Y0" = 0, "X0Y1" = 0, "X1Y0" = 0, "X1Y1" = 1)))
+                    strata_n = c("X0Y0" = 0, "X0Y1" = 0, "X1Y0" = 0, "X1Y1" = 1)))
+
     # I: Inquiry
     estimand <-
-      declare_inquiry(did_X_cause_Y = causal_process == 'X_causes_Y')
+      declare_inquiry(did_X_cause_Y = causal_process == "X_causes_Y")
+
     # D: Data Strategy 2
     # Calculate bivariate probabilities given correlation
-    
     joint_prob <- function(p1, p2, rho) {
-      r <- rho * (p1 * p2 * (1 - p1) * (1 - p2)) ^ .5
+      r <- rho * (p1 * p2 * (1 - p1) * (1 - p2))^.5
       c(
         p00 = (1 - p1) * (1 - p2) + r,
         p01 = p2 * (1 - p1) - r,
         p10 = p1 * (1 - p2) - r,
         p11 = p1 * p2 + r)}
-    
+
     joint_prob_H <- joint_prob(p_E1_H, p_E2_H, cor_E1E2_H)
-    
+
     joint_prob_not_H <- joint_prob(p_E1_not_H, p_E2_not_H, cor_E1E2_not_H)
-    
-    trace_processes <- declare_step(
+
+    trace_processes <- declare_measurement(
       test_results = sample(
-        c("00", "01", "10", "11"),1, 
+        c("00", "01", "10", "11"), 1,
         prob = ifelse(rep(causal_process == "X_causes_Y", 4),
                       joint_prob_H,
                       joint_prob_not_H)),
       E1 = test_results == "10" | test_results == "11",
-      E2 = test_results == "01" | test_results == "11",
-      handler = fabricate)
-    
+      E2 = test_results == "01" | test_results == "11")
+
     # A: Answer Strategy
     bayes_rule <- function(p_H, p_E_H, p_E_not_H) {
       p_E_H * p_H / (p_E_H * p_H + p_E_not_H * (1 - p_H))}
-    
+
     prior_only <- function(data){
       return(with(data,
                   data.frame(
                     posterior_H = bayes_rule(p_H = prior_H, p_E_H = 1, p_E_not_H = 1),
-                    result = TRUE)
+                    result = "TRUE")
       ))}
-    
+
     E1_only <- function(data){
       return(with(data,
                   data.frame(
                     posterior_H = bayes_rule(
-                      p_H = prior_H, 
-                      p_E_H = ifelse(E1, p_E1_H, 1 - p_E1_H), 
+                      p_H = prior_H,
+                      p_E_H = ifelse(E1, p_E1_H, 1 - p_E1_H),
                       p_E_not_H = ifelse(E1, p_E1_not_H, 1 - p_E1_not_H)),
-                    result = E1))
+                    result = as.character(E1)))
       )}
-    
+
     E2_only <- function(data){
       return(with(data,
                   data.frame(
                     posterior_H = bayes_rule(
-                      p_H = prior_H, 
-                      p_E_H = ifelse(E2, p_E2_H, 1 - p_E2_H), 
+                      p_H = prior_H,
+                      p_E_H = ifelse(E2, p_E2_H, 1 - p_E2_H),
                       p_E_not_H = ifelse(E2, p_E2_not_H, 1 - p_E2_not_H)),
-                    result = E2))
+                    result = as.character(E2)))
       )}
-    
+
     E1_and_E2 <- function(data){
       return(with(data,
                   data.frame(
                     posterior_H = bayes_rule(
-                      p_H = prior_H, 
+                      p_H = prior_H,
                       p_E_H = joint_prob_H[c("00", "01", "10", "11") %in% test_results],
                       p_E_not_H = joint_prob_not_H[c("00", "01", "10", "11") %in% test_results]),
                     result = test_results)
       ))}
-    
+
     prior_only_estimator <- declare_estimator(
       handler = label_estimator(prior_only),
       label = "No tests (Prior)",
-      inquiry = estimand
+      inquiry = "did_X_cause_Y"
     )
-    
+
     E1_only_estimator <- declare_estimator(
       handler = label_estimator(E1_only),
       label = label_E1,
-      inquiry = estimand
+      inquiry = "did_X_cause_Y"
     )
-    
+
     E2_only_estimator <- declare_estimator(
       handler = label_estimator(E2_only),
       label = label_E2,
-      inquiry = estimand
+      inquiry = "did_X_cause_Y"
     )
-    
+
     E1_and_E2_estimator <- declare_estimator(
       handler = label_estimator(E1_and_E2),
       label = paste(label_E1, "and", label_E2),
-      inquiry = estimand
+      inquiry = "did_X_cause_Y"
     )
-    
+
     # Design
     process_tracing_design <-
-      population + select_case + trace_processes + estimand +
-      prior_only_estimator + E1_only_estimator + E2_only_estimator + 
+      model + select_case + trace_processes + estimand +
+      prior_only_estimator + E1_only_estimator + E2_only_estimator +
       E1_and_E2_estimator
-    
-    
   }}}
   
   attr(process_tracing_design, "code") <- 

@@ -23,8 +23,8 @@
 #' @return A post-treatment design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team} 
 #' @concept post-treatment
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design redesign
-#' @importFrom fabricatr fabricate fabricate
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement diagnose_design redesign
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom stats rnorm
 #' @export
@@ -57,45 +57,46 @@ two_arm_attrition_designer <- function(N = 100,
   if(rho < 0 || rho > 1) stop("rho must be in [0,1]")
   {{{
     # M: Model
-    population   <- declare_population(N   = N, 
-                                       u_R = rnorm(N), 
-                                       u_Y = rnorm(N, mean = rho * u_R, 
-                                                   sd = sqrt(1 - rho^2)))
-    
-    potential_outcomes_R <- declare_potential_outcomes(R ~ (a_R + b_R*Z > u_R))
-    
-    potential_outcomes_Y <- declare_potential_outcomes(Y ~ (a_Y + b_Y*Z > u_Y))
-    
-    # I: Inquiry
-    estimand_1 <- declare_inquiry(mean(R_Z_1 - R_Z_0), label = "ATE on R")
-    
-    estimand_2 <- declare_inquiry(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y")
-    
-    estimand_3 <- declare_inquiry(mean((Y_Z_1 - Y_Z_0)[R==1]), 
-                                   label = "ATE on Y (Given R)")
-    
+    model <- declare_model(
+      N   = N,
+      u_R = rnorm(N),
+      u_Y = rnorm(N, mean = rho * u_R, sd = sqrt(1 - rho^2)),
+      potential_outcomes(R ~ (a_R + b_R * Z > u_R)),
+      potential_outcomes(Y ~ (a_Y + b_Y * Z > u_Y))
+    )
+
     # D: Data Strategy
     assignment <- declare_assignment(Z = complete_ra(N, prob = 0.5))
-    
-    reveal     <- declare_reveal(outcome_variables = c("R", "Y")) 
-    
-    observed   <- declare_step(Y_obs = ifelse(R, Y, NA), handler = fabricate)    
-    
+
+    measurement <- declare_measurement(
+      R = reveal_outcomes(R ~ Z),
+      Y = reveal_outcomes(Y ~ Z),
+      Y_obs = ifelse(R, Y, NA)
+    )
+
+    # I: Inquiry
+    estimand_1 <- declare_inquiry(mean(R_Z_1 - R_Z_0), label = "ATE on R")
+
+    estimand_2 <- declare_inquiry(mean(Y_Z_1 - Y_Z_0), label = "ATE on Y")
+
+    estimand_3 <- declare_inquiry(mean((Y_Z_1 - Y_Z_0)[R == 1]),
+                                  label = "ATE on Y (Given R)")
+
     # A: Answer Strategy
     estimator_1 <- declare_estimator(
-      R ~ Z, term = "Z", inquiry = estimand_1, label = "DIM on R")
-    
+      R ~ Z, term = "Z", inquiry = "ATE on R", label = "DIM on R")
+
     estimator_2 <- declare_estimator(
-      Y_obs ~ Z, term = "Z", 
-      inquiry = c(estimand_2, estimand_3), label = "DIM on Y_obs")
-    
+      Y_obs ~ Z, term = "Z",
+      inquiry = c("ATE on Y", "ATE on Y (Given R)"), label = "DIM on Y_obs")
+
     estimator_3 <- declare_estimator(
-      Y ~ Z, term = "Z", inquiry = c(estimand_2, estimand_3), label = "DIM on Y")
-    
+      Y ~ Z, term = "Z",
+      inquiry = c("ATE on Y", "ATE on Y (Given R)"), label = "DIM on Y")
+
     # Design
-    two_arm_attrition_design <- population + potential_outcomes_R +  potential_outcomes_Y +
-      assignment  + reveal + observed +
-      estimand_1  + estimand_2  + estimand_3 +
+    two_arm_attrition_design <- model + assignment + measurement +
+      estimand_1 + estimand_2 + estimand_3 +
       estimator_1 + estimator_2 + estimator_3
   }}}
   

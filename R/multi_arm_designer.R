@@ -17,8 +17,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept multiarm trial
-#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_model  declare_reveal
-#' @importFrom fabricatr fabricate 
+#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_model declare_measurement
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr difference_in_means
 #' @importFrom rlang eval_bare expr quo_text quos sym
@@ -77,36 +77,17 @@ multi_arm_designer <- function(N = 30,
   conditions <- as.character(conditions)
   
 
-  # build terms: (outcome_means[i] + u_i) * (Z == "i")
-  # Build RHS as expressions, then a Y ~ RHS quosure (captures outcome_means)
+  # potential outcomes: Y ~ (outcome_means[i] + u_i) * (Z == "i") + ... + u
   terms <- lapply(seq_len(m_arms), function(i) {
-    rlang::expr(
-      ( !!rlang::expr(outcome_means[!!i]) + !!rlang::sym(paste0("u_", i)) ) *
-        (Z == !!as.character(conditions[i]))
-    )
+    expr((!!outcome_means_[[i]] + !!sym(paste0("u_", i))) * (Z == !!conditions[i]))
   })
-  rhs <- Reduce(function(a, b) rlang::expr(!!a + !!b), terms)
-  rhs <- rlang::expr( !!rhs + u )
+  rhs <- Reduce(function(a, b) expr(!!a + !!b), terms)
+  rhs <- expr(!!rhs + u)
   
-  f_Y_quo <- rlang::quo( Y ~ !!rhs )
+  po_expr <- expr(potential_outcomes(Y ~ !!rhs, conditions = list(Z = !!conditions)))
   
-  # Use declare_potential_outcomes directly (no declare_model wrapper)
-  po_expr <- rlang::expr(
-    declare_potential_outcomes(
-      formula    = !!f_Y_quo,
-      conditions = list(Z = !!as.character(conditions))
-    )
-  )
-  
-  check <<- f_Y_quo
-  
-
-  population_expr <- expr(
-    declare_model(N = !!N_, !!!errors, u = rnorm(!!N_)*!!sd_i_
-                  ))
-  
-
-  po <- rlang::eval_bare(po_expr)
+  model_expr <- expr(
+    declare_model(N = !!N_, !!!errors, u = rnorm(!!N_) * !!sd_i_, !!po_expr))
   
   assignment_expr <-
     expr(
@@ -167,26 +148,21 @@ multi_arm_designer <- function(N = 30,
 
   {{{
     # M: Model
-    population <- eval_bare(population_expr)
-
-    # addressing environment issue    
-    po <- eval_bare(po_expr)
+    model <- eval_bare(model_expr)
     
     # I: Inquiry
-    estimand  <- eval_bare(estimand_expr)
+    estimand <- eval_bare(estimand_expr)
     
     # D: Data Strategy
     assignment <- eval_bare(assignment_expr)
     
-    reveal_Y <-  declare_reveal(assignment_variables = Z)
+    reveal_Y <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
     
     # A: Answer Strategy
     estimator <- eval_bare(estimator_expr)
     
     # Design
-    multi_arm_design <-
-      population + po + 
-      assignment + reveal_Y + estimand +  estimator
+    multi_arm_design <- model + assignment + reveal_Y + estimand + estimator
     
   }}}
   
@@ -198,10 +174,8 @@ multi_arm_designer <- function(N = 30,
       arguments_as_values = TRUE,
       exclude_args = union(c("args_to_fix", "conditions"), args_to_fix))
   
-  design_code <- sub_expr_text(design_code, population_expr, estimand_expr,
-                               po_expr, 
-                               assignment_expr,
-                               estimator_expr)
+  design_code <- sub_expr_text(design_code, model_expr, estimand_expr,
+                               assignment_expr, estimator_expr)
 
   attr(multi_arm_design, "code") <- design_code
   

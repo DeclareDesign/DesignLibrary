@@ -19,8 +19,8 @@
 #' @return A simple two-arm design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal
-#' @importFrom fabricatr fabricate 
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom stats rnorm
 #' @importFrom rlang list2 expr eval_bare
@@ -47,33 +47,30 @@ two_arm_designer <- function(N = 100,
   if(assignment_prob < 0 || assignment_prob > 1) stop("assignment_prob must be in [0,1]")
   if(abs(rho) > 1) stop("rho must be in [-1,1]")
   {{{
-    
     # M: Model
-    model  <- declare_model(
+    model <- declare_model(
       N = N,
       u_0 = rnorm(N),
       u_1 = rnorm(n = N, mean = rho * u_0, sd = sqrt(1 - rho^2)),
-      potential_outcomes(Y ~(1-Z) * (u_0*control_sd + control_mean) + 
-        Z     * (u_1*treatment_sd + treatment_mean))) 
-    
+      potential_outcomes(Y ~ (1 - Z) * (u_0 * control_sd + control_mean) +
+                           Z * (u_1 * treatment_sd + treatment_mean)))
+
     # I: Inquiry
-    inquiry <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))  
-    
+    inquiry <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
+
     # D: Data Strategy
-    data_strategy <- declare_assignment(
-      Z = complete_ra(N, prob = assignment_prob),
-      Y = reveal_outcomes(Y ~ Z)) 
-    
+    assignment <- declare_assignment(Z = complete_ra(N, prob = assignment_prob))
+
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+
     # A: Answer Strategy
     answer_strategy <- declare_estimator(Y ~ Z, inquiry = "ATE")
-    
 
-    two_arm_design <- model + inquiry + data_strategy + answer_strategy
-    
+    two_arm_design <- model + inquiry + assignment + measurement + answer_strategy
   }}}  
   
   attr(two_arm_design, "code") <-
-    DesignLibrary:::construct_design_code(designer = two_arm_designer,
+    construct_design_code(designer = two_arm_designer,
                           args = match.call.defaults(),
                           args_to_fix = args_to_fix,
                           exclude_args = union(c("ate", "args_to_fix", "dots"), args_to_fix),

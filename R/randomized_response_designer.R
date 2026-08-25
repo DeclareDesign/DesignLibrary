@@ -16,8 +16,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept descriptive
-#' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal set_diagnosands label_estimator
-#' @importFrom fabricatr fabricate draw_binary
+#' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_inquiry declare_estimator declare_model declare_measurement set_diagnosands label_estimator
+#' @importFrom fabricatr fabricate draw_binary reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @export
 #' @examples
@@ -35,56 +35,51 @@ randomized_response_designer <- function(N = 1000,
   if(withholding_rate < 0 || withholding_rate > 1) stop("withholding_rate must be in [0,1]")
   {{{
     # M: Model
-    population <- declare_population(
+    model <- declare_model(
       N = N,
       sensitive_trait = draw_binary(prob = prevalence_rate, N = N),
       withholder = draw_binary(prob = sensitive_trait * withholding_rate, N = N),
-      direct_answer =  sensitive_trait - withholder
-    )
-    
-    potential_outcomes <- declare_potential_outcomes(
+      direct_answer = sensitive_trait - withholder,
       Y_Z_Yes = 1,
       Y_Z_Truth = sensitive_trait
     )
-    
+
     # I: Inquiry
     estimand <- declare_inquiry(true_rate = mean(sensitive_trait))
-    
+
     # D: Data Strategy
     assignment <- declare_assignment(
-      Z = complete_ra(N, prob = prob_forced_yes,
-      conditions = c("Truth","Yes"))
+      Z = complete_ra(N, prob = prob_forced_yes, conditions = c("Truth", "Yes"))
     )
-    
+
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+
     # A: Answer Strategy
     estimator_randomized_response <- declare_estimator(
       handler = label_estimator(
         function(data) with(
           data,
           data.frame(estimate = (mean(Y) - prob_forced_yes) / (1 - prob_forced_yes)))),
-      inquiry = estimand,
+      inquiry = "true_rate",
       label = "Forced Randomized Response"
     )
-    
+
     estimator_direct_question <- declare_estimator(
       handler = label_estimator(function(data) with(
         data,
         data.frame(estimate = mean(direct_answer)))),
-      inquiry = estimand,
+      inquiry = "true_rate",
       label = "Direct Question"
     )
-    
+
     # Design
-    randomized_response_design <- population + assignment + potential_outcomes +
-      estimand + declare_reveal(Y, Z) +
+    randomized_response_design <- model + assignment + estimand + measurement +
       estimator_randomized_response + estimator_direct_question
-    
+
     randomized_response_design <- set_diagnosands(
       randomized_response_design,
-      declare_diagnosands(bias = mean(estimate - estimand)
-)
+      declare_diagnosands(bias = mean(estimate - estimand))
     )
-    
   }}}
   attr(randomized_response_design, "code") <- 
     construct_design_code(randomized_response_designer, args_to_fix = args_to_fix, match.call.defaults())

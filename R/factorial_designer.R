@@ -25,8 +25,8 @@
 #' 
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept factorial
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design label_estimator
-#' @importFrom fabricatr fabricate fabricate
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement diagnose_design label_estimator
+#' @importFrom fabricatr fabricate reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr tidy lm_robust
 #' @importFrom rlang eval_bare expr is_integerish parse_expr quo_text quos sym UQS
@@ -108,9 +108,8 @@ factorial_designer <- function(
   names(cond_list) <- treatment_names
   cond_grid <- expand.grid(cond_list)
   
-  # assignment strings
-  # a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, paste0(treatment_names[x], "_1"), paste0(treatment_names[x], "_0")))
-  a <- sapply(1:k, function(x) ifelse(cond_grid[,x]==1, "1", "0"))
+  # potential outcome name strings, in the fabricatr convention T1_0_T2_0_T3_0
+  a <- sapply(1:k, function(x) paste0(treatment_names[x], "_", cond_grid[,x]))
   assignment_string <- sapply(1:2^k, function(r) paste0(a[r,], collapse = "_"))
 
   # regression term strings
@@ -136,39 +135,29 @@ factorial_designer <- function(
   if(!"N" %in% args_to_fix)  N_ <- expr(N)
   
   
-  # population --------------------------------------------------------------
-  population_expr <- expr(declare_population(!!N_))
-  
-  # potential outcomes ------------------------------------------------------
+  # model: population and potential outcomes -------------------------------
   potouts <- sapply(1:length(outcome_means),
                     function(i) quos(!!outcome_means_[[i]] + rnorm(!!N_, 0, !!outcome_sds_[[i]])))
   names_pos <- paste0(outcome_name, "_", assignment_string)
   names(potouts) <- names_pos
   
-  potential_outcomes_expr <- expr(declare_potential_outcomes(!!!(potouts)))
+  model_expr <- expr(declare_model(N = !!N_, !!!(potouts)))
   
   # assignment --------------------------------------------------------------
   Z <- sym("Z")
   assignment_given_factor <- sapply(1:length(cond_row), function(i) quos(as.numeric(!!Z %in% !!cond_row[[i]])))
   names(assignment_given_factor) <- treatment_names
   
-  assignment_expr1 <- expr(declare_assignment(Z = complete_ra(N, conditions = 1:(2^!!k_), prob_each = !!prob_each),
-                                              Z_cond_prob = obtain_condition_probabilities(assignment = Z, conditions = 1:(2^!!k_), prob_each = !!prob_each)))
-  assignment_expr2 <- expr(declare_step(fabricate, !!!assignment_given_factor))
+  assignment_expr <- expr(declare_assignment(Z = complete_ra(N, conditions = 1:(2^!!k_), prob_each = !!prob_each),
+                                             Z_cond_prob = obtain_condition_probabilities(assignment = Z, conditions = 1:(2^!!k_), prob_each = !!prob_each),
+                                             !!!assignment_given_factor))
   
   # reveal outcomes ---------------------------------------------------------
-  reveal_expr <- expr(declare_reveal(
-    handler = function(data){
-      potential_cols <- mapply(paste, data[, !!treatment_names, drop = FALSE], sep = "_", SIMPLIFY = FALSE)
-      potential_cols <- do.call(paste, c(!!outcome_name, potential_cols, sep = "_"))
-      upoc <- unique(potential_cols)
-    
-      df <- data[, upoc, drop = FALSE]
-      R <- seq_len(nrow(df))
-      C <- match(potential_cols, colnames(df))
-      data[,!!outcome_name] <- df[cbind(R, C)]
-      data
-    }))
+  reveal_rhs <- Reduce(function(a, b) expr(!!a + !!b), lapply(treatment_names, sym))
+  reveal_given_factors <- list(expr(reveal_outcomes(!!sym(outcome_name) ~ !!reveal_rhs)))
+  names(reveal_given_factors) <- outcome_name
+  
+  reveal_expr <- expr(declare_measurement(!!!reveal_given_factors))
   
   # estimands ---------------------------------------------------------------
   perm <- function(v) {
@@ -180,8 +169,7 @@ factorial_designer <- function(
   
   interaction  <- function(k, tnames = treatment_names, yname = outcome_name) {
     conditions <- perm(rep(2,k))
-    # combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
-    combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(x, collapse = "_")))
+    combs <- paste0(yname, "_", apply(conditions, 1, function(x) paste0(tnames, "_", x, collapse = "_")))
     signs <- (1 - 2*(k%%2))*( 1- 2*apply(conditions, 1, sum) %% 2)
     
     allsigns <- sapply(1:((nrow(conditions)-1)), function(j) {
@@ -226,26 +214,21 @@ factorial_designer <- function(
   {{{
     
     # M: Model
-    population <- eval_bare(population_expr)
-    
-    potential_outcomes <- eval_bare(potential_outcomes_expr)
-    
-    reveal_Y <- eval_bare(reveal_expr)
+    model <- eval_bare(model_expr)
     
     # I: Inquiry
     estimand <- eval_bare(estimand_expr)
     
     # D: Data Strategy
-    assignment_factors <- eval_bare(assignment_expr1)
+    assignment <- eval_bare(assignment_expr)
     
-    assignment <- eval_bare(assignment_expr2)
+    reveal_Y <- eval_bare(reveal_expr)
     
     # A: Answer Strategy
     estimator <- eval_bare(estimator_expr)
     
     # Design
-    factorial_design <- population + potential_outcomes + assignment_factors + 
-      assignment + reveal_Y + estimand + estimator
+    factorial_design <- model + assignment + reveal_Y + estimand + estimator
     
   }}}
   
@@ -256,9 +239,8 @@ factorial_designer <- function(
                                        exclude_args = c("k", "assignment_probs", "outcome_name", "treatment_names", "sd", args_to_fix, "args_to_fix"))
   
   
-  design_code <- sub_expr_text(design_code, population_expr, potential_outcomes_expr,
-                               reveal_expr, estimand_expr, assignment_expr1, 
-                               assignment_expr2, estimator_expr)
+  design_code <- sub_expr_text(design_code, model_expr, reveal_expr, estimand_expr,
+                               assignment_expr, estimator_expr)
   
   attr(factorial_design, "code") <- design_code
   

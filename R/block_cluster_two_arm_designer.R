@@ -36,8 +36,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment 
 #' @concept blocking
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal
-#' @importFrom fabricatr fabricate add_level
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement
+#' @importFrom fabricatr fabricate add_level potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
 #' @importFrom rlang is_integerish
@@ -118,7 +118,7 @@ block_cluster_two_arm_designer <- function(N = NULL,
                     ", which differs from overall specified sd of ", round(sd, 3)))
     {{{    
     # M: Model
-    population <- declare_population(
+    model <- declare_model(
       blocks = add_level(
         N = N_blocks,
         u_b = rnorm(N) * sd_block),
@@ -129,33 +129,33 @@ block_cluster_two_arm_designer <- function(N = NULL,
       i = add_level(
         N = N_i_in_cluster,
         u_0 = rnorm(N) * sd_i_0,
-        u_1 = rnorm(n = N, mean = rho * scale(u_0), sd = sqrt(1 - rho^2)) * sd_i_1)
+        u_1 = rnorm(n = N, mean = rho * scale(u_0), sd = sqrt(1 - rho^2)) * sd_i_1,
+        potential_outcomes(
+          Y ~ (1 - Z) * (control_mean + u_0 + u_b + u_c) +
+            Z * (treatment_mean + u_1 + u_b + u_c)))
     )
-    
-    potential_outcomes <- declare_potential_outcomes(
-      Y ~ (1 - Z) * (control_mean + u_0 + u_b + u_c) + 
-        Z * (treatment_mean + u_1 + u_b + u_c) )
     
     # I: Inquiry
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
     
     # D: Data Strategy
-    assignment <- declare_assignment(Z = block_and_cluster_ra(block_prob = assignment_probs, blocks = blocks, clusters = clusters))
+    assignment <- declare_assignment(
+      Z = block_and_cluster_ra(block_prob = rep(assignment_probs, length.out = N_blocks),
+                               blocks = blocks, clusters = clusters))
     
-    reveal <- declare_reveal(Y, Z)
+    reveal <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
     
     # A: Answer Strategy
     estimator <- declare_estimator(
       Y ~ Z,
-      inquiry = estimand,
-      .method =lm_robust,
+      inquiry = "ATE",
+      .method = lm_robust,
       fixed_effects = ~ blocks,
       clusters = clusters
     )
     
     # Design
-    block_cluster_two_arm_design <- population + potential_outcomes + estimand + assignment + 
-      reveal + estimator
+    block_cluster_two_arm_design <- model + estimand + assignment + reveal + estimator
   }}}
   
   attr(block_cluster_two_arm_design, "code") <- 

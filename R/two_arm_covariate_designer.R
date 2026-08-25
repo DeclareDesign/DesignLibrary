@@ -25,8 +25,8 @@
 #' @return A simple two-arm design with covariate W.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal
-#' @importFrom fabricatr fabricate 
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_lin lm_robust difference_in_means 
 #' @importFrom stats rnorm
@@ -73,39 +73,38 @@ two_arm_covariate_designer <- function(N = 100,
   if(abs(rho_WZ) > 1) stop("rho_WX must be in [-1,1]")
   {{{
     # M: Model
-    population <- declare_population(
+    model <- declare_model(
       N = N,
       u_W = rnorm(N),
-      u_Y = rnorm(n = N, mean = rho_WY * u_W, sd = sqrt(1 - rho_WY ^ 2)),
-      u_Z = rnorm(n = N, mean = rho_WZ * u_W, sd = sqrt(1 - rho_WZ ^ 2)),
-      W   = u_W
+      u_Y = rnorm(n = N, mean = rho_WY * u_W, sd = sqrt(1 - rho_WY^2)),
+      u_Z = rnorm(n = N, mean = rho_WZ * u_W, sd = sqrt(1 - rho_WZ^2)),
+      W   = u_W,
+      potential_outcomes(
+        Y ~ (1 - Z) * (u_Y * sd + control_mean) +
+          Z * (u_Y * sd + treatment_mean + h * u_W))
     )
-    
-    potentials <- declare_potential_outcomes(
-      Y ~ (1 - Z) * (u_Y * sd + control_mean) + 
-        Z         * (u_Y * sd + treatment_mean + h * u_W))
-    
+
     # I: Inquiry
     estimand <- declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
-    
+
     # D: Data Strategy
-    assignment  <- declare_step(Z = 1 * (u_Z <  qnorm(prob)), handler = fabricate)
-    
-    reveal_Y    <- declare_reveal()
-    
+    assignment <- declare_assignment(Z = 1 * (u_Z < qnorm(prob)))
+
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+
     # A: Answer Strategy
-    estimator_1 <- declare_estimator(Y ~ Z,   inquiry = estimand, 
+    estimator_1 <- declare_estimator(Y ~ Z, inquiry = "ATE",
                                      label = "No controls")
-    
-    estimator_2 <- declare_estimator(Y ~ Z + W, inquiry = estimand, .method =lm_robust, 
+
+    estimator_2 <- declare_estimator(Y ~ Z + W, inquiry = "ATE", .method = lm_robust,
                                      label = "With controls")
-    
-    estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, inquiry = estimand, .method =lm_lin,
+
+    estimator_3 <- declare_estimator(Y ~ Z, covariates = ~ W, inquiry = "ATE", .method = lm_lin,
                                      label = "Lin")
-    
+
     # Design
-    two_arm_covariate_design <- population + potentials + estimand + assignment + reveal_Y + 
-                                estimator_1 + estimator_2 + estimator_3
+    two_arm_covariate_design <- model + estimand + assignment + measurement +
+      estimator_1 + estimator_2 + estimator_3
   }}}
   
   attr(two_arm_covariate_design, "code") <- 

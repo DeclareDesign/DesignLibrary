@@ -21,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Jasper Cooper \email{jjc2247@columbia.edu}
   \item Graeme Blair \email{graeme.blair@ucla.edu}
   \item Alexander Coppock \email{alex.coppock@yale.edu}
   \item Macartan Humphreys \email{macartan@gmail.com}

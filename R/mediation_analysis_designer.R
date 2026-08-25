@@ -19,8 +19,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept mediation
-#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_population declare_potential_outcomes declare_reveal declare_step diagnose_design draw_estimands
-#' @importFrom fabricatr fabricate fabricate
+#' @importFrom DeclareDesign declare_assignment declare_inquiries declare_estimator declare_model declare_measurement diagnose_design draw_estimands
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
 #' @export
@@ -45,28 +45,22 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
   if(abs(rho) > 1) stop("rho must be in [-1, 1]")
   {{{
     # M: Model
-    population <- declare_population(
-      N = N, 
+    model <- declare_model(
+      N = N,
       e1 = rnorm(N),
-      e2 = rnorm(n = N, mean = rho * e1, sd = sqrt(1 - rho^2))
-    )
-    
-    POs_M <- declare_potential_outcomes(M ~ 1*(a * Z + e1 > 0))
-    
-    POs_Y <- declare_potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
-                                        conditions = list(M = 0:1, Z = 0:1))
-    
-    POs_Y_nat_0 <- declare_potential_outcomes(
+      e2 = rnorm(n = N, mean = rho * e1, sd = sqrt(1 - rho^2)),
+      potential_outcomes(M ~ 1 * (a * Z + e1 > 0)),
+      potential_outcomes(Y ~ d * Z + b * M + c * M * Z + e2,
+                         conditions = list(M = 0:1, Z = 0:1)),
       Y_nat0_Z_0 = b * M_Z_0 + e2,
-      Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2)
-    
-    POs_Y_nat_1 <- declare_potential_outcomes(
+      Y_nat0_Z_1 = d + b * M_Z_0 + c * M_Z_0 + e2,
       Y_nat1_Z_0 = b * M_Z_1 + e2,
-      Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2)
-    
+      Y_nat1_Z_1 = d + b * M_Z_1 + c * M_Z_1 + e2
+    )
+
     # I: Inquiry
     estimands <- declare_inquiries(
-      FirstStage = mean(M_Z_1 - M_Z_0), 
+      FirstStage = mean(M_Z_1 - M_Z_0),
       Indirect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
       Indirect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
       Controlled_Direct_0 = mean(Y_M_0_Z_1 - Y_M_0_Z_0),
@@ -74,57 +68,53 @@ mediation_analysis_designer <- function(N = 200, a = 1, b = .4, c = 0, d = .5, r
       Natural_Direct_0 = mean(Y_nat0_Z_1 - Y_nat0_Z_0),
       Natural_Direct_1 = mean(Y_nat1_Z_1 - Y_nat1_Z_0)
     )
-    
-    # D: Data strategy 
+
+    # D: Data strategy
     assignment <- declare_assignment(Z = complete_ra(N, prob = 0.5))
-    
-    reveal_M <- declare_reveal(M, Z)
-    
-    reveal_Y <- declare_reveal(Y, assignment_variable = c("M","Z"))
-    
-    reveal_nat0 <- declare_reveal(Y_nat0)
-    
-    reveal_nat1 <- declare_reveal(Y_nat1)
-    
-    manipulation <- declare_step(Not_M = 1 - M, handler = fabricate)
-    
+
+    measurement <- declare_measurement(
+      M = reveal_outcomes(M ~ Z),
+      Y = reveal_outcomes(Y ~ M + Z),
+      Y_nat0 = reveal_outcomes(Y_nat0 ~ Z),
+      Y_nat1 = reveal_outcomes(Y_nat1 ~ Z),
+      Not_M = 1 - M
+    )
+
     # A: Answer Strategy
     mediator_regression <- declare_estimator(
       M ~ Z,
-      .method =lm_robust,
+      .method = lm_robust,
       inquiry = "FirstStage",
       label = "Stage 1")
-    
+
     stage2_1 <- declare_estimator(
       Y ~ Z * M,
-      .method =lm_robust,
+      .method = lm_robust,
       term = c("M"),
       inquiry = c("Indirect_0"),
       label = "Stage 2"
     )
-    
+
     stage2_2 <- declare_estimator(
       Y ~ Z * M,
-      .method =lm_robust,
+      .method = lm_robust,
       term = c("Z"),
       inquiry = c("Controlled_Direct_0", "Natural_Direct_0"),
       label = "Direct_0"
     )
-    
+
     stage2_3 <- declare_estimator(
       Y ~ Z * Not_M,
-      .method =lm_robust,
+      .method = lm_robust,
       term = c("Z"),
       inquiry = c("Controlled_Direct_1", "Natural_Direct_1"),
       label = "Direct_1"
     )
+
     # Design
-    mediation_analysis_design <- population + 
-      POs_M + POs_Y + POs_Y_nat_0 + POs_Y_nat_1 +
-      estimands + assignment + 
-      reveal_M + reveal_Y + reveal_nat0 + reveal_nat1 + manipulation +
+    mediation_analysis_design <- model + estimands + assignment + measurement +
       mediator_regression + stage2_1 + stage2_2 + stage2_3
-    
+
   }}}
   attr(mediation_analysis_design, "code") <- 
     construct_design_code(mediation_analysis_designer, args_to_fix = args_to_fix, match.call.defaults())

@@ -17,8 +17,8 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept observational
 #' @concept regression discontinuity
-#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal declare_sampling
-#' @importFrom fabricatr fabricate 
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_model declare_measurement declare_sampling
+#' @importFrom fabricatr fabricate reveal_outcomes
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom estimatr lm_robust
 #' @importFrom rlang is_integerish
@@ -48,39 +48,38 @@ regression_discontinuity_designer <- function(
   {{{
     # M: Model
     po_function <- function(X, coefs, tau) {
-      as.vector(poly(X, length(coefs), raw = T) %*% coefs) + tau}
-    
-    population <- declare_population(
+      as.vector(poly(X, length(coefs), raw = TRUE) %*% coefs) + tau
+    }
+
+    model <- declare_model(
       N = N,
-      X = runif(N,0,1) - cutoff,
-      noise = rnorm(N,0,outcome_sd),
-      Z = 1 * (X > 0))
-    
-    potential_outcomes <- declare_potential_outcomes(
+      X = runif(N, 0, 1) - cutoff,
+      noise = rnorm(N, 0, outcome_sd),
+      Z = 1 * (X > 0),
       Y_Z_0 = po_function(X, tau = 0, coefs = control_coefs) + noise,
-      Y_Z_1 = po_function(X, tau = tau, coefs = treatment_coefs) + noise)
-    
-    reveal_Y <- declare_reveal(Y)
-    
+      Y_Z_1 = po_function(X, tau = tau, coefs = treatment_coefs) + noise
+    )
+
     # I: Inquiry
     estimand <- declare_inquiry(
-      LATE = po_function(X = 0, coefs = treatment_coefs, tau = tau) - 
+      LATE = po_function(X = 0, coefs = treatment_coefs, tau = tau) -
         po_function(X = 0, coefs = control_coefs, tau = 0))
-    
+
     # D: Data Strategy
-    sampling <- declare_sampling(handler = function(data){
-      subset(data,(X > 0 - abs(bandwidth)) & X < 0 + abs(bandwidth))})
-    
-    # A: Answer Strategy 
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ Z))
+
+    sampling <- declare_sampling(filter = abs(X) < abs(bandwidth))
+
+    # A: Answer Strategy
     estimator <- declare_estimator(
       formula = Y ~ poly(X, poly_reg_order) * Z,
-      .method =lm_robust,
+      .method = lm_robust,
       term = "Z",
-      inquiry = estimand)
-    
+      inquiry = "LATE")
+
     # Design
-    regression_discontinuity_design <- 
-      population + potential_outcomes + estimand + reveal_Y + sampling + estimator
+    regression_discontinuity_design <-
+      model + estimand + measurement + sampling + estimator
   }}}
   
   attr(regression_discontinuity_design, "code") <- 

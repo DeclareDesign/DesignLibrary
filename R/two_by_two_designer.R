@@ -29,8 +29,8 @@
 #' @return A two-by-two factorial design.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment factorial
-#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design redesign
-#' @importFrom fabricatr fabricate 
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement diagnose_design redesign
+#' @importFrom fabricatr fabricate reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom estimatr lm_robust
 #' @importFrom rlang list2 expr eval_bare
@@ -79,55 +79,54 @@ two_by_two_designer <- function(N = 100,
   if(max(c(prob_A, prob_B) < 0)) stop("prob_ arguments must be nonnegative")
   if(max(c(prob_A, prob_B) > 1))  stop("prob_ arguments must not exceed 1")
   {{{
-    
     # M: Model
-    population <- declare_population(N, u = rnorm(N, sd=sd_i))
-    
-    potential_outcomes <- declare_potential_outcomes(
-      Y_A_0_B_0 = mean_A0B0 + u + rnorm(N, sd = outcome_sds[1]),  
-      Y_A_0_B_1 = mean_A0B1 + u + rnorm(N, sd = outcome_sds[2]),  
+    model <- declare_model(
+      N = N,
+      u = rnorm(N, sd = sd_i),
+      Y_A_0_B_0 = mean_A0B0 + u + rnorm(N, sd = outcome_sds[1]),
+      Y_A_0_B_1 = mean_A0B1 + u + rnorm(N, sd = outcome_sds[2]),
       Y_A_1_B_0 = mean_A1B0 + u + rnorm(N, sd = outcome_sds[3]),
-      Y_A_1_B_1 = mean_A1B1 + u + rnorm(N, sd = outcome_sds[4]))
-    
-    
+      Y_A_1_B_1 = mean_A1B1 + u + rnorm(N, sd = outcome_sds[4])
+    )
+
     # I: Inquiry
     estimand_1 <- declare_inquiry(
-      ate_A = weight_B*mean(Y_A_1_B_1 - Y_A_0_B_1) + (1-weight_B)*mean(Y_A_1_B_0 - Y_A_0_B_0))
-    
+      ate_A = weight_B * mean(Y_A_1_B_1 - Y_A_0_B_1) + (1 - weight_B) * mean(Y_A_1_B_0 - Y_A_0_B_0))
+
     estimand_2 <- declare_inquiry(
-      ate_B = weight_A*mean(Y_A_1_B_1 - Y_A_1_B_0) + (1-weight_A)*mean(Y_A_0_B_1 - Y_A_0_B_0))
-    
+      ate_B = weight_A * mean(Y_A_1_B_1 - Y_A_1_B_0) + (1 - weight_A) * mean(Y_A_0_B_1 - Y_A_0_B_0))
+
     estimand_3 <- declare_inquiry(
       interaction = mean((Y_A_1_B_1 - Y_A_1_B_0) - (Y_A_0_B_1 - Y_A_0_B_0)))
-    
+
     # D: Data Strategy
-    
+
     # Factorial assignments
     assign_A <- declare_assignment(A = complete_ra(N, prob = prob_A))
-    
+
     assign_B <- declare_assignment(B = block_ra(prob = prob_B, blocks = A))
-    
-    reveal_Y <- declare_reveal(Y_variables = Y, assignment_variables = c(A,B))
-    
+
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ A + B))
+
     # A: Answer Strategy
     estimator_1 <- declare_estimator(Y ~ A + B,
-                                     .method =lm_robust,
+                                     .method = lm_robust,
                                      term = c("A", "B"),
-                                     inquiry = c("ate_A", "ate_B"), 
+                                     inquiry = c("ate_A", "ate_B"),
                                      label = "No_Interaction")
-    
+
     estimator_2 <- declare_estimator(Y ~ A + B + A:B,
-                                     .method =lm_robust,
-                                     term = "A:B", 
-                                     inquiry = "interaction", 
+                                     .method = lm_robust,
+                                     term = "A:B",
+                                     inquiry = "interaction",
                                      label = "Interaction")
-    
+
     # Design
-    two_by_two_design <- population + potential_outcomes + 
+    two_by_two_design <- model +
       estimand_1 + estimand_2 + estimand_3 +
-      assign_A + assign_B + reveal_Y + 
+      assign_A + assign_B + measurement +
       estimator_1 + estimator_2
-    
+
   }}}
   
   attr(two_by_two_design, "code") <- 

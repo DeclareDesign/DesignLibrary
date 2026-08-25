@@ -22,8 +22,8 @@
 #' @return A simple instrumental variables design with binary instrument, treatment, and outcome variables.
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
-#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_population declare_potential_outcomes declare_reveal diagnose_design
-#' @importFrom fabricatr fabricate 
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_model declare_measurement diagnose_design
+#' @importFrom fabricatr fabricate potential_outcomes reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @importFrom generics tidy
 #' @importFrom estimatr iv_robust lm_robust
@@ -83,54 +83,51 @@ binary_iv_designer <- function(N = 100,
   if(length(d) != 4) stop("vector d must be length 4.")
   
   {{{
-    
     # M: Model
-    population <- declare_population(
+    model <- declare_model(
       N = N,
       type = sample(1:4, N, replace = TRUE, prob = type_probs),
       type_label = c("Always", "Never", "Complier", "Defier")[type],
       u_Z = runif(N),
       u_Y = rnorm(N) * outcome_sd,
       Z = (u_Z < assignment_probs[type]),
-      X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z)
+      X = (type == 1) + (type == 3) * Z + (type == 4) * (1 - Z),
+      potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + u_Y,
+                         conditions = list(X = 0:1))
     )
-    
-    potential_outcomes <-
-      declare_potential_outcomes(Y ~ a[type] + b[type] * X + d[type] * Z + u_Y,
-                                 assignment_variables = "X")
-    
-    reveal <- declare_reveal(outcome_variables = Y,
-                             assignment_variables = "X")
-    
+
+    # D: Data Strategy
+    measurement <- declare_measurement(Y = reveal_outcomes(Y ~ X))
+
     # I: Inquiry
     estimand <- declare_inquiry(
       first_stage = mean((type == 3) - (type == 4)),
       ate = mean(Y_X_1 - Y_X_0),
       late = mean(Y_X_1[type == 3] - Y_X_0[type == 3]),
-      late_het = (mean(type == 3)*mean(Y_X_1[type == 3] - Y_X_0[type == 3]) -
-                         mean(type == 4)*mean(Y_X_1[type == 4] - Y_X_0[type == 4]))/(mean(type == 3) - mean(type == 4))
+      late_het = (mean(type == 3) * mean(Y_X_1[type == 3] - Y_X_0[type == 3]) -
+                    mean(type == 4) * mean(Y_X_1[type == 4] - Y_X_0[type == 4])) /
+        (mean(type == 3) - mean(type == 4))
     )
-    
+
     # A: Answer Strategy
-    estimator_1 <- declare_estimator(X ~ Z, 
-                                     .method =difference_in_means,
-                                     inquiry = "first_stage", 
+    estimator_1 <- declare_estimator(X ~ Z,
+                                     .method = difference_in_means,
+                                     inquiry = "first_stage",
                                      label = "d-i-m")
-    
-    estimator_2 <- declare_estimator(Y ~ X, 
-                                     inquiry = c("ate", "late","late_het"), 
-                                     .method =lm_robust, 
+
+    estimator_2 <- declare_estimator(Y ~ X,
+                                     inquiry = c("ate", "late", "late_het"),
+                                     .method = lm_robust,
                                      label = "lm_robust")
-    
-    estimator_3 <- declare_estimator(Y ~ X | Z, 
-                                     inquiry = c("ate", "late", "late_het"), 
-                                     .method =iv_robust, 
+
+    estimator_3 <- declare_estimator(Y ~ X | Z,
+                                     inquiry = c("ate", "late", "late_het"),
+                                     .method = iv_robust,
                                      label = "iv_robust")
-    
-    
-    binary_iv_design <- population + potential_outcomes + reveal + 
+
+    # Design
+    binary_iv_design <- model + measurement +
       estimand + estimator_1 + estimator_2 + estimator_3
-    
   }}}
   
   attr(binary_iv_design, "code") <- 
