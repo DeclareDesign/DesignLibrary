@@ -13,6 +13,8 @@
 # It also runs pkgdown's reference-index check, so an exported function that
 # nobody added to _pkgdown.yml fails here rather than in the other repository.
 on:
+  schedule:
+    - cron: "23 14 * * 0"
   push:
     branches: [main, master, rewrite]
   pull_request:
