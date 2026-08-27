@@ -8,7 +8,7 @@ Status](https://coveralls.io/repos/github/DeclareDesign/DesignLibrary/badge.svg?
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/DesignLibrary)](https://cran.r-project.org/package=DesignLibrary)
 [![minimal R
 version](https://img.shields.io/badge/R%3E%3D-3.4.0-6666ff.svg)](https://cran.r-project.org/)
-[![packageversion](https://img.shields.io/badge/Package%20version-0.1.5.9999-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/Package%20version-0.1.10-orange.svg?style=flat-square)](https://github.com/DeclareDesign/DesignLibrary/commits/master)
 
 **DesignLibrary** provides simple interface to build designs using the
 package **DeclareDesign**. In one line of code users can specify the
@@ -254,10 +254,10 @@ Two Arm Covariate Design
 My Design
 </td>
 <td style="text-align:center;">
-<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/example_design.html"><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:15px;width:16.88px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#2860F6;overflow:visible;position:relative;"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
+<a data-toggle="tooltip" title="Read description of design" href="https://declaredesign.org/r/designlibrary/articles/Example_Design.html"><svg aria-hidden="true" role="img" viewbox="0 0 576 512" style="height:15px;width:16.88px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#2860F6;overflow:visible;position:relative;"><path d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"></path></svg></a>
 </td>
 <td style="text-align:center;">
-<a data-toggle="tooltip" title="Open designer documentation" href="https://declaredesign.org/r/designlibrary/reference/NA.html"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:15px;width:15px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#2860F6;overflow:visible;position:relative;"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg></a>
+
 </td>
 <td style="text-align:center;">
 <a data-toggle="tooltip" title="Open in DeclareDesign Inspector" href="https://eos.wzb.eu/ipi/DDinspector/?import_library=my_design"><svg aria-hidden="true" role="img" viewbox="0 0 512 512" style="height:15px;width:15px;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:#2860F6;overflow:visible;position:relative;"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg></a>
@@ -289,15 +289,15 @@ devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 We welcome contributions to the library!
 
 -   You can [submit static
-    designs](https://declaredesign.org/r/designlibrary/articles/how_to_write_and_contribute_designs.html)
+    designs](https://declaredesign.org/r/designlibrary/articles/How_to_Write_and_Contribute_Designs.html)
     made in `DeclareDesign`, which will live as properly attributed
     entries in the library on our website
 -   Or you can [submit designer functions that generate
-    designs](https://declaredesign.org/r/designlibrary/articles/how_to_write_and_contribute_designers.html),
+    designs](https://declaredesign.org/r/designlibrary/articles/How_to_Write_and_Contribute_Designers.html),
     which may be added to the CRAN version of the package
 
 ------------------------------------------------------------------------
 
 This project is generously supported by a grant from the [Laura and John
-Arnold Foundation](http://www.arnoldfoundation.org) and seed funding
+Arnold Foundation](https://www.arnoldventures.org) and seed funding
 from [Evidence in Governance and Politics (EGAP)](http://egap.org).

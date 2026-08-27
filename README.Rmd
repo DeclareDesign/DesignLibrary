@@ -10,7 +10,7 @@ always_allow_html: true
 [![Coverage Status](https://coveralls.io/repos/github/DeclareDesign/DesignLibrary/badge.svg?branch=master)](https://coveralls.io/github/DeclareDesign/DesignLibrary?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/DesignLibrary)](https://cran.r-project.org/package=DesignLibrary)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.4.0-6666ff.svg)](https://cran.r-project.org/)
-[![packageversion](https://img.shields.io/badge/Package%20version-0.1.5.9999-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/Package%20version-`r gsub("-", "--", read.dcf("DESCRIPTION")[1, "Version"])`-orange.svg?style=flat-square)](https://github.com/DeclareDesign/DesignLibrary/commits/master)
 
 **DesignLibrary** provides simple interface to build designs using the package **DeclareDesign**. In one line of code users can specify the parameters of individual designs and diagnose their properties. The designers can also be used to compare performance of a given design across a range of combinations of parameters, such as effect size, sample size, assignment probabilities and more.
 
@@ -41,13 +41,15 @@ overview <- read_csv("inst/extdata/overview.csv")
 overview <-
   overview %>%
   mutate(Vignette = add_link(url = paste0("https://declaredesign.org/r/designlibrary/articles/", vignette, ".html"), 
-                                  fa_string = "fab fa-readme", 
+                                  fa_string = "readme", 
                                   "Read description of design"),
-         Designer = add_link(url = paste0("https://declaredesign.org/r/designlibrary/reference/", designer, ".html"), 
-                                  fa_string = "fas fa-pencil-alt", 
-                                  "Open designer documentation"),
+         Designer = if_else(is.na(designer),
+                            "",
+                            add_link(url = paste0("https://declaredesign.org/r/designlibrary/reference/", designer, ".html"), 
+                                  fa_string = "pencil-alt", 
+                                  "Open designer documentation")),
          `Design Inspector` = add_link(url = paste0("https://eos.wzb.eu/ipi/DDinspector/?import_library=", design), 
-                                       fa_string = "fas fa-info-circle", 
+                                       fa_string = "info-circle", 
                                        "Open in DeclareDesign Inspector"),
          design_title = str_replace_all(design, "_", " "),
          design_title = str_to_title(design_title),
@@ -79,9 +81,9 @@ devtools::install_github("DeclareDesign/DesignLibrary", keep_source = TRUE)
 
 We welcome contributions to the library! 
 
-- You can [submit static designs](https://declaredesign.org/r/designlibrary/articles/how_to_write_and_contribute_designs.html) made in `DeclareDesign`, which will live as properly attributed entries in the library on our website
-- Or you can [submit designer functions that generate designs](https://declaredesign.org/r/designlibrary/articles/how_to_write_and_contribute_designers.html), which may be added to the CRAN version of the package
+- You can [submit static designs](https://declaredesign.org/r/designlibrary/articles/How_to_Write_and_Contribute_Designs.html) made in `DeclareDesign`, which will live as properly attributed entries in the library on our website
+- Or you can [submit designer functions that generate designs](https://declaredesign.org/r/designlibrary/articles/How_to_Write_and_Contribute_Designers.html), which may be added to the CRAN version of the package
 
 ---
 
-This project is generously supported by a grant from the [Laura and John Arnold Foundation](http://www.arnoldfoundation.org) and seed funding from [Evidence in Governance and Politics (EGAP)](http://egap.org).
+This project is generously supported by a grant from the [Laura and John Arnold Foundation](https://www.arnoldventures.org) and seed funding from [Evidence in Governance and Politics (EGAP)](http://egap.org).
