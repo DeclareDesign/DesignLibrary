@@ -58,7 +58,7 @@ overview <-
 
 overview %>%
   select(Design, Vignette, Designer, `Design Inspector`) %>%
-  kable(escape = F, align = c("l", "c", "c", "c")) %>%
+  kable(format = "html", escape = F, align = c("l", "c", "c", "c")) %>%
   kable_styling()
 ```
 
