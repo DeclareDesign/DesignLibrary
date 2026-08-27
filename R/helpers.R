@@ -154,7 +154,11 @@ construct_design_code <- function(designer, args, args_to_fix = NULL,
   # the following evaluates arguments all passed onto the function
   # it also allows evaluation of arguments of class `language` when they contain 
   # symbols were defined in previous arguments
-  ee <- new.env() #shorter than eval_envir
+  # Parented on the designer's caller, so an argument passed as a symbol from
+  # inside a function (lapply(cors, function(r) designer(cor_E1E2_H = r))) can
+  # still be found. A bare new.env() is parented on this frame, which reaches
+  # the namespace and the global environment but never the caller's locals.
+  ee <- new.env(parent = parent.frame(2)) #shorter than eval_envir
   for(i in arg_names) {
     invisible(assign(i, eval(args[[i]], envir=ee), ee))
   }

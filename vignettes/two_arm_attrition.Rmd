@@ -49,7 +49,9 @@ diagnoses <- diagnose_designs(designs, sims = 25)
 ```
 
 ```{r,eval = TRUE}
-kable(reshape_diagnosis(diagnoses,select = c("Bias","Power")), digits = 2)
+kable(reshape_diagnosis(diagnoses)[, c("Design", "rho", "Inquiry", "Estimator",
+                                       "Outcome", "Term", "N Sims", "Bias", "Power")],
+      digits = 2)
 ```
 
 - The diagnosis illustrates that the effect on reporting can always be estimated with high power and no bias
