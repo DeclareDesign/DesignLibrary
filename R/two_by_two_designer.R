@@ -78,6 +78,8 @@ two_by_two_designer <- function(N = 100,
   if(max(c(sd_i, outcome_sds) < 0) )      stop("sd_i and outcome_sds must be nonnegative")
   if(max(c(prob_A, prob_B) < 0)) stop("prob_ arguments must be nonnegative")
   if(max(c(prob_A, prob_B) > 1))  stop("prob_ arguments must not exceed 1")
+  if(!is.null(outcome_means) && all(!is.null(c(mean_A0B0, mean_A0B1, mean_A1B0, mean_A1B1))) &&
+     !identical(outcome_means, c(mean_A0B0, mean_A0B1, mean_A1B0, mean_A1B1)))  stop("Both `outcome_means` and `mean_*` parameters are specified and have different values. Taking value of `mean_*` arguments.")
   {{{
     
     # M: Model
