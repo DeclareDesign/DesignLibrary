@@ -28,8 +28,7 @@ Depends:
     estimatr (>= 2.0.0)
 Remotes:
     DeclareDesign/DeclareDesign@rewrite,
-    DeclareDesign/fabricatr@rewrite,
-    DeclareDesign/estimatr@rewrite
+    DeclareDesign/fabricatr@rewrite
 Imports:
     generics,
     rlang,
