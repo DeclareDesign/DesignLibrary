@@ -15,14 +15,17 @@ Encoding: UTF-8
 Depends:
     R (>= 4.1.0)
 Imports:
-    fabricatr,
-    DeclareDesign,
+    fabricatr (>= 2.0.0),
+    DeclareDesign (>= 2.0.0),
     randomizr,
     estimatr,
     rlang,
     yaml,
     utils,
     stats
+Remotes:
+    DeclareDesign/DeclareDesign@rewrite,
+    DeclareDesign/fabricatr@rewrite
 Suggests:
     shiny,
     generics,
