@@ -35,7 +35,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept qualitative 
 #' @concept process tracing
-#' @importFrom DeclareDesign declare_diagnosands declare_inquiry declare_estimator declare_model declare_sampling declare_measurement diagnose_design draw_data draw_estimands draw_estimates set_diagnosands
+#' @importFrom DeclareDesign declare_inquiry declare_estimator declare_model declare_sampling declare_measurement diagnose_design draw_data draw_estimands draw_estimates
 #' @importFrom fabricatr fabricate
 #' @importFrom randomizr conduct_ra draw_rs 
 #' @importFrom stats rbinom
@@ -156,14 +156,14 @@ process_tracing_designer <- function(
     prior_only <- function(data){
       return(with(data,
                   data.frame(
-                    posterior_H = bayes_rule(p_H = prior_H, p_E_H = 1, p_E_not_H = 1),
+                    estimate = bayes_rule(p_H = prior_H, p_E_H = 1, p_E_not_H = 1),
                     result = "TRUE")
       ))}
 
     E1_only <- function(data){
       return(with(data,
                   data.frame(
-                    posterior_H = bayes_rule(
+                    estimate = bayes_rule(
                       p_H = prior_H,
                       p_E_H = ifelse(E1, p_E1_H, 1 - p_E1_H),
                       p_E_not_H = ifelse(E1, p_E1_not_H, 1 - p_E1_not_H)),
@@ -173,7 +173,7 @@ process_tracing_designer <- function(
     E2_only <- function(data){
       return(with(data,
                   data.frame(
-                    posterior_H = bayes_rule(
+                    estimate = bayes_rule(
                       p_H = prior_H,
                       p_E_H = ifelse(E2, p_E2_H, 1 - p_E2_H),
                       p_E_not_H = ifelse(E2, p_E2_not_H, 1 - p_E2_not_H)),
@@ -183,7 +183,7 @@ process_tracing_designer <- function(
     E1_and_E2 <- function(data){
       return(with(data,
                   data.frame(
-                    posterior_H = bayes_rule(
+                    estimate = bayes_rule(
                       p_H = prior_H,
                       p_E_H = joint_prob_H[c("00", "01", "10", "11") %in% test_results],
                       p_E_not_H = joint_prob_not_H[c("00", "01", "10", "11") %in% test_results]),
@@ -223,17 +223,6 @@ process_tracing_designer <- function(
   
   attr(process_tracing_design, "code") <- 
     construct_design_code(process_tracing_designer, args_to_fix = args_to_fix, match.call.defaults())
-  
-  process_tracing_design <- set_diagnosands(
-    process_tracing_design,
-    diagnosands = declare_diagnosands(
-      bias = mean(posterior_H - estimand),
-      rmse = sqrt(mean((posterior_H - estimand)^2)),
-      mean_inquiry = mean(estimand),
-      mean_posterior = mean(posterior_H),
-      sd_posterior = sd(posterior_H),
-      keep_defaults = FALSE
-    ))
   
   process_tracing_design
 }

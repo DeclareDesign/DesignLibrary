@@ -16,7 +16,7 @@
 #' @author \href{https://declaredesign.org/}{DeclareDesign Team}
 #' @concept experiment
 #' @concept descriptive
-#' @importFrom DeclareDesign declare_assignment declare_diagnosands declare_inquiry declare_estimator declare_model declare_measurement set_diagnosands label_estimator
+#' @importFrom DeclareDesign declare_assignment declare_inquiry declare_estimator declare_model declare_measurement label_estimator
 #' @importFrom fabricatr fabricate draw_binary reveal_outcomes
 #' @importFrom randomizr conduct_ra 
 #' @export
@@ -75,11 +75,6 @@ randomized_response_designer <- function(N = 1000,
     # Design
     randomized_response_design <- model + assignment + estimand + measurement +
       estimator_randomized_response + estimator_direct_question
-
-    randomized_response_design <- set_diagnosands(
-      randomized_response_design,
-      declare_diagnosands(bias = mean(estimate - estimand))
-    )
   }}}
   attr(randomized_response_design, "code") <- 
     construct_design_code(randomized_response_designer, args_to_fix = args_to_fix, match.call.defaults())

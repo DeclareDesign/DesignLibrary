@@ -28,7 +28,6 @@ globalVariables(
     "n",
     "noise",
     "outcome_sd",
-    "posterior_H",
     "R",
     "R_Z_0",
     "R_Z_1",

@@ -34,8 +34,8 @@ check_one <- function(nm) {
   base1 <- baseline$tier1[[nm]]
   out$formals_match <- setequal(names(formals(designer)), names(base1$formals))
   r <- run_design(d)
-  # Process tracing returns posterior_H rather than estimate; any numeric
-  # column the estimators filled counts.
+  # Any numeric column the estimators filled counts, since a designer may
+  # report something other than `estimate`.
   num <- names(r)[vapply(r, is.numeric, logical(1))]
   num <- setdiff(num, c("estimand", "sim_ID"))
   out$estimates_ok <- nrow(r) > 0 && length(num) > 0 &&
