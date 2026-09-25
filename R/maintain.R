@@ -309,7 +309,7 @@ make_index <- function(use_cache = TRUE) {
     out <- design_index_from_files(files)
   }
   out <- fill_missing_index_params(out, files)
-  out <- out[order(as.character(out$file), as.character(out$id)), , drop = FALSE]
+  out <- out[order(as.character(out$file), as.character(out$id), method = "radix"), , drop = FALSE]
   rownames(out) <- NULL
   out
 }
@@ -505,7 +505,7 @@ order_audit_results <- function(results) {
     if (has_notes) return(3L)
     4L
   }, integer(1))
-  results[order(rank, vapply(results, function(r) r$id %||% "", character(1)))]
+  results[order(rank, vapply(results, function(r) r$id %||% "", character(1)), method = "radix")]
 }
 
 #' One-line status string for an audit result
@@ -730,10 +730,14 @@ print.research_designs_audit <- function(x, ...) {
 #'
 #' @param designs Ids/aliases, or `NULL` for shiny-included designs.
 #' @param sims Number of simulations (package default is 100).
+#' @param seed Seed set before each design is built and diagnosed, so a
+#'   preview does not depend on which other designs were baked with it. The
+#'   caller's random number stream is restored on exit. `NULL` leaves the
+#'   stream alone.
 #' @return Invisibly, a list with `paths` (character) and `failures`
 #'   (data frame with `id` and `error`).
 #' @export
-bake_previews <- function(designs = NULL, sims = 100) {
+bake_previews <- function(designs = NULL, sims = 100, seed = 343) {
   paths_info <- package_write_paths()
   out_dir <- paths_info$previews
   dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
@@ -756,9 +760,23 @@ bake_previews <- function(designs = NULL, sims = 100) {
   fail_ids <- character(0)
   fail_errs <- character(0)
 
+  if (!is.null(seed)) {
+    had_seed <- exists(".Random.seed", envir = globalenv(), inherits = FALSE)
+    old_seed <- if (had_seed) get(".Random.seed", envir = globalenv())
+    on.exit(
+      if (had_seed) {
+        assign(".Random.seed", old_seed, envir = globalenv())
+      } else if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
+        rm(".Random.seed", envir = globalenv())
+      },
+      add = TRUE
+    )
+  }
+
   for (i in seq_len(nrow(idx))) {
     id <- idx$id[[i]]
     message("Baking preview: ", id, " (", i, "/", nrow(idx), ")")
+    if (!is.null(seed)) set.seed(seed)
     # Return the written path from tryCatch. Do not use `<<-` here:
     # tryCatch evaluates in this frame, so `<<-` would skip local `paths`
     # and refresh_library() would report 0 writes after a successful bake.
@@ -870,18 +888,28 @@ write_index_artifact <- function(index = make_index(use_cache = FALSE)) {
 #' Audit and preview failures are reported at the end; they do not abort
 #' the refresh.
 #'
+#' A refresh of a subset leaves the rest of the library as it was: the audit
+#' and refresh reports under `tools/` are rewritten only by a full refresh, and index rows
+#' outside the subset keep the `params` column already written.
+#'
 #' @param sims Preview simulations (default 100).
 #' @param designs Optional subset; default all for audit, shiny-on for previews.
+#' @param seed Passed to [bake_previews()].
 #' @return A list with `index`, `audit`, `previews`, `ok_ids`, `preview_failures`,
 #'   and `report`.
 #' @export
-refresh_library <- function(sims = 100, designs = NULL) {
+refresh_library <- function(sims = 100, designs = NULL, seed = 343) {
   paths_info <- package_write_paths()
   message("ResearchDesigns refresh_library()")
   message("Package root: ", paths_info$root)
   message("Designs dir:  ", designs_dir())
   message("Checklist:")
   for (item in contributor_checklist()) message("  [ ] ", item)
+
+  prior_csv <- file.path(paths_info$index, "designs_index.csv")
+  prior <- if (!is.null(designs) && file.exists(prior_csv)) {
+    utils::read.csv(prior_csv, stringsAsFactors = FALSE)
+  }
 
   index <- make_index(use_cache = FALSE)
   write_index_artifact(index)
@@ -890,7 +918,12 @@ refresh_library <- function(sims = 100, designs = NULL) {
     message("  ", paste(index$id, collapse = ", "))
   }
 
-  audit <- audit_designs(designs = designs, write_report = TRUE)
+  audit <- audit_designs(designs = designs, write_report = is.null(designs))
+  if (!is.null(prior) && "params" %in% names(prior)) {
+    audited <- vapply(audit$results, function(r) as.character(r$id[[1]]), character(1))
+    keep <- !(index$id %in% audited) & index$id %in% prior$id
+    index$params[keep] <- prior$params[match(index$id[keep], prior$id)]
+  }
   index <- overlay_audit_params(index, audit)
   write_index_artifact(index)
   print(audit)
@@ -922,7 +955,7 @@ refresh_library <- function(sims = 100, designs = NULL) {
   }
 
   bake <- if (length(bake_ids)) {
-    bake_previews(designs = bake_ids, sims = sims)
+    bake_previews(designs = bake_ids, sims = sims, seed = seed)
   } else {
     list(paths = character(0), failures = empty_fail)
   }
@@ -959,14 +992,17 @@ refresh_library <- function(sims = 100, designs = NULL) {
     lines <- c(lines, "Audit report:", paste0("  ", audit$report_paths), "")
   }
 
-  report_dir <- file.path(paths_info$root, "tools")
-  dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
-  report_path <- file.path(report_dir, "refresh_report.txt")
-  writeLines(lines, report_path)
+  report_path <- NULL
+  if (is.null(designs)) {
+    report_dir <- file.path(paths_info$root, "tools")
+    dir.create(report_dir, recursive = TRUE, showWarnings = FALSE)
+    report_path <- file.path(report_dir, "refresh_report.txt")
+    writeLines(lines, report_path)
+  }
 
   message("\n===== refresh_library summary =====")
   for (ln in lines) message(ln)
-  message("Wrote ", report_path)
+  if (!is.null(report_path)) message("Wrote ", report_path)
 
   if (length(audit_failed) || nrow(preview_failures)) {
     warning(

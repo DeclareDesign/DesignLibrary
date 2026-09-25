@@ -109,7 +109,7 @@
 ",TRUE,TRUE,"trust_game.R"
 "two_arm_attrition",NA,"Two-arm trial with attrition","template","experiment, causal, attrition","","N, a_R, b_R, a_Y, b_Y, rho","Two-arm trial in which the outcome is observed only for units that report. Treatment can move reporting as well as the outcome, so the design contrasts the effect on reporting, the effect on the outcome among reporters, and the effect on the outcome had it been observed for everyone. Flattened from DesignLibrary::two_arm_attrition_designer.
 ",TRUE,TRUE,"two_arm_attrition.R"
-"two_arm_flexible",NA,"Flexible two-arm trial (library)","template","experiment, two-arm","","N, assignment_prob, control_mean, control_sd, ate, treatment_sd, rho","One-level two-arm trial with complete random assignment. Potential outcomes are jointly normal, with correlation rho between the control and treatment shocks. Argument names match DesignLibrary::two_arm_designer; ate is the difference in means, so the treatment mean is control_mean + ate.
+"two_arm_flexible",NA,"Flexible two-arm trial","template","experiment, two-arm","","N, assignment_prob, control_mean, control_sd, ate, treatment_sd, rho","One-level two-arm trial with complete random assignment. Potential outcomes are jointly normal, with correlation rho between the control and treatment shocks. Argument names match DesignLibrary::two_arm_designer; ate is the difference in means, so the treatment mean is control_mean + ate.
 ",TRUE,TRUE,"two_arm_flexible.R"
 "two_arm_bare_bones","11.3","Bare-bones two-arm trial","rdss","","","N, prob","Bare-bones two-arm trial (chapter 11).
 ",FALSE,TRUE,"two_arm_rdss_11.3.R"
