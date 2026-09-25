@@ -117,7 +117,8 @@ is_shiny_param_kind <- function(kind) {
 #' DeclareDesign reads a bare atomic vector, and a bare list, as one design per
 #' element. A parameter whose default is already a vector must therefore be
 #' passed as `list(c(...))` to replace the vector, or `list(v1, v2)` to sweep
-#' vectors.
+#' vectors. The rule covers every vector default, including one long enough to
+#' be classified `data` (a drawn shock, a grid of x values).
 #'
 #' A list-valued parameter cannot be told apart from a sweep by type, since
 #' both arrive as a list, so the rule is structural: a list whose every element
@@ -139,13 +140,22 @@ prepare_redesign_dots <- function(params, dots) {
     i <- match(nm, params$name)
     if (is.na(i)) next
     val <- dots[[nm]]
-    if (identical(kinds[[i]], "vector")) {
+    if (identical(kinds[[i]], "vector") || is_long_bare_vector(params$value[[i]])) {
       if (!is.list(val)) dots[[nm]] <- list(val)
     } else if (identical(kinds[[i]], "list")) {
       if (!is_list_sweep(val)) dots[[nm]] <- list(val)
     }
   }
   dots
+}
+
+#' Whether a default is a bare atomic vector too long for a Shiny box
+#'
+#' Such a parameter is classified `data`, yet `redesign()` would still read a
+#' bare replacement one design per element, so it is wrapped like `vector`.
+#' @noRd
+is_long_bare_vector <- function(val) {
+  is.atomic(val) && is.null(dim(val)) && !is.object(val) && length(val) > 1L
 }
 
 #' Whether a value supplied for a list parameter is a sweep over lists

@@ -303,3 +303,15 @@ test_that("get_args prints a table holding a function and a list", {
   # over the column and a closure cannot be coerced.
   expect_false(inherits(args$default, "AsIs"))
 })
+
+test_that("a vector default too long for Shiny is still replaced whole, not swept", {
+  args <- get_args("conditional_expectation")
+  expect_equal(unname(args$kind[args$name == "x_range"]), "data")
+
+  x <- seq(0, 2, length.out = 50)
+  expect_no_warning(d <- make_design("conditional_expectation", x_range = x))
+  expect_s3_class(d, "design")
+
+  sweep <- make_design("conditional_expectation", x_range = list(x, 2 * x))
+  expect_length(sweep, 2)
+})
