@@ -5,8 +5,9 @@ category: template
 keywords: [experiment, causal, mediation]
 description: >
   Two-arm trial with a binary mediator, declaring the first stage, the
-  controlled direct effects, the natural direct effects and the indirect
-  effects as separate inquiries, and answering all of them with the usual
+  controlled direct effects, the natural direct effects, and the effect of
+  the mediator on the outcome at each level of treatment as separate
+  inquiries, and answering all of them with the usual
   regression of the outcome on the treatment interacted with the mediator.
   The design's use is to show when that answer strategy fails: the mediator
   is not randomly assigned, and rho governs how far the mediator's shock and
@@ -49,8 +50,8 @@ design <-
 
   declare_inquiry(
     FirstStage = mean(M_Z_1 - M_Z_0),
-    Indirect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
-    Indirect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
+    Mediator_Effect_0 = mean(Y_M_1_Z_0 - Y_M_0_Z_0),
+    Mediator_Effect_1 = mean(Y_M_1_Z_1 - Y_M_0_Z_1),
     Controlled_Direct_0 = mean(Y_M_0_Z_1 - Y_M_0_Z_0),
     Controlled_Direct_1 = mean(Y_M_1_Z_1 - Y_M_1_Z_0),
     Natural_Direct_0 = mean(Y_nat0_Z_1 - Y_nat0_Z_0),
@@ -70,7 +71,7 @@ design <-
   declare_estimator(M ~ Z, .method = lm_robust, inquiry = "FirstStage",
                     label = "Stage 1") +
   declare_estimator(Y ~ Z * M, .method = lm_robust, term = "M",
-                    inquiry = "Indirect_0", label = "Stage 2") +
+                    inquiry = "Mediator_Effect_0", label = "Stage 2") +
   declare_estimator(Y ~ Z * M, .method = lm_robust, term = "Z",
                     inquiry = c("Controlled_Direct_0", "Natural_Direct_0"),
                     label = "Direct_0") +
