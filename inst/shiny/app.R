@@ -1320,7 +1320,7 @@ server <- function(input, output, session) {
       )
     }
     p <- p +
-      ggplot2::geom_point(size = 2.4, position = pd) +
+      ggplot2::geom_point(size = 2.4, position = pd, na.rm = TRUE) +
       ggplot2::facet_wrap(~diagnosand, scales = "free_x", ncol = 2) +
       ggplot2::theme_bw(base_size = 12) +
       ggplot2::labs(x = NULL, y = NULL, color = NULL)
@@ -1652,7 +1652,7 @@ server <- function(input, output, session) {
         }
         p +
           ggplot2::geom_line(linewidth = 0.8, position = pd) +
-          ggplot2::geom_point(size = 2.2, position = pd) +
+          ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
           ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
           ggplot2::theme_bw(base_size = 12) +
           ggplot2::labs(x = xp, y = y_col, color = if (use_color) "estimator" else NULL)
@@ -1677,7 +1677,7 @@ server <- function(input, output, session) {
         }
         p +
           ggplot2::geom_line(linewidth = 0.8, position = pd) +
-          ggplot2::geom_point(size = 2.2, position = pd) +
+          ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
           ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
           ggplot2::theme_bw(base_size = 12) +
           ggplot2::labs(x = xp, y = y_col, color = gp)
