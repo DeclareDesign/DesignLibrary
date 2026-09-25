@@ -138,7 +138,7 @@ construct_design_code <- function(designer, args, args_to_fix = NULL,
     close <- grep("[}]{3}", txt)
     
     if(length(open) != 1) stop("could not find opening tag in ", substitute(designer))
-    if(length(close) != 1) stop("could not find opening tag in ", substitute(designer))
+    if(length(close) != 1) stop("could not find closing tag in ", substitute(designer))
     txt <- txt[seq(open + 1, close - 1)]
   }
   

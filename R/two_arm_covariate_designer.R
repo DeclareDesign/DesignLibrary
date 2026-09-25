@@ -70,7 +70,7 @@ two_arm_covariate_designer <- function(N = 100,
   if(sd < 0 ) stop("sd must be non-negative")
   if(prob < 0 || prob > 1) stop("prob must be in [0,1]")
   if(abs(rho_WY) > 1) stop("rho_WY must be in [-1,1]")
-  if(abs(rho_WZ) > 1) stop("rho_WX must be in [-1,1]")
+  if(abs(rho_WZ) > 1) stop("rho_WZ must be in [-1,1]")
   {{{
     # M: Model
     model <- declare_model(

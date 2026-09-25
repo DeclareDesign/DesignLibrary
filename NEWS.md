@@ -8,6 +8,7 @@
 * `process_tracing_designer()` names its estimate `estimate` rather than `posterior_H`, so the default diagnosands apply and a diagnosis after `redesign()` no longer reads `NA`. Neither designer calls `set_diagnosands()` any more.
 * `multi_arm_designer()` uses `outcome_means`; 0.1.10 ignored it and drew every potential outcome with mean 0. `args_to_fix = "outcome_means"` now fixes the means.
 * `block_cluster_two_arm_designer()` recycles `assignment_probs` over blocks, so `N_blocks` can be changed with `redesign()`, and asks for `se_type = "CR2"` explicitly, the standard errors 0.1.10 got by default and estimatr 2.0 no longer gives with fixed effects and clusters.
+* Two error messages name the right thing: `two_arm_covariate_designer(rho_WZ = )` said `rho_WX`, and `get_design_code()` reported a missing closing `}}}` as a missing opening tag.
 
 # DesignLibrary 0.1.10
 

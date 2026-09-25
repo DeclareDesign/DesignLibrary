@@ -1,5 +1,3 @@
-context(desc = "Testing that helpers in the library work as they should")
-
 testthat::test_that(
   desc = "functions can be passed to designer and returned by construct_design_code",
   code = {
@@ -25,7 +23,7 @@ test_that(
         mean(rnorm(100))
       }}}
     }
-    expect_is(DesignLibrary:::find_triple_bracket(f = test_function),"character")
+    expect_type(DesignLibrary:::find_triple_bracket(f = test_function), "character")
     expect_equal(DesignLibrary:::find_triple_bracket(f = mean),"")
   })
 
@@ -38,12 +36,14 @@ test_that(
 
 test_that(desc = "construct_design_code works as it should when source is missing",
           code = {
-            expect_equal(DesignLibrary:::construct_design_code(designer = mean, args = c("x"), arguments_as_values = F,exclude_args = NULL),c("",""))
-            expect_is(DesignLibrary:::construct_design_code(designer = function(x = 1) {eval(rlang::parse_expr("{{{x}}}"))}, args = c(x = 1), arguments_as_values = TRUE, exclude_args = NULL),"character")
+            expect_equal(DesignLibrary:::construct_design_code(designer = mean, args = c("x"), arguments_as_values = FALSE,exclude_args = NULL),c("",""))
+            expect_type(DesignLibrary:::construct_design_code(designer = function(x = 1) {eval(rlang::parse_expr("{{{x}}}"))}, args = c(x = 1), arguments_as_values = TRUE, exclude_args = NULL), "character")
             test_designer <- function() "{{{"
-            expect_error(DesignLibrary:::construct_design_code(designer = test_designer,args = "x"))
+            expect_error(DesignLibrary:::construct_design_code(designer = test_designer, args = "x"),
+                         "could not find closing tag", fixed = TRUE)
             test_designer <- function() "}}}"
-            expect_error(DesignLibrary:::construct_design_code(designer = test_designer,args = "x"))
+            expect_error(DesignLibrary:::construct_design_code(designer = test_designer, args = "x"),
+                         "could not find opening tag", fixed = TRUE)
           }) 
 
 
@@ -63,26 +63,23 @@ test_that(desc = "construct_design_code works as it should when using rlang func
             expect_equal(test_function(), c("", "t1 <- rlang::quo(paste0(!!letters[1]))"))
           }) 
 
-# test_that(desc = "construct_design_code works when args_to_fix is not NULL and exclude_args is not NULL",
-# code = expect_is(get_design_code(binary_iv_designer(args_to_fix = "N")), "character")
-# )
-# 
-# test_that(desc = "construct_design_code works when args_to_fix is not NULL and exclude_args is NULL",
-# code = expect_is(get_design_code(two_arm_attrition_designer(args_to_fix = "N")), "character")
-# )
-
+test_that(desc = "construct_design_code works when args_to_fix is not NULL",
+          code = {
+            expect_type(get_design_code(binary_iv_designer(args_to_fix = "N")), "character")
+            expect_type(get_design_code(two_arm_attrition_designer(args_to_fix = "N")), "character")
+          })
 
 test_that(desc = "match.call.defaults has all cases tested",
           code = {
             test_fun <- function(...){...}
-            expect_error(match.call.defaults(test_fun,expand.dots = T),NA)
+            expect_no_error(match.call.defaults(test_fun, expand.dots = TRUE))
           }) 
 
 
 test_that(desc = "return_args works fine",
           code = {
-            expect_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5),fixes = NULL),NA)
-            expect_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5),fixes = LETTERS[1:2]),NA)
+            expect_no_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5), fixes = NULL))
+            expect_no_error(DesignLibrary:::return_args(c(A = 1, B = 2, C = 3, D = 4, E = 5), fixes = LETTERS[1:2]))
           })
 
 test_that(desc = "str_within() works fine",

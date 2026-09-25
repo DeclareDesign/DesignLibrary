@@ -34,9 +34,10 @@ Imports:
     rlang,
     glue
 Suggests: 
-    testthat,
+    testthat (>= 3.1.9),
     knitr,
     rmarkdown,
     ggplot2,
     tidyverse
 Config/roxygen2/version: 8.0.0
+Config/testthat/edition: 3
