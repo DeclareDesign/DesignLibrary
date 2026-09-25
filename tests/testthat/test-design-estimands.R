@@ -1,3 +1,11 @@
+# draw_data() and draw_estimands() each redraw the model, so seed them alike to read one draw
+draw_one <- function(design) {
+  set.seed(343)
+  dat <- DeclareDesign::draw_data(design)
+  set.seed(343)
+  list(data = dat, estimands = DeclareDesign::draw_estimands(design))
+}
+
 test_that("audit_experiment's outcomes reveal its estimand", {
   skip_if_not_installed("DeclareDesign")
 
@@ -13,8 +21,9 @@ test_that("regression_discontinuity's estimand is the jump at the estimator's cu
   skip_if_not_installed("rdrobust")
 
   d <- make_design("regression_discontinuity")
-  dat <- DeclareDesign::draw_data(d)
-  estimand <- DeclareDesign::draw_estimands(d)$estimand
+  draw <- draw_one(d)
+  dat <- draw$data
+  estimand <- draw$estimands$estimand
   # The running variable is centered, and the estimator is called with c = 0
   near_cutoff <- abs(dat$X) < 0.01
   expect_gt(sum(near_cutoff), 0)
@@ -22,14 +31,6 @@ test_that("regression_discontinuity's estimand is the jump at the estimator's cu
 })
 
 # Getting started designs ----
-
-# draw_data() and draw_estimands() each redraw the model, so seed them alike to read one draw
-draw_one <- function(design) {
-  set.seed(343)
-  dat <- DeclareDesign::draw_data(design)
-  set.seed(343)
-  list(data = dat, estimands = DeclareDesign::draw_estimands(design))
-}
 
 test_that("the constant-effect two-arm designs declare the effect they build in", {
   skip_if_not_installed("DeclareDesign")
@@ -126,9 +127,9 @@ test_that("mediation_analysis's natural outcomes are its potential outcomes at t
   estimands <- draw$estimands
   expected <- c(
     FirstStage = mean(dat$e1 > -1 & dat$e1 <= 0),
-    # The Indirect inquiries are the effect of M on Y holding Z fixed, as the Stage 2 estimator targets
-    Indirect_0 = b,
-    Indirect_1 = b + c,
+    # The Mediator_Effect inquiries are the effect of M on Y holding Z fixed
+    Mediator_Effect_0 = b,
+    Mediator_Effect_1 = b + c,
     Controlled_Direct_0 = d_eff,
     Controlled_Direct_1 = d_eff + c,
     Natural_Direct_0 = d_eff + c * mean(dat$M_Z_0),
