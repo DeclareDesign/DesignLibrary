@@ -1645,13 +1645,13 @@ server <- function(input, output, session) {
           p <- p + ggplot2::geom_errorbar(
             ggplot2::aes(ymin = conf.low, ymax = conf.high),
             width = 0,
-            size = 0.5,
+            linewidth = 0.5,
             position = pd,
             na.rm = TRUE
           )
         }
         p +
-          ggplot2::geom_line(size = 0.8, position = pd) +
+          ggplot2::geom_line(linewidth = 0.8, position = pd) +
           ggplot2::geom_point(size = 2.2, position = pd) +
           ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
           ggplot2::theme_bw(base_size = 12) +
@@ -1670,13 +1670,13 @@ server <- function(input, output, session) {
           p <- p + ggplot2::geom_errorbar(
             ggplot2::aes(ymin = conf.low, ymax = conf.high),
             width = 0,
-            size = 0.5,
+            linewidth = 0.5,
             position = pd,
             na.rm = TRUE
           )
         }
         p +
-          ggplot2::geom_line(size = 0.8, position = pd) +
+          ggplot2::geom_line(linewidth = 0.8, position = pd) +
           ggplot2::geom_point(size = 2.2, position = pd) +
           ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
           ggplot2::theme_bw(base_size = 12) +
