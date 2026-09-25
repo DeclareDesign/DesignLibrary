@@ -34,7 +34,7 @@ design <-
     Y_D_0 = control(X) + U,
     Y_D_1 = treatment(X) + U
   ) +
-  declare_inquiry(LATE = treatment(0.5) - control(0.5)) +
+  declare_inquiry(LATE = treatment(0) - control(0)) +
   declare_measurement(Y = reveal_outcomes(Y ~ D)) + 
   declare_estimator(
     Y, X, c = 0, 
