@@ -4,12 +4,14 @@
 \alias{refresh_library}
 \title{Refresh the library (maintainer one-stop)}
 \usage{
-refresh_library(sims = 100, designs = NULL)
+refresh_library(sims = 100, designs = NULL, seed = 343)
 }
 \arguments{
 \item{sims}{Preview simulations (default 100).}
 
 \item{designs}{Optional subset; default all for audit, shiny-on for previews.}
+
+\item{seed}{Passed to \code{\link[=bake_previews]{bake_previews()}}.}
 }
 \value{
 A list with \code{index}, \code{audit}, \code{previews}, \code{ok_ids}, \code{preview_failures},
@@ -21,4 +23,9 @@ index, audits (including a short diagnosis of every design), and
 diagnosis previews (\code{sims = 100} by default).
 Audit and preview failures are reported at the end; they do not abort
 the refresh.
+}
+\details{
+A refresh of a subset leaves the rest of the library as it was: the audit
+and refresh reports under \verb{tools/} are rewritten only by a full refresh, and index rows
+outside the subset keep the \code{params} column already written.
 }

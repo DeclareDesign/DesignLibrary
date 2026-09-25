@@ -4,12 +4,17 @@
 \alias{bake_previews}
 \title{Bake compact diagnosis previews into inst/previews}
 \usage{
-bake_previews(designs = NULL, sims = 100)
+bake_previews(designs = NULL, sims = 100, seed = 343)
 }
 \arguments{
 \item{designs}{Ids/aliases, or \code{NULL} for shiny-included designs.}
 
 \item{sims}{Number of simulations (package default is 100).}
+
+\item{seed}{Seed set before each design is built and diagnosed, so a
+preview does not depend on which other designs were baked with it. The
+caller's random number stream is restored on exit. \code{NULL} leaves the
+stream alone.}
 }
 \value{
 Invisibly, a list with \code{paths} (character) and \code{failures}
