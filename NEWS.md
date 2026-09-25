@@ -4,6 +4,8 @@
 
 Library listing in pedagogical order, eight DesignLibrary-named wrappers, parameter kinds for R and Shiny, and a two-simulation run in every audit.
 
+**CR2 standard errors under estimatr 2.0.** `block_cluster_two_arm` and `stepped_wedge` now write `se_type = "CR2"` in their estimators. estimatr 1.0.6 gave CR2 by default when `fixed_effects` and `clusters` are both set; 2.0 gives CR0 and warns, which made `block_cluster_two_arm`'s SE about 16% smaller and moved its coverage and power. A test pins both designs' SEs to a direct CR2 `lm_robust()` fit.
+
 **get_code print.** `get_code()` still returns `$simple` and `$full`. Printing uses `cat()` on `$full` (or `$simple` if `style = "simple"`) so console output is copy-paste ready rather than a quoted list.
 
 **Library listing.** `list_designs()` prints grouped `id (label)` lines under Getting started, Other design templates, Other RDSS designs, and Other designs. Getting started is a fixed pedagogical sequence. Other groups show at most 10 designs unless `list_all = TRUE`. The Shiny library table uses that same row order (it no longer re-sorts by category then label) and no longer shows an alias column. Aliases still resolve in R, for example `make_design("2.1")`. `list_designs()` is metadata-only by default and uses the baked library index with a live-file overlay. The `params` column (and the Shiny library TOC) comes from that index — YAML `params:` keys plus pre-design assignment names — so listing does not evaluate each design.

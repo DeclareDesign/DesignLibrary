@@ -124,3 +124,22 @@ test_that("unported DesignLibrary designers stop and point at make_design()", {
   expect_error(regression_discontinuity_designer(), "regression_discontinuity")
   expect_error(process_tracing_designer(), "process_tracing")
 })
+
+test_that("fixed-effects cluster designs ask for CR2, as estimatr 1.0.6 gave by default", {
+  skip_if_not_installed("DeclareDesign")
+  skip_on_cran()
+
+  d <- make_design("block_cluster_two_arm")
+  dat <- DeclareDesign::draw_data(d)
+  est <- DeclareDesign::get_estimates(d, data = dat)
+  cr2 <- estimatr::lm_robust(Y ~ Z, data = dat, fixed_effects = ~ blocks,
+                             clusters = clusters, se_type = "CR2")
+  expect_equal(est$std.error, unname(cr2$std.error["Z"]))
+
+  d <- make_design("stepped_wedge")
+  dat <- DeclareDesign::draw_data(d)
+  est <- DeclareDesign::get_estimates(d, data = dat)
+  cr2 <- estimatr::lm_robust(Y ~ Z, data = dat, fixed_effects = ~ periods + units,
+                             clusters = units, subset = time < max(time), se_type = "CR2")
+  expect_equal(est$std.error, unname(cr2$std.error["Z"]))
+})

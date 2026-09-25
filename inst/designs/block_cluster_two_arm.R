@@ -61,4 +61,5 @@ design <-
 
   declare_estimator(Y ~ Z, .method = lm_robust,
                     fixed_effects = ~ blocks, clusters = clusters,
+                    se_type = "CR2",
                     inquiry = "ATE")

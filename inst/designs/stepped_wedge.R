@@ -42,6 +42,6 @@ design <-
   declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0), subset = time < max(time)) + 
   declare_measurement(Y = reveal_outcomes(Y ~ Z)) +
   declare_estimator(Y ~ Z, fixed_effects = ~ periods + units, 
-                    clusters = units, 
+                    clusters = units, se_type = "CR2",
                     subset = time < max(time),
                     inquiry = "ATE", label = "TWFE")
