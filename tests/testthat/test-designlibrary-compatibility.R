@@ -87,6 +87,10 @@ wrapper_only_aliases <- list(
   block_cluster_two_arm_designer = c("sd_i_0", "assignment_probs")
 )
 
+# Helper functions a library file defines for its own steps. They are R-only
+# knobs of the file but have no designer formal.
+file_helpers <- list(multi_arm_designer = "per_arm")
+
 test_that("designer formals that are passed through match library knobs", {
   skip_if_not_installed("DeclareDesign")
   skip_on_cran()
@@ -103,7 +107,7 @@ test_that("designer formals that are passed through match library knobs", {
       character(0),
       info = paste0(nm, " formals not in get_args: ", paste(missing_knobs, collapse = ", "))
     )
-    extra_knobs <- setdiff(knobs, form)
+    extra_knobs <- setdiff(knobs, c(form, file_helpers[[nm]]))
     expect_equal(
       extra_knobs,
       character(0),

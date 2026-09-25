@@ -191,8 +191,9 @@ mediation_analysis_designer <- function(
 #' Defaults for `outcome_means`, `outcome_sds`, and `conditions` are
 #' evaluated after `m_arms`, so `multi_arm_designer(m_arms = 4)` expands
 #' those vectors before calling `make_design()`. `make_design("multiarm_trial",
-#' m_arms = 4)` without matching-length vectors messages and still
-#' redesigns (draws may be `NaN`). Wrong-length `outcome_means` errors.
+#' m_arms = 4)` does the same inside the design: constant vectors are repeated
+#' and conditions `1..k` become `1..m_arms`. Any other wrong-length vector
+#' errors.
 #' Inquiries are `mean(Y(k) - Y(1))`; estimation is one `lm_robust`.
 #' Library-file knobs match these formals.
 #'

@@ -50,7 +50,7 @@ only add tips (and never invent new parameter names).
 The \code{kind} column is \code{"scalar"}, \code{"vector"}, \code{"list"}, \code{"data"}, or
 \code{"function"}. \code{shiny} is \code{TRUE} for scalar and short-vector parameters that
 the browser can edit as text. Data frames, matrices, long vectors, lists,
-and functions stay redesignable in R (\code{make_design(..., data = ...)},
+and functions stay redesignable in R (\code{make_design(..., dataset = ...)},
 \code{make_design(..., Y = ...)}) but are not Shiny controls.
 
 The \code{default} column holds the values themselves, so it is a list column and

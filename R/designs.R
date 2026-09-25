@@ -610,7 +610,7 @@ make_design <- function(design = "two_arm_simple", ...) {
 #' The `kind` column is `"scalar"`, `"vector"`, `"list"`, `"data"`, or
 #' `"function"`. `shiny` is `TRUE` for scalar and short-vector parameters that
 #' the browser can edit as text. Data frames, matrices, long vectors, lists,
-#' and functions stay redesignable in R (`make_design(..., data = ...)`,
+#' and functions stay redesignable in R (`make_design(..., dataset = ...)`,
 #' `make_design(..., Y = ...)`) but are not Shiny controls.
 #'
 #' The `default` column holds the values themselves, so it is a list column and

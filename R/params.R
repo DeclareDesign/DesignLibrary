@@ -83,7 +83,7 @@ shiny_vector_max <- function() 20L
 #' same wrapping problem as `vector` and is handled in
 #' [prepare_redesign_dots()].
 #' `data`: data frame, matrix/array, classed object, or a longer atomic
-#' vector. Package parameter (`make_design(..., data = ...)`); not a Shiny
+#' vector. Package parameter (`make_design(..., dataset = ...)`); not a Shiny
 #' control.
 #' `function` — a function (for example an outcome `Y`). R-only; not a Shiny
 #' control (`make_design(..., Y = ...)`).

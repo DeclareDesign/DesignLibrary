@@ -4,6 +4,10 @@
 
 Library listing in pedagogical order, eight DesignLibrary-named wrappers, parameter kinds for R and Shiny, and a two-simulation run in every audit.
 
+**`multiarm_trial` follows `m_arms` alone.** `make_design("multiarm_trial", m_arms = 5)` now gives five arms and four contrasts: a constant `outcome_means` or `outcome_sds` is repeated to `m_arms` and `conditions` `1..k` becomes `1..m_arms`, through a file-local `per_arm()`. A supplied vector of any other wrong length is an error naming it. The design no longer declares `coupled:` and no longer messages.
+
+**Data-valued parameters are named `dataset`.** `simple_random_sampling`, `survey_nonresponse`, and `subgroup_effects` read their population as `declare_model(data = dataset)`, so a new population is `make_design(id, dataset = df)`. The name stays true when the population is replaced, where a name like `pilot` would not. `make_design(id, data = df)` no longer reaches these designs. The baked index is rebuilt, which also brings its parameter lists up to date with the design files.
+
 **Long vector parameters replaced whole.** A parameter whose default is a vector too long for a Shiny box (`cluster_random_sampling`'s `locality_shock` and `individual_shock`, `conditional_expectation`'s `x_range`) was passed to `redesign()` bare, which reads a bare vector as one design per element: `make_design("cluster_random_sampling", locality_shock = rnorm(500))` returned 500 designs. It now returns one, like a short vector parameter, and `list(v1, v2)` still sweeps.
 
 **`refresh_library()` and `bake_previews()` are reproducible.** Each preview is baked from `set.seed(seed)` (default 343) set before the design is built, so a preview no longer depends on which other designs were baked in the same run, and the caller's random number stream is restored afterwards. A refresh of a subset (`designs = `) no longer rewrites the audit and refresh reports under `tools/`, and leaves the `params` column of the other index rows as it found them. Index rows are sorted in the C locale, so the order no longer differs between Windows and macOS.

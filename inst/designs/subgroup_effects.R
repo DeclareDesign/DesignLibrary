@@ -9,7 +9,7 @@ description: >
 params:
   "n_x1": "Sample size in subgroup X1 (or size allocated to X1)"
   "total_n": "Total sample size"
-  "data": "Fixed population; pass via make_design(..., data = ...). Not edited in the browser."
+  "dataset": "Fixed population; pass via make_design(..., dataset = ...). Not edited in the browser."
 book_link: https://book.declaredesign.org/library/experimental-causal.html#def-ch18num6
 include_in_shiny: true
 ---
@@ -23,7 +23,7 @@ fixed_pop <-
               Y ~ rbinom(N, 1,
                          prob = 0.7 + 0.1 * Z  - 0.4 * X - 0.2 * Z * X))
   )
-data <- fixed_pop
+dataset <- fixed_pop
 
 # Note: n_x2 = total_n - n_x1
 
@@ -32,7 +32,7 @@ design <-
     total_n = 1000,
     n_x1 = 500
   ) +
-  declare_model(data = data,
+  declare_model(data = dataset,
                 TE = (Y_Z_1 - Y_Z_0) ) +  # Individual level effects
   declare_inquiry(
     # Difference in conditional average effects 

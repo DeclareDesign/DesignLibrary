@@ -7,37 +7,37 @@
 ",FALSE,TRUE,"baseline_over_N.R"
 "two_arm_block_cluster",NA,"Two arm trial with blocks and clusters","template","experiment, causal, blocking, cluster","","N_blocks, N_clusters_in_block, N_i_in_cluster, sd_block, sd_cluster, sd_i, ate, assignment_prob","Two-arm trial in which units are nested in clusters and clusters in blocks, assignment is at the cluster level and blocked, and the outcome carries a block-level, a cluster-level and an individual-level shock. Estimation uses block fixed effects with cluster-robust standard errors. The default shocks split the outcome variance equally across the three levels, an intracluster correlation of two thirds. Flattened from DesignLibrary::block_cluster_two_arm_designer.
 ",TRUE,TRUE,"block_cluster_two_arm.R"
-"two_arm_block_rdss","18.4","block randomized trial","rdss","experiment, causal, blocking","","b, N","Block randomized two-arm trial design. (chapter 18).
+"two_arm_block_rdss","18.4","block randomized trial","rdss","experiment, causal, blocking","","N, b","Block randomized two-arm trial design. (chapter 18).
 ",TRUE,TRUE,"block_randomized_trial.R"
 "blocked_and_clustered","18.5","blocked and clustered","rdss","experiment, causal, blocking, cluster","","ICC, N_clusters","Blocked and clustered randomized trial. (chapter 18). In this design we have to assign in clusters but we improve performance by making blocks out of clusters of the same size.
 ",TRUE,TRUE,"blocked_and_clustered.R"
 "bootstrapped","9.5","bootstrapped","rdss","","rdss","","Bootstrapped standard errors. (chapter 9).
 ",TRUE,TRUE,"bootstrapped.R"
-"cluster_random_sampling","15.3","cluster random sampling","rdss","observational, descriptive, cluster","","budget_function, se_type, ICC, state_mean, cluster_prob, locality_shock, individual_shock","Cluster random sampling design. (chapter 15).
+"cluster_random_sampling","15.3","cluster random sampling","rdss","observational, descriptive, cluster","","budget_function, cluster_prob, state_mean, ICC, locality_shock, individual_shock, se_type","Cluster random sampling design. (chapter 15).
 ",TRUE,TRUE,"cluster_random_sampling.R"
 "conditional_expectation","11.4","Conditional expectation function","rdss","","purrr, tibble, dplyr, tidyr, stringr","dip, x_range, N, polynomial_degrees","Conditional expectation function design (chapter 11).
 ",FALSE,TRUE,"conditional_expectation.R"
-"conjoint","17.5","conjoint","rdss","experiment, descriptive","rdss, cjoint, dplyr, purrr","conjoint_utility, N_subjects, N_tasks","Conjoint experiment design. (chapter 17).
+"conjoint","17.5","conjoint","rdss","experiment, descriptive","rdss, cjoint, dplyr, purrr","levels_list, conjoint_utility, N_subjects, N_tasks","Conjoint experiment design. (chapter 17).
 ",TRUE,TRUE,"conjoint.R"
-"covariate_adjustment","18.2","covariate adjustment","rdss","experiment, causal","","N, r_sq, prob","Two-arm trial with covariate adjustment. (chapter 18).
+"covariate_adjustment","18.2","covariate adjustment","rdss","experiment, causal","","N, prob, r_sq","Two-arm trial with covariate adjustment. (chapter 18).
 ",TRUE,TRUE,"covariate_adjustment.R"
 "declaration_using_declare","10.1","Example of declaration using Declare","rdss","","","N","Example of declaration using DeclareDesign (chapter 10).
 ",FALSE,TRUE,"declaration_using_declare.R"
 "design_10_2","10.2","design 10 2","rdss","","","N","10.2 (chapter 10).
 ",FALSE,TRUE,"design_10_2.R"
-"design_10_4","10.4","design 10 4","rdss","","","effect_size, N","10.4 (chapter 10).
+"design_10_4","10.4","design 10 4","rdss","","","N, effect_size","10.4 (chapter 10).
 ",FALSE,TRUE,"design_10_4.R"
-"diff_in_diff","16.3","diff-in-diff","rdss","observational, causal","rdss, DIDmultiplegt, dplyr","N_units, N_time_periods","Difference-in-differences design (chapter 16).
+"diff_in_diff","16.3","diff-in-diff","rdss","observational, causal","rdss, DIDmultiplegt, dplyr","N_time_periods, N_units","Difference-in-differences design (chapter 16).
 ",TRUE,TRUE,"diff_in_diff.R"
-"encouragement","18.8","encouragement","rdss","experiment, causal","dplyr","N, share_always_takers, share_never_takers, share_compliers, share_defiers","Encouragement design. (chapter 18).
+"encouragement","18.8","encouragement","rdss","experiment, causal","dplyr","N, share_always_takers, share_compliers, share_defiers, share_never_takers","Encouragement design. (chapter 18).
 ",TRUE,TRUE,"encouragement.R"
 "example_declaration","5.1","Example declaration","rdss","","","N","Example declaration (chapter 5).
 ",FALSE,TRUE,"example_declaration.R"
-"factorial_2x2","18.7","factorial 2x2","rdss","experiment, causal","","CATE_Z1_Z2_0, CATE_Z2_Z1_0, interaction, N","Two-by-two factorial design. (chapter 18).
+"factorial_2x2","18.7","factorial 2x2","rdss","experiment, causal","","N, CATE_Z1_Z2_0, CATE_Z2_Z1_0, interaction","Two-by-two factorial design. (chapter 18).
 ",TRUE,TRUE,"factorial_2x2.R"
 "factorial_2x2x2",NA,"2x2x2 factorial","template","experiment, causal, factorial, interaction","","N, effect_T1, effect_T2, effect_T3, interaction_T1_T2, interaction_T1_T3, interaction_T2_T3, interaction_T1_T2_T3, sd","Three-factor (2^3) factorial experiment with independent, equiprobable assignment to each factor. Inquiries are the average marginal effect of each factor, the three average two-way interactions, and the three-way interaction, each averaged over the conditions of the other factors. Estimation is a fully interacted regression of demeaned treatments, in which the intercept is the average outcome across all eight cells. Flattened from DesignLibrary::factorial_designer at k = 3.
 ",TRUE,TRUE,"factorial_2x2x2.R"
-"instrumental_variables","16.4","instrumental variables","rdss","observational, causal","dplyr","N, prob, a, b","Instrumental variables design. (chapter 16).
+"instrumental_variables","16.4","instrumental variables","rdss","observational, causal","dplyr","N, a, b, prob","Instrumental variables design. (chapter 16).
 ",TRUE,TRUE,"instrumental_variables.R"
 "italian_village","9.1","Italian village","rdss","","","N","Italian village design. (chapter 9).
 ",FALSE,TRUE,"italian_village.R"
@@ -47,7 +47,7 @@
 ",FALSE,TRUE,"italian_village_continued.R"
 "latent_variables","15.6","latent variables","rdss","observational, descriptive","","N","Latent variable design (chapter 15).
 ",TRUE,TRUE,"latent_variables.R"
-"lin_estimator","18.3","lin estimator","rdss","experiment, causal","","prob, control_slope, N","Lin estimator design. (chapter 18).
+"lin_estimator","18.3","lin estimator","rdss","experiment, causal","","N, control_slope, prob","Lin estimator design. (chapter 18).
 ",TRUE,TRUE,"lin_estimator.R"
 "linear_regression","13.1","Linear regression","rdss","","","N","Linear regression design (chapter 13).
 ",FALSE,TRUE,"linear_regression.R"
@@ -61,15 +61,15 @@
 ",TRUE,TRUE,"matching.R"
 "mediation_analysis",NA,"Mediation analysis","template","experiment, causal, mediation","","N, a, b, c, d, rho","Two-arm trial with a binary mediator, declaring the first stage, the controlled direct effects, the natural direct effects, and the effect of the mediator on the outcome at each level of treatment as separate inquiries, and answering all of them with the usual regression of the outcome on the treatment interacted with the mediator. The design's use is to show when that answer strategy fails: the mediator is not randomly assigned, and rho governs how far the mediator's shock and the outcome's shock move together. At rho = 0 the mediator is unconfounded by construction and the regressions recover their targets. Raise rho and the estimates for every quantity defined through the mediator drift from their estimands while the first stage stays unbiased. Ported from DesignLibrary::mediation_analysis_designer.
 ",TRUE,TRUE,"mediation_analysis.R"
-"multi_site_studies","19.4","multi-site studies","rdss","complex","metafor, rdss, dplyr, tidyr, broom","study_sizes, study_assignment_probabilities, study_intercepts, study_priors, study_coordination","Multi-site studies with and without coordination. (chapter 19).
+"multi_site_studies","19.4","multi-site studies","rdss","complex","metafor, rdss, dplyr, tidyr, broom","study_assignment_probabilities, study_coordination, study_intercepts, study_priors, study_sizes","Multi-site studies with and without coordination. (chapter 19).
 ",TRUE,TRUE,"multi_site_studies.R"
-"multiarm_trial",NA,"Multi-arm trial","template","experiment, causal, multiarm","","N, m_arms, outcome_means, outcome_sds, conditions, sd_i, Y","Multi-arm experiment with equal assignment probabilities. The outcome is a function of the assigned arm: the arm mean plus a shared shock and optional per-arm noise. The per-arm noise is drawn when the outcome is measured, so a unit has no fixed potential outcome under an arm it was not assigned to, and the inquiries are population contrasts of arm means, outcome_means[k] - outcome_means[1], rather than sample average effects. Estimation is one lm_robust of Y on factor(Z). The number of arms is m_arms (default 3). outcome_means, outcome_sds, and conditions are length-m_arms vectors.
+"multiarm_trial",NA,"Multi-arm trial","template","experiment, causal, multiarm","","N, m_arms, outcome_means, outcome_sds, conditions, sd_i, per_arm, Y","Multi-arm experiment with equal assignment probabilities. The outcome is a function of the assigned arm: the arm mean plus a shared shock and optional per-arm noise. The per-arm noise is drawn when the outcome is measured, so a unit has no fixed potential outcome under an arm it was not assigned to, and the inquiries are population contrasts of arm means, outcome_means[k] - outcome_means[1], rather than sample average effects. Estimation is one lm_robust of Y on factor(Z). The number of arms is m_arms (default 3). outcome_means, outcome_sds, and conditions are length-m_arms vectors. When m_arms changes and they are not supplied, their defaults extend to the new number of arms: a constant vector is repeated and conditions 1..k become 1..m_arms. Any other vector of the wrong length is an error.
 ",TRUE,TRUE,"multiarm_trial.R"
 "multilevel","15.4","multilevel","rdss","observational, descriptive","rdss, lme4, dplyr, tibble","states","Multilevel regression and poststratification design. (chapter 15).
 ",TRUE,TRUE,"multilevel.R"
 "multilevel_answer_strategies","15.5","Redesign over answer strategies.","rdss","observational, descriptive","rdss, lme4, dplyr, tibble","states","Redesign over answer strategies. (chapter 15).
 ",FALSE,TRUE,"multilevel_answer_strategies.R"
-"network_experiment","18.13","network experiment","rdss","experiment, causal","rdss, spdep, interference, tidyverse","adjacency, permutations, estimator_AS, controlled_direct_effect, controlled_indirect_effect, total_effect","Experiments over spatial networks design. (chapter 18).
+"network_experiment","18.13","network experiment","rdss","experiment, causal","rdss, spdep, interference, tidyverse","adjacency, permutations, prob_exposure, estimator_AS, controlled_direct_effect, controlled_indirect_effect, total_effect","Experiments over spatial networks design. (chapter 18).
 ",TRUE,TRUE,"network_experiment.R"
 "pate_with_sampling","4.1","PATE with sampling","rdss","sampling, experiment, PATE","","N, n, b, prob","Sample from a population, then randomly assign treatment. Inquiry is the population average treatment effect (PATE).
 ",TRUE,TRUE,"pate_with_sampling.R"
@@ -79,7 +79,7 @@
 ",TRUE,TRUE,"pretest_posttest.R"
 "process_tracing","16.1b","process tracing","rdss","observational, causal","rdss, CausalQueries","query, strategies","Process tracing design declaration (chapter 16).
 ",TRUE,TRUE,"process_tracing.R"
-"random_forests","19.1","random forests","rdss","complex","dplyr, grf","f_Y, get_best_predictor, share_train, N, covariate_names","Random forests design (chapter 19) uses machine learning to study effect heterogeneity. The design targets individual level causal effects and identifies which variables are mostly commonly used to predict causal effects.
+"random_forests","19.1","random forests","rdss","complex","dplyr, grf","f_Y, get_best_predictor, N, covariate_names, share_train","Random forests design (chapter 19) uses machine learning to study effect heterogeneity. The design targets individual level causal effects and identifies which variables are mostly commonly used to predict causal effects.
 ",TRUE,TRUE,"random_forests.R"
 "randomization_inference","9.7","Randomization inference under the sharp null.","rdss","","rdss, ri2","block_m","Randomization inference under the sharp null. (chapter 9).
 ",FALSE,TRUE,"randomization_inference.R"
@@ -87,25 +87,25 @@
 ",TRUE,TRUE,"randomized_response.R"
 "randomized_saturation","18.12","randomized saturation","rdss","experiment, causal","dplyr","N_groups, N_per_group, effect_Z, effect_S_low, effect_S_high","Randomized saturation design. (chapter 18).
 ",TRUE,TRUE,"randomized_saturation.R"
-"regression_discontinuity","16.5","regression discontinuity","rdss","observational, causal","rdss, rdrobust","control, treatment, cutoff, N","Regression discontinuity design (chapter 16).
+"regression_discontinuity","16.5","regression discontinuity","rdss","observational, causal","rdss, rdrobust","control, treatment, N, cutoff","Regression discontinuity design (chapter 16).
 ",FALSE,TRUE,"regression_discontinuity.R"
-"regression_discontinuity_fuzzy","16.6","regression discontinuity fuzzy","rdss","observational, causal","rdss, rdrobust","cutoff, control, treatment, bandwidth, N","Regression discontinuity designs with varying bandwidths (chapter 16).
+"regression_discontinuity_fuzzy","16.6","regression discontinuity fuzzy","rdss","observational, causal","rdss, rdrobust","cutoff, control, treatment, N, bandwidth","Regression discontinuity designs with varying bandwidths (chapter 16).
 ",TRUE,TRUE,"regression_discontinuity_fuzzy.R"
-"simple_random_sampling","15.1","simple random sampling","rdss","observational, descriptive","","data, cuts, sample_size","Simple random sampling design (chapter 15).
+"simple_random_sampling","15.1","simple random sampling","rdss","observational, descriptive","","dataset, cuts, sample_size","Simple random sampling design (chapter 15).
 ",TRUE,TRUE,"simple_random_sampling.R"
-"single_period_two_arm","18.11","Comparison single-period two arm trial","rdss","experiment, causal","","n_units, effect_size","Comparison single-period two arm trial design. (chapter 18).
+"single_period_two_arm","18.11","Comparison single-period two arm trial","rdss","experiment, causal","","effect_size, n_units","Comparison single-period two arm trial design. (chapter 18).
 ",FALSE,TRUE,"single_period_two_arm.R"
 "stepped_wedge","18.10","stepped-wedge","rdss","experiment, causal","dplyr","effect_size","Stepped-wedge design. (chapter 18).
 ",TRUE,TRUE,"stepped_wedge.R"
-"structural_estimation","19.2","structural estimation","rdss","complex","bbmle","offer, likelihood, n, delta, kappa, alpha, N","Structural estimation declaration. (chapter 19). The design shows how to use maximum likelihood techniques to estimate parameters of a formal model from data.
+"structural_estimation","19.2","structural estimation","rdss","complex","bbmle","offer, likelihood, n, N, alpha, delta, kappa","Structural estimation declaration. (chapter 19). The design shows how to use maximum likelihood techniques to estimate parameters of a formal model from data.
 ",TRUE,TRUE,"structural_estimation.R"
-"subgroup_effects","18.6","subgroup effects","rdss","experiment, causal","","data, total_n, n_x1","Subgroup design declaration. (chapter 18).
+"subgroup_effects","18.6","subgroup effects","rdss","experiment, causal","","dataset, n_x1, total_n","Subgroup design declaration. (chapter 18).
 ",TRUE,TRUE,"subgroup_effects.R"
-"survey_nonresponse","15.2","survey nonresponse","rdss","observational, descriptive, sampling","dplyr","data, effort","Survey nonresponse design. (chapter 15).
+"survey_nonresponse","15.2","survey nonresponse","rdss","observational, descriptive, sampling","dplyr","dataset, effort","Survey nonresponse design. (chapter 15).
 ",TRUE,TRUE,"survey_nonresponse.R"
-"three_arm",NA,"Three-arm trial","template","experiment, causal, three-arm","","N, outcome_means, sd_i, prob_each","Three-arm experiment with modifiable assignment probabilities. 
+"three_arm",NA,"Three-arm trial","template","experiment, causal, three-arm","","N, sd_i, outcome_means, prob_each","Three-arm experiment with modifiable assignment probabilities. 
 ",TRUE,TRUE,"three_arm_trial.R"
-"trust_game","17.6","trust game","rdss","experiment, descriptive","","invested, average_invested, returned, average_returned, n_pairs, deceive","Trust game design. (chapter 17).
+"trust_game","17.6","trust game","rdss","experiment, descriptive","","invested, average_invested, returned, average_returned, deceive, n_pairs","Trust game design. (chapter 17).
 ",TRUE,TRUE,"trust_game.R"
 "two_arm_attrition",NA,"Two-arm trial with attrition","template","experiment, causal, attrition","","N, a_R, b_R, a_Y, b_Y, rho","Two-arm trial in which the outcome is observed only for units that report. Treatment can move reporting as well as the outcome, so the design contrasts the effect on reporting, the effect on the outcome among reporters, and the effect on the outcome had it been observed for everyone. Flattened from DesignLibrary::two_arm_attrition_designer.
 ",TRUE,TRUE,"two_arm_attrition.R"
@@ -117,13 +117,13 @@
 ",FALSE,TRUE,"two_arm_rdss_13.2.R"
 "two_arm_trial_rdss","18.1","two-arm trial","rdss","experiment, causal","","N, b","Canonical two-arm trial design. (chapter 18).
 ",FALSE,TRUE,"two_arm_rdss_18.1.R"
-"two_arm_rdss_1","2.1","Two-arm trial from RDSS with sampling","rdss","experiment, two-arm, introduction","","N, b, n","Two-arm trial design from RDSS chapter 2. Illustrates MIDA with a simple sampling and complete random assignment step.
+"two_arm_rdss_1","2.1","Two-arm trial from RDSS with sampling","rdss","experiment, two-arm, introduction","","N, n, b","Two-arm trial design from RDSS chapter 2. Illustrates MIDA with a simple sampling and complete random assignment step.
 ",TRUE,TRUE,"two_arm_rdss_2.1.R"
 "two_arm_simple",NA,"Simple two-arm trial","template","experiment, two-arm","","N, b","Simple two-arm trial with complete random assignment and a population average treatment effect.
 ",TRUE,TRUE,"two_arm_simple.R"
-"two_arm_with_blocks",NA,"Two-arm trial with blocks","template","experiment, two-arm, blocking","","k, block_size, b","Simple two arm design with block randomization
+"two_arm_with_blocks",NA,"Two-arm trial with blocks","template","experiment, two-arm, blocking","","b, block_size, k","Simple two arm design with block randomization
 ",TRUE,TRUE,"two_arm_with_blocks.R"
-"two_arm_with_blocks_rdss","2.2","Two-arm trial with blocks from RDSS","rdss","experiment, two-arm, blocking, introduction","","b, N","Chapter 2 design that uses background information (history) for blocked assignment and a blocked difference-in-means estimator.
+"two_arm_with_blocks_rdss","2.2","Two-arm trial with blocks from RDSS","rdss","experiment, two-arm, blocking, introduction","","N, b","Chapter 2 design that uses background information (history) for blocked assignment and a blocked difference-in-means estimator.
 ",TRUE,TRUE,"two_arm_with_blocks_rdss.R"
 "two_by_two",NA,"2x2 factorial (library)","template","experiment, causal, factorial","","N, prob_A, prob_B, weight_A, weight_B, outcome_means, sd_i, outcome_sds","Two-by-two factorial with independent assignment of A then B within blocks of A. Cell means are the vector outcome_means in order AB = 00, 01, 10, 11. Inquiries are the weighted average effect of each factor and the interaction. Argument names match DesignLibrary::two_by_two_designer.
 ",TRUE,TRUE,"two_by_two.R"
@@ -133,5 +133,5 @@
 ",FALSE,TRUE,"two_outcome_model_b.R"
 "uncertainty_over_effect_size","11.2","uncertainty over effect size","rdss","","","N","Uncertainty over effect size design. (chapter 11).
 ",TRUE,TRUE,"uncertainty_over_effect_size.R"
-"village_campaign","12.1a","village campaign","rdss","","","n_villages, citizens_per_village, se_type","12.1a (chapter 12).
+"village_campaign","12.1a","village campaign","rdss","","","citizens_per_village, n_villages, se_type","12.1a (chapter 12).
 ",FALSE,TRUE,"village_campaign.R"

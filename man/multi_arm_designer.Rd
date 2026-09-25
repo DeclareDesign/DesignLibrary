@@ -44,8 +44,9 @@ Routes to \code{\link[=make_design]{make_design()}} with id \code{"multiarm_tria
 \code{make_design("multiarm_trial", N = N, m_arms = m_arms, ...)}.
 Defaults for \code{outcome_means}, \code{outcome_sds}, and \code{conditions} are
 evaluated after \code{m_arms}, so \code{multi_arm_designer(m_arms = 4)} expands
-those vectors before calling \code{make_design()}. \code{make_design("multiarm_trial", m_arms = 4)} without matching-length vectors messages and still
-redesigns (draws may be \code{NaN}). Wrong-length \code{outcome_means} errors.
+those vectors before calling \code{make_design()}. \code{make_design("multiarm_trial", m_arms = 4)} does the same inside the design: constant vectors are repeated
+and conditions \verb{1..k} become \verb{1..m_arms}. Any other wrong-length vector
+errors.
 Inquiries are \code{mean(Y(k) - Y(1))}; estimation is one \code{lm_robust}.
 Library-file knobs match these formals.
 }
