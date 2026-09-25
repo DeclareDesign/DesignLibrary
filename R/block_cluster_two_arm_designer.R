@@ -151,7 +151,8 @@ block_cluster_two_arm_designer <- function(N = NULL,
       inquiry = "ATE",
       .method = lm_robust,
       fixed_effects = ~ blocks,
-      clusters = clusters
+      clusters = clusters,
+      se_type = "CR2"
     )
     
     # Design

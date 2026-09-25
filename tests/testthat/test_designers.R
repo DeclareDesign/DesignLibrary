@@ -160,6 +160,16 @@ test_that(desc = "block_cluster_two_arm_designer errors when it should",
               N_clusters_in_block = c(2,2)))
           })
 
+test_that(desc = "block_cluster_two_arm_designer asks for CR2 standard errors, as 0.1.10 got by default",
+          code = {
+            design <- block_cluster_two_arm_designer()
+            dat <- draw_data(design)
+            est <- get_estimates(design, data = dat)
+            cr2 <- estimatr::lm_robust(Y ~ Z, data = dat, fixed_effects = ~ blocks,
+                                       clusters = clusters, se_type = "CR2")
+            expect_equal(est$std.error, unname(cr2$std.error["Z"]))
+          })
+
 test_that(desc = "two_by_two_designer errors when it should",
           code = {
             expect_error(two_by_two_designer(weight_A = 10))

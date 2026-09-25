@@ -4,6 +4,10 @@
 * `expand_design()` is deprecated in DeclareDesign 2.0; the examples and vignettes sweep a designer's arguments with `redesign(designer(...), ...)`. An argument the designer consumes before any step reads it (process tracing's `cor_E1E2_H`) is swept by calling the designer once per value.
 * `model = ` becomes `.method = ` in every estimator.
 * Requires DeclareDesign 2.0.0, fabricatr 2.0.0 and estimatr 2.0.0.
+* `randomized_response_designer()` reports the default diagnosands again. Its custom `bias` replaced the default set rather than adding to it, which hid the columns that show the direct question is biased and the randomized response is not.
+* `process_tracing_designer()` names its estimate `estimate` rather than `posterior_H`, so the default diagnosands apply and a diagnosis after `redesign()` no longer reads `NA`. Neither designer calls `set_diagnosands()` any more.
+* `multi_arm_designer()` uses `outcome_means`; 0.1.10 ignored it and drew every potential outcome with mean 0. `args_to_fix = "outcome_means"` now fixes the means.
+* `block_cluster_two_arm_designer()` recycles `assignment_probs` over blocks, so `N_blocks` can be changed with `redesign()`, and asks for `se_type = "CR2"` explicitly, the standard errors 0.1.10 got by default and estimatr 2.0 no longer gives with fixed effects and clusters.
 
 # DesignLibrary 0.1.10
 
