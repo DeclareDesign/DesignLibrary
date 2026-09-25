@@ -4,6 +4,8 @@
 
 Library listing in pedagogical order, eight DesignLibrary-named wrappers, parameter kinds for R and Shiny, and a two-simulation run in every audit.
 
+**Previews at 100 simulations.** 43 of the 53 baked previews held a 2-simulation diagnosis, so the app's Diagnosis tab showed bias and power estimated from two draws while `bake_previews()` defaults to 100. All 53 are now baked at 100 (seed 343), which also brings `multilevel`'s preview up to its current estimator label.
+
 **Two estimands fixed.** `audit_experiment` tested for `"Always-Responder"` and `"Never-Responder"` while drawing `"Always-responder"` and `"Never-responder"`, so every unit's outcomes were 1 under the white name and 0 under the Latino one and the estimate was 1 in every draw. `regression_discontinuity` centers its running variable at the cutoff but evaluated the estimand at 0.5 on that centered scale (-0.3875, where the jump at the threshold is 0.15); it is now `treatment(0) - control(0)`. Bias across 100 simulations is now 0.005 and 0.008. A test for each checks one draw's potential outcomes against the declared estimand. The previews for `audit_experiment`, `two_arm_block_cluster` and `stepped_wedge` are re-baked.
 
 **`mediation_analysis` inquiries renamed.** `Indirect_0` and `Indirect_1` are now `Mediator_Effect_0` and `Mediator_Effect_1`. Each is the effect of the mediator on the outcome with treatment held at 0 or 1 (`b` and `b + c`), not a natural indirect effect, and the old names said otherwise. Their values are unchanged, and the preview is re-baked at 100 simulations (the one it replaces had 2).
