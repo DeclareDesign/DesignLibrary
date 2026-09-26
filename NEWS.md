@@ -1,6 +1,4 @@
-# Changelog
-
-## 2.0.0
+# DesignLibrary 2.0.0
 
 **DesignLibrary 2.0 is the package developed as ResearchDesigns, and it supersedes DesignLibrary 0.1.** Designs are self-contained declaration files read through `make_design()`, `list_designs()`, and `get_args()`, and parameters are read from the design itself rather than from a designer function's formals. It requires DeclareDesign 2.0.
 
@@ -10,7 +8,7 @@
 
 **Renamed from ResearchDesigns.** The S3 classes `research_designs_*` are now `design_library_*`, and the options `researchdesigns.*` are now `designlibrary.*`. The entries below, through 0.1.1, record ResearchDesigns' development.
 
-## 0.1.1
+# ResearchDesigns version 0.1.1
 
 Library listing in pedagogical order, eight DesignLibrary-named wrappers, parameter kinds for R and Shiny, and a two-simulation run in every audit.
 
