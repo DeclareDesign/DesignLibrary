@@ -395,6 +395,63 @@ block_cluster_two_arm_designer <- function(
   ))
 }
 
+#' Create a two-arm design with a possibly prognostic covariate
+#'
+#' Routes to [make_design()] with id `"two_arm_covariate"`:
+#' `make_design("two_arm_covariate", N = N, rho_WY = rho_WY, ...)`.
+#'
+#' The covariate `W` can predict the outcome (`rho_WY`), moderate the effect
+#' (`h`), and predict assignment (`rho_WZ`). With `rho_WZ = 0` assignment is
+#' random and adjustment buys precision; otherwise `W` confounds. Argument
+#' names match DesignLibrary 0.1's `two_arm_covariate_designer`.
+#'
+#' @inheritParams two_arm_designer
+#' @param prob Probability of assignment to treatment.
+#' @param sd Standard deviation of the outcome shock.
+#' @param h Heterogeneity of the treatment effect by `W`.
+#' @param treatment_mean Average outcome in treatment. If supplied, overrides
+#'   `ate` (`ate` becomes `treatment_mean - control_mean`).
+#' @param rho_WY Correlation between `W` and the outcome shock (-1 to 1).
+#' @param rho_WZ Correlation between `W` and the latent assignment variable
+#'   (-1 to 1).
+#' @return A design object.
+#' @seealso [make_design()]
+#' @export
+#' @examples
+#' \dontrun{
+#' prognostic <- two_arm_covariate_designer(N = 40, ate = 0.2, rho_WY = 0.9, h = 0.5)
+#' confounded <- two_arm_covariate_designer(N = 40, ate = 0, rho_WZ = 0.9, rho_WY = 0.9)
+#' }
+two_arm_covariate_designer <- function(
+  N = 100,
+  prob = 0.5,
+  control_mean = 0,
+  sd = 1,
+  ate = 1,
+  h = 0,
+  treatment_mean = NULL,
+  rho_WY = 0,
+  rho_WZ = 0,
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (sd < 0) stop("sd must be non-negative.", call. = FALSE)
+  if (prob < 0 || prob > 1) stop("prob must be in [0, 1].", call. = FALSE)
+  if (abs(rho_WY) > 1) stop("rho_WY must be in [-1, 1].", call. = FALSE)
+  if (abs(rho_WZ) > 1) stop("rho_WZ must be in [-1, 1].", call. = FALSE)
+  if (!is.null(treatment_mean)) ate <- treatment_mean - control_mean
+  call_library_design("two_arm_covariate", list(
+    N = N,
+    prob = prob,
+    control_mean = control_mean,
+    sd = sd,
+    ate = ate,
+    h = h,
+    rho_WY = rho_WY,
+    rho_WZ = rho_WZ
+  ))
+}
+
 #' Stop with related make_design() calls for a DesignLibrary 0.1 designer not yet ported
 #'
 #' These names used to message and return `invisible(NULL)`, which reads as a
@@ -488,14 +545,5 @@ spillover_designer <- function(...) {
   designer_not_ported(
     "spillover_designer",
     'make_design("randomized_saturation")'
-  )
-}
-
-#' @rdname designers-not-ported
-#' @export
-two_arm_covariate_designer <- function(...) {
-  designer_not_ported(
-    "two_arm_covariate_designer",
-    'make_design("covariate_adjustment")'
   )
 }

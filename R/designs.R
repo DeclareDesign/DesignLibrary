@@ -104,7 +104,8 @@ designlibrary_core_ids <- function() {
     "mediation_analysis",
     "multiarm_trial",
     "two_by_two",
-    "block_cluster_two_arm"
+    "block_cluster_two_arm",
+    "two_arm_covariate"
   )
 }
 

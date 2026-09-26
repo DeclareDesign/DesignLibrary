@@ -104,6 +104,17 @@ test_that("two_arm_attrition's effect on reporting is the share moved across the
   )
 })
 
+test_that("two_arm_covariate's estimand is ate plus h times the mean of W", {
+  skip_if_not_installed("DeclareDesign")
+
+  d <- two_arm_covariate_designer(N = 50, control_mean = 1, treatment_mean = 1.3, h = 0.5)
+  draw <- draw_one(d)
+  expect_equal(
+    draw$estimands$estimand[draw$estimands$inquiry == "ATE"],
+    0.3 + 0.5 * mean(draw$data$W)
+  )
+})
+
 test_that("randomized_response's estimand is the prevalence its truthful answers reveal", {
   skip_if_not_installed("DeclareDesign")
 

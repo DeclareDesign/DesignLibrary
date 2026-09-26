@@ -110,6 +110,11 @@ test_that("designer argument names match DesignLibrary 0.1 where we claim them",
     c("N_blocks", "N_clusters_in_block", "N_i_in_cluster", "ate") %in%
       names(formals(block_cluster_two_arm_designer))
   ))
+  expect_true(all(
+    c("N", "prob", "control_mean", "sd", "ate", "h", "treatment_mean",
+      "rho_WY", "rho_WZ") %in%
+      names(formals(two_arm_covariate_designer))
+  ))
 })
 
 test_that("unported DesignLibrary 0.1 designers stop and point at make_design()", {
@@ -118,7 +123,6 @@ test_that("unported DesignLibrary 0.1 designers stop and point at make_design()"
   # neither the designer nor its replacement.
   expect_error(factorial_designer(), "make_design\\(\"factorial_2x2\"\\)")
   expect_error(cluster_sampling_designer(), "cluster_random_sampling")
-  expect_error(two_arm_covariate_designer(), "covariate_adjustment")
   expect_error(binary_iv_designer(), "encouragement")
   expect_error(spillover_designer(), "randomized_saturation")
   expect_error(regression_discontinuity_designer(), "regression_discontinuity")

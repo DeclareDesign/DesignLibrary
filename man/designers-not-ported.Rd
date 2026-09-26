@@ -8,7 +8,6 @@
 \alias{process_tracing_designer}
 \alias{regression_discontinuity_designer}
 \alias{spillover_designer}
-\alias{two_arm_covariate_designer}
 \title{DesignLibrary 0.1 designers not ported as-is}
 \usage{
 binary_iv_designer(...)
@@ -22,8 +21,6 @@ process_tracing_designer(...)
 regression_discontinuity_designer(...)
 
 spillover_designer(...)
-
-two_arm_covariate_designer(...)
 }
 \arguments{
 \item{...}{Ignored.}

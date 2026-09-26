@@ -4,7 +4,7 @@
 
 **DesignLibrary 2.0 is the package developed as ResearchDesigns, and it supersedes DesignLibrary 0.1.** Designs are self-contained declaration files read through `make_design()`, `list_designs()`, and `get_args()`, and parameters are read from the design itself rather than from a designer function's formals. It requires DeclareDesign 2.0.
 
-**Code written for DesignLibrary 0.1 mostly keeps running.** Eight designers keep their 0.1 names and argument names (`two_arm_designer()`, `two_arm_attrition_designer()`, `pretest_posttest_designer()`, `randomized_response_designer()`, `mediation_analysis_designer()`, `multi_arm_designer()`, `two_by_two_designer()`, and `block_cluster_two_arm_designer()`), each routed to a library design. The other seven 0.1 designers stop with the related designs to use instead.
+**Code written for DesignLibrary 0.1 mostly keeps running.** Nine designers keep their 0.1 names and argument names (`two_arm_designer()`, `two_arm_attrition_designer()`, `pretest_posttest_designer()`, `randomized_response_designer()`, `mediation_analysis_designer()`, `multi_arm_designer()`, `two_by_two_designer()`, `block_cluster_two_arm_designer()`, and `two_arm_covariate_designer()`), each routed to a library design. The other six 0.1 designers stop with the related designs to use instead.
 
 **Renamed from ResearchDesigns.** The S3 classes `research_designs_*` are now `design_library_*`, and the options `researchdesigns.*` are now `designlibrary.*`. The entries below, through 0.1.1, record ResearchDesigns' development.
 

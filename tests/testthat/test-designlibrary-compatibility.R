@@ -9,7 +9,8 @@ working_designers <- c(
   "mediation_analysis_designer",
   "multi_arm_designer",
   "two_by_two_designer",
-  "block_cluster_two_arm_designer"
+  "block_cluster_two_arm_designer",
+  "two_arm_covariate_designer"
 )
 
 not_ported_designers <- c(
@@ -18,8 +19,7 @@ not_ported_designers <- c(
   "factorial_designer",
   "process_tracing_designer",
   "regression_discontinuity_designer",
-  "spillover_designer",
-  "two_arm_covariate_designer"
+  "spillover_designer"
 )
 
 test_that("DesignLibrary 0.1 designer names are exported", {
@@ -59,7 +59,7 @@ test_that("ported DesignLibrary 0.1 designers return a design", {
 
 # Designer formals that are rewritten in the wrapper and never passed to
 # make_design() (so they are not knobs on the library file):
-#   two_arm_designer: treatment_mean -> ate
+#   two_arm_designer, two_arm_covariate_designer: treatment_mean -> ate
 #   two_by_two_designer: mean_A0B0 / mean_A0B1 / mean_A1B0 / mean_A1B1
 #     -> slots of outcome_means
 #   block_cluster_two_arm_designer: sd_i_0 -> sd_i, assignment_probs ->
@@ -73,7 +73,8 @@ designer_to_id <- c(
   mediation_analysis_designer = "mediation_analysis",
   multi_arm_designer = "multiarm_trial",
   two_by_two_designer = "two_by_two",
-  block_cluster_two_arm_designer = "block_cluster_two_arm"
+  block_cluster_two_arm_designer = "block_cluster_two_arm",
+  two_arm_covariate_designer = "two_arm_covariate"
 )
 
 wrapper_only_aliases <- list(
@@ -84,7 +85,8 @@ wrapper_only_aliases <- list(
   mediation_analysis_designer = character(0),
   multi_arm_designer = character(0),
   two_by_two_designer = c("mean_A0B0", "mean_A0B1", "mean_A1B0", "mean_A1B1"),
-  block_cluster_two_arm_designer = c("sd_i_0", "assignment_probs")
+  block_cluster_two_arm_designer = c("sd_i_0", "assignment_probs"),
+  two_arm_covariate_designer = "treatment_mean"
 )
 
 # Helper functions a library file defines for its own steps. They are R-only
