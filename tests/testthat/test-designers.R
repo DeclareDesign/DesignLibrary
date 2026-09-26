@@ -122,7 +122,6 @@ test_that("unported DesignLibrary 0.1 designers stop and point at make_design()"
   # factorial_designer(k = 3)` failed further downstream with an error naming
   # neither the designer nor its replacement.
   expect_error(factorial_designer(), "make_design\\(\"factorial_2x2\"\\)")
-  expect_error(process_tracing_designer(), "process_tracing")
 })
 
 test_that("fixed-effects cluster designs ask for CR2, as estimatr 1.0.6 gave by default", {

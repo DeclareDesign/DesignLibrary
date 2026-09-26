@@ -83,6 +83,8 @@
 ",TRUE,TRUE,"pretest_posttest.R"
 "process_tracing","16.1b","process tracing","rdss","observational, causal","rdss, CausalQueries","query, strategies","Process tracing design declaration (chapter 16).
 ",TRUE,TRUE,"process_tracing.R"
+"process_tracing_bayes",NA,"Process tracing with two clues","template","observational, causal, qualitative, bayesian","","joint_prob, bayes_rule, prior_only, clue_posterior, E1_only, E2_only, both_clues, N, prob_X, process_proportions, prior_H, p_E1_H, p_E1_not_H, p_E2_H, p_E2_not_H, cor_E1E2_H, cor_E1E2_not_H","One case with X = 1 and Y = 1 is selected from a population of causal processes, and two clues are observed whose probabilities depend on whether X caused Y (a straw in the wind and a smoking gun at the defaults). The design compares the posterior that X caused Y after no clue, either clue alone, and both clues, each updated by Bayes' rule from prior_H. Flattened from DesignLibrary::process_tracing_designer.
+",TRUE,TRUE,"process_tracing_bayes.R"
 "random_forests","19.1","random forests","rdss","complex","dplyr, grf","f_Y, get_best_predictor, N, covariate_names, share_train","Random forests design (chapter 19) uses machine learning to study effect heterogeneity. The design targets individual level causal effects and identifies which variables are mostly commonly used to predict causal effects.
 ",TRUE,TRUE,"random_forests.R"
 "randomization_inference","9.7","Randomization inference under the sharp null.","rdss","","rdss, ri2","block_m","Randomization inference under the sharp null. (chapter 9).

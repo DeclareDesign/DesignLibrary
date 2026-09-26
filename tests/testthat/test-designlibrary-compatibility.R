@@ -14,12 +14,12 @@ working_designers <- c(
   "regression_discontinuity_designer",
   "spillover_designer",
   "cluster_sampling_designer",
-  "binary_iv_designer"
+  "binary_iv_designer",
+  "process_tracing_designer"
 )
 
 not_ported_designers <- c(
-  "factorial_designer",
-  "process_tracing_designer"
+  "factorial_designer"
 )
 
 test_that("DesignLibrary 0.1 designer names are exported", {
@@ -80,7 +80,8 @@ designer_to_id <- c(
   regression_discontinuity_designer = "regression_discontinuity_polynomial",
   spillover_designer = "spillover",
   cluster_sampling_designer = "cluster_sampling",
-  binary_iv_designer = "binary_iv"
+  binary_iv_designer = "binary_iv",
+  process_tracing_designer = "process_tracing_bayes"
 )
 
 wrapper_only_aliases <- list(
@@ -96,7 +97,8 @@ wrapper_only_aliases <- list(
   regression_discontinuity_designer = character(0),
   spillover_designer = character(0),
   cluster_sampling_designer = character(0),
-  binary_iv_designer = c("a_Y", "b_Y", "d_Y")
+  binary_iv_designer = c("a_Y", "b_Y", "d_Y"),
+  process_tracing_designer = c("label_E1", "label_E2")
 )
 
 # Helper functions a library file defines for its own steps. They are R-only
@@ -105,7 +107,11 @@ file_helpers <- list(
   multi_arm_designer = "per_arm",
   regression_discontinuity_designer = "po_function",
   spillover_designer = "dgp",
-  cluster_sampling_designer = "dataset"
+  cluster_sampling_designer = "dataset",
+  process_tracing_designer = c(
+    "joint_prob", "bayes_rule", "prior_only", "clue_posterior", "E1_only",
+    "E2_only", "both_clues"
+  )
 )
 
 test_that("designer formals that are passed through match library knobs", {

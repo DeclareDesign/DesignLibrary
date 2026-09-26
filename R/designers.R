@@ -662,6 +662,88 @@ binary_iv_designer <- function(
   ))
 }
 
+#' Create a process tracing design with two clues
+#'
+#' Routes to [make_design()] with id `"process_tracing_bayes"`:
+#' `make_design("process_tracing_bayes", prior_H = prior_H, ...)`.
+#'
+#' One case with X = 1 and Y = 1 is selected, two clues are observed, and the
+#' posterior that X caused Y is updated by Bayes' rule. Argument names match
+#' DesignLibrary 0.1's `process_tracing_designer`. The estimator labels are
+#' fixed at "Straw in the Wind" and "Smoking Gun", so `label_E1` and
+#' `label_E2` other than those warn and are ignored. For the book's
+#' CausalQueries version, see `make_design("process_tracing")`.
+#'
+#' @inheritParams two_arm_designer
+#' @param N Number of cases in the population.
+#' @param prob_X Probability that X = 1.
+#' @param process_proportions Shares of the four causal processes: X causes
+#'   Y, Y regardless, X causes not Y, and not Y regardless.
+#' @param prior_H Prior probability that X caused Y.
+#' @param p_E1_H,p_E1_not_H Probability of clue 1 if X did and did not cause Y.
+#' @param p_E2_H,p_E2_not_H Probability of clue 2 if X did and did not cause Y.
+#' @param cor_E1E2_H,cor_E1E2_not_H Correlation of the two clues if X did and
+#'   did not cause Y.
+#' @param label_E1,label_E2 Ignored unless left at their defaults.
+#' @return A design object.
+#' @seealso [make_design()]
+#' @export
+#' @examples
+#' \dontrun{
+#' process_tracing_designer(prior_H = 0.3, p_E2_H = 0.5)
+#' }
+process_tracing_designer <- function(
+  N = 100,
+  prob_X = 0.5,
+  process_proportions = c(0.25, 0.25, 0.25, 0.25),
+  prior_H = 0.5,
+  p_E1_H = 0.8,
+  p_E1_not_H = 0.2,
+  p_E2_H = 0.3,
+  p_E2_not_H = 0,
+  cor_E1E2_H = 0,
+  cor_E1E2_not_H = 0,
+  label_E1 = "Straw in the Wind",
+  label_E2 = "Smoking Gun",
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (N < 1 || N %% 1 != 0) stop("N must be a positive integer.", call. = FALSE)
+  if (length(process_proportions) != 4) stop("process_proportions must have length 4.", call. = FALSE)
+  if (abs(sum(process_proportions) - 1) > 1e-8 || any(process_proportions < 0)) {
+    stop("process_proportions must be non-negative and sum to 1.", call. = FALSE)
+  }
+  probs <- c(prob_X = prob_X, prior_H = prior_H, p_E1_H = p_E1_H,
+             p_E1_not_H = p_E1_not_H, p_E2_H = p_E2_H, p_E2_not_H = p_E2_not_H)
+  bad <- names(probs)[probs < 0 | probs > 1]
+  if (length(bad)) stop(bad[[1]], " must be in [0, 1].", call. = FALSE)
+  if (abs(cor_E1E2_H) > 1) stop("cor_E1E2_H must be in [-1, 1].", call. = FALSE)
+  if (abs(cor_E1E2_not_H) > 1) stop("cor_E1E2_not_H must be in [-1, 1].", call. = FALSE)
+  clue_pair_min <- function(p1, p2, rho) {
+    r <- rho * (p1 * p2 * (1 - p1) * (1 - p2))^0.5
+    min((1 - p1) * (1 - p2) + r, p2 * (1 - p1) - r, p1 * (1 - p2) - r, p1 * p2 + r)
+  }
+  if (clue_pair_min(p_E1_H, p_E2_H, cor_E1E2_H) < 0 ||
+      clue_pair_min(p_E1_not_H, p_E2_not_H, cor_E1E2_not_H) < 0) {
+    stop("Correlation coefficient not compatible with probabilities.", call. = FALSE)
+  }
+  if (!identical(label_E1, "Straw in the Wind") || !identical(label_E2, "Smoking Gun")) {
+    warning("label_E1 and label_E2 are ignored; the estimator labels are fixed.", call. = FALSE)
+  }
+  call_library_design("process_tracing_bayes", list(
+    N = N,
+    prob_X = prob_X,
+    process_proportions = process_proportions,
+    prior_H = prior_H,
+    p_E1_H = p_E1_H,
+    p_E1_not_H = p_E1_not_H,
+    p_E2_H = p_E2_H,
+    p_E2_not_H = p_E2_not_H,
+    cor_E1E2_H = cor_E1E2_H,
+    cor_E1E2_not_H = cor_E1E2_not_H
+  ))
+}
+
 #' Stop with related make_design() calls for a DesignLibrary 0.1 designer not yet ported
 #'
 #' These names used to message and return `invisible(NULL)`, which reads as a
@@ -709,13 +791,5 @@ factorial_designer <- function(...) {
   )
 }
 
-#' @rdname designers-not-ported
-#' @export
-process_tracing_designer <- function(...) {
-  designer_not_ported(
-    "process_tracing_designer",
-    'make_design("process_tracing")'
-  )
-}
 
 

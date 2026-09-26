@@ -109,7 +109,8 @@ designlibrary_core_ids <- function() {
     "regression_discontinuity_polynomial",
     "spillover",
     "cluster_sampling",
-    "binary_iv"
+    "binary_iv",
+    "process_tracing_bayes"
   )
 }
 

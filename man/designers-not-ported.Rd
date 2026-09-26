@@ -3,12 +3,9 @@
 \name{designers-not-ported}
 \alias{designers-not-ported}
 \alias{factorial_designer}
-\alias{process_tracing_designer}
 \title{DesignLibrary 0.1 designers not ported as-is}
 \usage{
 factorial_designer(...)
-
-process_tracing_designer(...)
 }
 \arguments{
 \item{...}{Ignored.}

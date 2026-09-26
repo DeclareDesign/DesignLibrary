@@ -74,6 +74,7 @@ reference:
   - spillover_designer
   - cluster_sampling_designer
   - binary_iv_designer
+  - process_tracing_designer
 - subtitle: Unported stubs
   contents:
   - designers-not-ported
