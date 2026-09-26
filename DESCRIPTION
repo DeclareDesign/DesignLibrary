@@ -23,8 +23,8 @@ Depends:
 Imports:
     fabricatr (>= 2.0.0),
     DeclareDesign (>= 2.0.0),
-    randomizr,
-    estimatr,
+    randomizr (>= 2.0.0),
+    estimatr (>= 2.0.0),
     rlang,
     yaml,
     utils,
