@@ -1,7 +1,7 @@
 # Create a blocked and clustered two-arm design
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 with id `"block_cluster_two_arm"`:
 `make_design("block_cluster_two_arm", N_blocks = N_blocks, ...)`.
 
@@ -65,7 +65,7 @@ block_cluster_two_arm_designer(
 
 - ...:
 
-  Unused DesignLibrary arguments; warned and dropped.
+  Unused DesignLibrary 0.1 arguments; warned and dropped.
 
 ## Value
 
@@ -73,11 +73,12 @@ A design object.
 
 ## Details
 
-A simplified signature relative to DesignLibrary: level sizes and three
-shock standard deviations, a scalar assignment probability, and `ate`.
-Extra DesignLibrary arguments (`N`, `sd`, `rho`, `verbose`, per-block
-`assignment_probs`) are accepted in `...` and ignored with a warning.
+A simplified signature relative to DesignLibrary 0.1: level sizes and
+three shock standard deviations, a scalar assignment probability, and
+`ate`. Extra DesignLibrary 0.1 arguments (`N`, `sd`, `rho`, `verbose`,
+per-block `assignment_probs`) are accepted in `...` and ignored with a
+warning.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)

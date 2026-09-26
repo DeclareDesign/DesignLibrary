@@ -6,7 +6,7 @@ test_that("copy_library_shiny writes a standalone app folder", {
     expect_true(file.exists(file.path(dest, "deploy-options.R")))
     expect_true(file.exists(file.path(dest, "local.R.example")))
     # local.R is preserved across recopies
-    writeLines("options(researchdesigns.keep = TRUE)", file.path(dest, "local.R"))
+    writeLines("options(designlibrary.keep = TRUE)", file.path(dest, "local.R"))
     copy_library_shiny(dest, overwrite = TRUE)
     expect_true(file.exists(file.path(dest, "local.R")))
     expect_match(paste(readLines(file.path(dest, "local.R")), collapse = "\n"), "keep = TRUE")

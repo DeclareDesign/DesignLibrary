@@ -1,4 +1,4 @@
-ResearchDesigns audit: 66/68 ok, 2 failed
+DesignLibrary audit: 66/68 ok, 2 failed
 (Order: FAIL, SKIP/parked, OK-with-notes, OK)
 
  - italian_village_bayes: FAIL [missing_packages] - Design 'italian_village_bayes' needs packages not installed: rstanarm

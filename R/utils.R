@@ -22,13 +22,13 @@ designs_dir <- function() {
       return(normalizePath(candidate, winslash = "/", mustWork = FALSE))
     }
   }
-  path <- system.file("designs", package = "ResearchDesigns")
+  path <- system.file("designs", package = "DesignLibrary")
   if (nzchar(path)) {
     return(normalizePath(path, winslash = "/", mustWork = FALSE))
   }
   stop(
-    "No designs directory found. Set options(ResearchDesigns.root = ...) ",
-    "to your package source, or reinstall ResearchDesigns.",
+    "No designs directory found. Set options(DesignLibrary.root = ...) ",
+    "to your package source, or reinstall DesignLibrary.",
     call. = FALSE
   )
 }
@@ -43,7 +43,7 @@ previews_dir <- function() {
       return(normalizePath(candidate, winslash = "/", mustWork = FALSE))
     }
   }
-  path <- system.file("previews", package = "ResearchDesigns")
+  path <- system.file("previews", package = "DesignLibrary")
   if (nzchar(path)) {
     return(normalizePath(path, winslash = "/", mustWork = FALSE))
   }
@@ -64,7 +64,7 @@ library_index_dir <- function() {
       return(normalizePath(candidate, winslash = "/", mustWork = FALSE))
     }
   }
-  path <- system.file("library_index", package = "ResearchDesigns")
+  path <- system.file("library_index", package = "DesignLibrary")
   if (nzchar(path)) {
     return(normalizePath(path, winslash = "/", mustWork = FALSE))
   }
@@ -74,16 +74,16 @@ library_index_dir <- function() {
   stop("No library index directory found.", call. = FALSE)
 }
 
-#' Is this path a ResearchDesigns DESCRIPTION root?
+#' Is this path a DesignLibrary DESCRIPTION root?
 #' @noRd
-is_researchdesigns_root <- function(path) {
+is_designlibrary_root <- function(path) {
   desc <- file.path(path, "DESCRIPTION")
   if (!file.exists(desc)) return(FALSE)
   pkg <- tryCatch(
     unname(read.dcf(desc, fields = "Package")[1, 1]),
     error = function(e) NA_character_
   )
-  identical(as.character(pkg)[[1]], "ResearchDesigns")
+  identical(as.character(pkg)[[1]], "DesignLibrary")
 }
 
 #' Walk parents looking for package root
@@ -92,7 +92,7 @@ walk_for_package_root <- function(start) {
   current <- normalizePath(start, winslash = "/", mustWork = FALSE)
   if (!nzchar(current) || current == ".") return(NULL)
   for (i in seq_len(24)) {
-    if (is_researchdesigns_root(current)) return(current)
+    if (is_designlibrary_root(current)) return(current)
     parent <- dirname(current)
     if (identical(parent, current)) break
     current <- parent
@@ -103,7 +103,7 @@ walk_for_package_root <- function(start) {
 #' Writable package root (for maintainer refresh)
 #'
 #' Lookup order:
-#' 1. `options(ResearchDesigns.root = ...)` or env `RESEARCHDESIGNS_ROOT`
+#' 1. `options(DesignLibrary.root = ...)` or env `RESEARCHDESIGNS_ROOT`
 #' 2. Walk up from `start` (default `getwd()`)
 #' 3. Installed / `load_all` package path
 #'
@@ -111,16 +111,16 @@ walk_for_package_root <- function(start) {
 #' @return Normalized path to the package root.
 #' @noRd
 find_package_root <- function(start = getwd()) {
-  opt <- getOption("ResearchDesigns.root", NULL)
+  opt <- getOption("DesignLibrary.root", NULL)
   if (is.null(opt) || !nzchar(as.character(opt)[[1]])) {
     opt <- Sys.getenv("RESEARCHDESIGNS_ROOT", unset = "")
   }
   if (nzchar(as.character(opt)[[1]])) {
     opt <- normalizePath(as.character(opt)[[1]], winslash = "/", mustWork = FALSE)
-    if (is_researchdesigns_root(opt)) return(opt)
+    if (is_designlibrary_root(opt)) return(opt)
     stop(
-      "ResearchDesigns.root / RESEARCHDESIGNS_ROOT is set to '", opt,
-      "' but that folder has no ResearchDesigns DESCRIPTION.",
+      "DesignLibrary.root / RESEARCHDESIGNS_ROOT is set to '", opt,
+      "' but that folder has no DesignLibrary DESCRIPTION.",
       call. = FALSE
     )
   }
@@ -129,23 +129,23 @@ find_package_root <- function(start = getwd()) {
   if (!is.null(hit)) return(hit)
 
   pkg_path <- tryCatch(
-    system.file(package = "ResearchDesigns"),
+    system.file(package = "DesignLibrary"),
     error = function(e) ""
   )
   if (nzchar(pkg_path)) {
     hit <- walk_for_package_root(pkg_path)
     if (!is.null(hit)) return(hit)
-    if (is_researchdesigns_root(pkg_path)) {
+    if (is_designlibrary_root(pkg_path)) {
       return(normalizePath(pkg_path, winslash = "/", mustWork = FALSE))
     }
   }
 
   stop(
-    "Could not find ResearchDesigns package root (DESCRIPTION).\n",
+    "Could not find DesignLibrary package root (DESCRIPTION).\n",
     "Do one of:\n",
-    "  setwd(\"C:/path/to/ResearchDesigns\")\n",
-    "  options(ResearchDesigns.root = \"C:/path/to/ResearchDesigns\")\n",
-    "  Sys.setenv(RESEARCHDESIGNS_ROOT = \"C:/path/to/ResearchDesigns\")\n",
+    "  setwd(\"C:/path/to/DesignLibrary\")\n",
+    "  options(DesignLibrary.root = \"C:/path/to/DesignLibrary\")\n",
+    "  Sys.setenv(RESEARCHDESIGNS_ROOT = \"C:/path/to/DesignLibrary\")\n",
     "then re-run refresh_library().",
     call. = FALSE
   )

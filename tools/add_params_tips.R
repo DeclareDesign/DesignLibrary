@@ -3,16 +3,16 @@
 
 root <- "C:/WZB Dropbox/Macartan Humphreys/5_github/ResearchDesigns"
 dir <- file.path(root, "inst/designs")
-options(ResearchDesigns.root = root)
+options(DesignLibrary.root = root)
 
 suppressPackageStartupMessages({
   if (!requireNamespace("yaml", quietly = TRUE)) stop("yaml required")
 })
 
 # Load package internals if available
-pkg_ok <- requireNamespace("ResearchDesigns", quietly = TRUE)
+pkg_ok <- requireNamespace("DesignLibrary", quietly = TRUE)
 if (pkg_ok) {
-  suppressPackageStartupMessages(library(ResearchDesigns))
+  suppressPackageStartupMessages(library(DesignLibrary))
 }
 
 `%||%` <- function(a, b) {

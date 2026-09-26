@@ -19,7 +19,7 @@ redesignable). If \code{FALSE}, also report other non-step gaps (e.g. data frame
 \item{include_steps}{If \code{TRUE}, also report design pieces.}
 }
 \value{
-A data frame (class \code{research_designs_param_coverage}) of gaps.
+A data frame (class \code{design_library_param_coverage}) of gaps.
 }
 \description{
 For each library design: evaluate the file, read redesignable parameters from

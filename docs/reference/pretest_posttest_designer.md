@@ -1,7 +1,7 @@
 # Create a pretest-posttest design
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 with id `"pretest_posttest"`:
 `make_design("pretest_posttest", N = N, ate = ate, ...)`.
 
@@ -47,7 +47,7 @@ pretest_posttest_designer(
 
 - args_to_fix:
 
-  Ignored. Present for DesignLibrary compatibility.
+  Ignored. Present for compatibility with DesignLibrary 0.1.
 
 ## Value
 
@@ -55,4 +55,4 @@ A design object.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)

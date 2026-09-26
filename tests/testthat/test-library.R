@@ -4,7 +4,7 @@ test_that("list_designs finds the starter library", {
   expect_true(all(c("two_arm_simple", "two_arm_with_blocks") %in% idx$id))
   expect_true("2.1" %in% idx$alias)
   expect_true("2.2" %in% idx$alias)
-  expect_s3_class(idx, "research_designs_list")
+  expect_s3_class(idx, "design_library_list")
 })
 
 test_that("list_designs is metadata-only by default", {
@@ -19,7 +19,7 @@ test_that("list_designs is metadata-only by default", {
 })
 
 test_that("Shiny library table still displays a params column", {
-  app <- system.file("shiny", "app.R", package = "ResearchDesigns")
+  app <- system.file("shiny", "app.R", package = "DesignLibrary")
   if (!nzchar(app) || !file.exists(app)) {
     app <- file.path("inst", "shiny", "app.R")
   }
@@ -37,51 +37,51 @@ test_that("Shiny library table still displays a params column", {
 
 test_that("library browser tabs map YAML categories and search globally", {
   expect_equal(
-    ResearchDesigns:::library_tab_key(c("template", "templates", "rdss", "Other", "")),
+    DesignLibrary:::library_tab_key(c("template", "templates", "rdss", "Other", "")),
     c("templates", "templates", "rdss", "other", "other")
   )
   expect_equal(
-    ResearchDesigns:::library_tab_keys(c("rdss", "template", "survey")),
+    DesignLibrary:::library_tab_keys(c("rdss", "template", "survey")),
     c("templates", "rdss", "survey")
   )
   expect_equal(
-    ResearchDesigns:::library_tab_keys(c("rdss", "Other")),
+    DesignLibrary:::library_tab_keys(c("rdss", "Other")),
     c("templates", "rdss", "other")
   )
-  expect_equal(ResearchDesigns:::library_tab_label("templates"), "Templates")
-  expect_equal(ResearchDesigns:::library_tab_label("rdss"), "RDSS designs")
-  expect_equal(ResearchDesigns:::library_tab_label("other"), "Other")
+  expect_equal(DesignLibrary:::library_tab_label("templates"), "Templates")
+  expect_equal(DesignLibrary:::library_tab_label("rdss"), "RDSS designs")
+  expect_equal(DesignLibrary:::library_tab_label("other"), "Other")
 
   idx <- as.data.frame(list_designs(shiny_only = TRUE))
   if (!nrow(idx)) idx <- as.data.frame(list_designs())
   skip_if_not(nrow(idx) >= 2L)
 
-  keys <- ResearchDesigns:::library_tab_keys(idx$category)
+  keys <- DesignLibrary:::library_tab_keys(idx$category)
   expect_equal(keys[seq_len(min(2L, length(keys)))], c("templates", "rdss")[seq_len(min(2L, length(keys)))])
 
-  templates <- idx[ResearchDesigns:::library_tab_key(idx$category) == "templates", , drop = FALSE]
-  starter <- ResearchDesigns:::starter_design_ids()
+  templates <- idx[DesignLibrary:::library_tab_key(idx$category) == "templates", , drop = FALSE]
+  starter <- DesignLibrary:::starter_design_ids()
   starter <- starter[starter %in% templates$id]
   if (length(starter)) {
     expect_equal(templates$id[seq_along(starter)], starter)
   }
 
-  browse <- ResearchDesigns:::filter_library_browser(idx, tab = "templates", q = "")
+  browse <- DesignLibrary:::filter_library_browser(idx, tab = "templates", q = "")
   expect_equal(browse$tab, "templates")
-  expect_true(all(ResearchDesigns:::library_tab_key(browse$rows$category) == "templates"))
-  expect_false(any(ResearchDesigns:::library_tab_key(browse$rows$category) == "rdss"))
+  expect_true(all(DesignLibrary:::library_tab_key(browse$rows$category) == "templates"))
+  expect_false(any(DesignLibrary:::library_tab_key(browse$rows$category) == "rdss"))
 
-  rdss_only <- idx[ResearchDesigns:::library_tab_key(idx$category) == "rdss", , drop = FALSE]
+  rdss_only <- idx[DesignLibrary:::library_tab_key(idx$category) == "rdss", , drop = FALSE]
   skip_if_not(nrow(rdss_only) >= 1L)
   q <- rdss_only$id[[1]]
-  hit <- ResearchDesigns:::filter_library_browser(idx, tab = "templates", q = q)
+  hit <- DesignLibrary:::filter_library_browser(idx, tab = "templates", q = q)
   expect_true(hit$n_match >= 1L)
   expect_equal(hit$tab, "rdss")
   expect_true(q %in% hit$rows$id)
-  expect_true(all(ResearchDesigns:::library_tab_key(hit$rows$category) == "rdss"))
+  expect_true(all(DesignLibrary:::library_tab_key(hit$rows$category) == "rdss"))
 
   both_q <- "trial"
-  both <- ResearchDesigns:::filter_library_browser(idx, tab = "templates", q = both_q)
+  both <- DesignLibrary:::filter_library_browser(idx, tab = "templates", q = both_q)
   if (length(both$match_tabs) > 1L) {
     expect_equal(both$tab, "templates")
     expect_true("rdss" %in% both$match_tabs)
@@ -92,10 +92,10 @@ test_that("library browser tabs map YAML categories and search globally", {
 test_that("list_designs print is compact", {
   idx <- list_designs()
   out <- paste(capture.output(print(idx)), collapse = "\n")
-  expect_match(out, "ResearchDesigns library")
+  expect_match(out, "DesignLibrary library")
   expect_match(out, "Getting started")
   leftover_templates <- idx$category %in% c("template", "templates") &
-    !idx$id %in% ResearchDesigns:::starter_design_ids()
+    !idx$id %in% DesignLibrary:::starter_design_ids()
   if (any(leftover_templates)) {
     expect_match(out, "Other design templates")
   }
@@ -105,7 +105,7 @@ test_that("list_designs print is compact", {
   expect_false(grepl("include_in_shiny", out))
   expect_false(grepl("\\bparams\\b", out))
   expect_false(grepl("Packages:", out))
-  starter <- ResearchDesigns:::starter_design_ids()
+  starter <- DesignLibrary:::starter_design_ids()
   starter <- starter[starter %in% idx$id]
   expect_equal(idx$id[seq_along(starter)], starter)
   other_pos <- which(!idx$id %in% starter)[1]
@@ -133,7 +133,7 @@ test_that("YAML-less defaults fill category and object", {
       "designs/plain_demo.R"
     )
     # parse_design_file is internal; exercise via parse on a real file path
-    parsed <- ResearchDesigns:::parse_design_file("designs/plain_demo.R")
+    parsed <- DesignLibrary:::parse_design_file("designs/plain_demo.R")
     expect_equal(parsed$meta$id, "plain_demo")
     expect_equal(parsed$meta$category, "Other")
     expect_equal(parsed$meta$object, "design")
@@ -143,7 +143,7 @@ test_that("YAML-less defaults fill category and object", {
 
 test_that("get_code returns simple and full forms", {
   code <- get_code("two_arm_simple", style = "both", b = 0.2)
-  expect_s3_class(code, "research_designs_code")
+  expect_s3_class(code, "design_library_code")
   expect_match(code$simple, 'make_design\\("two_arm_simple", b = 0\\.2\\)')
   expect_true(grepl("declare_model", code$full))
   expect_false(grepl("library\\(", code$full))
@@ -185,9 +185,9 @@ test_that("alias and id both resolve", {
   if (inherits(d1, "error") || inherits(d2, "error")) {
     skip(paste("DeclareDesign runtime issue:", conditionMessage(d1)))
   }
-  expect_equal(attr(d1, "research_designs_id"), "two_arm_simple")
+  expect_equal(attr(d1, "design_library_id"), "two_arm_simple")
   # Book alias 2.1 points at the RDSS chapter port, not the template
-  expect_equal(attr(d2, "research_designs_id"), "two_arm_rdss_1")
+  expect_equal(attr(d2, "design_library_id"), "two_arm_rdss_1")
 })
 
 test_that("YAML diagnosands are parsed and preferred_diagnosands works", {
@@ -205,7 +205,7 @@ test_that("YAML diagnosands are parsed and preferred_diagnosands works", {
       ),
       "designs/dg_demo.R"
     )
-    parsed <- ResearchDesigns:::parse_design_file("designs/dg_demo.R")
+    parsed <- DesignLibrary:::parse_design_file("designs/dg_demo.R")
     expect_equal(parsed$meta$diagnosands, c("rmse", "bias"))
   })
   expect_equal(preferred_diagnosands("two_arm_simple"), c("bias", "power"))
@@ -218,7 +218,7 @@ test_that("list_designs overlays files missing from the baked index", {
   skip_if_not(requireNamespace("withr", quietly = TRUE))
   withr::with_tempdir({
     writeLines(
-      c("Package: ResearchDesigns", "Version: 0.0.0"),
+      c("Package: DesignLibrary", "Version: 0.0.0"),
       "DESCRIPTION"
     )
     dir.create(file.path("inst", "designs"), recursive = TRUE)
@@ -267,14 +267,14 @@ test_that("list_designs overlays files missing from the baked index", {
       file.path("inst", "library_index", "designs_index.csv"),
       row.names = FALSE
     )
-    withr::with_options(list(ResearchDesigns.root = normalizePath(getwd())), {
+    withr::with_options(list(DesignLibrary.root = normalizePath(getwd())), {
       idx <- list_designs()
       expect_true("baked_one" %in% idx$id)
       expect_true("my_design" %in% idx$id)
       expect_equal(idx$label[idx$id == "baked_one"], "Fresh One")
       expect_equal(idx$label[idx$id == "my_design"], "My Design")
       expect_match(idx$params[idx$id == "my_design"], "N")
-      expect_s3_class(idx, "research_designs_list")
+      expect_s3_class(idx, "design_library_list")
     })
   })
 })
@@ -288,7 +288,7 @@ test_that("bake_previews returns the path it wrote", {
   skip_on_cran()
   skip_if_not_installed("DeclareDesign")
   id <- "two_arm_simple"
-  prev_dir <- ResearchDesigns:::package_write_paths()$previews
+  prev_dir <- DesignLibrary:::package_write_paths()$previews
   orig <- file.path(prev_dir, paste0(id, ".rds"))
   bak <- tempfile(fileext = ".rds")
   if (file.exists(orig)) {

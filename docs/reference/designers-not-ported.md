@@ -1,8 +1,10 @@
-# DesignLibrary designers not ported as-is
+# DesignLibrary 0.1 designers not ported as-is
 
-These names exist so code written for DesignLibrary does not fail with
-"object not found". They message with related declarations via
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md),
+These names exist so that code written for DesignLibrary 0.1 fails with
+an error that says what to write instead, rather than with "object not
+found" or, worse, several lines later on a `NULL` design. Each names the
+related declarations available through
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md),
 for example `make_design("encouragement")` or
 `make_design("factorial_2x2")`.
 
@@ -32,8 +34,8 @@ two_arm_covariate_designer(...)
 
 ## Value
 
-Invisible `NULL`.
+Nothing: these always stop.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)

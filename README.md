@@ -1,4 +1,4 @@
-# ResearchDesigns
+# DesignLibrary
 
 A prototype for a library of declared designs using DeclareDesign.
 
@@ -17,7 +17,7 @@ A prototype for a library of declared designs using DeclareDesign.
 list_designs()
 make_design("two_arm_simple")
 make_design("two_arm_simple", b = 0.5)
-two_arm_designer(N = 40, ate = 0.2)  # DesignLibrary name
+two_arm_designer(N = 40, ate = 0.2)  # DesignLibrary 0.1 name
 make_design("2.1", b = 0.5)          # book alias
 get_args("two_arm_simple")
 get_code("two_arm_simple")             # simple make_design() + full source
@@ -38,9 +38,9 @@ If `pkgdown::build_site()` fails with `write_html` / "Error closing file", use `
 ## Server deploy
 
 ```r
-remotes::install_github("macartan/ResearchDesigns")
-ResearchDesigns::install_library_dependencies()
-ResearchDesigns::copy_library_shiny("/srv/shiny-server/researchdesigns")
+remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+DesignLibrary::install_library_dependencies()
+DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 ```
 
 Point Shiny Server at that folder. `local.R` there is never overwritten on re-copy.
@@ -69,7 +69,7 @@ diagnosands: [rmse, bias]
 
 ## Classic DeclareDesign vs DeclareDesign
 
-**Classic DeclareDesign** (and DesignLibrary) often paired a *designer function* with a design: parameters lived on the designer, and tools like `expand_design(two_arm_designer, N = c(50, 100))` swept that function. Reproducible code was glued on with special extraction (`{{{ }}}`).
+**Classic DeclareDesign** (and DesignLibrary 0.1) often paired a *designer function* with a design: parameters lived on the designer, and tools like `expand_design(two_arm_designer, N = c(50, 100))` swept that function. Reproducible code was glued on with special extraction (`{{{ }}}`).
 
 **DeclareDesign** keeps the same declaration verbs (`declare_model`, `+`, `diagnose_design`, …) but treats the **declared design itself** as redesignable. Free symbols in the design (e.g. `b`, `tau`) are found on the object, so:
 
@@ -78,7 +78,7 @@ designs <- redesign(design, tau = c(0.1, 0.3, 0.5))
 diagnose_design(designs, sims = 100)
 ```
 
-needs no designer and no DesignLibrary-style gluing. This package is built for that model.
+needs no designer and no designer-style gluing. This package is built for that model.
 
 ## Contributor checklist
 

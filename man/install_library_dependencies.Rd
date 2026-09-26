@@ -2,7 +2,7 @@
 % Please edit documentation in R/install_library_dependencies.R
 \name{install_library_dependencies}
 \alias{install_library_dependencies}
-\title{Install ResearchDesigns system dependencies}
+\title{Install DesignLibrary system dependencies}
 \usage{
 install_library_dependencies(
   include_shiny = TRUE,
@@ -39,8 +39,8 @@ are never installed from CRAN.
 \details{
 Typical server workflow:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("macartan/ResearchDesigns")
-ResearchDesigns::install_library_dependencies()
-ResearchDesigns::copy_library_shiny("/path/to/shiny-app")
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+DesignLibrary::install_library_dependencies()
+DesignLibrary::copy_library_shiny("/path/to/shiny-app")
 }\if{html}{\out{</div>}}
 }

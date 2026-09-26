@@ -1,7 +1,7 @@
 # Contributor checklist for a design
 
 Used by
-[`audit_designs()`](https://macartan.github.io/ResearchDesigns/reference/audit_designs.md)
+[`audit_designs()`](https://declaredesign.org/r/designlibrary/reference/audit_designs.md)
 and documented for authors.
 
 ## Usage

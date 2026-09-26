@@ -1,4 +1,4 @@
-# ResearchDesigns Shiny browser
+# DesignLibrary Shiny browser
 # Deploy: remotes::install_github(...); install_library_dependencies(); copy_library_shiny(dest)
 # Flow: Library (searchable table) -> Design / Diagnosis / Redesign
 
@@ -18,8 +18,8 @@ for (cfg in c("deploy-options.R", "local.R")) {
   if (file.exists(path)) source(path, local = FALSE)
 }
 
-PKGDOWN_URL <- "https://macartan.github.io/ResearchDesigns/"
-GITHUB_URL <- "https://github.com/macartan/ResearchDesigns"
+PKGDOWN_URL <- "https://declaredesign.org/r/designlibrary/"
+GITHUB_URL <- "https://github.com/DeclareDesign/DesignLibrary"
 DECLAREDESIGN_URL <- "https://declaredesign.org/"
 BOOK_URL <- "https://book.declaredesign.org/"
 
@@ -262,7 +262,7 @@ brand_title <- function() {
   tags$span(
     class = "rd-brand",
     tags$img(src = "dd-logo.svg", alt = "DeclareDesign", height = "28"),
-    "ResearchDesigns"
+    "DesignLibrary"
   )
 }
 
@@ -270,7 +270,7 @@ app_head <- tags$head(
   tags$link(rel = "icon", type = "image/svg+xml", href = "dd-logo.svg"),
   tags$link(rel = "apple-touch-icon", href = "dd-icon.png"),
   tags$meta(name = "theme-color", content = DD_MAGENTA),
-  tags$title("ResearchDesigns")
+  tags$title("DesignLibrary")
 )
 
 theme_obj <- if (has_bslib) {
@@ -296,10 +296,10 @@ theme_obj <- if (has_bslib) {
 }
 
 library_category_tabs <- function(categories) {
-  keys <- ResearchDesigns:::library_tab_keys(categories)
+  keys <- DesignLibrary:::library_tab_keys(categories)
   if (!length(keys)) keys <- c("templates", "rdss")
   panels <- lapply(keys, function(k) {
-    tabPanel(title = ResearchDesigns:::library_tab_label(k), value = k)
+    tabPanel(title = DesignLibrary:::library_tab_label(k), value = k)
   })
   div(
     class = "rd-lib-tabs",
@@ -312,8 +312,8 @@ library_category_tabs <- function(categories) {
 
 library_panel <- function() {
   idx <- tryCatch({
-    out <- ResearchDesigns::list_designs(shiny_only = TRUE)
-    if (!nrow(out)) ResearchDesigns::list_designs() else out
+    out <- DesignLibrary::list_designs(shiny_only = TRUE)
+    if (!nrow(out)) DesignLibrary::list_designs() else out
   }, error = function(e) NULL)
   cats <- if (!is.null(idx) && nrow(idx)) as.character(idx$category) else character(0)
   div(
@@ -420,7 +420,7 @@ about_panel <- function() {
         alt = "Research Design in the Social Sciences"
       )
     ),
-    h3("About ResearchDesigns"),
+    h3("About DesignLibrary"),
     p(
       tags$img(src = "dd-logo.svg", alt = "DeclareDesign", height = "36", style = "vertical-align: middle; margin-right: 0.5rem;"),
       "A library of declared designs in the DeclareDesign ecosystem. Designs are self-contained R files; editable parameters come from the design object."
@@ -441,7 +441,7 @@ about_panel <- function() {
     p(class = "rd-muted", style = "clear: both;",
       paste0(
         "Package version ",
-        tryCatch(as.character(utils::packageVersion("ResearchDesigns")), error = function(e) "?"),
+        tryCatch(as.character(utils::packageVersion("DesignLibrary")), error = function(e) "?"),
         "."
       )
     )
@@ -525,7 +525,7 @@ contribute_panel <- function() {
           " so index, audit, and preview artifacts are built for your design:",
           tags$pre(
             class = "rd-code",
-            "options(ResearchDesigns.root = \"/path/to/your/ResearchDesigns\")\nrefresh_library()"
+            "options(DesignLibrary.root = \"/path/to/your/DesignLibrary\")\nrefresh_library()"
           )
         ),
         tags$li(
@@ -540,7 +540,7 @@ contribute_panel <- function() {
         tags$li(
           tags$strong("Pull request"),
           " from your fork to ",
-          tags$a(href = GITHUB_URL, target = "_blank", "macartan/ResearchDesigns"),
+          tags$a(href = GITHUB_URL, target = "_blank", "macartan/DesignLibrary"),
           ". Keep the PR focused on the new (or updated) design file and any packages it needs."
         )
       )
@@ -606,7 +606,7 @@ contribute_panel <- function() {
       class = "rd-card",
       h4("Checklist"),
       tags$ul(
-        lapply(ResearchDesigns::contributor_checklist(), function(item) tags$li(item))
+        lapply(DesignLibrary::contributor_checklist(), function(item) tags$li(item))
       ),
       p(
         class = "rd-muted",
@@ -652,8 +652,8 @@ ui_body <- if (has_bslib) {
 ui <- ui_body
 
 server <- function(input, output, session) {
-  idx_all <- ResearchDesigns::list_designs(shiny_only = TRUE)
-  if (!nrow(idx_all)) idx_all <- ResearchDesigns::list_designs()
+  idx_all <- DesignLibrary::list_designs(shiny_only = TRUE)
+  if (!nrow(idx_all)) idx_all <- DesignLibrary::list_designs()
 
   selected_id <- reactiveVal(NA_character_)
   live_diag <- reactiveVal(NULL)
@@ -683,7 +683,7 @@ server <- function(input, output, session) {
   format_arg_default <- function(args_row) {
     kind <- if ("kind" %in% names(args_row)) args_row$kind[[1]] else "scalar"
     val <- if ("default" %in% names(args_row)) args_row$default[[1]] else NULL
-    ResearchDesigns:::format_shiny_param_default(
+    DesignLibrary:::format_shiny_param_default(
       val, kind, args_row$value_str[[1]] %||% ""
     )
   }
@@ -709,11 +709,11 @@ server <- function(input, output, session) {
   }
 
   redesign_kind_help <- function(id) {
-    HTML(ResearchDesigns:::redesign_kind_help(id))
+    HTML(DesignLibrary:::redesign_kind_help(id))
   }
 
   collect_mod_dots <- function(id) {
-    args <- ResearchDesigns::get_args(id)
+    args <- DesignLibrary::get_args(id)
     if (!nrow(args)) {
       return(list(dots = list(), exprs = list(), lengths = integer(0), range_params = character(0)))
     }
@@ -729,7 +729,7 @@ server <- function(input, output, session) {
       raw <- trimws(input[[paste0("mod_val_", nm)]] %||% "")
       if (!nzchar(raw)) next
       def <- format_arg_default(args[i, , drop = FALSE])
-      parsed <- ResearchDesigns:::parse_shiny_param_raw(raw, kind, def)
+      parsed <- DesignLibrary:::parse_shiny_param_raw(raw, kind, def)
       if (isTRUE(parsed$skip)) next
       if (!is.null(parsed$error)) {
         return(list(error = paste0("Could not parse ", nm, ": ", parsed$error)))
@@ -761,7 +761,7 @@ server <- function(input, output, session) {
   # Search is global; if the current tab has no hits, switch to the first
   # matching tab (filter_library_browser).
   library_browser_state <- reactive({
-    ResearchDesigns:::filter_library_browser(
+    DesignLibrary:::filter_library_browser(
       as.data.frame(idx_all),
       tab = input$lib_category %||% "templates",
       q = input$lib_search %||% ""
@@ -791,7 +791,7 @@ server <- function(input, output, session) {
           "%d match%s in %s (searched all categories).",
           res$n_match,
           if (res$n_match == 1L) "" else "es",
-          ResearchDesigns:::library_tab_label(res$tab)
+          DesignLibrary:::library_tab_label(res$tab)
         )
       ))
     }
@@ -799,7 +799,7 @@ server <- function(input, output, session) {
       sprintf(
         "%d in %s",
         as.integer(res$match_counts[[k]]),
-        ResearchDesigns:::library_tab_label(k)
+        DesignLibrary:::library_tab_label(k)
       )
     }, character(1))
     div(
@@ -808,7 +808,7 @@ server <- function(input, output, session) {
         "%d match%s across all categories. Showing %s; also %s.",
         res$n_match,
         if (res$n_match == 1L) "" else "es",
-        ResearchDesigns:::library_tab_label(res$tab),
+        DesignLibrary:::library_tab_label(res$tab),
         paste(bits, collapse = ", ")
       )
     )
@@ -869,7 +869,7 @@ server <- function(input, output, session) {
     hit <- which(!is.na(als) & nzchar(als) & als == key)
     if (length(hit)) return(as.character(df$id[[hit[[1]]]]))
     tryCatch({
-      info <- ResearchDesigns::design_info(key)
+      info <- DesignLibrary::design_info(key)
       as.character(info$id[[1]])
     }, error = function(e) NA_character_)
   }
@@ -983,7 +983,7 @@ server <- function(input, output, session) {
     if (is.na(id) || !nzchar(id)) {
       return(div(class = "rd-card", p("Open a design from the Library tab.")))
     }
-    info <- ResearchDesigns::design_info(id)
+    info <- DesignLibrary::design_info(id)
     share <- tryCatch(design_share_url(id), error = function(e) design_query(id))
     div(
       class = "rd-selected-banner",
@@ -1065,27 +1065,27 @@ server <- function(input, output, session) {
   output$design_profile_text <- renderText({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    ResearchDesigns::design_profile(id)
+    DesignLibrary::design_profile(id)
   })
 
   output$simple_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    code <- ResearchDesigns::get_code(id, style = "simple")
+    code <- DesignLibrary::get_code(id, style = "simple")
     tags$pre(class = "rd-code rd-code-oneline", code$simple)
   })
 
   output$full_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    code <- ResearchDesigns::get_code(id, style = "full")
+    code <- DesignLibrary::get_code(id, style = "full")
     tags$pre(class = "rd-code", code$full)
   })
 
   output$args_table <- renderTable({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    args <- ResearchDesigns::get_args(id)
+    args <- DesignLibrary::get_args(id)
     show <- data.frame(
       name = args$name,
       default = args$value_str,
@@ -1100,7 +1100,7 @@ server <- function(input, output, session) {
     id <- selected_id()
     req(!is.na(id))
     out <- tryCatch({
-      d <- ResearchDesigns::make_design(id)
+      d <- DesignLibrary::make_design(id)
       run <- DeclareDesign::run_design(d)
       paste(utils::capture.output(print(run)), collapse = "\n")
     }, error = function(e) paste("Error:", conditionMessage(e)))
@@ -1115,7 +1115,7 @@ server <- function(input, output, session) {
     req(!is.na(id), nzchar(id))
     live <- live_diag()
     if (!is.null(live)) return(live)
-    ResearchDesigns::get_preview(id)
+    DesignLibrary::get_preview(id)
   })
 
   output$preview_status <- renderUI({
@@ -1124,7 +1124,7 @@ server <- function(input, output, session) {
     if (!is.null(live_diag())) {
       return(p(tags$strong("Showing: "), "live diagnosis from this session."))
     }
-    prev <- ResearchDesigns::get_preview(id)
+    prev <- DesignLibrary::get_preview(id)
     if (is.null(prev)) {
       p(class = "rd-muted", "No baked preview yet. Click “Run diagnosis”, or ask a maintainer to run refresh_library().")
     } else {
@@ -1138,7 +1138,7 @@ server <- function(input, output, session) {
     sims <- as.integer(input$diag_sims %||% 100)
     withProgress(message = "Diagnosing…", value = 0.3, {
       res <- tryCatch({
-        d <- ResearchDesigns::make_design(id)
+        d <- DesignLibrary::make_design(id)
         diagnosis <- DeclareDesign::diagnose_design(d, sims = sims)
         summary <- tryCatch(DeclareDesign::get_diagnosands(diagnosis), error = function(e) NULL)
         tidy <- tryCatch(generics::tidy(diagnosis), error = function(e) NULL)
@@ -1181,7 +1181,7 @@ server <- function(input, output, session) {
     prefer <- character(0)
     if (!is.null(design_id) && length(design_id) && !is.na(design_id) && nzchar(as.character(design_id)[[1]])) {
       prefer <- tryCatch(
-        ResearchDesigns::preferred_diagnosands(as.character(design_id)[[1]]),
+        DesignLibrary::preferred_diagnosands(as.character(design_id)[[1]]),
         error = function(e) character(0)
       )
     }
@@ -1201,7 +1201,7 @@ server <- function(input, output, session) {
     exclude <- character(0)
     if (!is.null(design_id) && length(design_id) && !is.na(design_id) && nzchar(as.character(design_id)[[1]])) {
       exclude <- tryCatch(
-        ResearchDesigns::excluded_diagnosands(as.character(design_id)[[1]]),
+        DesignLibrary::excluded_diagnosands(as.character(design_id)[[1]]),
         error = function(e) character(0)
       )
     }
@@ -1403,7 +1403,7 @@ server <- function(input, output, session) {
   output$mod_param_grid <- renderUI({
     id <- selected_id()
     if (is.na(id) || !nzchar(id)) return(NULL)
-    args <- ResearchDesigns::get_args(id)
+    args <- DesignLibrary::get_args(id)
     data_args <- if ("kind" %in% names(args) && nrow(args)) {
       args[args$kind %in% c("data", "function", "list"), , drop = FALSE]
     } else {
@@ -1457,7 +1457,7 @@ server <- function(input, output, session) {
   current_mod_state <- reactive({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    args <- ResearchDesigns::get_args(id)
+    args <- DesignLibrary::get_args(id)
     lapply(args$name, function(nm) input[[paste0("mod_val_", nm)]])
     collect_mod_dots(id)
   })
@@ -1501,7 +1501,7 @@ server <- function(input, output, session) {
   observeEvent(input$reset_mods, {
     id <- selected_id()
     req(!is.na(id))
-    args <- ResearchDesigns::get_args(id)
+    args <- DesignLibrary::get_args(id)
     if ("shiny" %in% names(args)) {
       args <- args[isTRUE(args$shiny) | args$shiny %in% TRUE, , drop = FALSE]
     }
@@ -1537,7 +1537,7 @@ server <- function(input, output, session) {
     mod_status("")
     withProgress(message = "Redesign + diagnosis…", value = 0.2, {
       res <- tryCatch({
-        design <- do.call(ResearchDesigns::make_design, c(list(design = id), st$dots))
+        design <- do.call(DesignLibrary::make_design, c(list(design = id), st$dots))
         diagnosis <- DeclareDesign::diagnose_design(design, sims = sims)
         tidy <- tryCatch(generics::tidy(diagnosis), error = function(e) NULL)
         if (is.null(tidy)) {

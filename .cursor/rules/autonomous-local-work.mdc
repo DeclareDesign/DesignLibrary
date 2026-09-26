@@ -1,9 +1,9 @@
 ---
-description: Run and edit freely inside ResearchDesigns without asking permission
+description: Run and edit freely inside DesignLibrary without asking permission
 alwaysApply: true
 ---
 
-# Autonomous work in ResearchDesigns
+# Autonomous work in DesignLibrary
 
 When operating in this package (path under `5_github/ResearchDesigns`, including via the `rdss_wizard` workspace):
 

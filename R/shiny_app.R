@@ -1,6 +1,6 @@
 #' Path to the bundled Shiny app
 #' @noRd
-shiny_app_dir <- function(package = "ResearchDesigns") {
+shiny_app_dir <- function(package = "DesignLibrary") {
   path <- system.file("shiny", package = package)
   if (!nzchar(path) || !dir.exists(path)) {
     root <- tryCatch(find_package_root(), error = function(e) NULL)
@@ -34,7 +34,7 @@ resolve_shiny_dest <- function(dest = getwd()) {
   normalizePath(out, winslash = "/", mustWork = TRUE)
 }
 
-#' Launch the ResearchDesigns Shiny browser
+#' Launch the DesignLibrary Shiny browser
 #'
 #' @param ... Passed to [shiny::runApp()].
 #' @return The value of `shiny::runApp()` (called for side effects).
@@ -58,26 +58,26 @@ run_shiny <- function(...) {
 #'
 #' Materializes `app.R` (and `www/` if present) so a Shiny Server / Posit
 #' Connect host can point at a folder. The folder relies on the installed
-#' `ResearchDesigns` package for designs and helpers.
+#' `DesignLibrary` package for designs and helpers.
 #'
 #' Typical server workflow:
 #' ```r
-#' remotes::install_github("macartan/ResearchDesigns")
-#' ResearchDesigns::install_library_dependencies()
-#' ResearchDesigns::copy_library_shiny("/srv/shiny-server/researchdesigns")
+#' remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+#' DesignLibrary::install_library_dependencies()
+#' DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 #' ```
 #'
 #' Existing `local.R` in `dest` is never overwritten.
 #'
 #' @param dest Directory to write (created if needed). Default: working directory.
 #' @param overwrite If `TRUE`, replace `app.R` / `www` files (not `local.R`).
-#' @param package Package that ships the app; default `"ResearchDesigns"`.
+#' @param package Package that ships the app; default `"DesignLibrary"`.
 #' @return Invisibly, the normalized destination path.
 #' @export
 copy_library_shiny <- function(
   dest = getwd(),
   overwrite = TRUE,
-  package = "ResearchDesigns"
+  package = "DesignLibrary"
 ) {
   src <- shiny_app_dir(package)
   if (!nzchar(src) || !dir.exists(src)) {
@@ -128,17 +128,17 @@ copy_library_shiny <- function(
     error = function(e) "unknown"
   )
   stamp <- c(
-    paste0("# Written by ResearchDesigns::copy_library_shiny() at ",
+    paste0("# Written by DesignLibrary::copy_library_shiny() at ",
            format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z")),
-    paste0("options(researchdesigns.deploy_pkg_version = ",
+    paste0("options(designlibrary.deploy_pkg_version = ",
            encodeString(ver, quote = "\""), ")"),
-    paste0("options(researchdesigns.deploy_dir = ",
+    paste0("options(designlibrary.deploy_dir = ",
            encodeString(dest, quote = "\""), ")")
   )
   writeLines(stamp, file.path(dest, "deploy-options.R"), useBytes = TRUE)
 
   message(
-    "Shiny app written to ", dest, " (ResearchDesigns ", ver, "). ",
+    "Shiny app written to ", dest, " (DesignLibrary ", ver, "). ",
     "Point Shiny Server at this folder, then restart workers if needed."
   )
   invisible(dest)

@@ -47,7 +47,7 @@ both present.}
 \item{...}{Optional parameter values included in the simple snippet.}
 }
 \value{
-A list with \code{simple} and \code{full}, class \code{research_designs_code}.
+A list with \code{simple} and \code{full}, class \code{design_library_code}.
 }
 \description{
 Returns a list with \verb{$simple} (a one-line \code{make_design()} call) and \verb{$full}

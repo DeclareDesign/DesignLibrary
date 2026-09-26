@@ -1,7 +1,7 @@
 # Create a two-arm design with attrition
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 with id `"two_arm_attrition"`:
 `make_design("two_arm_attrition", N = N, a_R = a_R, ...)`.
 
@@ -47,7 +47,7 @@ two_arm_attrition_designer(
 
 - args_to_fix:
 
-  Ignored. Present for DesignLibrary compatibility.
+  Ignored. Present for compatibility with DesignLibrary 0.1.
 
 ## Value
 
@@ -55,4 +55,4 @@ A design object.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)

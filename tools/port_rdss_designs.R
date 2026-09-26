@@ -1,5 +1,5 @@
-# Port rdss_wizard declarations into ResearchDesigns/inst/designs/
-# Run from ResearchDesigns root:
+# Port rdss_wizard declarations into DesignLibrary/inst/designs/
+# Run from DesignLibrary root:
 #   Rscript tools/port_rdss_designs.R
 
 wizard_dir <- "C:/WZB Dropbox/Macartan Humphreys/5_github/rdss_wizard"

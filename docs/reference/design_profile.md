@@ -1,7 +1,7 @@
-# Character profile for a design (same prose as printing [`design_info()`](https://macartan.github.io/ResearchDesigns/reference/design_info.md))
+# Character profile for a design (same prose as printing [`design_info()`](https://declaredesign.org/r/designlibrary/reference/design_info.md))
 
 Character profile for a design (same prose as printing
-[`design_info()`](https://macartan.github.io/ResearchDesigns/reference/design_info.md))
+[`design_info()`](https://declaredesign.org/r/designlibrary/reference/design_info.md))
 
 ## Usage
 

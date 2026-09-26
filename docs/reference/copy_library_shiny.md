@@ -2,16 +2,12 @@
 
 Materializes `app.R` (and `www/` if present) so a Shiny Server / Posit
 Connect host can point at a folder. The folder relies on the installed
-`ResearchDesigns` package for designs and helpers.
+`DesignLibrary` package for designs and helpers.
 
 ## Usage
 
 ``` r
-copy_library_shiny(
-  dest = getwd(),
-  overwrite = TRUE,
-  package = "ResearchDesigns"
-)
+copy_library_shiny(dest = getwd(), overwrite = TRUE, package = "DesignLibrary")
 ```
 
 ## Arguments
@@ -26,7 +22,7 @@ copy_library_shiny(
 
 - package:
 
-  Package that ships the app; default `"ResearchDesigns"`.
+  Package that ships the app; default `"DesignLibrary"`.
 
 ## Value
 
@@ -36,8 +32,8 @@ Invisibly, the normalized destination path.
 
 Typical server workflow:
 
-    remotes::install_github("macartan/ResearchDesigns")
-    ResearchDesigns::install_library_dependencies()
-    ResearchDesigns::copy_library_shiny("/srv/shiny-server/researchdesigns")
+    remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+    DesignLibrary::install_library_dependencies()
+    DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 
 Existing `local.R` in `dest` is never overwritten.

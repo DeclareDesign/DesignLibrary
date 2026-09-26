@@ -1,4 +1,4 @@
-test_that("DesignLibrary-named designers return designs", {
+test_that("designers with DesignLibrary 0.1 names return designs", {
   skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
@@ -61,7 +61,7 @@ test_that("multi_arm_designer accepts m_arms = 4", {
   est_lib <- DeclareDesign::draw_estimands(d_lib)
   expect_equal(as.numeric(est_lib$estimand[est_lib$inquiry == "ate_Y_2_1"]), 0, tolerance = 1e-8)
   expect_equal(as.numeric(est_lib$estimand[est_lib$inquiry == "ate_Y_3_1"]), 0, tolerance = 1e-8)
-  expect_equal(attr(d_lib, "research_designs_id"), "multiarm_trial")
+  expect_equal(attr(d_lib, "design_library_id"), "multiarm_trial")
 
   expect_error(make_design("multi_arm_three"), "Unknown design")
 
@@ -76,7 +76,7 @@ test_that("multi_arm_designer accepts m_arms = 4", {
   expect_equal(sort(unique(as.integer(DeclareDesign::draw_data(d_make)$Z))), 1:4)
 })
 
-test_that("designer argument names match DesignLibrary where we claim them", {
+test_that("designer argument names match DesignLibrary 0.1 where we claim them", {
   expect_true(all(
     c("N", "assignment_prob", "control_mean", "control_sd", "ate",
       "treatment_mean", "treatment_sd", "rho") %in%
@@ -112,7 +112,7 @@ test_that("designer argument names match DesignLibrary where we claim them", {
   ))
 })
 
-test_that("unported DesignLibrary designers stop and point at make_design()", {
+test_that("unported DesignLibrary 0.1 designers stop and point at make_design()", {
   # They used to message and return invisible(NULL), so `design <-
   # factorial_designer(k = 3)` failed further downstream with an error naming
   # neither the designer nor its replacement.

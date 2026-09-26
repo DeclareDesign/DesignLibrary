@@ -588,7 +588,7 @@ param_coverage_gaps <- function(design, include_steps = FALSE) {
 #' @param atomic_only If `TRUE`, only report atomic gaps (likely should be
 #'   redesignable). If `FALSE`, also report other non-step gaps (e.g. data frames).
 #' @param include_steps If `TRUE`, also report design pieces.
-#' @return A data frame (class `research_designs_param_coverage`) of gaps.
+#' @return A data frame (class `design_library_param_coverage`) of gaps.
 #' @export
 param_coverage_report <- function(designs = NULL, atomic_only = FALSE, include_steps = FALSE) {
   idx <- make_index()
@@ -676,11 +676,11 @@ param_coverage_report <- function(designs = NULL, atomic_only = FALSE, include_s
     out <- out[isTRUE(out$atomic) | (!is.na(out$type) & out$type %in% c("load_error", "check_error")), , drop = FALSE]
   }
   rownames(out) <- NULL
-  structure(out, class = c("research_designs_param_coverage", "data.frame"), atomic_only = atomic_only, include_steps = include_steps)
+  structure(out, class = c("design_library_param_coverage", "data.frame"), atomic_only = atomic_only, include_steps = include_steps)
 }
 
 #' @export
-print.research_designs_param_coverage <- function(x, ...) {
+print.design_library_param_coverage <- function(x, ...) {
   atomic_only <- isTRUE(attr(x, "atomic_only"))
   cat(
     "Param coverage gaps",
@@ -979,7 +979,7 @@ truncate_for_print <- function(x, width) {
 as_args_table <- function(out) {
   out <- out[c("name", "default", "value_str", "tip", "kind", "shiny")]
   rownames(out) <- NULL
-  class(out) <- c("research_designs_args", "data.frame")
+  class(out) <- c("design_library_args", "data.frame")
   out
 }
 
@@ -988,11 +988,11 @@ as_args_table <- function(out) {
 #' The `default` column holds the values themselves, and a function or a list
 #' has no one-line form, so the printed table shows `value_str` in its place.
 #'
-#' @param x A `research_designs_args` table.
+#' @param x A `design_library_args` table.
 #' @param ... Unused.
 #' @return `x`, invisibly.
 #' @export
-print.research_designs_args <- function(x, ...) {
+print.design_library_args <- function(x, ...) {
   if (!nrow(x)) {
     cat("No modifiable parameters.\n")
     return(invisible(x))

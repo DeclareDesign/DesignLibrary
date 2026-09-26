@@ -7,8 +7,8 @@ metadata-only (baked library index plus a live-file overlay). The
 `params` column is a comma-separated name string from that index (YAML
 `params:` keys plus pre-design assignment names); designs are not
 evaluated. Use
-[`design_info()`](https://macartan.github.io/ResearchDesigns/reference/design_info.md),
-[`get_args()`](https://macartan.github.io/ResearchDesigns/reference/get_args.md),
+[`design_info()`](https://declaredesign.org/r/designlibrary/reference/design_info.md),
+[`get_args()`](https://declaredesign.org/r/designlibrary/reference/get_args.md),
 or `as.data.frame(list_designs(discover_params = TRUE))` for
 redesignable parameters from a loaded design. Row order matches print
 order.
@@ -40,4 +40,4 @@ list_designs(shiny_only = FALSE, discover_params = FALSE, list_all = FALSE)
 
 ## Value
 
-A data frame with class `research_designs_list`.
+A data frame with class `design_library_list`.

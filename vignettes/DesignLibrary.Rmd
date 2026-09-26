@@ -1,8 +1,8 @@
 ---
-title: "ResearchDesigns: a library of declared designs"
+title: "DesignLibrary: a library of declared designs"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ResearchDesigns: a library of declared designs}
+  %\VignetteIndexEntry{DesignLibrary: a library of declared designs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,16 +16,16 @@ knitr::opts_chunk$set(
 )
 # Prefer source designs when developing from the package tree / Dropbox checkout
 if (dir.exists("../inst/designs")) {
-  options(ResearchDesigns.root = normalizePath("..", winslash = "/"))
+  options(DesignLibrary.root = normalizePath("..", winslash = "/"))
 }
-library(ResearchDesigns)
+library(DesignLibrary)
 library(DeclareDesign)
 library(ggplot2)
 ```
 
 # The idea
 
-To contribute a design to **ResearchDesigns** you just have to place a self-contained `.R` file in `inst/designs/`. That file declares a design and, optionally, a short YAML header. Once it is there, the design can be loaded, modified, diagnosed, and browsed in the bundled Shiny app.
+To contribute a design to **DesignLibrary** you just have to place a self-contained `.R` file in `inst/designs/`. That file declares a design and, optionally, a short YAML header. Once it is there, the design can be loaded, modified, diagnosed, and browsed in the bundled Shiny app.
 
 For the contribution workflow (fork, add file, refresh, check, pull request), see the vignette *Contributing a design* or the Shiny **Contribute** tab.
 
@@ -38,10 +38,10 @@ Here is the starter design `two_arm_simple`.
 <summary><code>inst/designs/two_arm_simple.R</code></summary>
 
 ```{r, echo = FALSE, results = "asis"}
-path <- system.file("designs", "two_arm_simple.R", package = "ResearchDesigns")
+path <- system.file("designs", "two_arm_simple.R", package = "DesignLibrary")
 if (!nzchar(path) || !file.exists(path)) {
   root <- tryCatch(
-    ResearchDesigns:::find_package_root(),
+    DesignLibrary:::find_package_root(),
     error = function(e) NULL
   )
   if (!is.null(root)) {
@@ -70,7 +70,7 @@ list_designs()
 
 Call `list_designs()` to see ids and labels. Use `design_info("two_arm_simple")` or `get_args("two_arm_simple")` for one design, or `as.data.frame(list_designs(discover_params = TRUE))` for the table including redesignable parameters.
 
-# Use ResearchDesigns to make a design
+# Use DesignLibrary to make a design
 
 ```{r make-default}
 my_design <- make_design("two_arm_simple")
@@ -80,7 +80,7 @@ my_design
 
 # Change parameters and simulate
 
-Parameters are taken from the design itself. Pass new values to `make_design()`; under the hood this uses DeclareDesign's `redesign()`. A core set of designs also keep DesignLibrary names, so `two_arm_designer(N = 40, ate = 0.2)` is the same idea as `make_design("two_arm_flexible", N = 40, ate = 0.2)`.
+Parameters are taken from the design itself. Pass new values to `make_design()`; under the hood this uses DeclareDesign's `redesign()`. A core set of designs also keep DesignLibrary 0.1 names, so `two_arm_designer(N = 40, ate = 0.2)` is the same idea as `make_design("two_arm_flexible", N = 40, ate = 0.2)`.
 
 ```{r make-and-simulate}
 make_design("two_arm_simple", b = 0.3) |>
@@ -116,8 +116,8 @@ A short set of helpers keeps the library honest:
 Run maintainer helpers from the package source tree, or set:
 
 ```{r maintainer-root, eval = FALSE}
-options(ResearchDesigns.root = "C:/path/to/ResearchDesigns")
+options(DesignLibrary.root = "C:/path/to/DesignLibrary")
 refresh_library()
 ```
 
-That is the whole loop: drop in a design file, use it from R or Shiny, and refresh the library when you change the set. Step-by-step contribution guidance is in `vignette("contributing", package = "ResearchDesigns")`.
+That is the whole loop: drop in a design file, use it from R or Shiny, and refresh the library when you change the set. Step-by-step contribution guidance is in `vignette("contributing", package = "DesignLibrary")`.

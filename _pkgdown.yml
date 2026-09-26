@@ -1,8 +1,8 @@
-url: https://macartan.github.io/ResearchDesigns/
+url: https://declaredesign.org/r/designlibrary/
 template:
   bootstrap: 5
 home:
-  title: ResearchDesigns
+  title: DesignLibrary
   description: A library of declared designs (DeclareDesign), with a small API and bundled Shiny browser.
 navbar:
   structure:
@@ -12,14 +12,14 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: ResearchDesigns overview
-        href: articles/ResearchDesigns.html
+      - text: DesignLibrary overview
+        href: articles/DesignLibrary.html
       - text: Contributing a design
         href: articles/contributing.html
 articles:
 - title: Getting started
   contents:
-  - ResearchDesigns
+  - DesignLibrary
   - contributing
 reference:
 - title: Discover
@@ -34,6 +34,7 @@ reference:
   contents:
   - make_design
   - get_args
+  - print.design_library_args
   - get_code
   - design_profile
 - title: Shiny
@@ -56,8 +57,8 @@ reference:
   - contributor_checklist
   - param_coverage_report
   - param_coverage_gaps
-- title: DesignLibrary designers
-  desc: DesignLibrary-compatible designer functions. Working ports call `make_design()`; unported names are stubs that point to related library designs.
+- title: DesignLibrary 0.1 designers
+  desc: Designer functions with their DesignLibrary 0.1 names and arguments. Working ports call `make_design()`; unported names are stubs that point to related library designs.
 - subtitle: Working designers
   contents:
   - two_arm_designer

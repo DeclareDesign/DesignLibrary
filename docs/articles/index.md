@@ -2,7 +2,7 @@
 
 ### Getting started
 
-- [ResearchDesigns: a library of declared
-  designs](https://macartan.github.io/ResearchDesigns/articles/ResearchDesigns.md):
+- [DesignLibrary: a library of declared
+  designs](https://declaredesign.org/r/designlibrary/articles/DesignLibrary.md):
 - [Contributing a
-  design](https://macartan.github.io/ResearchDesigns/articles/contributing.md):
+  design](https://declaredesign.org/r/designlibrary/articles/contributing.md):

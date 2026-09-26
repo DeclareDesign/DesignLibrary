@@ -1,4 +1,4 @@
-#' ResearchDesigns: a library of declared designs
+#' DesignLibrary: a library of declared designs
 #'
 #' Lightweight library of research designs declared with DeclareDesign.
 #' Designs live as self-contained R files under `inst/designs/`. Editable
@@ -18,7 +18,7 @@
 #'
 #' @section Shiny deploy:
 #' ```r
-#' remotes::install_github("macartan/ResearchDesigns")
+#' remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
 #' install_library_dependencies()
 #' copy_library_shiny("/path/to/shiny-app")
 #' ```

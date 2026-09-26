@@ -1,7 +1,7 @@
 # Create a mediation analysis design
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 with id `"mediation_analysis"`:
 `make_design("mediation_analysis", N = N, a = a, ...)`.
 
@@ -47,7 +47,7 @@ mediation_analysis_designer(
 
 - args_to_fix:
 
-  Ignored. Present for DesignLibrary compatibility.
+  Ignored. Present for compatibility with DesignLibrary 0.1.
 
 ## Value
 
@@ -55,4 +55,4 @@ A design object.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)

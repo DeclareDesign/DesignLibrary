@@ -8,7 +8,7 @@ build_docs(pkg = NULL, ...)
 }
 \arguments{
 \item{pkg}{Package root. Default: \code{find_package_root()} via
-\code{options(ResearchDesigns.root=...)} or the current working directory.}
+\code{options(DesignLibrary.root=...)} or the current working directory.}
 
 \item{...}{Passed to \code{\link[pkgdown:build_site]{pkgdown::build_site()}} (for example \code{devel = TRUE}).}
 }
@@ -23,7 +23,7 @@ directory, then copies the result into \verb{docs/}.
 }
 \examples{
 \dontrun{
-options(ResearchDesigns.root = "C:/path/to/ResearchDesigns")
+options(DesignLibrary.root = "C:/path/to/DesignLibrary")
 build_docs()
 }
 }

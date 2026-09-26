@@ -17,7 +17,7 @@ github_package_sources <- function() {
 #' @noRd
 description_packages <- function(
   fields = c("Imports", "Suggests"),
-  package = "ResearchDesigns"
+  package = "DesignLibrary"
 ) {
   path <- system.file("DESCRIPTION", package = package)
   if (!nzchar(path) || !file.exists(path)) {
@@ -57,7 +57,7 @@ design_declared_packages <- function() {
   unique(pkgs)
 }
 
-#' Install ResearchDesigns system dependencies
+#' Install DesignLibrary system dependencies
 #'
 #' Installs package Imports (and, by default, Suggests needed for the Shiny
 #' browser), plus any extra packages declared in design YAML `packages:` fields.
@@ -67,9 +67,9 @@ design_declared_packages <- function() {
 #'
 #' Typical server workflow:
 #' ```r
-#' remotes::install_github("macartan/ResearchDesigns")
-#' ResearchDesigns::install_library_dependencies()
-#' ResearchDesigns::copy_library_shiny("/path/to/shiny-app")
+#' remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+#' DesignLibrary::install_library_dependencies()
+#' DesignLibrary::copy_library_shiny("/path/to/shiny-app")
 #' ```
 #'
 #' @param include_shiny If `TRUE` (default), also install Shiny Suggests
@@ -102,7 +102,7 @@ install_library_dependencies <- function(
   pkgs <- unique(c(pkgs, design_declared_packages()))
 
   # Never try to install ourselves this way
-  pkgs <- setdiff(pkgs, "ResearchDesigns")
+  pkgs <- setdiff(pkgs, "DesignLibrary")
 
   # fabricatr before DeclareDesign (DD imports fabricatr); others independent
   prefer <- c("fabricatr", "estimatr", "DeclareDesign", "randomizr")

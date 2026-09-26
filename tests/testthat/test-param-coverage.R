@@ -3,7 +3,7 @@ test_that("param coverage: declared+used objects appear in design params (atomic
   skip_on_cran()
 
   if (dir.exists("../../inst/designs")) {
-    options(ResearchDesigns.root = normalizePath("../..", winslash = "/"))
+    options(DesignLibrary.root = normalizePath("../..", winslash = "/"))
   }
 
   rep <- param_coverage_report(atomic_only = TRUE)

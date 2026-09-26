@@ -1,17 +1,18 @@
 # Create a multi-arm design
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 with id `"multiarm_trial"`:
 `make_design("multiarm_trial", N = N, m_arms = m_arms, ...)`. Defaults
 for `outcome_means`, `outcome_sds`, and `conditions` are evaluated after
 `m_arms`, so `multi_arm_designer(m_arms = 4)` expands those vectors
 before calling
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md).
-`make_design("multiarm_trial", m_arms = 4)` without matching-length
-vectors messages and still redesigns (draws may be `NaN`). Wrong-length
-`outcome_means` errors. Inquiries are `mean(Y(k) - Y(1))`; estimation is
-one `lm_robust`. Library-file knobs match these formals.
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md).
+`make_design("multiarm_trial", m_arms = 4)` does the same inside the
+design: constant vectors are repeated and conditions `1..k` become
+`1..m_arms`. Any other wrong-length vector errors. Inquiries are
+`mean(Y(k) - Y(1))`; estimation is one `lm_robust`. Library-file knobs
+match these formals.
 
 ## Usage
 
@@ -62,7 +63,7 @@ multi_arm_designer(
 
 - args_to_fix:
 
-  Ignored. Present for DesignLibrary compatibility.
+  Ignored. Present for compatibility with DesignLibrary 0.1.
 
 ## Value
 
@@ -70,7 +71,7 @@ A design object.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 
 ## Examples
 

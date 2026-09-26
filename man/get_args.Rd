@@ -39,7 +39,7 @@ get_args(
 \item{design}{Design id or book alias.}
 }
 \value{
-A \code{research_designs_args} data frame with \code{name}, \code{default},
+A \code{design_library_args} data frame with \code{name}, \code{default},
 \code{value_str}, \code{tip}, \code{kind}, and \code{shiny}.
 }
 \description{

@@ -1,4 +1,4 @@
-ResearchDesigns refresh_library() summary
+DesignLibrary refresh_library() summary
 Package root: C:/WZB Dropbox/Macartan Humphreys/5_github/ResearchDesigns
 Index designs: 68
 Audit: 66 ok, 0 parked, 2 failed

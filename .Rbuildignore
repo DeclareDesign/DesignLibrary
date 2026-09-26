@@ -12,3 +12,4 @@
 ^vignettes/*\.html$
 ^vignettes/*\.R$
 ^.*\.gitkeep$
+^notes$

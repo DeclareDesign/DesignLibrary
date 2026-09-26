@@ -31,7 +31,7 @@ In more detail:
 
 # 1. Fork
 
-Fork [ResearchDesigns](https://github.com/macartan/ResearchDesigns) on GitHub and clone your fork. Work from the package source tree (or set `options(ResearchDesigns.root = "...")` so helpers find `inst/designs/`).
+Fork [DesignLibrary](https://github.com/DeclareDesign/DesignLibrary) on GitHub and clone your fork. Work from the package source tree (or set `options(DesignLibrary.root = "...")` so helpers find `inst/designs/`).
 
 # 2. Add your file
 
@@ -58,7 +58,7 @@ Editable parameters are discovered from the design object. Tip strings and libra
 After adding or editing a design, rebuild the index, run the audit, and bake diagnosis previews:
 
 ```r
-options(ResearchDesigns.root = "/path/to/your/ResearchDesigns")
+options(DesignLibrary.root = "/path/to/your/DesignLibrary")
 refresh_library()
 ```
 
@@ -79,7 +79,7 @@ Confirm the design appears in the Library, opens cleanly, and diagnosis / redesi
 
 # 5. Pull request
 
-Open a pull request from your fork to `macartan/ResearchDesigns`. Keep the PR focused on the new or updated design file and any packages it needs. Mention extra dependencies in YAML `packages:` and in the PR description when relevant.
+Open a pull request from your fork to `macartan/DesignLibrary`. Keep the PR focused on the new or updated design file and any packages it needs. Mention extra dependencies in YAML `packages:` and in the PR description when relevant.
 
 # YAML fields
 
@@ -122,10 +122,10 @@ include_in_shiny: true
 # Checklist
 
 ```{r checklist, eval = TRUE}
-library(ResearchDesigns)
+library(DesignLibrary)
 contributor_checklist()
 ```
 
 In R the same helpers are `contributor_checklist()`, `audit_designs()`, and `refresh_library()`.
 
-Eight designs also have DesignLibrary names: `two_arm_designer()`, `two_arm_attrition_designer()`, `pretest_posttest_designer()`, `randomized_response_designer()`, `mediation_analysis_designer()`, `multi_arm_designer()`, `two_by_two_designer()`, and `block_cluster_two_arm_designer()`.
+Eight designs also have DesignLibrary 0.1 names: `two_arm_designer()`, `two_arm_attrition_designer()`, `pretest_posttest_designer()`, `randomized_response_designer()`, `mediation_analysis_designer()`, `multi_arm_designer()`, `two_by_two_designer()`, and `block_cluster_two_arm_designer()`.

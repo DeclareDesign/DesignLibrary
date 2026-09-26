@@ -1,6 +1,6 @@
-# Launch the ResearchDesigns Shiny browser
+# Launch the DesignLibrary Shiny browser
 
-Launch the ResearchDesigns Shiny browser
+Launch the DesignLibrary Shiny browser
 
 ## Usage
 

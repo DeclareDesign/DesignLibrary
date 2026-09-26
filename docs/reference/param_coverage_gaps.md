@@ -2,8 +2,8 @@
 
 Runs the design, reads `discover_design_params()`, and compares to
 top-level assignments before `design <-`. Flags names that are used in
-the design body (or seen by DeclareDesignZero's object finder) but not
-in the redesignable parameter list.
+the design body (or seen by DeclareDesign's object finder) but not in
+the redesignable parameter list.
 
 ## Usage
 

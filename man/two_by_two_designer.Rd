@@ -39,7 +39,7 @@ two_by_two_designer(
 
 \item{outcome_sds}{Extra standard deviation in each cell, length 4.}
 
-\item{args_to_fix}{Ignored. Present for DesignLibrary compatibility.}
+\item{args_to_fix}{Ignored. Present for compatibility with DesignLibrary 0.1.}
 }
 \value{
 A design object.

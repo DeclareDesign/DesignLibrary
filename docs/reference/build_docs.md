@@ -19,7 +19,7 @@ build_docs(pkg = NULL, ...)
 - pkg:
 
   Package root. Default: `find_package_root()` via
-  `options(ResearchDesigns.root=...)` or the current working directory.
+  `options(DesignLibrary.root=...)` or the current working directory.
 
 - ...:
 
@@ -35,7 +35,7 @@ Invisibly, the path to `docs/`.
 
 ``` r
 if (FALSE) { # \dontrun{
-options(ResearchDesigns.root = "C:/path/to/ResearchDesigns")
+options(DesignLibrary.root = "C:/path/to/DesignLibrary")
 build_docs()
 } # }
 ```

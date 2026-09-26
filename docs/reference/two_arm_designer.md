@@ -1,9 +1,9 @@
 # Create a one-level two-arm design
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
-with id `"two_arm"`:
-`make_design("two_arm", N = N, assignment_prob = assignment_prob, ...)`.
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
+with id `"two_arm_flexible"`:
+`make_design("two_arm_flexible", N = N, assignment_prob = assignment_prob, ...)`.
 
 ## Usage
 
@@ -58,7 +58,7 @@ two_arm_designer(
 
 - args_to_fix:
 
-  Ignored. Present for DesignLibrary compatibility.
+  Ignored. Present for compatibility with DesignLibrary 0.1.
 
 ## Value
 
@@ -68,17 +68,18 @@ A design object.
 
 Builds a design with one treatment and one control arm. Treatment
 effects can be specified by `ate` or by `treatment_mean` (which
-overrides `ate`). Argument names match DesignLibrary `two_arm_designer`.
+overrides `ate`). Argument names match DesignLibrary 0.1's
+`two_arm_designer`.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-make_design("two_arm", N = 40, ate = 0.2)
+make_design("two_arm_flexible", N = 40, ate = 0.2)
 two_arm_designer(N = 40, ate = 0.2)
 } # }
 ```

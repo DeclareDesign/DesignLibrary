@@ -1,9 +1,15 @@
-Package: ResearchDesigns
+Package: DesignLibrary
 Title: A Library of Declared Designs
-Version: 0.1.1
-Authors@R: person("Macartan", "Humphreys",
-                  email = "macartan.humphreys@wzb.eu",
-                  role = c("aut", "cre"))
+Version: 2.0.0
+Authors@R: c(
+    person("Macartan", "Humphreys", , "macartan.humphreys@wzb.eu", role = c("aut", "cre")),
+    person("Graeme", "Blair", , "graeme.blair@ucla.edu", role = "aut"),
+    person("Jasper", "Cooper", , "jjc2247@columbia.edu", role = "aut"),
+    person("Alexander", "Coppock", , "alex.coppock@northwestern.edu", role = "aut"),
+    person("Clara", "Bicalho", , "clarabmcorreia@gmail.com", role = "aut"),
+    person("Neal", "Fultz", , "nfultz@gmail.com", role = "aut"),
+    person("Lily", "Medina", , "lilymiru@gmail.com", role = "aut")
+  )
 Description: A lightweight library of research designs declared with
     DeclareDesign. Designs live as self-contained R files; editable
     parameters are read from the design itself. Optional YAML metadata
@@ -44,8 +50,8 @@ Suggests:
     broom
 Config/testthat/edition: 3
 Config/Needs/website: pkgdown
-URL: https://github.com/macartan/ResearchDesigns, https://macartan.github.io/ResearchDesigns/
-BugReports: https://github.com/macartan/ResearchDesigns/issues
+URL: https://github.com/DeclareDesign/DesignLibrary, https://declaredesign.org/r/designlibrary/
+BugReports: https://github.com/DeclareDesign/DesignLibrary/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.0.0

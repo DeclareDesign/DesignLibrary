@@ -4,18 +4,14 @@
 \alias{copy_library_shiny}
 \title{Copy the bundled Shiny app to a standalone folder}
 \usage{
-copy_library_shiny(
-  dest = getwd(),
-  overwrite = TRUE,
-  package = "ResearchDesigns"
-)
+copy_library_shiny(dest = getwd(), overwrite = TRUE, package = "DesignLibrary")
 }
 \arguments{
 \item{dest}{Directory to write (created if needed). Default: working directory.}
 
 \item{overwrite}{If \code{TRUE}, replace \code{app.R} / \code{www} files (not \code{local.R}).}
 
-\item{package}{Package that ships the app; default \code{"ResearchDesigns"}.}
+\item{package}{Package that ships the app; default \code{"DesignLibrary"}.}
 }
 \value{
 Invisibly, the normalized destination path.
@@ -23,14 +19,14 @@ Invisibly, the normalized destination path.
 \description{
 Materializes \code{app.R} (and \verb{www/} if present) so a Shiny Server / Posit
 Connect host can point at a folder. The folder relies on the installed
-\code{ResearchDesigns} package for designs and helpers.
+\code{DesignLibrary} package for designs and helpers.
 }
 \details{
 Typical server workflow:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("macartan/ResearchDesigns")
-ResearchDesigns::install_library_dependencies()
-ResearchDesigns::copy_library_shiny("/srv/shiny-server/researchdesigns")
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+DesignLibrary::install_library_dependencies()
+DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 }\if{html}{\out{</div>}}
 
 Existing \code{local.R} in \code{dest} is never overwritten.

@@ -39,7 +39,7 @@ of per-block probabilities is not supported.}
 
 \item{args_to_fix}{Ignored.}
 
-\item{...}{Unused DesignLibrary arguments; warned and dropped.}
+\item{...}{Unused DesignLibrary 0.1 arguments; warned and dropped.}
 }
 \value{
 A design object.
@@ -49,9 +49,9 @@ Routes to \code{\link[=make_design]{make_design()}} with id \code{"block_cluster
 \code{make_design("block_cluster_two_arm", N_blocks = N_blocks, ...)}.
 }
 \details{
-A simplified signature relative to DesignLibrary: level sizes and three
+A simplified signature relative to DesignLibrary 0.1: level sizes and three
 shock standard deviations, a scalar assignment probability, and \code{ate}.
-Extra DesignLibrary arguments (\code{N}, \code{sd}, \code{rho}, \code{verbose}, per-block
+Extra DesignLibrary 0.1 arguments (\code{N}, \code{sd}, \code{rho}, \code{verbose}, per-block
 \code{assignment_probs}) are accepted in \code{...} and ignored with a warning.
 }
 \seealso{

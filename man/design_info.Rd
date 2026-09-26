@@ -39,7 +39,7 @@ design_info(
 \item{design}{Design id or book alias.}
 }
 \value{
-A named list of metadata with class \code{research_designs_info}.
+A named list of metadata with class \code{design_library_info}.
 }
 \description{
 Printing uses short English prose. The underlying list is unchanged for

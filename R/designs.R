@@ -87,13 +87,13 @@ eval_design <- function(parsed) {
   }
 
   design <- get(obj_name, envir = env, inherits = FALSE)
-  attr(design, "research_designs_id") <- parsed$meta$id
-  attr(design, "research_designs_alias") <- parsed$meta$alias
-  attr(design, "research_designs_path") <- parsed$path
+  attr(design, "design_library_id") <- parsed$meta$id
+  attr(design, "design_library_alias") <- parsed$meta$alias
+  attr(design, "design_library_path") <- parsed$path
   design
 }
 
-#' Design ids that match exported DesignLibrary designer names
+#' Design ids that match exported DesignLibrary 0.1 designer names
 #' @noRd
 designlibrary_core_ids <- function() {
   c(
@@ -254,7 +254,7 @@ filter_library_browser <- function(df, tab = "templates", q = "") {
 #' @param list_all If `FALSE` (default), printing shows the full getting-started
 #'   sequence and up to 10 designs in each remaining group. If `TRUE`, printing
 #'   lists every design.
-#' @return A data frame with class `research_designs_list`.
+#' @return A data frame with class `design_library_list`.
 #' @export
 list_designs <- function(shiny_only = FALSE, discover_params = FALSE, list_all = FALSE) {
   idx <- make_index()
@@ -274,7 +274,7 @@ list_designs <- function(shiny_only = FALSE, discover_params = FALSE, list_all =
   if (!nrow(idx)) {
     return(structure(
       empty,
-      class = c("research_designs_list", "data.frame"),
+      class = c("design_library_list", "data.frame"),
       list_all = isTRUE(list_all)
     ))
   }
@@ -320,7 +320,7 @@ list_designs <- function(shiny_only = FALSE, discover_params = FALSE, list_all =
   }
   structure(
     out,
-    class = c("research_designs_list", "data.frame"),
+    class = c("design_library_list", "data.frame"),
     list_all = isTRUE(list_all)
   )
 }
@@ -339,10 +339,10 @@ arrange_design_list <- function(out) {
 }
 
 #' @export
-print.research_designs_list <- function(x, ..., list_all = NULL, n = 10L) {
+print.design_library_list <- function(x, ..., list_all = NULL, n = 10L) {
   n_all <- nrow(x)
   cat(
-    "ResearchDesigns library: ", n_all, " design",
+    "DesignLibrary library: ", n_all, " design",
     if (n_all == 1L) "" else "s",
     "\n",
     sep = ""
@@ -400,12 +400,12 @@ print.research_designs_list <- function(x, ..., list_all = NULL, n = 10L) {
 #' etc.).
 #'
 #' @param design Design id or book alias.
-#' @return A named list of metadata with class `research_designs_info`.
+#' @return A named list of metadata with class `design_library_info`.
 #' @export
 design_info <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
   meta <- resolve_design(design)$meta
-  structure(meta, class = c("research_designs_info", "list"))
+  structure(meta, class = c("design_library_info", "list"))
 }
 
 #' Preferred diagnosands declared in a design's YAML
@@ -444,7 +444,7 @@ excluded_diagnosands <- function(design) {
 }
 
 #' @export
-print.research_designs_info <- function(x, ...) {
+print.design_library_info <- function(x, ...) {
   id <- as.character(x$id %||% "")[[1]]
   alias <- x$alias
   has_alias <- !is.null(alias) && length(alias) && !is.na(alias) && nzchar(as.character(alias)[[1]])
@@ -618,7 +618,7 @@ make_design <- function(design = "two_arm_simple", ...) {
 #' place.
 #'
 #' @param design Design id or book alias.
-#' @return A `research_designs_args` data frame with `name`, `default`,
+#' @return A `design_library_args` data frame with `name`, `default`,
 #'   `value_str`, `tip`, `kind`, and `shiny`.
 #' @export
 #' @examples
@@ -660,7 +660,7 @@ prefix_yaml_libraries <- function(code, packages) {
 #'   [print()] and [as.character()] show. `$simple` and `$full` are always
 #'   both present.
 #' @param ... Optional parameter values included in the simple snippet.
-#' @return A list with `simple` and `full`, class `research_designs_code`.
+#' @return A list with `simple` and `full`, class `design_library_code`.
 #' @export
 #' @examples
 #' \dontrun{
@@ -688,7 +688,7 @@ get_code <- function(design, style = c("both", "simple", "full"), ...) {
       simple = simple,
       full = prefix_yaml_libraries(parsed$code, parsed$meta$packages)
     ),
-    class = c("research_designs_code", "list"),
+    class = c("design_library_code", "list"),
     style = style
   )
 }
@@ -708,17 +708,17 @@ trim_code_snippet <- function(code) {
 }
 
 #' @export
-format.research_designs_code <- function(x, ..., style = NULL) {
+format.design_library_code <- function(x, ..., style = NULL) {
   trim_code_snippet(code_snippet(x, style = style))
 }
 
 #' @export
-as.character.research_designs_code <- function(x, ..., style = NULL) {
+as.character.design_library_code <- function(x, ..., style = NULL) {
   format(x, ..., style = style)
 }
 
 #' @export
-print.research_designs_code <- function(x, ..., style = NULL) {
+print.design_library_code <- function(x, ..., style = NULL) {
   cat(format(x, ..., style = style), "\n", sep = "")
   invisible(x)
 }

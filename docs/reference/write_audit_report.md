@@ -12,8 +12,8 @@ write_audit_report(x, dir = NULL)
 
 - x:
 
-  A `research_designs_audit` object from
-  [`audit_designs()`](https://macartan.github.io/ResearchDesigns/reference/audit_designs.md).
+  A `design_library_audit` object from
+  [`audit_designs()`](https://declaredesign.org/r/designlibrary/reference/audit_designs.md).
 
 - dir:
 

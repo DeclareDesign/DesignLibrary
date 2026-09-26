@@ -7,7 +7,7 @@
 write_audit_report(x, dir = NULL)
 }
 \arguments{
-\item{x}{A \code{research_designs_audit} object from \code{\link[=audit_designs]{audit_designs()}}.}
+\item{x}{A \code{design_library_audit} object from \code{\link[=audit_designs]{audit_designs()}}.}
 
 \item{dir}{Output directory. Default: \verb{tools/} under the package root.}
 }

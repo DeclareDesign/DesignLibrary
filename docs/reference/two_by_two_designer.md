@@ -1,7 +1,7 @@
 # Create a two-by-two factorial design
 
 Routes to
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
 with id `"two_by_two"`:
 `make_design("two_by_two", N = N, outcome_means = outcome_means, ...)`.
 
@@ -65,7 +65,7 @@ two_by_two_designer(
 
 - args_to_fix:
 
-  Ignored. Present for DesignLibrary compatibility.
+  Ignored. Present for compatibility with DesignLibrary 0.1.
 
 ## Value
 
@@ -79,4 +79,4 @@ entries when supplied.
 
 ## See also
 
-[`make_design()`](https://macartan.github.io/ResearchDesigns/reference/make_design.md)
+[`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)

@@ -1,10 +1,11 @@
-# Install ResearchDesigns system dependencies
+# Install DesignLibrary system dependencies
 
 Installs package Imports (and, by default, Suggests needed for the Shiny
 browser), plus any extra packages declared in design YAML `packages:`
-fields. GitHub-only stack packages (`DeclareDesignZero`,
-`fabricatrZero`) are installed via
+fields. GitHub-only stack packages (`DeclareDesign`, `fabricatr`,
+`estimatr`) come from the rewrite branches via
 [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html).
+They are never installed from CRAN.
 
 ## Usage
 
@@ -54,6 +55,6 @@ Invisibly, a list with `installed`, `already_ok`, and `failed`.
 
 Typical server workflow:
 
-    remotes::install_github("macartan/ResearchDesigns")
-    ResearchDesigns::install_library_dependencies()
-    ResearchDesigns::copy_library_shiny("/path/to/shiny-app")
+    remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+    DesignLibrary::install_library_dependencies()
+    DesignLibrary::copy_library_shiny("/path/to/shiny-app")

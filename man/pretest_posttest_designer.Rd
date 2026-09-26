@@ -27,7 +27,7 @@ pretest_posttest_designer(
 
 \item{attrition_rate}{Share of units not observed at the posttest.}
 
-\item{args_to_fix}{Ignored. Present for DesignLibrary compatibility.}
+\item{args_to_fix}{Ignored. Present for compatibility with DesignLibrary 0.1.}
 }
 \value{
 A design object.

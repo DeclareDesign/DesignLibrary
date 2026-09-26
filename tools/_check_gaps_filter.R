@@ -1,10 +1,10 @@
 setwd("C:/WZB Dropbox/Macartan Humphreys/5_github/ResearchDesigns")
-options(ResearchDesigns.root = normalizePath(".", winslash = "/"))
+options(DesignLibrary.root = normalizePath(".", winslash = "/"))
 devtools::load_all(".", quiet = TRUE)
 
 # Classify pre-design objects without diagnosing
 parsed <- resolve_design("village_campaign")
-pre <- ResearchDesigns:::extract_pre_design_objects(parsed$code)
+pre <- DesignLibrary:::extract_pre_design_objects(parsed$code)
 print(pre[, c("name", "type", "atomic")])
 
 # Unit-test the filter logic on the typed table

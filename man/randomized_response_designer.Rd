@@ -22,7 +22,7 @@ randomized_response_designer(
 \item{withholding_rate}{Share of trait holders who deny it under direct
 questioning.}
 
-\item{args_to_fix}{Ignored. Present for DesignLibrary compatibility.}
+\item{args_to_fix}{Ignored. Present for compatibility with DesignLibrary 0.1.}
 }
 \value{
 A design object.

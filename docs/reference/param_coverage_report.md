@@ -31,4 +31,4 @@ param_coverage_report(
 
 ## Value
 
-A data frame (class `research_designs_param_coverage`) of gaps.
+A data frame (class `design_library_param_coverage`) of gaps.

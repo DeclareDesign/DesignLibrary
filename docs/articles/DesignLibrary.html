@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>ResearchDesigns: a library of declared designs • ResearchDesigns</title>
+<title>DesignLibrary: a library of declared designs • DesignLibrary</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ResearchDesigns: a library of declared designs">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="DesignLibrary: a library of declared designs">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -18,9 +18,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">ResearchDesigns</a>
+    <a class="navbar-brand me-2" href="../index.html">DesignLibrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,18 +29,18 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="../articles/ResearchDesigns.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../articles/DesignLibrary.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/ResearchDesigns.html">ResearchDesigns overview</a></li>
+<li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
   </ul>
 </li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/macartan/ResearchDesigns/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -54,11 +54,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>ResearchDesigns: a library of declared designs</h1>
+      <h1>DesignLibrary: a library of declared designs</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/macartan/ResearchDesigns/blob/HEAD/vignettes/ResearchDesigns.Rmd" class="external-link"><code>vignettes/ResearchDesigns.Rmd</code></a></small>
-      <div class="d-none name"><code>ResearchDesigns.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/DeclareDesign/DesignLibrary/blob/HEAD/vignettes/DesignLibrary.Rmd" class="external-link"><code>vignettes/DesignLibrary.Rmd</code></a></small>
+      <div class="d-none name"><code>DesignLibrary.Rmd</code></div>
     </div>
 
     
@@ -66,7 +66,7 @@
 <div class="section level2">
 <h2 id="the-idea">The idea<a class="anchor" aria-label="anchor" href="#the-idea"></a>
 </h2>
-<p>To contribute a design to <strong>ResearchDesigns</strong> you just
+<p>To contribute a design to <strong>DesignLibrary</strong> you just
 have to place a self-contained <code>.R</code> file in
 <code>inst/designs/</code>. That file declares a design and, optionally,
 a short YAML header. Once it is there, the design can be loaded,
@@ -78,15 +78,15 @@ request), see the vignette <em>Contributing a design</em> or the Shiny
 <div class="section level2">
 <h2 id="what-a-design-file-looks-like">What a design file looks like<a class="anchor" aria-label="anchor" href="#what-a-design-file-looks-like"></a>
 </h2>
-<p>Here is the starter design <code>two_arm_trial</code>.</p>
-<details><summary><code>inst/designs/two_arm_trial.R</code>
+<p>Here is the starter design <code>two_arm_simple</code>.</p>
+<details><summary><code>inst/designs/two_arm_simple.R</code>
 </summary><div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>id<span class="sc">:</span> two_arm_trial</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>id<span class="sc">:</span> two_arm_simple</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>label<span class="sc">:</span> Simple two<span class="sc">-</span>arm trial</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>category<span class="sc">:</span> template</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>keywords<span class="sc">:</span> [experiment, two<span class="sc">-</span>arm]</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>description<span class="sc">:</span> <span class="er">&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  Simple two<span class="sc">-</span>arm trial with complete random assignment.</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  Simple two<span class="sc">-</span>arm trial with complete random assignment and a population average treatment effect.</span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>params<span class="sc">:</span></span>
 <span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>  <span class="st">"N"</span><span class="sc">:</span> <span class="st">"Number of units (sample or population size)"</span></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="st">"b"</span><span class="sc">:</span> <span class="st">"Treatment effect (outcome scale)"</span></span>
@@ -94,24 +94,26 @@ request), see the vignette <em>Contributing a design</em> or the Shiny
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>include_in_shiny<span class="sc">:</span> true</span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="sc">---</span></span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>design <span class="ot">&lt;-</span></span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  </span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  <span class="fu">declare_model</span>(</span>
-<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>    <span class="at">N =</span> N,</span>
-<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>    <span class="fu">potential_outcomes</span>(Y <span class="sc">~</span> b <span class="sc">*</span> Z <span class="sc">+</span> <span class="fu">rnorm</span>(N))</span>
-<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>  <span class="fu">declare_inquiry</span>(<span class="at">ATE =</span> <span class="fu">mean</span>(Y_Z_1) <span class="sc">-</span> <span class="fu">mean</span>(Y_Z_0)) <span class="sc">+</span></span>
-<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a>  </span>
-<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>  <span class="fu">declare_assignment</span>(<span class="at">Z =</span> <span class="fu">complete_ra</span>(N)) <span class="sc">+</span></span>
-<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>  </span>
-<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a>  <span class="fu">declare_measurement</span>(<span class="at">Y =</span> <span class="fu">reveal_outcomes</span>(Y <span class="sc">~</span> Z)) <span class="sc">+</span></span>
-<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>  </span>
-<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>  <span class="fu">declare_estimator</span>(Y <span class="sc">~</span> Z, <span class="at">.method =</span> difference_in_means, <span class="at">inquiry =</span> <span class="st">"ATE"</span>)</span></code></pre></div>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>design <span class="ot">&lt;-</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  </span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>  <span class="fu">declare_parameters</span>(</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>    <span class="at">N =</span> <span class="dv">1000</span>,  <span class="co"># Number of units</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>    <span class="at">b =</span> <span class="fl">0.2</span>    <span class="co"># ATE</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  </span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>  <span class="co"># M: model</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  <span class="fu">declare_model</span>(<span class="at">N =</span> N, <span class="at">Y_Z_0 =</span> <span class="fu">rnorm</span>(<span class="fu">n</span>()), <span class="at">Y_Z_1  =</span> Y_Z_0 <span class="sc">+</span> b) <span class="sc">+</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>  </span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>  <span class="co"># I: Inquiry</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a>  <span class="fu">declare_inquiry</span>(<span class="at">ATE =</span> <span class="fu">mean</span>(Y_Z_1 <span class="sc">-</span> Y_Z_0)) <span class="sc">+</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a>  <span class="co"># D: Data strategy  </span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a>  <span class="fu">declare_assignment</span>(<span class="at">Z =</span> <span class="fu">complete_ra</span>(<span class="fu">n</span>())) <span class="sc">+</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a>  <span class="fu">declare_measurement</span>(<span class="at">Y =</span> Z<span class="sc">*</span>Y_Z_1 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>Z)<span class="sc">*</span>Y_Z_0) <span class="sc">+</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a>  </span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a>  <span class="co"># A: Answer strategy</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a>  <span class="fu">declare_estimator</span>(Y <span class="sc">~</span> Z, <span class="at">.method =</span> difference_in_means, <span class="at">inquiry =</span> <span class="st">"ATE"</span>)</span></code></pre></div>
 </details><p>The header is optional. At minimum you need a design object (by
 default named <code>design</code>). Parameter tips are plain strings
 under <code>params:</code>; quote keys such as <code>"N"</code> and
@@ -126,17 +128,18 @@ available to <code><a href="../reference/make_design.html">make_design()</a></co
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_designs.html">list_designs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ResearchDesigns library: 67 designs</span></span>
+<span><span class="co">#&gt; DesignLibrary library: 68 designs</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; * Getting started</span></span>
-<span><span class="co">#&gt;   two_arm_trial (Simple two-arm trial)</span></span>
-<span><span class="co">#&gt;   two_arm (Flexible two-arm trial (library))</span></span>
-<span><span class="co">#&gt;   multiarm_trial (Multi-arm trial)</span></span>
-<span><span class="co">#&gt;   two_arm_with_blocks (Two-arm trial with blocks)</span></span>
-<span><span class="co">#&gt;   block_cluster_two_arm (Two arm trial with blocks and clusters)</span></span>
-<span><span class="co">#&gt;   two_arm_attrition (Two-arm trial with attrition)</span></span>
+<span><span class="co">#&gt;   two_arm_simple (Simple two-arm trial)</span></span>
+<span><span class="co">#&gt;   two_arm_flexible (Flexible two-arm trial)</span></span>
+<span><span class="co">#&gt;   three_arm (Three-arm trial)</span></span>
 <span><span class="co">#&gt;   two_by_two (2x2 factorial (library))</span></span>
+<span><span class="co">#&gt;   two_arm_block_cluster (Two arm trial with blocks and clusters)</span></span>
+<span><span class="co">#&gt;   two_arm_with_blocks (Two-arm trial with blocks)</span></span>
+<span><span class="co">#&gt;   two_arm_attrition (Two-arm trial with attrition)</span></span>
 <span><span class="co">#&gt;   factorial_2x2x2 (2x2x2 factorial)</span></span>
+<span><span class="co">#&gt;   multiarm_trial (Multi-arm trial)</span></span>
 <span><span class="co">#&gt;   pretest_posttest (Pretest-posttest design)</span></span>
 <span><span class="co">#&gt;   randomized_response (Randomized response)</span></span>
 <span><span class="co">#&gt;   mediation_analysis (Mediation analysis)</span></span>
@@ -144,14 +147,14 @@ available to <code><a href="../reference/make_design.html">make_design()</a></co
 <span><span class="co">#&gt; * Other RDSS designs</span></span>
 <span><span class="co">#&gt;   audit_experiment (audit experiment)</span></span>
 <span><span class="co">#&gt;   audit_intervention (audit intervention)</span></span>
-<span><span class="co">#&gt;   bare_bones_two_arm (Bare-bones two-arm trial)</span></span>
 <span><span class="co">#&gt;   baseline_over_N (A baseline declaration intended to be reed over $N$.)</span></span>
-<span><span class="co">#&gt;   block_randomized_trial (block randomized trial)</span></span>
 <span><span class="co">#&gt;   blocked_and_clustered (blocked and clustered)</span></span>
 <span><span class="co">#&gt;   bootstrapped (bootstrapped)</span></span>
 <span><span class="co">#&gt;   cluster_random_sampling (cluster random sampling)</span></span>
 <span><span class="co">#&gt;   conditional_expectation (Conditional expectation function)</span></span>
 <span><span class="co">#&gt;   conjoint (conjoint)</span></span>
+<span><span class="co">#&gt;   covariate_adjustment (covariate adjustment)</span></span>
+<span><span class="co">#&gt;   declaration_using_declare (Example of declaration using Declare)</span></span>
 <span><span class="co">#&gt;   ... and 46 more</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; print(list_designs(), list_all = TRUE) lists every design.</span></span>
@@ -159,23 +162,30 @@ available to <code><a href="../reference/make_design.html">make_design()</a></co
 <span><span class="co">#&gt; See design_info("id") or get_args("id") for details;</span></span>
 <span><span class="co">#&gt; as.data.frame(list_designs(discover_params = TRUE)) for parameters.</span></span></code></pre></div>
 <p>Call <code><a href="../reference/list_designs.html">list_designs()</a></code> to see ids and labels. Use
-<code>design_info("two_arm_trial")</code> or
-<code>get_args("two_arm_trial")</code> for one design, or
+<code>design_info("two_arm_simple")</code> or
+<code>get_args("two_arm_simple")</code> for one design, or
 <code>as.data.frame(list_designs(discover_params = TRUE))</code> for the
 table including redesignable parameters.</p>
 </div>
 <div class="section level2">
-<h2 id="use-researchdesigns-to-make-a-design">Use ResearchDesigns to make a design<a class="anchor" aria-label="anchor" href="#use-researchdesigns-to-make-a-design"></a>
+<h2 id="use-designlibrary-to-make-a-design">Use DesignLibrary to make a design<a class="anchor" aria-label="anchor" href="#use-designlibrary-to-make-a-design"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">my_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span></span>
 <span><span class="va">my_design</span></span>
-<span><span class="co">#&gt; Research design with 5 step(s):</span></span>
-<span><span class="co">#&gt;   [model] model (dgp)</span></span>
-<span><span class="co">#&gt;   [inquiry] ATE (inquiry)</span></span>
-<span><span class="co">#&gt;   [assignment] assignment (dgp)</span></span>
-<span><span class="co">#&gt;   [measurement] measurement (dgp)</span></span>
-<span><span class="co">#&gt;   [estimator] estimator (estimator)</span></span></code></pre></div>
+<span><span class="co">#&gt; Research design with 6 steps</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Step 1 (parameters): declare_parameters(N = 1000, b = 0.2)</span></span>
+<span><span class="co">#&gt; Step 2 (model): declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1 = Y_Z_0 + b)</span></span>
+<span><span class="co">#&gt; Step 3 (inquiry): declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))</span></span>
+<span><span class="co">#&gt; Step 4 (assignment): declare_assignment(Z = complete_ra(n()))</span></span>
+<span><span class="co">#&gt; Step 5 (measurement): declare_measurement(Y = Z * Y_Z_1 + (1 - Z) * Y_Z_0)</span></span>
+<span><span class="co">#&gt; Step 6 (estimator): declare_estimator(Y ~ Z, .method = difference_in_means, inquiry = "ATE")</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Parameters and objects the design refers to:</span></span>
+<span><span class="co">#&gt;  name value   kind declared steps</span></span>
+<span><span class="co">#&gt;     b   0.2 scalar     TRUE  1, 2</span></span>
+<span><span class="co">#&gt;     N  1000 scalar     TRUE  1, 2</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="change-parameters-and-simulate">Change parameters and simulate<a class="anchor" aria-label="anchor" href="#change-parameters-and-simulate"></a>
@@ -183,25 +193,26 @@ table including redesignable parameters.</p>
 <p>Parameters are taken from the design itself. Pass new values to
 <code><a href="../reference/make_design.html">make_design()</a></code>; under the hood this uses DeclareDesign’s
 <code>redesign()</code>. A core set of designs also keep DesignLibrary
-names, so <code>two_arm_designer(N = 40, ate = 0.2)</code> is the same
-idea as <code>make_design("two_arm", N = 40, ate = 0.2)</code>.</p>
+0.1 names, so <code>two_arm_designer(N = 40, ate = 0.2)</code> is the
+same idea as
+<code>make_design("two_arm_flexible", N = 40, ate = 0.2)</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span>, b <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, b <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">simulate_design</span><span class="op">(</span>sims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 14</span></span></span>
-<span><span class="co">#&gt;   sim_ID term  estimate std.error statistic     p.value conf.low conf.high    df</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      1 Z        0.344    0.061<span style="text-decoration: underline;">7</span>      5.58     3.15<span style="color: #949494;">e</span><span style="color: #BB0000;">-8</span>    0.223     0.465  998.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>      2 Z        0.343    0.063<span style="text-decoration: underline;">1</span>      5.44     6.81<span style="color: #949494;">e</span><span style="color: #BB0000;">-8</span>    0.219     0.467  993.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: outcome &lt;chr&gt;, estimator &lt;chr&gt;, inquiry &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 15</span></span></span>
+<span><span class="co">#&gt;   design   sim_ID term  estimate std.error statistic  p.value conf.low conf.high</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> design_1      1 Z        0.405    0.062<span style="text-decoration: underline;">3</span>      6.50 1.26<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span>   0.283      0.527</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> design_1      2 Z        0.202    0.066<span style="text-decoration: underline;">6</span>      3.03 2.53<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span>   0.071<span style="text-decoration: underline;">0</span>     0.332</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: df &lt;dbl&gt;, outcome &lt;chr&gt;, estimator &lt;chr&gt;, inquiry &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   estimand &lt;dbl&gt;, b &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>You can now change all parameters in one go.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span>, b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.3</span>, <span class="fl">.6</span><span class="op">)</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.3</span>, <span class="fl">.6</span><span class="op">)</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">simulate_design</span><span class="op">(</span>sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">estimate</span>, <span class="va">p.value</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span>  <span class="op">+</span> <span class="fu">facet_grid</span><span class="op">(</span><span class="va">N</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ResearchDesigns_files/figure-html/make-and-simulate-grid-1.png" class="r-plt" alt="" width="576"></p>
+<p><img src="DesignLibrary_files/figure-html/make-and-simulate-grid-1.png" class="r-plt" alt="" width="576"></p>
 </div>
 <div class="section level2">
 <h2 id="browse-in-shiny">Browse in Shiny<a class="anchor" aria-label="anchor" href="#browse-in-shiny"></a>
@@ -236,12 +247,12 @@ step</li>
 </ul>
 <p>Run maintainer helpers from the package source tree, or set:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>ResearchDesigns.root <span class="op">=</span> <span class="st">"C:/path/to/ResearchDesigns"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>DesignLibrary.root <span class="op">=</span> <span class="st">"C:/path/to/DesignLibrary"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/refresh_library.html">refresh_library</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>That is the whole loop: drop in a design file, use it from R or
 Shiny, and refresh the library when you change the set. Step-by-step
 contribution guidance is in
-<code><a href="../articles/contributing.html">vignette("contributing", package = "ResearchDesigns")</a></code>.</p>
+<code><a href="../articles/contributing.html">vignette("contributing", package = "DesignLibrary")</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -250,11 +261,11 @@ contribution guidance is in
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Macartan Humphreys.</p>
+  <p>Developed by Macartan Humphreys, Graeme Blair, Jasper Cooper, Alexander Coppock, Clara Bicalho, Neal Fultz, Lily Medina.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

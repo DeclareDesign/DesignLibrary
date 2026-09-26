@@ -60,9 +60,9 @@ test_that("get_args succeeds when find_all_objects errors on empty names", {
 })
 
 test_that("classify_param_kind treats functions as R-only", {
-  expect_equal(ResearchDesigns:::classify_param_kind(function(x) x), "function")
-  expect_false(ResearchDesigns:::is_shiny_param_kind("function"))
-  expect_true(ResearchDesigns:::is_modifiable_value(function(x) x))
+  expect_equal(DesignLibrary:::classify_param_kind(function(x) x), "function")
+  expect_false(DesignLibrary:::is_shiny_param_kind("function"))
+  expect_true(DesignLibrary:::is_modifiable_value(function(x) x))
 })
 
 test_that("make_design replaces a vector parameter as one value", {
@@ -97,12 +97,12 @@ test_that("conditional_expectation lists dip and polynomial_degrees", {
   expect_true(isTRUE(args$shiny[args$name == "polynomial_degrees"]))
   expect_true(all(nzchar(args$tip) & !is.na(args$tip)))
 
-  expect_equal(ResearchDesigns:::classify_param_kind(1:4), "vector")
+  expect_equal(DesignLibrary:::classify_param_kind(1:4), "vector")
 
-  parsed <- ResearchDesigns:::resolve_design("conditional_expectation")
-  d0 <- ResearchDesigns:::eval_design(parsed)
-  params <- ResearchDesigns:::discover_design_params(d0, code = parsed$code)
-  dots <- ResearchDesigns:::prepare_redesign_dots(
+  parsed <- DesignLibrary:::resolve_design("conditional_expectation")
+  d0 <- DesignLibrary:::eval_design(parsed)
+  params <- DesignLibrary:::discover_design_params(d0, code = parsed$code)
+  dots <- DesignLibrary:::prepare_redesign_dots(
     params,
     list(polynomial_degrees = 1:4)
   )
@@ -113,7 +113,7 @@ test_that("conditional_expectation lists dip and polynomial_degrees", {
   expect_s3_class(d, "design")
   expect_false(is.list(d) && !inherits(d, "design"))
 
-  v <- ResearchDesigns:::validate_params_against_design(
+  v <- DesignLibrary:::validate_params_against_design(
     parsed$meta, d0, code = parsed$code
   )
   expect_true(v$ok)
@@ -122,7 +122,7 @@ test_that("conditional_expectation lists dip and polynomial_degrees", {
 
   meta_extra <- parsed$meta
   meta_extra$params <- c(meta_extra$params, list(not_a_param = "nope"))
-  v_extra <- ResearchDesigns:::validate_params_against_design(
+  v_extra <- DesignLibrary:::validate_params_against_design(
     meta_extra, d0, code = parsed$code
   )
   expect_false(v_extra$ok)
@@ -130,20 +130,20 @@ test_that("conditional_expectation lists dip and polynomial_degrees", {
 })
 
 test_that("Shiny parser treats vector commas as replacement, not a sweep", {
-  p <- ResearchDesigns:::parse_shiny_param_raw(
+  p <- DesignLibrary:::parse_shiny_param_raw(
     "0, 0, 0, 1", "vector", "0, 0, 0, 0"
   )
   expect_false(isTRUE(p$skip))
   expect_false(isTRUE(p$sweep))
   expect_equal(p$value, c(0, 0, 0, 1))
 
-  sweep <- ResearchDesigns:::parse_shiny_param_raw(
+  sweep <- DesignLibrary:::parse_shiny_param_raw(
     "0,0,0,1; 0,0.5,0.5,1", "vector", ""
   )
   expect_true(isTRUE(sweep$sweep))
   expect_equal(length(sweep$value), 2L)
 
-  sc <- ResearchDesigns:::parse_shiny_param_raw("50, 100", "scalar", "100")
+  sc <- DesignLibrary:::parse_shiny_param_raw("50, 100", "scalar", "100")
   expect_true(isTRUE(sc$sweep))
   expect_equal(sc$value, c(50, 100))
 })
@@ -155,37 +155,37 @@ n_li <- function(html) {
 
 test_that("vector defaults display a trailing semicolon; scalars do not", {
   expect_equal(
-    ResearchDesigns:::format_shiny_param_default(c(0, 0, 0), "vector"),
+    DesignLibrary:::format_shiny_param_default(c(0, 0, 0), "vector"),
     "0, 0, 0;"
   )
   expect_equal(
-    ResearchDesigns:::format_shiny_param_default(c(0, 0, 0), "vector", "c(0, 0, 0)"),
+    DesignLibrary:::format_shiny_param_default(c(0, 0, 0), "vector", "c(0, 0, 0)"),
     "0, 0, 0;"
   )
   expect_equal(
-    ResearchDesigns:::format_shiny_param_default(100, "scalar", "100"),
+    DesignLibrary:::format_shiny_param_default(100, "scalar", "100"),
     "100"
   )
-  expect_false(grepl(";", ResearchDesigns:::format_shiny_param_default(100, "scalar", "100"), fixed = TRUE))
+  expect_false(grepl(";", DesignLibrary:::format_shiny_param_default(100, "scalar", "100"), fixed = TRUE))
 })
 
 test_that("a trailing semicolon on a vector is not a sweep", {
-  skip_same <- ResearchDesigns:::parse_shiny_param_raw(
+  skip_same <- DesignLibrary:::parse_shiny_param_raw(
     "0, 0, 0;", "vector", "0, 0, 0;"
   )
   expect_true(isTRUE(skip_same$skip))
 
-  skip_hint <- ResearchDesigns:::parse_shiny_param_raw(
+  skip_hint <- DesignLibrary:::parse_shiny_param_raw(
     "0, 0, 0;", "vector", "0, 0, 0"
   )
   expect_true(isTRUE(skip_hint$skip))
 
-  trail <- ResearchDesigns:::parse_shiny_param_raw("0, 0, 0;", "vector", "1, 1, 1;")
+  trail <- DesignLibrary:::parse_shiny_param_raw("0, 0, 0;", "vector", "1, 1, 1;")
   expect_false(isTRUE(trail$skip))
   expect_false(isTRUE(trail$sweep))
   expect_equal(trail$value, c(0, 0, 0))
 
-  sweep <- ResearchDesigns:::parse_shiny_param_raw(
+  sweep <- DesignLibrary:::parse_shiny_param_raw(
     "0, 0, 0; 0.1, 0.2, 0.3", "vector", "0, 0, 0;"
   )
   expect_true(isTRUE(sweep$sweep))
@@ -199,7 +199,7 @@ test_that("redesign_kind_help is a short conditional bullet list", {
     stringsAsFactors = FALSE
   )
   two$default <- I(list(100, 1))
-  html_two <- ResearchDesigns:::redesign_kind_help("two_arm_flexible", args = two)
+  html_two <- DesignLibrary:::redesign_kind_help("two_arm_flexible", args = two)
   expect_match(html_two, "^<ul><li>")
   expect_equal(n_li(html_two), 1L)
   expect_match(html_two, "You can change parameter values below")
@@ -213,7 +213,7 @@ test_that("redesign_kind_help is a short conditional bullet list", {
     stringsAsFactors = FALSE
   )
   multi$default <- I(list(90, 3, c(0, 0, 0), function(Z) Z))
-  html_m <- ResearchDesigns:::redesign_kind_help("multiarm_trial", args = multi)
+  html_m <- DesignLibrary:::redesign_kind_help("multiarm_trial", args = multi)
   expect_equal(n_li(html_m), 3L)
   expect_match(html_m, "You can change parameter values below")
   expect_match(html_m, "On a vector parameter")
@@ -227,14 +227,14 @@ test_that("redesign_kind_help matches two_arm_flexible and multiarm_trial kinds"
   skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
-  html_two <- ResearchDesigns:::redesign_kind_help("two_arm_flexible")
+  html_two <- DesignLibrary:::redesign_kind_help("two_arm_flexible")
   expect_equal(n_li(html_two), 1L)
   expect_match(html_two, "You can change parameter values below")
   expect_false(grepl("On a vector parameter", html_two, fixed = TRUE))
   expect_false(grepl("Note:", html_two, fixed = TRUE))
   expect_false(grepl("Functions, data frames", html_two, fixed = TRUE))
 
-  html_m <- ResearchDesigns:::redesign_kind_help("multiarm_trial")
+  html_m <- DesignLibrary:::redesign_kind_help("multiarm_trial")
   expect_equal(n_li(html_m), 3L)
   expect_match(html_m, "On a vector parameter")
   expect_match(html_m, "outcome_means")
@@ -243,21 +243,21 @@ test_that("redesign_kind_help matches two_arm_flexible and multiarm_trial kinds"
 })
 
 test_that("classify_param_kind separates a bare list from a classed one", {
-  expect_equal(ResearchDesigns:::classify_param_kind(list(a = 1, b = "x")), "list")
-  expect_true(ResearchDesigns:::is_modifiable_value(list(a = 1)))
-  expect_false(ResearchDesigns:::is_shiny_param_kind("list"))
-  expect_equal(ResearchDesigns:::classify_param_kind(data.frame(a = 1)), "data")
-  expect_equal(ResearchDesigns:::classify_param_kind(y ~ x), "data")
-  expect_false(ResearchDesigns:::is_modifiable_value(y ~ x))
+  expect_equal(DesignLibrary:::classify_param_kind(list(a = 1, b = "x")), "list")
+  expect_true(DesignLibrary:::is_modifiable_value(list(a = 1)))
+  expect_false(DesignLibrary:::is_shiny_param_kind("list"))
+  expect_equal(DesignLibrary:::classify_param_kind(data.frame(a = 1)), "data")
+  expect_equal(DesignLibrary:::classify_param_kind(y ~ x), "data")
+  expect_false(DesignLibrary:::is_modifiable_value(y ~ x))
 })
 
 test_that("a list of lists is a sweep and anything else is one value", {
-  expect_true(ResearchDesigns:::is_list_sweep(list(list(a = 1), list(a = 2))))
-  expect_true(ResearchDesigns:::is_list_sweep(list(list(a = 1))))
-  expect_false(ResearchDesigns:::is_list_sweep(list(a = 1, b = 2)))
-  expect_false(ResearchDesigns:::is_list_sweep(list()))
-  expect_false(ResearchDesigns:::is_list_sweep(c(1, 2)))
-  expect_false(ResearchDesigns:::is_list_sweep(list(data.frame(a = 1))))
+  expect_true(DesignLibrary:::is_list_sweep(list(list(a = 1), list(a = 2))))
+  expect_true(DesignLibrary:::is_list_sweep(list(list(a = 1))))
+  expect_false(DesignLibrary:::is_list_sweep(list(a = 1, b = 2)))
+  expect_false(DesignLibrary:::is_list_sweep(list()))
+  expect_false(DesignLibrary:::is_list_sweep(c(1, 2)))
+  expect_false(DesignLibrary:::is_list_sweep(list(data.frame(a = 1))))
 })
 
 test_that("conjoint exposes levels_list and redesigns it whole", {
@@ -299,7 +299,7 @@ test_that("get_args prints a table holding a function and a list", {
   skip_on_cran()
 
   args <- get_args("conjoint")
-  expect_s3_class(args, "research_designs_args")
+  expect_s3_class(args, "design_library_args")
   out <- capture.output(print(args))
   expect_true(any(grepl("levels_list", out)))
   expect_true(any(grepl("conjoint_utility", out)))

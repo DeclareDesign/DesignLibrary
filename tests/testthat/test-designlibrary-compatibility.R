@@ -1,5 +1,5 @@
-# Fixed DesignLibrary names. Do not discover via *_designer: other library
-# designers may be added without being DesignLibrary wrappers.
+# Fixed DesignLibrary 0.1 names. Do not discover via *_designer: other library
+# designers may be added without being DesignLibrary 0.1 wrappers.
 
 working_designers <- c(
   "two_arm_designer",
@@ -22,19 +22,19 @@ not_ported_designers <- c(
   "two_arm_covariate_designer"
 )
 
-test_that("DesignLibrary designer names are exported", {
-  exported <- getNamespaceExports("ResearchDesigns")
+test_that("DesignLibrary 0.1 designer names are exported", {
+  exported <- getNamespaceExports("DesignLibrary")
   for (nm in c(working_designers, not_ported_designers)) {
     expect_true(nm %in% exported, info = nm)
   }
 })
 
-test_that("ported DesignLibrary designers return a design", {
+test_that("ported DesignLibrary 0.1 designers return a design", {
   skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
   call_small <- function(nm) {
-    f <- get(nm, envir = asNamespace("ResearchDesigns"), inherits = FALSE)
+    f <- get(nm, envir = asNamespace("DesignLibrary"), inherits = FALSE)
     args <- list()
     form <- names(formals(f))
     if ("N" %in% form) args$N <- 20L
@@ -63,7 +63,7 @@ test_that("ported DesignLibrary designers return a design", {
 #   two_by_two_designer: mean_A0B0 / mean_A0B1 / mean_A1B0 / mean_A1B1
 #     -> slots of outcome_means
 #   block_cluster_two_arm_designer: sd_i_0 -> sd_i, assignment_probs ->
-#     assignment_prob, `...` unused DesignLibrary args
+#     assignment_prob, `...` unused DesignLibrary 0.1 args
 # args_to_fix is ignored on every designer and is never a file knob.
 designer_to_id <- c(
   two_arm_designer = "two_arm_flexible",
@@ -95,7 +95,7 @@ test_that("designer formals that are passed through match library knobs", {
   skip_if_not_installed("DeclareDesign")
   skip_on_cran()
 
-  ns <- asNamespace("ResearchDesigns")
+  ns <- asNamespace("DesignLibrary")
   for (nm in working_designers) {
     f <- get(nm, envir = ns, inherits = FALSE)
     form <- names(formals(f))
@@ -116,16 +116,16 @@ test_that("designer formals that are passed through match library knobs", {
   }
 })
 
-test_that("unported DesignLibrary designers explain the make_design() alternative", {
+test_that("unported DesignLibrary 0.1 designers explain the make_design() alternative", {
   for (nm in not_ported_designers) {
-    f <- get(nm, envir = asNamespace("ResearchDesigns"), inherits = FALSE)
+    f <- get(nm, envir = asNamespace("DesignLibrary"), inherits = FALSE)
     msg <- tryCatch(
       f(),
       error = function(e) conditionMessage(e)
     )
     expect_true(is.character(msg) && nzchar(msg), info = nm)
     expect_match(msg, "make_design\\(", info = nm)
-    expect_match(msg, "not in ResearchDesigns", info = nm)
+    expect_match(msg, "is not in DesignLibrary 2.0", info = nm)
     expect_match(msg, "Related designs include", info = nm)
   }
 })

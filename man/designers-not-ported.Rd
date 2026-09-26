@@ -9,7 +9,7 @@
 \alias{regression_discontinuity_designer}
 \alias{spillover_designer}
 \alias{two_arm_covariate_designer}
-\title{DesignLibrary designers not ported as-is}
+\title{DesignLibrary 0.1 designers not ported as-is}
 \usage{
 binary_iv_designer(...)
 
@@ -32,7 +32,7 @@ two_arm_covariate_designer(...)
 Nothing: these always stop.
 }
 \description{
-These names exist so that code written for DesignLibrary fails with an
+These names exist so that code written for DesignLibrary 0.1 fails with an
 error that says what to write instead, rather than with "object not found"
 or, worse, several lines later on a \code{NULL} design. Each names the related
 declarations available through \code{\link[=make_design]{make_design()}}, for example

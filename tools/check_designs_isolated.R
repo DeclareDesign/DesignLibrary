@@ -26,7 +26,7 @@ if (!dir.exists(file.path(root, "inst", "designs")) &&
   root <- normalizePath(file.path(root, ".."))
 }
 if (!dir.exists(file.path(root, "inst", "designs"))) {
-  stop("run this from the ResearchDesigns package root", call. = FALSE)
+  stop("run this from the DesignLibrary package root", call. = FALSE)
 }
 
 # The worker runs in a fresh process, so nothing another design attached leaks in.

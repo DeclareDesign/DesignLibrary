@@ -1,5 +1,5 @@
-# Optional server overrides for the ResearchDesigns Shiny app.
+# Optional server overrides for the DesignLibrary Shiny app.
 # copy_library_shiny() never overwrites an existing local.R.
 #
 # Examples:
-# options(researchdesigns.default_design = "two_arm_trial")
+# options(designlibrary.default_design = "two_arm_trial")

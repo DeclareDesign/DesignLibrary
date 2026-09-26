@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Contributing a design • ResearchDesigns</title>
+<title>Contributing a design • DesignLibrary</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -18,9 +18,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="../index.html">ResearchDesigns</a>
+    <a class="navbar-brand me-2" href="../index.html">DesignLibrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,18 +29,18 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/ResearchDesigns.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/DesignLibrary.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/ResearchDesigns.html">ResearchDesigns overview</a></li>
+<li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
   </ul>
 </li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/macartan/ResearchDesigns/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -57,7 +57,7 @@
       <h1>Contributing a design</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/macartan/ResearchDesigns/blob/HEAD/vignettes/contributing.Rmd" class="external-link"><code>vignettes/contributing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DeclareDesign/DesignLibrary/blob/HEAD/vignettes/contributing.Rmd" class="external-link"><code>vignettes/contributing.Rmd</code></a></small>
       <div class="d-none name"><code>contributing.Rmd</code></div>
     </div>
 
@@ -90,9 +90,9 @@ design.</li>
 <div class="section level2">
 <h2 id="fork">1. Fork<a class="anchor" aria-label="anchor" href="#fork"></a>
 </h2>
-<p>Fork <a href="https://github.com/macartan/ResearchDesigns" class="external-link">ResearchDesigns</a>
+<p>Fork <a href="https://github.com/DeclareDesign/DesignLibrary" class="external-link">DesignLibrary</a>
 on GitHub and clone your fork. Work from the package source tree (or set
-<code>options(ResearchDesigns.root = "...")</code> so helpers find
+<code>options(DesignLibrary.root = "...")</code> so helpers find
 <code>inst/designs/</code>).</p>
 </div>
 <div class="section level2">
@@ -121,7 +121,7 @@ strings and library metadata live in optional YAML.</p>
 <p>After adding or editing a design, rebuild the index, run the audit,
 and bake diagnosis previews:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>ResearchDesigns.root <span class="op">=</span> <span class="st">"/path/to/your/ResearchDesigns"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>DesignLibrary.root <span class="op">=</span> <span class="st">"/path/to/your/DesignLibrary"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/refresh_library.html">refresh_library</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>That step creates the artifacts the library and Shiny browser expect
 for your design.</p>
@@ -144,7 +144,7 @@ diagnosis / redesign behave as you expect. Use
 <h2 id="pull-request">5. Pull request<a class="anchor" aria-label="anchor" href="#pull-request"></a>
 </h2>
 <p>Open a pull request from your fork to
-<code>macartan/ResearchDesigns</code>. Keep the PR focused on the new or
+<code>macartan/DesignLibrary</code>. Keep the PR focused on the new or
 updated design file and any packages it needs. Mention extra
 dependencies in YAML <code>packages:</code> and in the PR description
 when relevant.</p>
@@ -195,7 +195,7 @@ name.</td>
 </tr>
 <tr class="odd">
 <td><code>packages</code></td>
-<td>Extra R packages beyond DeclareDesignZero,
+<td>Extra R packages beyond DeclareDesign,
 e.g. <code>[margins, broom]</code>.</td>
 </tr>
 <tr class="even">
@@ -209,7 +209,7 @@ Prefix with <code>-</code> to hide one
 <td>Map parameter names to tip strings. Always quote keys:
 <code>"N": "Sample size"</code>. Names must match redesignable
 parameters. Data frames and matrices are R-only
-(<code>make_design(..., data = ...)</code>), not Shiny controls.</td>
+(<code>make_design(..., dataset = ...)</code>), not Shiny controls.</td>
 </tr>
 <tr class="even">
 <td><code>coupled</code></td>
@@ -254,23 +254,23 @@ redesign help box always show the note.</td>
 <h2 id="checklist">Checklist<a class="anchor" aria-label="anchor" href="#checklist"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/macartan/ResearchDesigns" class="external-link">ResearchDesigns</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DeclareDesign/DesignLibrary" class="external-link">DesignLibrary</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/contributor_checklist.html">contributor_checklist</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "File lives in inst/designs/ and is self-contained (no source() of other designs)."                                                                                                                                                                                                                                                                                    </span></span>
-<span><span class="co">#&gt;  [2] "Filename matches the substantive id (e.g. two_arm_trial.R)."                                                                                                                                                                                                                                                                                                          </span></span>
-<span><span class="co">#&gt;  [3] "YAML frontmatter is optional. If present, may set id, alias (book ref), label, category, keywords, packages, diagnosands, include_in_shiny, functional, book_link, params; object: only if the design is not named `design`."                                                                                                                                         </span></span>
-<span><span class="co">#&gt;  [4] "No YAML is fine: id = filename stem, label = humanized id, category = Other, object = design, include_in_shiny = TRUE, functional = TRUE."                                                                                                                                                                                                                            </span></span>
-<span><span class="co">#&gt;  [5] "Set functional: false to park a design (e.g. unavailable dependencies). Skipped by audit, smoke tests, and dependency install; forces include_in_shiny: false."                                                                                                                                                                                                       </span></span>
-<span><span class="co">#&gt;  [6] "The design object is the source of truth for editable parameters: only names assigned before `design &lt;-` (e.g. N &lt;- 1000; declare_model(N = N, ...)) count. Literals inside declare_* (e.g. declare_model(N = 1000)) are not parameters."                                                                                                                             </span></span>
-<span><span class="co">#&gt;  [7] "Scalar parameters (N &lt;- 100) can be swept with redesign(N = c(50, 100)). Vector parameters (probs &lt;- c(.1, .2, .3)) are replaced as a whole; the browser edits them as a comma-separated list. Data frames and matrices are package parameters (make_design(..., data = ...)), not Shiny controls — prefer `data &lt;- example_pop` over naming the example as the knob."</span></span>
-<span><span class="co">#&gt;  [8] "YAML params map names to tip strings; always quote keys (e.g. \"N\": \"Sample size\", \"b\": \"Effect size\"); names must match those redesignable parameters (no extras). Design steps (model_*, inquiry_*, etc.) are not params."                                                                                                                                   </span></span>
-<span><span class="co">#&gt;  [9] "Optional diagnosands: preferred display diagnosands (e.g. diagnosands: rmse, bias or [rmse, bias]); prefix with - to exclude (rmse, -bias, power). Shiny Diagnosis and Redesign use these defaults."                                                                                                                                                                  </span></span>
-<span><span class="co">#&gt; [10] "Extra packages listed under packages: and available to install."                                                                                                                                                                                                                                                                                                      </span></span>
-<span><span class="co">#&gt; [11] "Design evaluates under DeclareDesignZero; redesign() works for documented parameters. A design that loads but does not run fails the audit."                                                                                                                                                                                                                          </span></span>
-<span><span class="co">#&gt; [12] "Run refresh_library() from the package source tree after adding or editing designs (or set options(ResearchDesigns.root = \"...\"))."</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] "File lives in inst/designs/ and is self-contained (no source() of other designs)."                                                                                                                                                                                                                                                                                                              </span></span>
+<span><span class="co">#&gt;  [2] "Filename matches the substantive id (e.g. two_arm_simple.R)."                                                                                                                                                                                                                                                                                                                                   </span></span>
+<span><span class="co">#&gt;  [3] "YAML frontmatter is optional. If present, may set id, alias (book ref), label, category, keywords, packages, diagnosands, include_in_shiny, functional, book_link, params; object: only if the design is not named `design`."                                                                                                                                                                   </span></span>
+<span><span class="co">#&gt;  [4] "No YAML is fine: id = filename stem, label = humanized id, category = Other, object = design, include_in_shiny = TRUE, functional = TRUE."                                                                                                                                                                                                                                                      </span></span>
+<span><span class="co">#&gt;  [5] "Set functional: false to park a design (e.g. unavailable dependencies). Skipped by audit, smoke tests, and dependency install; forces include_in_shiny: false."                                                                                                                                                                                                                                 </span></span>
+<span><span class="co">#&gt;  [6] "The design object is the source of truth for editable parameters: only names assigned before `design &lt;-` (e.g. N &lt;- 1000; declare_model(N = N, ...)) count. Literals inside declare_* (e.g. declare_model(N = 1000)) are not parameters."                                                                                                                                                       </span></span>
+<span><span class="co">#&gt;  [7] "Scalar parameters (N &lt;- 100) can be swept with redesign(N = c(50, 100)). Vector parameters (probs &lt;- c(.1, .2, .3)) are replaced as a whole; the browser edits them as a comma-separated list. Data frames and matrices are package parameters (make_design(..., dataset = ...)), not Shiny controls; name the knob `dataset` (`dataset &lt;- example_pop`), not `data` or the example's own name."</span></span>
+<span><span class="co">#&gt;  [8] "YAML params map names to tip strings; always quote keys (e.g. \"N\": \"Sample size\", \"b\": \"Effect size\"); names must match those redesignable parameters (no extras). Design steps (model_*, inquiry_*, etc.) are not params."                                                                                                                                                             </span></span>
+<span><span class="co">#&gt;  [9] "Optional diagnosands: preferred display diagnosands (e.g. diagnosands: rmse, bias or [rmse, bias]); prefix with - to exclude (rmse, -bias, power). Shiny Diagnosis and Redesign use these defaults."                                                                                                                                                                                            </span></span>
+<span><span class="co">#&gt; [10] "Extra packages listed under packages: and available to install."                                                                                                                                                                                                                                                                                                                                </span></span>
+<span><span class="co">#&gt; [11] "Design evaluates under DeclareDesign; redesign() works for documented parameters. A design that loads but does not run fails the audit."                                                                                                                                                                                                                                                        </span></span>
+<span><span class="co">#&gt; [12] "Run refresh_library() from the package source tree after adding or editing designs (or set options(DesignLibrary.root = \"...\"))."</span></span></code></pre></div>
 <p>In R the same helpers are <code><a href="../reference/contributor_checklist.html">contributor_checklist()</a></code>,
 <code><a href="../reference/audit_designs.html">audit_designs()</a></code>, and <code><a href="../reference/refresh_library.html">refresh_library()</a></code>.</p>
-<p>Eight designs also have DesignLibrary names:
+<p>Eight designs also have DesignLibrary 0.1 names:
 <code><a href="../reference/two_arm_designer.html">two_arm_designer()</a></code>,
 <code><a href="../reference/two_arm_attrition_designer.html">two_arm_attrition_designer()</a></code>,
 <code><a href="../reference/pretest_posttest_designer.html">pretest_posttest_designer()</a></code>,
@@ -286,11 +286,11 @@ and <code><a href="../reference/block_cluster_two_arm_designer.html">block_clust
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Macartan Humphreys.</p>
+  <p>Developed by Macartan Humphreys, Graeme Blair, Jasper Cooper, Alexander Coppock, Clara Bicalho, Neal Fultz, Lily Medina.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -2,7 +2,7 @@
 % Please edit documentation in R/shiny_app.R
 \name{run_shiny}
 \alias{run_shiny}
-\title{Launch the ResearchDesigns Shiny browser}
+\title{Launch the DesignLibrary Shiny browser}
 \usage{
 run_shiny(...)
 }
@@ -13,5 +13,5 @@ run_shiny(...)
 The value of \code{shiny::runApp()} (called for side effects).
 }
 \description{
-Launch the ResearchDesigns Shiny browser
+Launch the DesignLibrary Shiny browser
 }

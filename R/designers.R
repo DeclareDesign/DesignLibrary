@@ -22,7 +22,7 @@ call_library_design <- function(id, dots) {
 #'
 #' Builds a design with one treatment and one control arm. Treatment effects
 #' can be specified by `ate` or by `treatment_mean` (which overrides `ate`).
-#' Argument names match DesignLibrary `two_arm_designer`.
+#' Argument names match DesignLibrary 0.1's `two_arm_designer`.
 #'
 #' @param N Sample size.
 #' @param assignment_prob Probability of assignment to treatment.
@@ -33,7 +33,7 @@ call_library_design <- function(id, dots) {
 #'   `ate` (`ate` becomes `treatment_mean - control_mean`).
 #' @param treatment_sd Standard deviation in treatment. Defaults to `control_sd`.
 #' @param rho Correlation between treatment and control potential outcomes.
-#' @param args_to_fix Ignored. Present for DesignLibrary compatibility.
+#' @param args_to_fix Ignored. Present for compatibility with DesignLibrary 0.1.
 #'
 #' @return A design object.
 #' @seealso [make_design()]
@@ -331,9 +331,9 @@ two_by_two_designer <- function(
 #' Routes to [make_design()] with id `"block_cluster_two_arm"`:
 #' `make_design("block_cluster_two_arm", N_blocks = N_blocks, ...)`.
 #'
-#' A simplified signature relative to DesignLibrary: level sizes and three
+#' A simplified signature relative to DesignLibrary 0.1: level sizes and three
 #' shock standard deviations, a scalar assignment probability, and `ate`.
-#' Extra DesignLibrary arguments (`N`, `sd`, `rho`, `verbose`, per-block
+#' Extra DesignLibrary 0.1 arguments (`N`, `sd`, `rho`, `verbose`, per-block
 #' `assignment_probs`) are accepted in `...` and ignored with a warning.
 #'
 #' @param N_blocks Number of blocks.
@@ -346,7 +346,7 @@ two_by_two_designer <- function(
 #' @param assignment_prob,assignment_probs Assignment probability. A vector
 #'   of per-block probabilities is not supported.
 #' @param args_to_fix Ignored.
-#' @param ... Unused DesignLibrary arguments; warned and dropped.
+#' @param ... Unused DesignLibrary 0.1 arguments; warned and dropped.
 #' @return A design object.
 #' @seealso [make_design()]
 #' @export
@@ -395,7 +395,7 @@ block_cluster_two_arm_designer <- function(
   ))
 }
 
-#' Stop with related make_design() calls for a DesignLibrary designer we did not port
+#' Stop with related make_design() calls for a DesignLibrary 0.1 designer not yet ported
 #'
 #' These names used to message and return `invisible(NULL)`, which reads as a
 #' courtesy in a new package and as a fault in a new major version of an old
@@ -406,15 +406,15 @@ block_cluster_two_arm_designer <- function(
 #' @noRd
 designer_not_ported <- function(old, suggestions) {
   stop(
-    old, "() is not in ResearchDesigns. Related designs include:\n",
+    old, "() from DesignLibrary 0.1 is not in DesignLibrary 2.0 yet. Related designs include:\n",
     paste0("  ", suggestions, collapse = "\n"),
     call. = FALSE
   )
 }
 
-#' DesignLibrary designers not ported as-is
+#' DesignLibrary 0.1 designers not ported as-is
 #'
-#' These names exist so that code written for DesignLibrary fails with an
+#' These names exist so that code written for DesignLibrary 0.1 fails with an
 #' error that says what to write instead, rather than with "object not found"
 #' or, worse, several lines later on a `NULL` design. Each names the related
 #' declarations available through [make_design()], for example

@@ -17,7 +17,7 @@ contributor_checklist <- function() {
     "Optional diagnosands: preferred display diagnosands (e.g. diagnosands: rmse, bias or [rmse, bias]); prefix with - to exclude (rmse, -bias, power). Shiny Diagnosis and Redesign use these defaults.",
     "Extra packages listed under packages: and available to install.",
     "Design evaluates under DeclareDesign; redesign() works for documented parameters. A design that loads but does not run fails the audit.",
-    "Run refresh_library() from the package source tree after adding or editing designs (or set options(ResearchDesigns.root = \"...\"))."
+    "Run refresh_library() from the package source tree after adding or editing designs (or set options(DesignLibrary.root = \"...\"))."
   )
 }
 
@@ -353,7 +353,7 @@ classify_audit_issue <- function(msg) {
 #'   2). If `NULL`, skip the run check (load and params only).
 #' @param write_report If `TRUE` (default), write CSV + markdown under `tools/`.
 #' @param report_dir Directory for reports; default `tools/` under package root.
-#' @return An object of class `research_designs_audit`.
+#' @return An object of class `design_library_audit`.
 #' @export
 audit_designs <- function(
   designs = NULL,
@@ -480,7 +480,7 @@ audit_designs <- function(
       checklist = contributor_checklist(),
       report_paths = character(0)
     ),
-    class = "research_designs_audit"
+    class = "design_library_audit"
   )
 
   if (isTRUE(write_report)) {
@@ -549,13 +549,13 @@ format_audit_result_line <- function(r) {
 
 #' Write audit results to CSV, markdown, and plain text under `tools/`
 #'
-#' @param x A `research_designs_audit` object from [audit_designs()].
+#' @param x A `design_library_audit` object from [audit_designs()].
 #' @param dir Output directory. Default: `tools/` under the package root.
 #' @return Character vector of paths written (invisibly).
 #' @export
 write_audit_report <- function(x, dir = NULL) {
-  if (!inherits(x, "research_designs_audit")) {
-    stop("x must be a research_designs_audit object from audit_designs().", call. = FALSE)
+  if (!inherits(x, "design_library_audit")) {
+    stop("x must be a design_library_audit object from audit_designs().", call. = FALSE)
   }
   if (is.null(dir)) {
     root <- tryCatch(find_package_root(), error = function(e) getwd())
@@ -597,7 +597,7 @@ write_audit_report <- function(x, dir = NULL) {
 
   md_path <- file.path(dir, "audit_report.md")
   lines <- c(
-    "# ResearchDesigns audit report",
+    "# DesignLibrary audit report",
     "",
     paste0(
       "Summary: **", x$n_ok %||% sum(vapply(x$results, function(r) isTRUE(r$ok) && !isTRUE(r$skipped), logical(1))),
@@ -686,7 +686,7 @@ write_audit_report <- function(x, dir = NULL) {
   # Plain text: problems at top, OK designs later
   txt_path <- file.path(dir, "audit_report.txt")
   header <- paste0(
-    "ResearchDesigns audit: ",
+    "DesignLibrary audit: ",
     x$n_ok %||% sum(vapply(x$results, function(r) isTRUE(r$ok) && !isTRUE(r$skipped), logical(1))),
     "/", x$n, " ok",
     if (!is.null(x$n_skipped) && x$n_skipped > 0) paste0(", ", x$n_skipped, " parked") else "",
@@ -705,9 +705,9 @@ write_audit_report <- function(x, dir = NULL) {
 }
 
 #' @export
-print.research_designs_audit <- function(x, ...) {
+print.design_library_audit <- function(x, ...) {
   cat(
-    "ResearchDesigns audit: ", x$n_ok, "/", x$n, " ok",
+    "DesignLibrary audit: ", x$n_ok, "/", x$n, " ok",
     if (!is.null(x$n_skipped) && x$n_skipped > 0) paste0(", ", x$n_skipped, " parked") else "",
     if (!is.null(x$n_fail) && x$n_fail > 0) paste0(", ", x$n_fail, " failed") else "",
     "\n",
@@ -900,7 +900,7 @@ write_index_artifact <- function(index = make_index(use_cache = FALSE)) {
 #' @export
 refresh_library <- function(sims = 100, designs = NULL, seed = 343) {
   paths_info <- package_write_paths()
-  message("ResearchDesigns refresh_library()")
+  message("DesignLibrary refresh_library()")
   message("Package root: ", paths_info$root)
   message("Designs dir:  ", designs_dir())
   message("Checklist:")
@@ -963,7 +963,7 @@ refresh_library <- function(sims = 100, designs = NULL, seed = 343) {
   preview_failures <- bake$failures %||% empty_fail
 
   lines <- c(
-    "ResearchDesigns refresh_library() summary",
+    "DesignLibrary refresh_library() summary",
     paste0("Package root: ", paths_info$root),
     paste0("Index designs: ", nrow(index)),
     paste0(
@@ -1065,13 +1065,13 @@ copy_dir_contents <- function(from, to, tries = 6L, sleep = 1) {
 #' directory, then copies the result into `docs/`.
 #'
 #' @param pkg Package root. Default: `find_package_root()` via
-#'   `options(ResearchDesigns.root=...)` or the current working directory.
+#'   `options(DesignLibrary.root=...)` or the current working directory.
 #' @param ... Passed to [pkgdown::build_site()] (for example `devel = TRUE`).
 #' @return Invisibly, the path to `docs/`.
 #' @export
 #' @examples
 #' \dontrun{
-#' options(ResearchDesigns.root = "C:/path/to/ResearchDesigns")
+#' options(DesignLibrary.root = "C:/path/to/DesignLibrary")
 #' build_docs()
 #' }
 build_docs <- function(pkg = NULL, ...) {
@@ -1084,7 +1084,7 @@ build_docs <- function(pkg = NULL, ...) {
   pkg <- normalizePath(pkg, winslash = "/", mustWork = TRUE)
   dest <- file.path(pkg, "docs")
 
-  tmp_root <- tempfile("ResearchDesigns-docs-")
+  tmp_root <- tempfile("DesignLibrary-docs-")
   dir.create(tmp_root, recursive = TRUE)
   on.exit(unlink(tmp_root, recursive = TRUE, force = TRUE), add = TRUE)
 

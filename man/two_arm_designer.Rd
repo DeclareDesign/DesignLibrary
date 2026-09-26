@@ -34,7 +34,7 @@ two_arm_designer(
 
 \item{rho}{Correlation between treatment and control potential outcomes.}
 
-\item{args_to_fix}{Ignored. Present for DesignLibrary compatibility.}
+\item{args_to_fix}{Ignored. Present for compatibility with DesignLibrary 0.1.}
 }
 \value{
 A design object.
@@ -46,7 +46,7 @@ Routes to \code{\link[=make_design]{make_design()}} with id \code{"two_arm_flexi
 \details{
 Builds a design with one treatment and one control arm. Treatment effects
 can be specified by \code{ate} or by \code{treatment_mean} (which overrides \code{ate}).
-Argument names match DesignLibrary \code{two_arm_designer}.
+Argument names match DesignLibrary 0.1's \code{two_arm_designer}.
 }
 \examples{
 \dontrun{

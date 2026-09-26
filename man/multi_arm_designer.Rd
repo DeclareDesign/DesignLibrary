@@ -34,7 +34,7 @@ unless \code{outcome_means} is a scalar (then recycled).}
 \item{Y}{Optional outcome function of \code{Z}, \code{u}, and \code{outcome_sds}. The
 library default is used when \code{Y} is \code{NULL}.}
 
-\item{args_to_fix}{Ignored. Present for DesignLibrary compatibility.}
+\item{args_to_fix}{Ignored. Present for compatibility with DesignLibrary 0.1.}
 }
 \value{
 A design object.

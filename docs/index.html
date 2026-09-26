@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>ResearchDesigns • ResearchDesigns</title>
+<title>DesignLibrary • DesignLibrary</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="ResearchDesigns">
-<meta name="description" content="A library of declared designs (DeclareDesignZero), with a small API and bundled Shiny browser.">
-<meta property="og:description" content="A library of declared designs (DeclareDesignZero), with a small API and bundled Shiny browser.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="DesignLibrary">
+<meta name="description" content="A library of declared designs (DeclareDesign), with a small API and bundled Shiny browser.">
+<meta property="og:description" content="A library of declared designs (DeclareDesign), with a small API and bundled Shiny browser.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,9 +20,9 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <a class="navbar-brand me-2" href="index.html">ResearchDesigns</a>
+    <a class="navbar-brand me-2" href="index.html">DesignLibrary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,18 +31,18 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="articles/ResearchDesigns.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="articles/DesignLibrary.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/ResearchDesigns.html">ResearchDesigns overview</a></li>
+<li><a class="dropdown-item" href="articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="articles/contributing.html">Contributing a design</a></li>
   </ul>
 </li>
       </ul>
 <ul class="navbar-nav">
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/macartan/ResearchDesigns/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -51,9 +51,9 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="researchdesigns">ResearchDesigns<a class="anchor" aria-label="anchor" href="#researchdesigns"></a>
+<div class="page-header"><h1 id="designlibrary">DesignLibrary<a class="anchor" aria-label="anchor" href="#designlibrary"></a>
 </h1></div>
-<p>A prototype for a library of declared designs using DeclareDesignZero.</p>
+<p>A prototype for a library of declared designs using DeclareDesign.</p>
 <p><strong>Versioning:</strong> start at 0.1.0 and bump slowly. Current: 0.1.1.</p>
 <div class="section level2">
 <h2 id="idea">Idea<a class="anchor" aria-label="anchor" href="#idea"></a>
@@ -70,14 +70,14 @@
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/list_designs.html">list_designs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span>, b <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/two_arm_designer.html">two_arm_designer</a></span><span class="op">(</span>N <span class="op">=</span> <span class="fl">40</span>, ate <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>  <span class="co"># DesignLibrary name</span></span>
+<span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, b <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/two_arm_designer.html">two_arm_designer</a></span><span class="op">(</span>N <span class="op">=</span> <span class="fl">40</span>, ate <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>  <span class="co"># DesignLibrary 0.1 name</span></span>
 <span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"2.1"</span>, b <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>          <span class="co"># book alias</span></span>
-<span><span class="fu"><a href="reference/get_args.html">get_args</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/get_code.html">get_code</a></span><span class="op">(</span><span class="st">"two_arm_trial"</span><span class="op">)</span>             <span class="co"># simple make_design() + full source</span></span>
+<span><span class="fu"><a href="reference/get_args.html">get_args</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/get_code.html">get_code</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span>             <span class="co"># simple make_design() + full source</span></span>
 <span><span class="fu"><a href="reference/run_shiny.html">run_shiny</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># Imports + Shiny Suggests + YAML packages: (+ Zero from GitHub)</span></span>
+<span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># Imports + Shiny Suggests + YAML packages: (+ the rewrite branches from GitHub)</span></span>
 <span><span class="fu"><a href="reference/copy_library_shiny.html">copy_library_shiny</a></span><span class="op">(</span><span class="st">"path/to/app"</span><span class="op">)</span>     <span class="co"># standalone Shiny folder for the server</span></span></code></pre></div>
 <p>Maintainer one-stop:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -89,9 +89,9 @@
 <h2 id="server-deploy">Server deploy<a class="anchor" aria-label="anchor" href="#server-deploy"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"macartan/ResearchDesigns"</span><span class="op">)</span></span>
-<span><span class="fu">ResearchDesigns</span><span class="fu">::</span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">ResearchDesigns</span><span class="fu">::</span><span class="fu"><a href="reference/copy_library_shiny.html">copy_library_shiny</a></span><span class="op">(</span><span class="st">"/srv/shiny-server/researchdesigns"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DeclareDesign/DesignLibrary@RDrewrite"</span><span class="op">)</span></span>
+<span><span class="fu">DesignLibrary</span><span class="fu">::</span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">DesignLibrary</span><span class="fu">::</span><span class="fu"><a href="reference/copy_library_shiny.html">copy_library_shiny</a></span><span class="op">(</span><span class="st">"/srv/shiny-server/designlibrary"</span><span class="op">)</span></span></code></pre></div>
 <p>Point Shiny Server at that folder. <code>local.R</code> there is never overwritten on re-copy. ## Minimal design file</p>
 <p>YAML is optional. This is enough:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -108,14 +108,14 @@
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co"># or: diagnosands: rmse, bias</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="classic-declaredesign-vs-declaredesignzero">Classic DeclareDesign vs DeclareDesignZero<a class="anchor" aria-label="anchor" href="#classic-declaredesign-vs-declaredesignzero"></a>
+<h2 id="classic-declaredesign-vs-declaredesign">Classic DeclareDesign vs DeclareDesign<a class="anchor" aria-label="anchor" href="#classic-declaredesign-vs-declaredesign"></a>
 </h2>
-<p><strong>Classic DeclareDesign</strong> (and DesignLibrary) often paired a <em>designer function</em> with a design: parameters lived on the designer, and tools like <code>expand_design(two_arm_designer, N = c(50, 100))</code> swept that function. Reproducible code was glued on with special extraction (<code>{{{ }}}</code>).</p>
-<p><strong>DeclareDesignZero</strong> keeps the same declaration verbs (<code>declare_model</code>, <code>+</code>, <code>diagnose_design</code>, …) but treats the <strong>declared design itself</strong> as redesignable. Free symbols in the design (e.g. <code>b</code>, <code>tau</code>) are found on the object, so:</p>
+<p><strong>Classic DeclareDesign</strong> (and DesignLibrary 0.1) often paired a <em>designer function</em> with a design: parameters lived on the designer, and tools like <code>expand_design(two_arm_designer, N = c(50, 100))</code> swept that function. Reproducible code was glued on with special extraction (<code>{{{ }}}</code>).</p>
+<p><strong>DeclareDesign</strong> keeps the same declaration verbs (<code>declare_model</code>, <code>+</code>, <code>diagnose_design</code>, …) but treats the <strong>declared design itself</strong> as redesignable. Free symbols in the design (e.g. <code>b</code>, <code>tau</code>) are found on the object, so:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">designs</span> <span class="op">&lt;-</span> <span class="fu">redesign</span><span class="op">(</span><span class="va">design</span>, tau <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">diagnose_design</span><span class="op">(</span><span class="va">designs</span>, sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<p>needs no designer and no DesignLibrary-style gluing. This package is built for that model.</p>
+<p>needs no designer and no designer-style gluing. This package is built for that model.</p>
 </div>
 <div class="section level2">
 <h2 id="contributor-checklist">Contributor checklist<a class="anchor" aria-label="anchor" href="#contributor-checklist"></a>
@@ -126,8 +126,9 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/macartan/ResearchDesigns/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/macartan/ResearchDesigns/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://cloud.r-project.org/package=DesignLibrary" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/DeclareDesign/DesignLibrary/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/DeclareDesign/DesignLibrary/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -143,7 +144,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing ResearchDesigns</a></li>
+<li><a href="authors.html#citation">Citing DesignLibrary</a></li>
 </ul>
 </div>
 
@@ -151,6 +152,12 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Macartan Humphreys <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Graeme Blair <br><small class="roles"> Author </small>   </li>
+<li>Jasper Cooper <br><small class="roles"> Author </small>   </li>
+<li>Alexander Coppock <br><small class="roles"> Author </small>   </li>
+<li>Clara Bicalho <br><small class="roles"> Author </small>   </li>
+<li>Neal Fultz <br><small class="roles"> Author </small>   </li>
+<li>Lily Medina <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 
@@ -161,11 +168,11 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Macartan Humphreys.</p>
+  <p>Developed by Macartan Humphreys, Graeme Blair, Jasper Cooper, Alexander Coppock, Clara Bicalho, Neal Fultz, Lily Medina.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

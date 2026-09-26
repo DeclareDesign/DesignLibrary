@@ -17,7 +17,7 @@ audit_designs(designs = NULL, sims = 2, write_report = TRUE, report_dir = NULL)
 \item{report_dir}{Directory for reports; default \verb{tools/} under package root.}
 }
 \value{
-An object of class \code{research_designs_audit}.
+An object of class \code{design_library_audit}.
 }
 \description{
 Checks that each file loads, exposes a design object, and that any YAML

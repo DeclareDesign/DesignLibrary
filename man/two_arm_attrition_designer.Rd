@@ -27,7 +27,7 @@ two_arm_attrition_designer(
 
 \item{rho}{Correlation between reporting and outcome shocks (0 to 1).}
 
-\item{args_to_fix}{Ignored. Present for DesignLibrary compatibility.}
+\item{args_to_fix}{Ignored. Present for compatibility with DesignLibrary 0.1.}
 }
 \value{
 A design object.

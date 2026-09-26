@@ -19,7 +19,7 @@ sequence and up to 10 designs in each remaining group. If \code{TRUE}, printing
 lists every design.}
 }
 \value{
-A data frame with class \code{research_designs_list}.
+A data frame with class \code{design_library_list}.
 }
 \description{
 Returns a data frame of design metadata. Printing is a grouped list of

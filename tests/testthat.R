@@ -1,4 +1,4 @@
 library(testthat)
-library(ResearchDesigns)
+library(DesignLibrary)
 
-test_check("ResearchDesigns")
+test_check("DesignLibrary")
