@@ -744,52 +744,75 @@ process_tracing_designer <- function(
   ))
 }
 
-#' Stop with related make_design() calls for a DesignLibrary 0.1 designer not yet ported
+#' Create a 2^k factorial design
 #'
-#' These names used to message and return `invisible(NULL)`, which reads as a
-#' courtesy in a new package and as a fault in a new major version of an old
-#' one: `design <- factorial_designer(k = 3)` then failed several lines later,
-#' inside `diagnose_design()`, with an error naming neither the designer nor
-#' the replacement. Stopping puts the complaint at the call that caused it.
+#' Routes to [make_design()] with id `"factorial"`:
+#' `make_design("factorial", N = N, k = k, ...)`.
 #'
-#' @noRd
-designer_not_ported <- function(old, suggestions) {
-  stop(
-    old, "() from DesignLibrary 0.1 is not in DesignLibrary 2.0 yet. Related designs include:\n",
-    paste0("  ", suggestions, collapse = "\n"),
-    call. = FALSE
-  )
-}
-
-#' DesignLibrary 0.1 designers not ported as-is
+#' Each of `k` factors is assigned with its own probability, and each of the
+#' `2^k` treatment combinations has its own normally distributed potential
+#' outcome. The inquiries are the overall average, the average effect of each
+#' factor, and every interaction, each averaged with equal weight over the
+#' conditions of the other factors. The estimator regresses the outcome on the
+#' full interaction of the treatments centered at 0.5, weighted by the inverse
+#' probability of the assigned combination, so the intercept estimates the
+#' overall average and each coefficient an average effect. Argument names
+#' match DesignLibrary 0.1's `factorial_designer`.
 #'
-#' These names exist so that code written for DesignLibrary 0.1 fails with an
-#' error that says what to write instead, rather than with "object not found"
-#' or, worse, several lines later on a `NULL` design. Each names the related
-#' declarations available through [make_design()], for example
-#' `make_design("encouragement")` or `make_design("factorial_2x2")`.
+#' `outcome_means` and `outcome_sds` follow the row order of
+#' `expand.grid(rep(list(c(0, 1)), k))`, in which the first factor varies
+#' fastest.
 #'
-#' @name designers-not-ported
-#' @param ... Ignored.
-#' @return Nothing: these always stop.
+#' @inheritParams two_arm_designer
+#' @param N Sample size.
+#' @param k Number of factors, an integer of at least 2.
+#' @param outcome_means Mean outcome in each of the `2^k` treatment
+#'   combinations.
+#' @param sd Standard deviation of every potential outcome, used when
+#'   `outcome_sds` is not supplied.
+#' @param outcome_sds Standard deviation of the outcome in each of the `2^k`
+#'   treatment combinations.
+#' @param assignment_probs Probability of assignment to each factor (length
+#'   `k`).
+#' @param outcome_name Name of the outcome variable.
+#' @param treatment_names Names of the `k` factors. `NULL` gives `T1`, ...,
+#'   `Tk`.
+#' @return A design object.
 #' @seealso [make_design()]
-#' @keywords internal
-NULL
-
-
-
-#' @rdname designers-not-ported
 #' @export
-factorial_designer <- function(...) {
-  designer_not_ported(
-    "factorial_designer",
-    c(
-      'make_design("factorial_2x2")',
-      'make_design("factorial_2x2x2")',
-      "two_by_two_designer()"
-    )
-  )
+#' @examples
+#' \dontrun{
+#' factorial_designer(k = 3, assignment_probs = c(1/2, 1/4, 1/8),
+#'                    outcome_means = c(0, 0, 0, 0, 0, 0, 0, 4))
+#' }
+factorial_designer <- function(
+  N = 256,
+  k = 3,
+  outcome_means = rep(0, 2^k),
+  sd = 1,
+  outcome_sds = rep(sd, 2^k),
+  assignment_probs = rep(0.5, k),
+  outcome_name = "Y",
+  treatment_names = NULL,
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (k < 2 || !rlang::is_integerish(k)) stop("k must be an integer of at least 2.", call. = FALSE)
+  if (length(outcome_means) != 2^k) stop("outcome_means must have length 2^k.", call. = FALSE)
+  if (length(outcome_sds) != 2^k) stop("outcome_sds must have length 2^k.", call. = FALSE)
+  if (length(assignment_probs) != k) stop("assignment_probs must have length k.", call. = FALSE)
+  if (any(outcome_sds < 0)) stop("outcome_sds must be non-negative.", call. = FALSE)
+  if (any(assignment_probs <= 0)) stop("assignment_probs must be positive.", call. = FALSE)
+  if (grepl(" ", outcome_name, fixed = TRUE)) stop("outcome_name must not contain spaces.", call. = FALSE)
+  if (is.null(treatment_names)) treatment_names <- paste0("T", seq_len(k))
+  if (length(treatment_names) != k) stop("treatment_names must have length k.", call. = FALSE)
+  call_library_design("factorial", list(
+    N = N,
+    k = k,
+    outcome_means = outcome_means,
+    outcome_sds = outcome_sds,
+    assignment_probs = assignment_probs,
+    outcome_name = outcome_name,
+    treatment_names = treatment_names
+  ))
 }
-
-
-

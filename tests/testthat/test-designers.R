@@ -117,11 +117,12 @@ test_that("designer argument names match DesignLibrary 0.1 where we claim them",
   ))
 })
 
-test_that("unported DesignLibrary 0.1 designers stop and point at make_design()", {
-  # They used to message and return invisible(NULL), so `design <-
-  # factorial_designer(k = 3)` failed further downstream with an error naming
-  # neither the designer nor its replacement.
-  expect_error(factorial_designer(), "make_design\\(\"factorial_2x2\"\\)")
+test_that("factorial_designer() validates as DesignLibrary 0.1 did", {
+  expect_error(factorial_designer(k = 1), "at least 2")
+  expect_error(factorial_designer(outcome_means = rep(0, 4)), "2\\^k")
+  expect_error(factorial_designer(assignment_probs = 0.5), "length k")
+  expect_error(factorial_designer(treatment_names = c("A", "B")), "length k")
+  expect_error(factorial_designer(outcome_name = "my Y"), "spaces")
 })
 
 test_that("fixed-effects cluster designs ask for CR2, as estimatr 1.0.6 gave by default", {

@@ -131,6 +131,33 @@ test_that("binary_iv's complier effect is b for compliers", {
   expect_equal(estimands$estimand[estimands$inquiry == "late"], 0.7)
 })
 
+test_that("factorial's inquiries are the effects and interactions its cell means imply", {
+  skip_if_not_installed("DeclareDesign")
+
+  # The worked example from DesignLibrary 0.1's factorial_designer(): average
+  # outcome 0, effect of T1 1, of T2 and T3 0, two-way interactions 0.5, and
+  # a triple interaction of 1. With outcome_sds 0 each estimand is exact.
+  X <- expand.grid(rep(list(c(0, 1)), 3))
+  outcome_means <- -0.25 + X[, 1] * 3 / 4 - X[, 2] / 4 - X[, 3] / 4 + X[, 1] * X[, 2] * X[, 3]
+  d <- factorial_designer(outcome_means = outcome_means, outcome_sds = rep(0, 8))
+  estimands <- draw_one(d)$estimands
+  truth <- c(
+    Overall_average = 0, te_T1 = 1, te_T2 = 0, te_T3 = 0,
+    `te_T1:T2` = 0.5, `te_T1:T3` = 0.5, `te_T2:T3` = 0.5, `te_T1:T2:T3` = 1
+  )
+  expect_equal(estimands$estimand[match(names(truth), estimands$inquiry)], unname(truth))
+
+  # Redesigning k rebuilds the potential outcomes, factors, and inquiries.
+  d4 <- redesign(make_design("factorial"), k = 4)
+  draw4 <- draw_one(d4)
+  expect_equal(nrow(draw4$estimands), 16)
+  expect_true(all(c("T4", "Y_T1_1_T2_1_T3_1_T4_1") %in% names(draw4$data)))
+  expect_error(
+    draw_data(redesign(make_design("factorial", outcome_means = 1:8), k = 4)),
+    "outcome_means has length 8 but 2\\^k is 16"
+  )
+})
+
 test_that("randomized_response's estimand is the prevalence its truthful answers reveal", {
   skip_if_not_installed("DeclareDesign")
 

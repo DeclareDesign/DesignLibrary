@@ -110,7 +110,8 @@ designlibrary_core_ids <- function() {
     "spillover",
     "cluster_sampling",
     "binary_iv",
-    "process_tracing_bayes"
+    "process_tracing_bayes",
+    "factorial"
   )
 }
 

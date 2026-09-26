@@ -15,16 +15,13 @@ working_designers <- c(
   "spillover_designer",
   "cluster_sampling_designer",
   "binary_iv_designer",
-  "process_tracing_designer"
-)
-
-not_ported_designers <- c(
+  "process_tracing_designer",
   "factorial_designer"
 )
 
 test_that("DesignLibrary 0.1 designer names are exported", {
   exported <- getNamespaceExports("DesignLibrary")
-  for (nm in c(working_designers, not_ported_designers)) {
+  for (nm in working_designers) {
     expect_true(nm %in% exported, info = nm)
   }
 })
@@ -66,6 +63,8 @@ test_that("ported DesignLibrary 0.1 designers return a design", {
 #     -> slots of outcome_means
 #   block_cluster_two_arm_designer: sd_i_0 -> sd_i, assignment_probs ->
 #     assignment_prob, `...` unused DesignLibrary 0.1 args
+#   factorial_designer: sd -> outcome_sds (sd is also a file knob, for
+#     redesign())
 # args_to_fix is ignored on every designer and is never a file knob.
 designer_to_id <- c(
   two_arm_designer = "two_arm_flexible",
@@ -81,7 +80,8 @@ designer_to_id <- c(
   spillover_designer = "spillover",
   cluster_sampling_designer = "cluster_sampling",
   binary_iv_designer = "binary_iv",
-  process_tracing_designer = "process_tracing_bayes"
+  process_tracing_designer = "process_tracing_bayes",
+  factorial_designer = "factorial"
 )
 
 wrapper_only_aliases <- list(
@@ -98,7 +98,8 @@ wrapper_only_aliases <- list(
   spillover_designer = character(0),
   cluster_sampling_designer = character(0),
   binary_iv_designer = c("a_Y", "b_Y", "d_Y"),
-  process_tracing_designer = c("label_E1", "label_E2")
+  process_tracing_designer = c("label_E1", "label_E2"),
+  factorial_designer = "sd"
 )
 
 # Helper functions a library file defines for its own steps. They are R-only
@@ -111,6 +112,11 @@ file_helpers <- list(
   process_tracing_designer = c(
     "joint_prob", "bayes_rule", "prior_only", "clue_posterior", "E1_only",
     "E2_only", "both_clues"
+  ),
+  factorial_designer = c(
+    "factorial_grid", "factorial_po_names", "factorial_population",
+    "factorial_assignment", "factorial_reveal", "factorial_inquiries",
+    "factorial_estimator"
   )
 )
 
@@ -136,19 +142,5 @@ test_that("designer formals that are passed through match library knobs", {
       character(0),
       info = paste0(nm, " get_args names not in formals: ", paste(extra_knobs, collapse = ", "))
     )
-  }
-})
-
-test_that("unported DesignLibrary 0.1 designers explain the make_design() alternative", {
-  for (nm in not_ported_designers) {
-    f <- get(nm, envir = asNamespace("DesignLibrary"), inherits = FALSE)
-    msg <- tryCatch(
-      f(),
-      error = function(e) conditionMessage(e)
-    )
-    expect_true(is.character(msg) && nzchar(msg), info = nm)
-    expect_match(msg, "make_design\\(", info = nm)
-    expect_match(msg, "is not in DesignLibrary 2.0", info = nm)
-    expect_match(msg, "Related designs include", info = nm)
   }
 })
