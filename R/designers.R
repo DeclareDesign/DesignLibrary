@@ -452,6 +452,216 @@ two_arm_covariate_designer <- function(
   ))
 }
 
+#' Create a regression discontinuity design with a polynomial fit
+#'
+#' Routes to [make_design()] with id `"regression_discontinuity_polynomial"`:
+#' `make_design("regression_discontinuity_polynomial", N = N, tau = tau, ...)`.
+#'
+#' Treatment is assigned when a uniform running variable passes `cutoff`, and
+#' each potential outcome is a polynomial in the running variable. Argument
+#' names match DesignLibrary 0.1's `regression_discontinuity_designer`. For the
+#' book's local-linear version, see `make_design("regression_discontinuity")`.
+#'
+#' @inheritParams two_arm_designer
+#' @param tau Jump in the outcome at the cutoff.
+#' @param outcome_sd Standard deviation of the outcome shock.
+#' @param cutoff Cutoff on the running variable, in (0, 1).
+#' @param bandwidth Largest distance from the cutoff for a unit to be kept.
+#' @param control_coefs Polynomial coefficients of the control outcome in the
+#'   running variable.
+#' @param treatment_coefs Polynomial coefficients of the treated outcome in the
+#'   running variable.
+#' @param poly_reg_order Order of the polynomial in the estimator.
+#' @return A design object.
+#' @seealso [make_design()]
+#' @export
+#' @examples
+#' \dontrun{
+#' regression_discontinuity_designer(N = 500, poly_reg_order = 2)
+#' }
+regression_discontinuity_designer <- function(
+  N = 1000,
+  tau = 0.15,
+  outcome_sd = 0.1,
+  cutoff = 0.5,
+  bandwidth = 0.5,
+  control_coefs = c(0.5, 0.5),
+  treatment_coefs = c(-5, 1),
+  poly_reg_order = 4,
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0, 1).", call. = FALSE)
+  if (poly_reg_order < 1 || poly_reg_order %% 1 != 0) {
+    stop("poly_reg_order must be an integer of at least 1.", call. = FALSE)
+  }
+  if (length(control_coefs) < 1) stop("control_coefs must have length > 0.", call. = FALSE)
+  if (length(treatment_coefs) < 1) stop("treatment_coefs must have length > 0.", call. = FALSE)
+  if (outcome_sd < 0) stop("outcome_sd must be non-negative.", call. = FALSE)
+  call_library_design("regression_discontinuity_polynomial", list(
+    N = N,
+    tau = tau,
+    outcome_sd = outcome_sd,
+    cutoff = cutoff,
+    bandwidth = bandwidth,
+    control_coefs = control_coefs,
+    treatment_coefs = treatment_coefs,
+    poly_reg_order = poly_reg_order
+  ))
+}
+
+#' Create a two-arm design with spillovers within groups
+#'
+#' Routes to [make_design()] with id `"spillover"`:
+#' `make_design("spillover", N_groups = N_groups, gamma = gamma, ...)`.
+#'
+#' A unit's outcome depends on the share of its group that is treated, raised
+#' to the power `gamma`. Argument names match DesignLibrary 0.1's
+#' `spillover_designer`. For a design that randomizes saturation, see
+#' `make_design("randomized_saturation")`.
+#'
+#' @inheritParams two_arm_designer
+#' @param N_groups Number of groups.
+#' @param N_i_group Number of units in each group.
+#' @param sd_i Standard deviation of the individual-level shock.
+#' @param gamma Curvature of the outcome in the group's treated share.
+#' @return A design object.
+#' @seealso [make_design()]
+#' @export
+#' @examples
+#' \dontrun{
+#' spillover_designer(N_groups = 40, gamma = 1)
+#' }
+spillover_designer <- function(
+  N_groups = 80,
+  N_i_group = 3,
+  sd_i = 0.2,
+  gamma = 2,
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (sd_i < 0) stop("sd_i must be non-negative.", call. = FALSE)
+  if (N_i_group < 1 || N_groups < 1) {
+    stop("N_i_group and N_groups must be at least 1.", call. = FALSE)
+  }
+  call_library_design("spillover", list(
+    N_groups = N_groups, N_i_group = N_i_group, sd_i = sd_i, gamma = gamma
+  ))
+}
+
+#' Create a two-stage cluster sampling design
+#'
+#' Routes to [make_design()] with id `"cluster_sampling"`:
+#' `make_design("cluster_sampling", n_clusters_in_block = n_clusters_in_block, ...)`.
+#'
+#' Clusters are sampled within blocks, then individuals within sampled
+#' clusters, from a population drawn once when the design is built. Argument
+#' names match DesignLibrary 0.1's `cluster_sampling_designer`. For the book's
+#' budget-constrained version, see `make_design("cluster_random_sampling")`.
+#'
+#' @inheritParams two_arm_designer
+#' @param N_blocks Number of blocks.
+#' @param N_clusters_in_block Number of clusters in each block.
+#' @param N_i_in_cluster Number of individuals in each cluster.
+#' @param n_clusters_in_block Number of clusters sampled in each block.
+#' @param n_i_in_cluster Number of individuals sampled in each sampled cluster.
+#' @param icc Intra-cluster correlation of the latent outcome, in \[0, 1\].
+#' @return A design object.
+#' @seealso [make_design()]
+#' @export
+#' @examples
+#' \dontrun{
+#' cluster_sampling_designer(N_clusters_in_block = 200, n_clusters_in_block = 20)
+#' }
+cluster_sampling_designer <- function(
+  N_blocks = 1,
+  N_clusters_in_block = 1000,
+  N_i_in_cluster = 50,
+  n_clusters_in_block = 100,
+  n_i_in_cluster = 10,
+  icc = 0.2,
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (n_clusters_in_block > min(N_clusters_in_block)) {
+    stop("n_clusters_in_block must not exceed N_clusters_in_block.", call. = FALSE)
+  }
+  if (n_i_in_cluster > min(N_i_in_cluster)) {
+    stop("n_i_in_cluster must not exceed N_i_in_cluster.", call. = FALSE)
+  }
+  if (icc < 0 || icc > 1) stop("icc must be in [0, 1].", call. = FALSE)
+  call_library_design("cluster_sampling", list(
+    N_blocks = N_blocks,
+    N_clusters_in_block = N_clusters_in_block,
+    N_i_in_cluster = N_i_in_cluster,
+    n_clusters_in_block = n_clusters_in_block,
+    n_i_in_cluster = n_i_in_cluster,
+    icc = icc
+  ))
+}
+
+#' Create a binary instrumental variables design
+#'
+#' Routes to [make_design()] with id `"binary_iv"`:
+#' `make_design("binary_iv", N = N, type_probs = type_probs, ...)`.
+#'
+#' Units are always-takers, never-takers, compliers, or defiers, in that order
+#' in every length-4 argument. `a_Y`, `b_Y`, and `d_Y` fill the defaults of
+#' `a`, `b`, and `d` and are not passed on. Argument names match DesignLibrary
+#' 0.1's `binary_iv_designer`. See also `make_design("encouragement")` and
+#' `make_design("instrumental_variables")`.
+#'
+#' @inheritParams two_arm_designer
+#' @param type_probs Shares of always-takers, never-takers, compliers, and
+#'   defiers.
+#' @param assignment_probs Probability that Z = 1 for each type.
+#' @param a_Y Outcome intercept for always-takers, used in the default `a`.
+#' @param b_Y Effect of X on the outcome for every type, used in the default
+#'   `b`.
+#' @param d_Y Direct effect of Z on the outcome for every type, used in the
+#'   default `d`.
+#' @param outcome_sd Standard deviation of the outcome shock.
+#' @param a,b,d Length-4 outcome intercepts, effects of X, and direct effects
+#'   of Z, by type.
+#' @return A design object.
+#' @seealso [make_design()]
+#' @export
+#' @examples
+#' \dontrun{
+#' binary_iv_designer(N = 200, b_Y = 0.5)
+#' binary_iv_designer(type_probs = c(0.2, 0.2, 0.5, 0.1), b = c(0, 0, 1, -1))
+#' }
+binary_iv_designer <- function(
+  N = 100,
+  type_probs = c(1/3, 1/3, 1/3, 0),
+  assignment_probs = c(0.5, 0.5, 0.5, 0.5),
+  a_Y = 1,
+  b_Y = 0,
+  d_Y = 0,
+  outcome_sd = 1,
+  a = c(1, 0, 0, 0) * a_Y,
+  b = rep(b_Y, 4),
+  d = rep(d_Y, 4),
+  args_to_fix = NULL
+) {
+  warn_args_to_fix(args_to_fix)
+  if (min(assignment_probs) < 0) stop("assignment_probs must be non-negative.", call. = FALSE)
+  if (max(assignment_probs) > 1) stop("assignment_probs must be at most 1.", call. = FALSE)
+  if (outcome_sd < 0) stop("outcome_sd must be non-negative.", call. = FALSE)
+  if (length(a) != 4) stop("a must have length 4.", call. = FALSE)
+  if (length(b) != 4) stop("b must have length 4.", call. = FALSE)
+  if (length(d) != 4) stop("d must have length 4.", call. = FALSE)
+  call_library_design("binary_iv", list(
+    N = N,
+    type_probs = type_probs,
+    assignment_probs = assignment_probs,
+    outcome_sd = outcome_sd,
+    a = a,
+    b = b,
+    d = d
+  ))
+}
+
 #' Stop with related make_design() calls for a DesignLibrary 0.1 designer not yet ported
 #'
 #' These names used to message and return `invisible(NULL)`, which reads as a
@@ -484,26 +694,7 @@ designer_not_ported <- function(old, suggestions) {
 #' @keywords internal
 NULL
 
-#' @rdname designers-not-ported
-#' @export
-binary_iv_designer <- function(...) {
-  designer_not_ported(
-    "binary_iv_designer",
-    c(
-      'make_design("encouragement")',
-      'make_design("instrumental_variables")'
-    )
-  )
-}
 
-#' @rdname designers-not-ported
-#' @export
-cluster_sampling_designer <- function(...) {
-  designer_not_ported(
-    "cluster_sampling_designer",
-    'make_design("cluster_random_sampling")'
-  )
-}
 
 #' @rdname designers-not-ported
 #' @export
@@ -527,23 +718,4 @@ process_tracing_designer <- function(...) {
   )
 }
 
-#' @rdname designers-not-ported
-#' @export
-regression_discontinuity_designer <- function(...) {
-  designer_not_ported(
-    "regression_discontinuity_designer",
-    c(
-      'make_design("regression_discontinuity")',
-      'make_design("regression_discontinuity_fuzzy")'
-    )
-  )
-}
 
-#' @rdname designers-not-ported
-#' @export
-spillover_designer <- function(...) {
-  designer_not_ported(
-    "spillover_designer",
-    'make_design("randomized_saturation")'
-  )
-}

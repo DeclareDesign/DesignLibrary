@@ -2,25 +2,13 @@
 % Please edit documentation in R/designers.R
 \name{designers-not-ported}
 \alias{designers-not-ported}
-\alias{binary_iv_designer}
-\alias{cluster_sampling_designer}
 \alias{factorial_designer}
 \alias{process_tracing_designer}
-\alias{regression_discontinuity_designer}
-\alias{spillover_designer}
 \title{DesignLibrary 0.1 designers not ported as-is}
 \usage{
-binary_iv_designer(...)
-
-cluster_sampling_designer(...)
-
 factorial_designer(...)
 
 process_tracing_designer(...)
-
-regression_discontinuity_designer(...)
-
-spillover_designer(...)
 }
 \arguments{
 \item{...}{Ignored.}

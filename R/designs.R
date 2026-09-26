@@ -105,7 +105,11 @@ designlibrary_core_ids <- function() {
     "multiarm_trial",
     "two_by_two",
     "block_cluster_two_arm",
-    "two_arm_covariate"
+    "two_arm_covariate",
+    "regression_discontinuity_polynomial",
+    "spillover",
+    "cluster_sampling",
+    "binary_iv"
   )
 }
 

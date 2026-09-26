@@ -10,16 +10,16 @@ working_designers <- c(
   "multi_arm_designer",
   "two_by_two_designer",
   "block_cluster_two_arm_designer",
-  "two_arm_covariate_designer"
+  "two_arm_covariate_designer",
+  "regression_discontinuity_designer",
+  "spillover_designer",
+  "cluster_sampling_designer",
+  "binary_iv_designer"
 )
 
 not_ported_designers <- c(
-  "binary_iv_designer",
-  "cluster_sampling_designer",
   "factorial_designer",
-  "process_tracing_designer",
-  "regression_discontinuity_designer",
-  "spillover_designer"
+  "process_tracing_designer"
 )
 
 test_that("DesignLibrary 0.1 designer names are exported", {
@@ -41,6 +41,8 @@ test_that("ported DesignLibrary 0.1 designers return a design", {
     if ("N_blocks" %in% form) args$N_blocks <- 2L
     if ("N_clusters_in_block" %in% form) args$N_clusters_in_block <- 2L
     if ("N_i_in_cluster" %in% form) args$N_i_in_cluster <- 2L
+    if ("n_clusters_in_block" %in% form) args$n_clusters_in_block <- 1L
+    if ("n_i_in_cluster" %in% form) args$n_i_in_cluster <- 1L
     do.call(f, args)
   }
 
@@ -74,7 +76,11 @@ designer_to_id <- c(
   multi_arm_designer = "multiarm_trial",
   two_by_two_designer = "two_by_two",
   block_cluster_two_arm_designer = "block_cluster_two_arm",
-  two_arm_covariate_designer = "two_arm_covariate"
+  two_arm_covariate_designer = "two_arm_covariate",
+  regression_discontinuity_designer = "regression_discontinuity_polynomial",
+  spillover_designer = "spillover",
+  cluster_sampling_designer = "cluster_sampling",
+  binary_iv_designer = "binary_iv"
 )
 
 wrapper_only_aliases <- list(
@@ -86,12 +92,21 @@ wrapper_only_aliases <- list(
   multi_arm_designer = character(0),
   two_by_two_designer = c("mean_A0B0", "mean_A0B1", "mean_A1B0", "mean_A1B1"),
   block_cluster_two_arm_designer = c("sd_i_0", "assignment_probs"),
-  two_arm_covariate_designer = "treatment_mean"
+  two_arm_covariate_designer = "treatment_mean",
+  regression_discontinuity_designer = character(0),
+  spillover_designer = character(0),
+  cluster_sampling_designer = character(0),
+  binary_iv_designer = c("a_Y", "b_Y", "d_Y")
 )
 
 # Helper functions a library file defines for its own steps. They are R-only
 # knobs of the file but have no designer formal.
-file_helpers <- list(multi_arm_designer = "per_arm")
+file_helpers <- list(
+  multi_arm_designer = "per_arm",
+  regression_discontinuity_designer = "po_function",
+  spillover_designer = "dgp",
+  cluster_sampling_designer = "dataset"
+)
 
 test_that("designer formals that are passed through match library knobs", {
   skip_if_not_installed("DeclareDesign")

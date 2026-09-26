@@ -70,6 +70,10 @@ reference:
   - two_by_two_designer
   - block_cluster_two_arm_designer
   - two_arm_covariate_designer
+  - regression_discontinuity_designer
+  - spillover_designer
+  - cluster_sampling_designer
+  - binary_iv_designer
 - subtitle: Unported stubs
   contents:
   - designers-not-ported

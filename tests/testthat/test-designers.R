@@ -122,10 +122,6 @@ test_that("unported DesignLibrary 0.1 designers stop and point at make_design()"
   # factorial_designer(k = 3)` failed further downstream with an error naming
   # neither the designer nor its replacement.
   expect_error(factorial_designer(), "make_design\\(\"factorial_2x2\"\\)")
-  expect_error(cluster_sampling_designer(), "cluster_random_sampling")
-  expect_error(binary_iv_designer(), "encouragement")
-  expect_error(spillover_designer(), "randomized_saturation")
-  expect_error(regression_discontinuity_designer(), "regression_discontinuity")
   expect_error(process_tracing_designer(), "process_tracing")
 })
 

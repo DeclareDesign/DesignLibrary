@@ -115,6 +115,22 @@ test_that("two_arm_covariate's estimand is ate plus h times the mean of W", {
   )
 })
 
+test_that("regression_discontinuity_polynomial's LATE is the jump tau", {
+  skip_if_not_installed("DeclareDesign")
+
+  # Both polynomials have no intercept, so they meet at the cutoff and differ by tau alone
+  d <- regression_discontinuity_designer(N = 200, tau = 0.4, treatment_coefs = c(2, -1, 3))
+  expect_equal(draw_one(d)$estimands$estimand, 0.4)
+})
+
+test_that("binary_iv's complier effect is b for compliers", {
+  skip_if_not_installed("DeclareDesign")
+
+  d <- binary_iv_designer(N = 200, b = c(0, 0, 0.7, -1), type_probs = c(0.2, 0.2, 0.5, 0.1))
+  estimands <- draw_one(d)$estimands
+  expect_equal(estimands$estimand[estimands$inquiry == "late"], 0.7)
+})
+
 test_that("randomized_response's estimand is the prevalence its truthful answers reveal", {
   skip_if_not_installed("DeclareDesign")
 
