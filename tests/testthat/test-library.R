@@ -142,7 +142,7 @@ test_that("YAML-less defaults fill category and object", {
 })
 
 test_that("get_code returns simple and full forms", {
-  code <- get_code("two_arm_simple", style = "both", b = 0.2)
+  code <- get_code("two_arm_simple", .style = "both", b = 0.2)
   expect_s3_class(code, "design_library_code")
   expect_match(code$simple, 'make_design\\("two_arm_simple", b = 0\\.2\\)')
   expect_true(grepl("declare_model", code$full))
@@ -172,7 +172,7 @@ test_that("get_code print method cats full source", {
 })
 
 test_that("get_code style = 'simple' prints the one-liner", {
-  code <- get_code("two_arm_simple", style = "simple")
+  code <- get_code("two_arm_simple", .style = "simple")
   out <- paste(capture.output(print(code)), collapse = "\n")
   expect_equal(trimws(out), 'make_design("two_arm_simple")')
 })
@@ -302,4 +302,9 @@ test_that("bake_previews returns the path it wrote", {
   expect_equal(length(baked$paths), 1L)
   expect_true(file.exists(baked$paths[[1]]))
   expect_equal(nrow(baked$failures), 0L)
+})
+
+test_that("get_code passes parameters named d or s through to the snippet", {
+  code <- get_code("mediation_analysis", d = 0.3, s = 1)
+  expect_identical(code$simple, 'make_design("mediation_analysis", d = 0.3, s = 1)')
 })

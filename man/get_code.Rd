@@ -5,7 +5,7 @@
 \title{Code for a design: simple \code{make_design()} call and/or full source}
 \usage{
 get_code(
-  design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
+  .design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
     "two_arm_block_cluster", "two_arm_with_blocks", "two_arm_attrition",
     "factorial_2x2x2", "multiarm_trial", "pretest_posttest", "randomized_response",
     "mediation_analysis", "binary_iv", "cluster_sampling", "factorial",
@@ -36,14 +36,14 @@ get_code(
     "15.1", "18.11", "18.10", "19.2", "18.6", "15.2", "17.6", "11.3", "18.4", "2.1",
     "13.2", "18.1", 
      "2.2", "10.3a", "10.3b", "11.2", "12.1a"),
-  style = c("both", "simple", "full"),
+  .style = c("both", "simple", "full"),
   ...
 )
 }
 \arguments{
-\item{design}{Design id or book alias.}
+\item{.design}{Design id or book alias.}
 
-\item{style}{\code{"simple"}, \code{"full"}, or \code{"both"}. Controls which snippet
+\item{.style}{\code{"simple"}, \code{"full"}, or \code{"both"}. Controls which snippet
 \code{\link[=print]{print()}} and \code{\link[=as.character]{as.character()}} show. \verb{$simple} and \verb{$full} are always
 both present.}
 
@@ -56,7 +56,7 @@ A list with \code{simple} and \code{full}, class \code{design_library_code}.
 Returns a list with \verb{$simple} (a one-line \code{make_design()} call) and \verb{$full}
 (the design file source, prefixed with \code{library()} calls for YAML
 \verb{packages:} when any are listed). Printing uses \code{\link[=cat]{cat()}} on \verb{$full} so the
-console output is copy-paste ready. Use \code{style = "simple"} to print the
+console output is copy-paste ready. Use \code{.style = "simple"} to print the
 one-liner instead. Programmatic access is unchanged: \code{get_code(id)$simple},
 \code{get_code(id)$full}.
 }

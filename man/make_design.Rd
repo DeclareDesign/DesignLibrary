@@ -5,7 +5,7 @@
 \title{Build a design, optionally with redesigned parameters}
 \usage{
 make_design(
-  design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
+  .design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
     "two_arm_block_cluster", "two_arm_with_blocks", "two_arm_attrition",
     "factorial_2x2x2", "multiarm_trial", "pretest_posttest", "randomized_response",
     "mediation_analysis", "binary_iv", "cluster_sampling", "factorial",
@@ -40,8 +40,9 @@ make_design(
 )
 }
 \arguments{
-\item{design}{Design id or book alias. Defaults to \code{"two_arm_simple"} (or the
-first installed design). Tab-completion offers the full library list.}
+\item{.design}{Design id or book alias. Defaults to \code{"two_arm_simple"} (or
+the first installed design). Tab-completion offers the full library list.
+Dotted so that a design parameter such as \code{d} cannot partially match it.}
 
 \item{...}{Named parameter values passed to \code{redesign()}.}
 }

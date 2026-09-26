@@ -12,7 +12,7 @@ warn_args_to_fix <- function(args_to_fix) {
 #' @noRd
 call_library_design <- function(id, dots) {
   dots$args_to_fix <- NULL
-  do.call(make_design, c(list(design = id), dots))
+  do.call(make_design, c(list(.design = id), dots))
 }
 
 #' Create a one-level two-arm design

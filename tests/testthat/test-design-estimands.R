@@ -169,11 +169,23 @@ test_that("randomized_response's estimand is the prevalence its truthful answers
   expect_equal(draw$estimands$estimand, mean(dat$Y_Z_Truth))
 })
 
+test_that("a parameter named d reaches the design when the id is passed positionally", {
+  skip_if_not_installed("DeclareDesign")
+
+  d <- make_design("mediation_analysis", d = 0.3)
+  expect_s3_class(d, "design")
+  set.seed(343)
+  positional <- draw_estimands(d)
+  set.seed(343)
+  named <- draw_estimands(make_design(.design = "mediation_analysis", d = 0.3))
+  expect_equal(positional, named)
+})
+
 test_that("mediation_analysis's natural outcomes are its potential outcomes at the untreated or treated mediator", {
   skip_if_not_installed("DeclareDesign")
 
   b <- 0.4; c <- 0.3; d_eff <- 0.5
-  d <- make_design(design = "mediation_analysis", b = b, c = c, d = d_eff)
+  d <- make_design(.design = "mediation_analysis", b = b, c = c, d = d_eff)
   draw <- draw_one(d)
   dat <- draw$data
   expect_equal(dat$Y_nat0_Z_1, ifelse(dat$M_Z_0 == 1, dat$Y_M_1_Z_1, dat$Y_M_0_Z_1))

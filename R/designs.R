@@ -562,8 +562,9 @@ print.design_library_info <- function(x, ...) {
 #' `make_design("` and pressing Tab lists installed design ids (and aliases).
 #' See [list_designs()] for the same catalogue in the console.
 #'
-#' @param design Design id or book alias. Defaults to `"two_arm_simple"` (or the
-#'   first installed design). Tab-completion offers the full library list.
+#' @param .design Design id or book alias. Defaults to `"two_arm_simple"` (or
+#'   the first installed design). Tab-completion offers the full library list.
+#'   Dotted so that a design parameter such as `d` cannot partially match it.
 #' @param ... Named parameter values passed to `redesign()`.
 #' @return A design object (or a list of designs if a parameter is a vector
 #'   and `redesign()` expands).
@@ -574,9 +575,13 @@ print.design_library_info <- function(x, ...) {
 #' make_design("two_arm_simple", b = 0.5)
 #' make_design("2.1", b = 0.5)  # book alias
 #' }
-make_design <- function(design = "two_arm_simple", ...) {
+make_design <- function(.design = "two_arm_simple", ...) {
   # When formals are the full library vector (set in .onLoad for IDE completion),
   # a bare make_design() call receives that vector, so use the first id.
+  # `.design` for the reason DeclareDesign 2.0 renamed its own: an undotted
+  # `design` partially matched a parameter named `d`, so
+  # make_design("mediation_analysis", d = 0.3) read 0.3 as the design id.
+  design <- .design
   if (length(design) > 1L) design <- design[[1L]]
   parsed <- resolve_design(design)
   d <- eval_design(parsed)
@@ -658,12 +663,12 @@ prefix_yaml_libraries <- function(code, packages) {
 #' Returns a list with `$simple` (a one-line `make_design()` call) and `$full`
 #' (the design file source, prefixed with `library()` calls for YAML
 #' `packages:` when any are listed). Printing uses [cat()] on `$full` so the
-#' console output is copy-paste ready. Use `style = "simple"` to print the
+#' console output is copy-paste ready. Use `.style = "simple"` to print the
 #' one-liner instead. Programmatic access is unchanged: `get_code(id)$simple`,
 #' `get_code(id)$full`.
 #'
-#' @param design Design id or book alias.
-#' @param style `"simple"`, `"full"`, or `"both"`. Controls which snippet
+#' @param .design Design id or book alias.
+#' @param .style `"simple"`, `"full"`, or `"both"`. Controls which snippet
 #'   [print()] and [as.character()] show. `$simple` and `$full` are always
 #'   both present.
 #' @param ... Optional parameter values included in the simple snippet.
@@ -674,8 +679,11 @@ prefix_yaml_libraries <- function(code, packages) {
 #' get_code("two_arm_simple")
 #' get_code("two_arm_simple")$simple
 #' }
-get_code <- function(design, style = c("both", "simple", "full"), ...) {
-  style <- match.arg(style)
+get_code <- function(.design, .style = c("both", "simple", "full"), ...) {
+  # Dotted, as in make_design(), so that a parameter passed through `...`
+  # (`d`, `s`) cannot partially match either one.
+  style <- match.arg(.style)
+  design <- .design
   if (length(design) > 1L) design <- design[[1L]]
   key <- normalize_design_key(design)
   parsed <- resolve_design(design)

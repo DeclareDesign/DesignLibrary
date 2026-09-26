@@ -1071,14 +1071,14 @@ server <- function(input, output, session) {
   output$simple_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    code <- DesignLibrary::get_code(id, style = "simple")
+    code <- DesignLibrary::get_code(id, .style = "simple")
     tags$pre(class = "rd-code rd-code-oneline", code$simple)
   })
 
   output$full_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    code <- DesignLibrary::get_code(id, style = "full")
+    code <- DesignLibrary::get_code(id, .style = "full")
     tags$pre(class = "rd-code", code$full)
   })
 
@@ -1537,7 +1537,7 @@ server <- function(input, output, session) {
     mod_status("")
     withProgress(message = "Redesign + diagnosis…", value = 0.2, {
       res <- tryCatch({
-        design <- do.call(DesignLibrary::make_design, c(list(design = id), st$dots))
+        design <- do.call(DesignLibrary::make_design, c(list(.design = id), st$dots))
         diagnosis <- DeclareDesign::diagnose_design(design, sims = sims)
         tidy <- tryCatch(generics::tidy(diagnosis), error = function(e) NULL)
         if (is.null(tidy)) {
