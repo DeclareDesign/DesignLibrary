@@ -13,3 +13,4 @@
 ^vignettes/*\.R$
 ^.*\.gitkeep$
 ^notes$
+^cran-comments\.md$

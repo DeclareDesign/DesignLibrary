@@ -2,10 +2,10 @@ Package: DesignLibrary
 Title: A Library of Declared Designs
 Version: 2.0.0
 Authors@R: c(
-    person("Macartan", "Humphreys", , "macartan.humphreys@wzb.eu", role = c("aut", "cre")),
+    person("Macartan", "Humphreys", , "macartan.humphreys@wzb.eu", role = "aut"),
     person("Graeme", "Blair", , "graeme.blair@ucla.edu", role = "aut"),
     person("Jasper", "Cooper", , "jjc2247@columbia.edu", role = "aut"),
-    person("Alexander", "Coppock", , "alex.coppock@northwestern.edu", role = "aut"),
+    person("Alexander", "Coppock", , "acoppock@gmail.com", role = c("aut", "cre")),
     person("Clara", "Bicalho", , "clarabmcorreia@gmail.com", role = "aut"),
     person("Neal", "Fultz", , "nfultz@gmail.com", role = "aut"),
     person("Lily", "Medina", , "lilymiru@gmail.com", role = "aut")
