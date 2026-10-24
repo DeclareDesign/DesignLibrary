@@ -34,7 +34,7 @@ test_that("ported DesignLibrary 0.1 designers return a design", {
     f <- get(nm, envir = asNamespace("DesignLibrary"), inherits = FALSE)
     args <- list()
     form <- names(formals(f))
-    if ("N" %in% form) args$N <- 20L
+    if ("N" %in% form && !"N_blocks" %in% form) args$N <- 20L
     if ("N_blocks" %in% form) args$N_blocks <- 2L
     if ("N_clusters_in_block" %in% form) args$N_clusters_in_block <- 2L
     if ("N_i_in_cluster" %in% form) args$N_i_in_cluster <- 2L
@@ -62,7 +62,7 @@ test_that("ported DesignLibrary 0.1 designers return a design", {
 #   two_by_two_designer: mean_A0B0 / mean_A0B1 / mean_A1B0 / mean_A1B1
 #     -> slots of outcome_means
 #   block_cluster_two_arm_designer: sd_i_0 -> sd_i, assignment_probs ->
-#     assignment_prob, `...` unused DesignLibrary 0.1 args
+#     assignment_prob; N, sd, and `...` hold removed DesignLibrary 0.1 args
 #   factorial_designer: sd -> outcome_sds (sd is also a file knob, for
 #     redesign())
 # args_to_fix is ignored on every designer and is never a file knob.
@@ -92,7 +92,7 @@ wrapper_only_aliases <- list(
   mediation_analysis_designer = character(0),
   multi_arm_designer = character(0),
   two_by_two_designer = c("mean_A0B0", "mean_A0B1", "mean_A1B0", "mean_A1B1"),
-  block_cluster_two_arm_designer = c("sd_i_0", "assignment_probs"),
+  block_cluster_two_arm_designer = c("N", "sd", "sd_i_0", "assignment_probs"),
   two_arm_covariate_designer = "treatment_mean",
   regression_discontinuity_designer = character(0),
   spillover_designer = character(0),

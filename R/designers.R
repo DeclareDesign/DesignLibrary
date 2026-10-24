@@ -333,9 +333,13 @@ two_by_two_designer <- function(
 #'
 #' A simplified signature relative to DesignLibrary 0.1: level sizes and three
 #' shock standard deviations, a scalar assignment probability, and `ate`.
-#' Extra DesignLibrary 0.1 arguments (`N`, `sd`, `rho`, `verbose`, per-block
-#' `assignment_probs`) are accepted in `...` and ignored with a warning.
+#' The DesignLibrary 0.1 arguments `N`, `sd`, `sd_i_1`, `rho`, `control_mean`,
+#' and `treatment_mean` are errors that name the argument to use instead.
+#' Other unused arguments (such as 0.1's `verbose`) are ignored with a
+#' warning, and per-block `assignment_probs` are an error.
 #'
+#' @param N,sd Removed DesignLibrary 0.1 arguments. Supplying either is an
+#'   error that names the arguments to set instead.
 #' @param N_blocks Number of blocks.
 #' @param N_clusters_in_block Number of clusters in each block.
 #' @param N_i_in_cluster Number of units in each cluster.
@@ -346,14 +350,17 @@ two_by_two_designer <- function(
 #' @param assignment_prob,assignment_probs Assignment probability. A vector
 #'   of per-block probabilities is not supported.
 #' @param args_to_fix Ignored.
-#' @param ... Unused DesignLibrary 0.1 arguments; warned and dropped.
+#' @param ... Removed DesignLibrary 0.1 arguments, which error; any other
+#'   argument is warned and dropped.
 #' @return A design object.
 #' @seealso [make_design()]
 #' @export
 block_cluster_two_arm_designer <- function(
+  N = NULL,
   N_blocks = 20,
   N_clusters_in_block = 4,
   N_i_in_cluster = 10,
+  sd = NULL,
   sd_block = 0.577,
   sd_cluster = 0.577,
   sd_i = 0.577,
@@ -367,6 +374,34 @@ block_cluster_two_arm_designer <- function(
   warn_args_to_fix(args_to_fix)
   extra <- list(...)
   extra <- extra[nzchar(names(extra) %||% "")]
+  # `N` and `sd` are formals so that they cannot partially match `N_blocks`
+  # or `sd_block` and fail with "matches multiple formal arguments".
+  supplied <- c(
+    if (!is.null(N)) "N",
+    if (!is.null(sd)) "sd",
+    names(extra)
+  )
+  removed <- c(
+    N = "Set the sample size through `N_blocks`, `N_clusters_in_block`, and `N_i_in_cluster`.",
+    sd = "Set `sd_block`, `sd_cluster`, and `sd_i` directly.",
+    sd_i_1 = "Treatment and control share the individual shock `sd_i`.",
+    rho = "Treatment and control potential outcomes are perfectly correlated; `rho` is not supported.",
+    control_mean = "Set the effect with `ate`.",
+    treatment_mean = "Set the effect with `ate`."
+  )
+  hit <- intersect(supplied, names(removed))
+  if (length(hit)) {
+    hints <- unique(removed[hit])
+    names(hints) <- rep("i", length(hints))
+    rlang::abort(c(
+      paste0(
+        "`block_cluster_two_arm_designer()` no longer takes ",
+        paste0("`", hit, "`", collapse = ", "),
+        " (DesignLibrary 0.1)."
+      ),
+      hints
+    ))
+  }
   if (length(extra)) {
     warning(
       "Ignoring unused arguments: ", paste(names(extra), collapse = ", "),

@@ -5,9 +5,11 @@
 \title{Create a blocked and clustered two-arm design}
 \usage{
 block_cluster_two_arm_designer(
+  N = NULL,
   N_blocks = 20,
   N_clusters_in_block = 4,
   N_i_in_cluster = 10,
+  sd = NULL,
   sd_block = 0.577,
   sd_cluster = 0.577,
   sd_i = 0.577,
@@ -20,6 +22,9 @@ block_cluster_two_arm_designer(
 )
 }
 \arguments{
+\item{N, sd}{Removed DesignLibrary 0.1 arguments. Supplying either is an
+error that names the arguments to set instead.}
+
 \item{N_blocks}{Number of blocks.}
 
 \item{N_clusters_in_block}{Number of clusters in each block.}
@@ -39,7 +44,8 @@ of per-block probabilities is not supported.}
 
 \item{args_to_fix}{Ignored.}
 
-\item{...}{Unused DesignLibrary 0.1 arguments; warned and dropped.}
+\item{...}{Removed DesignLibrary 0.1 arguments, which error; any other
+argument is warned and dropped.}
 }
 \value{
 A design object.
@@ -51,8 +57,10 @@ Routes to \code{\link[=make_design]{make_design()}} with id \code{"block_cluster
 \details{
 A simplified signature relative to DesignLibrary 0.1: level sizes and three
 shock standard deviations, a scalar assignment probability, and \code{ate}.
-Extra DesignLibrary 0.1 arguments (\code{N}, \code{sd}, \code{rho}, \code{verbose}, per-block
-\code{assignment_probs}) are accepted in \code{...} and ignored with a warning.
+The DesignLibrary 0.1 arguments \code{N}, \code{sd}, \code{sd_i_1}, \code{rho}, \code{control_mean},
+and \code{treatment_mean} are errors that name the argument to use instead.
+Other unused arguments (such as 0.1's \code{verbose}) are ignored with a
+warning, and per-block \code{assignment_probs} are an error.
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}
