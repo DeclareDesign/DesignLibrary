@@ -14,6 +14,10 @@ test_that("copy_library_shiny writes a standalone app folder", {
 })
 
 test_that("install_library_dependencies reports already-present packages", {
+  # Installs any missing dependency from CRAN and GitHub, which CRAN policy
+  # forbids during R CMD check.
+  skip_on_cran()
+  skip_if_offline()
   skip_if_not_installed("yaml")
   res <- install_library_dependencies(
     include_shiny = FALSE,

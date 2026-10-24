@@ -49,7 +49,7 @@
 ",FALSE,TRUE,"italian_village.R"
 "italian_village_bayes","9.3","Italian village  a la Bayes.","rdss","","rdss, rstanarm","summary_fn, N","Italian village design a la Bayes. (chapter 9).
 ",FALSE,TRUE,"italian_village_bayes.R"
-"italian_village_continued","9.2","Italian village , continued","rdss","","","N, linear_hypothesis","Italian village design, continued (chapter 9).
+"italian_village_continued","9.2","Italian village , continued","rdss","","car","N, linear_hypothesis","Italian village design, continued (chapter 9).
 ",FALSE,TRUE,"italian_village_continued.R"
 "latent_variables","15.6","latent variables","rdss","observational, descriptive","","N","Latent variable design (chapter 15).
 ",TRUE,TRUE,"latent_variables.R"

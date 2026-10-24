@@ -5,6 +5,7 @@ label: Italian village , continued
 category: rdss
 description: >
   Italian village design, continued (chapter 9).
+packages: [car]
 params:
   "N": "Number of units (sample or population size)"
   "linear_hypothesis": "Linear hypothesis tested (lh_robust)"
