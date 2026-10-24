@@ -76,3 +76,8 @@ reference:
   - binary_iv_designer
   - process_tracing_designer
   - factorial_designer
+- title: Defunct
+  desc: DesignLibrary 0.1 functions removed in 2.0.0. Each stops with an error naming its replacement.
+  contents:
+  - simple_two_arm_designer
+  - get_design_code
