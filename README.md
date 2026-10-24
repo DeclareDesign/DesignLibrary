@@ -2,7 +2,7 @@
 
 A prototype for a library of declared designs using DeclareDesign.
 
-**Versioning:** start at 0.1.0 and bump slowly. Current: 0.1.1.
+Version 2.0.0 supersedes DesignLibrary 0.1.10 on CRAN; see [Upgrading from 0.1](#upgrading-from-01).
 
 ## Idea
 
@@ -34,6 +34,17 @@ build_docs()        # pkgdown site -> docs/ (safe on Dropbox / Windows)
 ```
 
 If `pkgdown::build_site()` fails with `write_html` / "Error closing file", use `build_docs()` instead: it builds in a local temp folder, then copies into `docs/`.
+
+## Upgrading from 0.1
+
+The fifteen 0.1 designers (`two_arm_designer()`, `block_cluster_two_arm_designer()`, and so on) keep their names and, with the exceptions below, their arguments. Each now builds a library design, so `two_arm_designer(N = 40)` and `make_design("two_arm_flexible", N = 40)` return the same design.
+
+- `simple_*_designer()`, `get_design_code()`, and `match.call.defaults()` are defunct; each errors naming its replacement. Use `get_code("<id>")` for a design's source.
+- `block_cluster_two_arm_designer()` dropped `N`, `sd`, `sd_i_1`, `rho`, `control_mean`, and `treatment_mean` (each an error naming what to set instead) and changed its defaults.
+- `multi_arm_designer()` compares each arm with arm 1 only; `mediation_analysis_designer()` renames `Indirect_0`/`Indirect_1` to `Mediator_Effect_0`/`Mediator_Effect_1`.
+- Sweep with `redesign(two_arm_designer(), N = c(50, 100))`, and call `library(DeclareDesign)` yourself: `library(DesignLibrary)` no longer attaches it.
+
+The full list is in `NEWS.md` under "Breaking changes relative to 0.1.10".
 
 ## Server deploy
 
