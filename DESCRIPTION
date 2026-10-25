@@ -30,8 +30,7 @@ Imports:
     utils,
     stats
 Remotes:
-    DeclareDesign/DeclareDesign@rewrite,
-    DeclareDesign/fabricatr@rewrite
+    DeclareDesign/DeclareDesign@rewrite
 Suggests:
     shiny,
     generics,
