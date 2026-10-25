@@ -66,14 +66,27 @@ estimator_AS <-
         obs_exposure = obs_exposure,
         obs_outcome = data$Y,
         obs_prob_exposure = obs_prob_exposure,
-        n_var_permutations = 30
+        n_var_permutations = 30,
+        # without control_condition, estimates() returns empty variances
+        control_condition = "no",
+        variance_estimators = c("hajek", "horvitz-thompson", "max_ht_const")
       )
     
+    # max_ht_const returns its contrasts in alphabetical order, so match by name
+    terms <- names(out_AS$tau_ht)
+    variance <- c(out_AS$var_tau_ht_max[terms], out_AS$var_tau_h[terms])
+    # the Hajek variance of a difference can be negative; report no standard error
+    variance[variance < 0] <- NA
+    
     tibble(
-      term = c(names(out_AS$tau_ht), names(out_AS$tau_h)),
+      term = rep(terms, 2),
       inquiry = rep(c("total_ATE", "direct_ATE", "indirect_ATE"), 2),
       estimator = rep(c("Horvitz-Thompson", "Hajek"), each = 3),
-      estimate = c(out_AS$tau_ht, out_AS$tau_h)
+      estimate = c(out_AS$tau_ht, out_AS$tau_h[terms]),
+      std.error = sqrt(variance),
+      p.value = 2 * pnorm(-abs(estimate / std.error)),
+      conf.low = estimate - qnorm(0.975) * std.error,
+      conf.high = estimate + qnorm(0.975) * std.error
     )
   }
 
