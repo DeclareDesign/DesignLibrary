@@ -20,15 +20,14 @@ DesignLibrary 2.0 replaces the designer functions of 0.1 with a library of self-
 
 All fifteen 0.1 designers keep their names, and all but one keep their arguments. Each now builds a library design, so `two_arm_designer(N = 40)` returns the same design as `make_design("two_arm_flexible", N = 40)`. Most 0.1 scripts that call a designer and diagnose the result run unchanged.
 
-The breaks fall into two groups. Removed functions and removed arguments stop with an error that names the replacement, so a script that hits one tells you what to change. A handful of changes cannot error: a changed default, renamed inquiries or estimator terms, different step names, and the packages `library(DesignLibrary)` attaches. A script that runs under 2.0 can still return a different table from the one it returned under 0.1, and the section [Porting an existing script](#porting-an-existing-script) lists what to search for.
+The breaks fall into two groups. Removed functions and removed arguments stop with an error that names the replacement, so a script that hits one tells you what to change. A handful of changes cannot error: a changed default, renamed inquiries or estimator terms, and different step names. A script that runs under 2.0 can still return a different table from the one it returned under 0.1, and the section [Porting an existing script](#porting-an-existing-script) lists what to search for.
 
 # What does not change
 
-A 0.1 script like this one runs as written. `library(DeclareDesign)` is there for the reason given [below](#library-designlibrary-no-longer-attaches-declaredesign); this script would run without it.
+A 0.1 script like this one runs as written. As in 0.1, `library(DesignLibrary)` also attaches DeclareDesign, fabricatr, estimatr, and randomizr.
 
 ```{r, message = FALSE}
 library(DesignLibrary)
-library(DeclareDesign)
 
 design <- two_arm_designer(N = 100, ate = 0.25)
 set.seed(343)
@@ -146,10 +145,6 @@ length(designs)
 
 One exception: `process_tracing_designer()`'s `cor_E1E2_H` shapes the design before any step reads it, so call the designer once per value.
 
-## `library(DesignLibrary)` no longer attaches DeclareDesign
-
-In 0.1 DeclareDesign, fabricatr, estimatr, and randomizr were in `Depends`, so `library(DesignLibrary)` attached all four. In 2.0 they are in `Imports`, and DesignLibrary attaches them when it builds its first design. A script that builds a design before anything else never notices. A script that calls `declare_model()`, `fabricate()`, or another function from those packages before building a design fails with "could not find function" unless it calls `library(DeclareDesign)` first.
-
 # Porting an existing script
 
 Search the script for each pattern in the left column.
@@ -168,7 +163,6 @@ Search the script for each pattern in the left column.
 | `design[[` with a number, or step names such as `"ATE"` | `names(design)` to find the step | **wrong step, or error** |
 | `args_to_fix` | drop it | warning |
 | `expand_design(` | `redesign(designer(), arg = values)` | deprecation warning |
-| `library(DesignLibrary)` alone, then DeclareDesign functions before any design is built | add `library(DeclareDesign)` | could not find function |
 | `make_design(design = ` | `make_design("<id>")` | error |
 
 The rows in bold are the ones to search for deliberately, since nothing will point you to them.

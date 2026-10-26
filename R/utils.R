@@ -213,9 +213,8 @@ ensure_packages_attached <- function(pkgs) {
 #' Core stack always available when loading designs
 #' @noRd
 core_packages <- function() {
-  # fabricatr before DeclareDesign, which imports it. Attach order used to be
-  # load-bearing here, because the rewrite carried *Zero names and the two
-  # copies of estimatr shadowed each other for the 13 names they shared. Each
-  # package has one name again, so nothing shadows anything.
+  # library(DesignLibrary) attaches all four through DeclareDesign's Depends,
+  # so attaching them here matters only when DesignLibrary is used through
+  # `::` without being attached: the design files call them by name.
   c("fabricatr", "DeclareDesign", "estimatr", "randomizr")
 }

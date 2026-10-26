@@ -19,10 +19,10 @@ Description: A lightweight library of research designs declared with
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.1.0),
+    DeclareDesign (>= 2.0.0)
 Imports:
     fabricatr (>= 2.0.0),
-    DeclareDesign (>= 2.0.0),
     randomizr (>= 2.0.0),
     estimatr (>= 2.0.0),
     rlang,

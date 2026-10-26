@@ -46,7 +46,7 @@ The fifteen 0.1 designers (`two_arm_designer()`, `block_cluster_two_arm_designer
 - `simple_*_designer()`, `get_design_code()`, and `match.call.defaults()` are defunct; each errors naming its replacement. Use `get_code("<id>")` for a design's source.
 - `block_cluster_two_arm_designer()` dropped `N`, `sd`, `sd_i_1`, `rho`, `control_mean`, and `treatment_mean` (each an error naming what to set instead) and changed its defaults.
 - `multi_arm_designer()` compares each arm with arm 1 only; `mediation_analysis_designer()` renames `Indirect_0`/`Indirect_1` to `Mediator_Effect_0`/`Mediator_Effect_1`.
-- Sweep with `redesign(two_arm_designer(), N = c(50, 100))`. `library(DesignLibrary)` no longer attaches DeclareDesign; building the first design does.
+- Sweep with `redesign(two_arm_designer(), N = c(50, 100))`.
 
 The vignette *Upgrading from DesignLibrary 0.1* (`vignette("upgrading")`) works through every break with code, and the full list is in `NEWS.md` under "Breaking changes relative to 0.1.10".
 

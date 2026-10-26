@@ -27,11 +27,12 @@
 #' @importFrom yaml yaml.load
 #' @importFrom utils write.csv install.packages packageVersion
 #' @importFrom rlang `%||%`
-# The design files call these three by name once `core_packages()` has
-# attached them, so nothing here calls them with `::` and `R CMD check`
-# reports the Imports as unused. Importing one symbol from each says what the
-# DESCRIPTION already says: a design cannot run without them.
+# DeclareDesign (in Depends) attaches these three, and the design files call
+# them by name, so nothing here calls them with `::` and `R CMD check`
+# reports the Imports as unused. They stay in Imports for their 2.0 version
+# floors; importing one symbol from each says a design cannot run without them.
 #' @importFrom fabricatr fabricate
 #' @importFrom estimatr lm_robust
 #' @importFrom randomizr complete_ra
+#' @importFrom DeclareDesign redesign
 "_PACKAGE"
