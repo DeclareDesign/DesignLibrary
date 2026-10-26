@@ -287,19 +287,10 @@ test_that("contributor_checklist is non-empty", {
 test_that("bake_previews returns the path it wrote", {
   skip_on_cran()
   skip_if_not_installed("DeclareDesign")
-  id <- "two_arm_simple"
-  prev_dir <- DesignLibrary:::package_write_paths()$previews
-  orig <- file.path(prev_dir, paste0(id, ".rds"))
-  bak <- tempfile(fileext = ".rds")
-  if (file.exists(orig)) {
-    file.copy(orig, bak, overwrite = TRUE)
-  }
-  on.exit({
-    if (file.exists(bak)) file.copy(bak, orig, overwrite = TRUE)
-  }, add = TRUE)
-
-  baked <- bake_previews(designs = id, sims = 2)
+  out_dir <- withr::local_tempdir()
+  baked <- bake_previews(designs = "two_arm_simple", sims = 2, dir = out_dir)
   expect_equal(length(baked$paths), 1L)
+  expect_equal(dirname(normalizePath(baked$paths[[1]])), normalizePath(out_dir))
   expect_true(file.exists(baked$paths[[1]]))
   expect_equal(nrow(baked$failures), 0L)
 })

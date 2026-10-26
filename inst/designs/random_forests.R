@@ -9,7 +9,7 @@ description: >
   effect heterogeneity. The design targets individual level causal
   effects and identifies which variables are mostly commonly used to
   predict causal effects.
-packages: [dplyr, grf]
+packages: [rdss, dplyr, grf]
 params:
   "N": "Number of units (sample or population size)"
   "covariate_names": "Names of covariates used by the learner"
@@ -19,10 +19,6 @@ params:
 book_link: https://book.declaredesign.org/library/complex.html#def-ch19num1
 include_in_shiny: true
 ---
-
-pacman::p_load(rdss, # for helper functions
-               grf)  # random forests
-
 
 f_Y <- function(z, X.1, X.2, X.3, X.4, u) 
   z * X.1 + z * X.2 ^ 2 + z * exp(X.3) + z * X.3 * X.4 + u

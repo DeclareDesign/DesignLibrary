@@ -4,7 +4,7 @@
 \alias{bake_previews}
 \title{Bake compact diagnosis previews into inst/previews}
 \usage{
-bake_previews(designs = NULL, sims = 100, seed = 343)
+bake_previews(designs = NULL, sims = 100, seed = 343, dir = NULL)
 }
 \arguments{
 \item{designs}{Ids/aliases, or \code{NULL} for shiny-included designs.}
@@ -15,6 +15,9 @@ bake_previews(designs = NULL, sims = 100, seed = 343)
 preview does not depend on which other designs were baked with it. The
 caller's random number stream is restored on exit. \code{NULL} leaves the
 stream alone.}
+
+\item{dir}{Directory to write previews into. \code{NULL} (default) means
+\code{inst/previews} in the source tree; an installed package is refused.}
 }
 \value{
 Invisibly, a list with \code{paths} (character) and \code{failures}

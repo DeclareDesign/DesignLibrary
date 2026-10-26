@@ -4,7 +4,12 @@
 \alias{audit_designs}
 \title{Audit one or more designs}
 \usage{
-audit_designs(designs = NULL, sims = 2, write_report = TRUE, report_dir = NULL)
+audit_designs(
+  designs = NULL,
+  sims = 2,
+  write_report = FALSE,
+  report_dir = NULL
+)
 }
 \arguments{
 \item{designs}{Character vector of ids/aliases, or \code{NULL} for all.}
@@ -12,7 +17,8 @@ audit_designs(designs = NULL, sims = 2, write_report = TRUE, report_dir = NULL)
 \item{sims}{Number of simulations for a short \code{diagnose_design()} (default
 2). If \code{NULL}, skip the run check (load and params only).}
 
-\item{write_report}{If \code{TRUE} (default), write CSV + markdown under \verb{tools/}.}
+\item{write_report}{If \code{TRUE}, write CSV + markdown under \verb{tools/} in the
+source tree (default \code{FALSE}).}
 
 \item{report_dir}{Directory for reports; default \verb{tools/} under package root.}
 }

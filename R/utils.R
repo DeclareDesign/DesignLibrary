@@ -8,6 +8,23 @@
   if (is.null(x) || length(x) == 0L || (length(x) == 1L && is.na(x))) y else x
 }
 
+#' Snapshot the global RNG state
+#'
+#' Returns a function that puts `.Random.seed` back as it was, removing it
+#' if it did not exist. Use as `restore <- seed_restorer(); on.exit(restore())`.
+#' @noRd
+seed_restorer <- function() {
+  had_seed <- exists(".Random.seed", envir = globalenv(), inherits = FALSE)
+  old_seed <- if (had_seed) get(".Random.seed", envir = globalenv())
+  function() {
+    if (had_seed) {
+      assign(".Random.seed", old_seed, envir = globalenv())
+    } else if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
+      rm(".Random.seed", envir = globalenv())
+    }
+  }
+}
+
 #' Package designs directory
 #'
 #' Prefers the source-tree `inst/designs` (or installed `designs/`) from
@@ -175,6 +192,24 @@ package_write_paths <- function(root = find_package_root()) {
       index = file.path(root, "library_index")
     )
   }
+}
+
+#' Write paths for maintainer tools, refusing an installed package
+#'
+#' Maintainer tools write previews, the index, and reports. They must never
+#' write into a library under `.libPaths()`, so a root without `inst/` stops.
+#' @noRd
+source_write_paths <- function() {
+  paths <- package_write_paths()
+  if (!isTRUE(paths$source_tree)) {
+    stop(
+      "Maintainer tools write only into a DesignLibrary source tree, and '",
+      paths$root, "' is an installed package. Work from inside the source ",
+      "tree or set options(DesignLibrary.root = \"path/to/DesignLibrary\").",
+      call. = FALSE
+    )
+  }
+  paths
 }
 
 #' Humanize an id into a short label

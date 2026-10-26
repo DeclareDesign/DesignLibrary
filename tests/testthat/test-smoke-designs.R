@@ -1,36 +1,36 @@
-test_that("each design loads with make_design and runs simulate_design once", {
-  skip_if_not_installed("DeclareDesign")
+# One test per design. On CRAN, only designs whose packages are all in
+# Suggests run; the rest (Stan fits, packages CRAN machines may have but we
+# do not declare) are skipped there.
+smoke_idx <- list_designs(discover_params = FALSE)
+suggested <- trimws(sub("\\s*\\(.*", "", strsplit(
+  utils::packageDescription("DesignLibrary")$Suggests, ","
+)[[1]]))
 
-  idx <- list_designs(discover_params = FALSE)
-  expect_true(nrow(idx) >= 1L)
-  expect_true("packages" %in% names(idx))
-
-  for (i in seq_len(nrow(idx))) {
-    id <- idx$id[[i]]
-    if ("functional" %in% names(idx) && !isTRUE(idx$functional[[i]])) next
-    pkg_str <- idx$packages[[i]]
+for (i in seq_len(nrow(smoke_idx))) {
+  local({
+    id <- smoke_idx$id[[i]]
+    functional <- !("functional" %in% names(smoke_idx)) || isTRUE(smoke_idx$functional[[i]])
+    pkg_str <- smoke_idx$packages[[i]]
     if (is.null(pkg_str) || is.na(pkg_str)) pkg_str <- ""
     pkgs <- trimws(strsplit(pkg_str, ",")[[1]])
     pkgs <- pkgs[nzchar(pkgs)]
-    missing <- pkgs[!vapply(pkgs, requireNamespace, quietly = TRUE, FUN.VALUE = logical(1))]
-    if (length(missing)) {
-      # Do not skip() the whole test — just leave this design for a dedicated test
-      next
-    }
 
-    design <- make_design(id)
-    expect_true(
-      inherits(design, "design"),
-      info = paste0(id, ": make_design() did not return a design")
-    )
+    test_that(paste0(id, ": make_design() builds and simulate_design() runs once"), {
+      skip_if_not(functional, paste0(id, " is marked functional: false"))
+      if (!all(pkgs %in% suggested)) skip_on_cran()
+      for (p in pkgs) skip_if_not_installed(p)
 
-    sim <- DeclareDesign::simulate_design(design, sims = 1)
-    expect_true(
-      is.data.frame(sim) || inherits(sim, "simulations_df") || length(sim) > 0L,
-      info = paste0(id, ": simulate_design(..., sims = 1) failed or returned empty")
-    )
-  }
-})
+      design <- make_design(id)
+      expect_s3_class(design, "design")
+
+      sim <- DeclareDesign::simulate_design(design, sims = 1)
+      expect_gte(nrow(sim), 1L)
+      if ("estimate" %in% names(sim)) {
+        expect_false(all(is.na(sim$estimate)), info = id)
+      }
+    })
+  })
+}
 
 test_that("list_designs reports YAML packages for dependency example", {
   idx <- list_designs(discover_params = FALSE)

@@ -351,14 +351,15 @@ classify_audit_issue <- function(msg) {
 #' @param designs Character vector of ids/aliases, or `NULL` for all.
 #' @param sims Number of simulations for a short `diagnose_design()` (default
 #'   2). If `NULL`, skip the run check (load and params only).
-#' @param write_report If `TRUE` (default), write CSV + markdown under `tools/`.
+#' @param write_report If `TRUE`, write CSV + markdown under `tools/` in the
+#'   source tree (default `FALSE`).
 #' @param report_dir Directory for reports; default `tools/` under package root.
 #' @return An object of class `design_library_audit`.
 #' @export
 audit_designs <- function(
   designs = NULL,
   sims = 2,
-  write_report = TRUE,
+  write_report = FALSE,
   report_dir = NULL
 ) {
   idx <- make_index()
@@ -558,8 +559,7 @@ write_audit_report <- function(x, dir = NULL) {
     stop("x must be a design_library_audit object from audit_designs().", call. = FALSE)
   }
   if (is.null(dir)) {
-    root <- tryCatch(find_package_root(), error = function(e) getwd())
-    dir <- file.path(root, "tools")
+    dir <- file.path(source_write_paths()$root, "tools")
   }
   dir.create(dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -734,12 +734,13 @@ print.design_library_audit <- function(x, ...) {
 #'   preview does not depend on which other designs were baked with it. The
 #'   caller's random number stream is restored on exit. `NULL` leaves the
 #'   stream alone.
+#' @param dir Directory to write previews into. `NULL` (default) means
+#'   `inst/previews` in the source tree; an installed package is refused.
 #' @return Invisibly, a list with `paths` (character) and `failures`
 #'   (data frame with `id` and `error`).
 #' @export
-bake_previews <- function(designs = NULL, sims = 100, seed = 343) {
-  paths_info <- package_write_paths()
-  out_dir <- paths_info$previews
+bake_previews <- function(designs = NULL, sims = 100, seed = 343, dir = NULL) {
+  out_dir <- dir %||% source_write_paths()$previews
   dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
   idx <- make_index()
@@ -761,16 +762,8 @@ bake_previews <- function(designs = NULL, sims = 100, seed = 343) {
   fail_errs <- character(0)
 
   if (!is.null(seed)) {
-    had_seed <- exists(".Random.seed", envir = globalenv(), inherits = FALSE)
-    old_seed <- if (had_seed) get(".Random.seed", envir = globalenv())
-    on.exit(
-      if (had_seed) {
-        assign(".Random.seed", old_seed, envir = globalenv())
-      } else if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
-        rm(".Random.seed", envir = globalenv())
-      },
-      add = TRUE
-    )
+    restore_seed <- seed_restorer()
+    on.exit(restore_seed(), add = TRUE)
   }
 
   for (i in seq_len(nrow(idx))) {
@@ -832,7 +825,7 @@ bake_previews <- function(designs = NULL, sims = 100, seed = 343) {
 #' Write index artifact under inst/library_index
 #' @noRd
 write_index_artifact <- function(index = make_index(use_cache = FALSE)) {
-  paths_info <- package_write_paths()
+  paths_info <- source_write_paths()
   out_dir <- paths_info$index
   dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
   path <- file.path(out_dir, "designs_index.rds")
@@ -899,7 +892,7 @@ write_index_artifact <- function(index = make_index(use_cache = FALSE)) {
 #'   and `report`.
 #' @export
 refresh_library <- function(sims = 100, designs = NULL, seed = 343) {
-  paths_info <- package_write_paths()
+  paths_info <- source_write_paths()
   message("DesignLibrary refresh_library()")
   message("Package root: ", paths_info$root)
   message("Designs dir:  ", designs_dir())
@@ -1079,7 +1072,7 @@ build_docs <- function(pkg = NULL, ...) {
     stop('Install pkgdown first: install.packages("pkgdown")', call. = FALSE)
   }
   if (is.null(pkg)) {
-    pkg <- tryCatch(find_package_root(), error = function(e) getwd())
+    pkg <- source_write_paths()$root
   }
   pkg <- normalizePath(pkg, winslash = "/", mustWork = TRUE)
   dest <- file.path(pkg, "docs")

@@ -6,11 +6,11 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^_pkgdown\.yml$
 ^data-raw$
 ^\.cursor$
-^vignettes/*\.html$
-^vignettes/*\.R$
+^vignettes/.*\.html$
+^vignettes/.*\.R$
 ^.*\.gitkeep$
 ^notes$
 ^cran-comments\.md$
+^tools$

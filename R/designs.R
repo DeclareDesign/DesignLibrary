@@ -66,6 +66,11 @@ eval_design <- function(parsed) {
     )
   }
 
+  # Some design files call set.seed() to fix a population; keep that from
+  # resetting the user's RNG stream.
+  restore_seed <- seed_restorer()
+  on.exit(restore_seed(), add = TRUE)
+
   env <- new.env(parent = globalenv())
   # Design files may use `%||%`; R < 4.4 has it only if rlang is attached.
   env$`%||%` <- `%||%`

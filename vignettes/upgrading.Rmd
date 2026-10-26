@@ -39,7 +39,7 @@ What carries over:
 - The fifteen designer names: `two_arm_designer()`, `two_arm_attrition_designer()`, `two_arm_covariate_designer()`, `pretest_posttest_designer()`, `randomized_response_designer()`, `mediation_analysis_designer()`, `multi_arm_designer()`, `two_by_two_designer()`, `factorial_designer()`, `block_cluster_two_arm_designer()`, `regression_discontinuity_designer()`, `spillover_designer()`, `cluster_sampling_designer()`, `binary_iv_designer()`, and `process_tracing_designer()`.
 - Their argument names and defaults, except for `block_cluster_two_arm_designer()` and the default `N` of `multi_arm_designer()`.
 - Inquiry and estimator labels, except for the cases listed below.
-- The designs themselves. Seven of the designers (`two_arm_covariate`, `regression_discontinuity`, `spillover`, `cluster_sampling`, `binary_iv`, `process_tracing`, and `factorial`) became new library files flattened from their 0.1 code, and at the same arguments and seed each draws what its 0.1 designer drew.
+- The designs themselves. Seven of the designers became new library files (`two_arm_covariate`, `regression_discontinuity_polynomial`, `spillover`, `cluster_sampling`, `binary_iv`, `process_tracing_bayes`, and `factorial`) flattened from their 0.1 code, and at the same arguments and seed each draws what its 0.1 designer drew.
 
 # What changes, and why
 
@@ -143,7 +143,7 @@ designs <- redesign(two_arm_designer(), N = c(50, 100))
 length(designs)
 ```
 
-One exception: `process_tracing_designer()`'s `cor_E1E2_H` shapes the design before any step reads it, so call the designer once per value.
+One caution: `process_tracing_designer()` checks that `cor_E1E2_H` and `cor_E1E2_not_H` are compatible with the clue probabilities, and `redesign()` does not. An incompatible value passed through `redesign()` fails only when the design is run, with "negative probability" from the measurement step.
 
 # Porting an existing script
 
