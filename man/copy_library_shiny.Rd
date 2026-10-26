@@ -24,7 +24,7 @@ Connect host can point at a folder. The folder relies on the installed
 \details{
 Typical server workflow:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("DesignLibrary")
 DesignLibrary::install_library_dependencies()
 DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 }\if{html}{\out{</div>}}

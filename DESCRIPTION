@@ -29,8 +29,6 @@ Imports:
     yaml,
     utils,
     stats
-Remotes:
-    DeclareDesign/DeclareDesign@rewrite
 Suggests:
     shiny,
     generics,

@@ -6,6 +6,8 @@
 
 ## Breaking changes relative to 0.1.10
 
+`vignette("upgrading")` works through each of these with code, and lists the ones that change results without an error.
+
 Each removed function and argument below stops with an error that names its replacement.
 
 - `simple_two_arm_designer()`, `simple_factorial_designer()`, `simple_iv_designer()`, and `simple_spillover_designer()` (deprecated in 0.1) are defunct. Use `two_arm_designer()`, `two_by_two_designer()`, `binary_iv_designer()`, and `spillover_designer()`, which take the same arguments.
@@ -18,7 +20,7 @@ Each removed function and argument below stops with an error that names its repl
 - `args_to_fix` is ignored with a warning when non-empty: every parameter stays redesignable on the returned design.
 - Designs are DeclareDesign 2.0 designs. They have no separate potential outcomes or reveal steps, and some step names differ (the inquiry step of `factorial_designer()` is `"inquiry"`, not `"ATE"`). Inquiry and estimator labels are otherwise those of 0.1. Code that picks steps by name or position needs checking.
 - To sweep a parameter, use `redesign(two_arm_designer(), N = c(50, 100))`. `expand_design(two_arm_designer, N = c(50, 100))` still works but is deprecated in DeclareDesign 2.0.
-- `library(DesignLibrary)` no longer attaches DeclareDesign, fabricatr, estimatr, and randomizr: they are Imports, not Depends, and attach only when the first design is built. Call `library(DeclareDesign)` for `diagnose_design()` and friends.
+- `library(DesignLibrary)` no longer attaches DeclareDesign, fabricatr, estimatr, and randomizr: they are Imports, not Depends, and attach when the first design is built. Code that calls their functions before building a design needs `library(DeclareDesign)` first.
 - Requires R 4.1 and DeclareDesign, fabricatr, estimatr, and randomizr 2.0.
 
 **`make_design()`'s first argument is `.design`, and `get_code()`'s are `.design` and `.style`.** As `design`, it was partially matched by a parameter named `d`, so `make_design("mediation_analysis", d = 0.3)` read 0.3 as the design id and failed. A positional id is unaffected; `make_design(design = "x")` must become `make_design(.design = "x")` or `make_design("x")`. `get_code(id, style = "simple")` becomes `get_code(id, .style = "simple")`.

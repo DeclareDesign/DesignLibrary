@@ -62,7 +62,7 @@ run_shiny <- function(...) {
 #'
 #' Typical server workflow:
 #' ```r
-#' remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+#' install.packages("DesignLibrary")
 #' DesignLibrary::install_library_dependencies()
 #' DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 #' ```
@@ -83,7 +83,7 @@ copy_library_shiny <- function(
   if (!nzchar(src) || !dir.exists(src)) {
     stop(
       "No Shiny app found in ", package,
-      ". Reinstall with remotes::install_github(...) ?",
+      ". Reinstall DesignLibrary.",
       call. = FALSE
     )
   }

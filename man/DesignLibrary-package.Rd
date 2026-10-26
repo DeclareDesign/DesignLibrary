@@ -27,7 +27,7 @@ run_shiny()
 \section{Shiny deploy}{
 
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("DesignLibrary")
 install_library_dependencies()
 copy_library_shiny("/path/to/shiny-app")
 }\if{html}{\out{</div>}}
@@ -43,14 +43,14 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Macartan Humphreys \email{macartan.humphreys@wzb.eu}
+\strong{Maintainer}: Alexander Coppock \email{acoppock@gmail.com}
 
 Authors:
 \itemize{
+  \item Alexander Coppock \email{acoppock@gmail.com}
   \item Macartan Humphreys \email{macartan.humphreys@wzb.eu}
   \item Graeme Blair \email{graeme.blair@ucla.edu}
   \item Jasper Cooper \email{jjc2247@columbia.edu}
-  \item Alexander Coppock \email{alex.coppock@northwestern.edu}
   \item Clara Bicalho \email{clarabmcorreia@gmail.com}
   \item Neal Fultz \email{nfultz@gmail.com}
   \item Lily Medina \email{lilymiru@gmail.com}

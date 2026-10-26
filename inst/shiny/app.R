@@ -1,5 +1,5 @@
 # DesignLibrary Shiny browser
-# Deploy: remotes::install_github(...); install_library_dependencies(); copy_library_shiny(dest)
+# Deploy: install.packages("DesignLibrary"); install_library_dependencies(); copy_library_shiny(dest)
 # Flow: Library (searchable table) -> Design / Diagnosis / Redesign
 
 library(shiny)

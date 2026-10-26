@@ -32,14 +32,15 @@ Invisibly, a list with \code{installed}, \code{already_ok}, and \code{failed}.
 \description{
 Installs package Imports (and, by default, Suggests needed for the Shiny
 browser), plus any extra packages declared in design YAML \verb{packages:} fields.
-GitHub-only stack packages (\code{DeclareDesign}, \code{fabricatr}, \code{estimatr})
-come from the rewrite branches via \code{remotes::install_github()}. They
-are never installed from CRAN.
+Everything comes from CRAN except \code{interference} (used by
+\code{network_experiment}), which comes from GitHub via
+\code{remotes::install_github()}. An installed \code{DeclareDesign}, \code{fabricatr},
+\code{estimatr}, or \code{randomizr} older than 2.0.0 is upgraded from CRAN.
 }
 \details{
 Typical server workflow:
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("DesignLibrary")
 DesignLibrary::install_library_dependencies()
 DesignLibrary::copy_library_shiny("/path/to/shiny-app")
 }\if{html}{\out{</div>}}

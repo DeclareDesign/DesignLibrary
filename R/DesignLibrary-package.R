@@ -18,7 +18,7 @@
 #'
 #' @section Shiny deploy:
 #' ```r
-#' remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+#' install.packages("DesignLibrary")
 #' install_library_dependencies()
 #' copy_library_shiny("/path/to/shiny-app")
 #' ```

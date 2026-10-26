@@ -16,11 +16,14 @@ navbar:
         href: articles/DesignLibrary.html
       - text: Contributing a design
         href: articles/contributing.html
+      - text: Upgrading from DesignLibrary 0.1
+        href: articles/upgrading.html
 articles:
 - title: Getting started
   contents:
   - DesignLibrary
   - contributing
+  - upgrading
 reference:
 - title: Discover
   desc: Browse the design library.
