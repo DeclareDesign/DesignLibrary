@@ -38,7 +38,7 @@ discover_design_params <- function(design, code = NULL) {
     DeclareDesign::design_parameters(design),
     error = function(e) NULL
   )
-  params <- filter_modifiable_params(objs)
+  params <- filter_modifiable_params(objs, declared_param_values(design))
   if (!is.null(code) && nzchar(trimws(code))) {
     pre <- extract_pre_design_objects(code)
     # Author knobs: top-level assignments before design <-, including functions.
@@ -184,12 +184,34 @@ is_modifiable_value <- function(val) {
   is.atomic(val)
 }
 
+#' Values of a design's `declare_parameters()` steps, at full precision
+#'
+#' `design_parameters()` gives a declared parameter no environment and a value
+#' rounded for display (`c(1, 1, 1) / 3` reads back as 0.333 three times, which
+#' no longer sums to 1). The step keeps its quosures; evaluate them in order,
+#' each seeing those before it, as DeclareDesign does.
+#' @noRd
+declared_param_values <- function(design) {
+  out <- list()
+  for (step in unclass(design)) {
+    if (!identical(attr(step, "step_type"), "parameters")) next
+    dots <- attr(step, "dots")
+    cached <- attr(step, "param_values")
+    values <- if (is.list(cached)) cached[intersect(names(dots), names(cached))] else list()
+    for (nm in setdiff(names(dots), names(values))) {
+      values[nm] <- list(tryCatch(rlang::eval_tidy(dots[[nm]], data = values), error = function(e) NULL))
+    }
+    out[names(values)] <- values
+  }
+  out
+}
+
 #' Drop non-redesignable objects; dedupe by name
 #'
 #' Keeps atomic values (including matrices and short/long vectors), data
 #' frames, bare lists, and functions. Classed objects are dropped.
 #' @noRd
-filter_modifiable_params <- function(objs) {
+filter_modifiable_params <- function(objs, declared = list()) {
   empty <- empty_params_df()
   if (is.null(objs) || !nrow(objs)) return(empty)
 
@@ -220,6 +242,9 @@ filter_modifiable_params <- function(objs) {
       if (!is.null(val) && (is.symbol(val) || is.name(val))) {
         val <- tryCatch(eval(val, envir = env), error = function(e) NULL)
       }
+    }
+    if (is.null(val) && name %in% names(declared)) {
+      val <- declared[[name]]
     }
     # Last resort: DeclareDesign's `value` is a display snippet (doubles to
     # three significant digits, long strings cut), so this recovers a value

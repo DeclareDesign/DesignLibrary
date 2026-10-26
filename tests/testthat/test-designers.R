@@ -1,7 +1,4 @@
 test_that("designers with DesignLibrary 0.1 names return designs", {
-  skip_if_not_installed("DeclareDesign")
-  skip_on_cran()
-
   d <- two_arm_designer(N = 20, ate = 0.5)
   expect_s3_class(d, "design")
   est <- DeclareDesign::draw_estimands(d)
@@ -24,9 +21,6 @@ test_that("designers with DesignLibrary 0.1 names return designs", {
 })
 
 test_that("multi_arm_designer accepts m_arms = 4", {
-  skip_if_not_installed("DeclareDesign")
-  skip_on_cran()
-
   d3 <- multi_arm_designer(N = 30)
   expect_s3_class(d3, "design")
   est3 <- DeclareDesign::draw_estimands(d3)
@@ -142,4 +136,50 @@ test_that("fixed-effects cluster designs ask for CR2, as estimatr 1.0.6 gave by 
   cr2 <- estimatr::lm_robust(Y ~ Z, data = dat, fixed_effects = ~ periods + units,
                              clusters = units, subset = time < max(time), se_type = "CR2")
   expect_equal(est$std.error, unname(cr2$std.error["Z"]))
+})
+
+test_that("designer defaults match DesignLibrary 0.1.10 except where documented", {
+  source(test_path("fixtures", "designer_defaults_0_1_10.R"), local = TRUE)
+  for (fn in names(designer_defaults_0_1_10)) {
+    # A simplified signature, documented in the designer and the upgrading vignette
+    if (fn == "block_cluster_two_arm_designer") next
+    now <- formals(get(fn))
+    old <- designer_defaults_0_1_10[[fn]]
+    for (arg in names(old)) {
+      # 30 in 0.1.10 did not divide into three arms of the design's blocks
+      if (fn == "multi_arm_designer" && arg == "N") next
+      label <- paste0(fn, "(", arg, ")")
+      expect_true(arg %in% names(now), label = label)
+      expect_equal(eval(now[[arg]], baseenv()), old[[arg]], label = label)
+    }
+  }
+})
+
+test_that("spillover_designer() builds, sweeps, and validates", {
+  d <- spillover_designer(N_groups = 10, N_i_group = 3)
+  expect_s3_class(d, "design")
+  expect_equal(nrow(DeclareDesign::draw_data(d)), 30)
+  expect_length(spillover_designer(N_groups = 10, sd_i = c(0.1, 0.2)), 2)
+  expect_error(spillover_designer(sd_i = -1), "non-negative")
+})
+
+test_that("cluster_sampling_designer() samples the requested clusters and units", {
+  d <- cluster_sampling_designer(
+    N_clusters_in_block = 20, N_i_in_cluster = 5,
+    n_clusters_in_block = 4, n_i_in_cluster = 2
+  )
+  expect_s3_class(d, "design")
+  expect_equal(nrow(DeclareDesign::draw_data(d)), 8)
+  expect_error(cluster_sampling_designer(icc = 1.5), "\\[0, 1\\]")
+  expect_length(cluster_sampling_designer(N_clusters_in_block = 20, n_clusters_in_block = 4, icc = c(0.1, 0.3)), 2)
+})
+
+test_that("process_tracing_designer() checks probabilities, correlations, and labels", {
+  expect_error(process_tracing_designer(N = 0), "positive integer")
+  expect_error(process_tracing_designer(process_proportions = c(0.5, 0.5, 0.5, 0.5)), "sum to 1")
+  expect_error(process_tracing_designer(p_E1_H = 1.2), "p_E1_H must be in")
+  expect_error(process_tracing_designer(cor_E1E2_H = 1), "not compatible")
+  skip_if_not_installed("CausalQueries")
+  skip_if_not_installed("rdss")
+  expect_warning(process_tracing_designer(label_E1 = "Hoop"), "label_E1 and label_E2 are ignored")
 })
