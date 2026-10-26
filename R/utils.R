@@ -120,7 +120,8 @@ walk_for_package_root <- function(start) {
 #' Writable package root (for maintainer refresh)
 #'
 #' Lookup order:
-#' 1. `options(DesignLibrary.root = ...)` or env `RESEARCHDESIGNS_ROOT`
+#' 1. `options(DesignLibrary.root = ...)` or env `DESIGNLIBRARY_ROOT`
+#'    (`RESEARCHDESIGNS_ROOT` is still read as a fallback)
 #' 2. Walk up from `start` (default `getwd()`)
 #' 3. Installed / `load_all` package path
 #'
@@ -130,13 +131,13 @@ walk_for_package_root <- function(start) {
 find_package_root <- function(start = getwd()) {
   opt <- getOption("DesignLibrary.root", NULL)
   if (is.null(opt) || !nzchar(as.character(opt)[[1]])) {
-    opt <- Sys.getenv("RESEARCHDESIGNS_ROOT", unset = "")
+    opt <- Sys.getenv("DESIGNLIBRARY_ROOT", unset = Sys.getenv("RESEARCHDESIGNS_ROOT", unset = ""))
   }
   if (nzchar(as.character(opt)[[1]])) {
     opt <- normalizePath(as.character(opt)[[1]], winslash = "/", mustWork = FALSE)
     if (is_designlibrary_root(opt)) return(opt)
     stop(
-      "DesignLibrary.root / RESEARCHDESIGNS_ROOT is set to '", opt,
+      "DesignLibrary.root / DESIGNLIBRARY_ROOT is set to '", opt,
       "' but that folder has no DesignLibrary DESCRIPTION.",
       call. = FALSE
     )
@@ -162,7 +163,7 @@ find_package_root <- function(start = getwd()) {
     "Do one of:\n",
     "  setwd(\"C:/path/to/DesignLibrary\")\n",
     "  options(DesignLibrary.root = \"C:/path/to/DesignLibrary\")\n",
-    "  Sys.setenv(RESEARCHDESIGNS_ROOT = \"C:/path/to/DesignLibrary\")\n",
+    "  Sys.setenv(DESIGNLIBRARY_ROOT = \"C:/path/to/DesignLibrary\")\n",
     "then re-run refresh_library().",
     call. = FALSE
   )

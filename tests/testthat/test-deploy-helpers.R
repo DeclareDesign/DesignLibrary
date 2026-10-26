@@ -13,22 +13,17 @@ test_that("copy_library_shiny writes a standalone app folder", {
   })
 })
 
-test_that("install_library_dependencies reports already-present packages", {
-  # Installs any missing dependency from CRAN and GitHub, which CRAN policy
-  # forbids during R CMD check.
-  skip_on_cran()
-  skip_if_offline()
-  skip_if_not_installed("yaml")
+test_that("install_library_dependencies dry run plans without installing", {
   res <- install_library_dependencies(
     include_shiny = FALSE,
     include_suggests = FALSE,
-    verbose = FALSE
+    verbose = FALSE,
+    dry_run = TRUE
   )
-  expect_true(is.list(res))
-  expect_true("yaml" %in% res$already_ok || "yaml" %in% res$installed)
-  # Optional design extras (cjoint, MatchIt, …) may fail on CRAN/offline hosts
-  if (length(res$failed)) {
-    message("install_library_dependencies failed (ok to skip): ", paste(res$failed, collapse = ", "))
-  }
-  expect_true("yaml" %in% res$already_ok || "yaml" %in% res$installed)
+  expect_length(res$installed, 0L)
+  expect_length(res$failed, 0L)
+  expect_true(all(c("DeclareDesign", "yaml") %in% res$already_ok))
+  expect_false(any(c("DeclareDesign", "yaml") %in% res$to_install))
+  missing <- setdiff(DesignLibrary:::design_declared_packages(), res$already_ok)
+  expect_setequal(intersect(res$to_install, DesignLibrary:::design_declared_packages()), missing)
 })

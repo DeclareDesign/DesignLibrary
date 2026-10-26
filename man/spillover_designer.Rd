@@ -37,9 +37,7 @@ to the power \code{gamma}. Argument names match DesignLibrary 0.1's
 \code{make_design("randomized_saturation")}.
 }
 \examples{
-\dontrun{
 spillover_designer(N_groups = 40, gamma = 1)
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

@@ -15,3 +15,8 @@ The value of \code{shiny::runApp()} (called for side effects).
 \description{
 Launch the DesignLibrary Shiny browser
 }
+\examples{
+if (interactive()) {
+  run_shiny()
+}
+}

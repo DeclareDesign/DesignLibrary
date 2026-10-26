@@ -51,11 +51,9 @@ Inquiries are \code{mean(Y(k) - Y(1))}; estimation is one \code{lm_robust}.
 Library-file knobs match these formals.
 }
 \examples{
-\dontrun{
 make_design("multiarm_trial", N = 90)
 multi_arm_designer(m_arms = 4)
 multi_arm_designer(m_arms = 4, outcome_means = c(0, 0.5, 1, 2))
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

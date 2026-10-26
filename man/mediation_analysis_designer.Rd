@@ -36,6 +36,9 @@ A design object.
 Routes to \code{\link[=make_design]{make_design()}} with id \code{"mediation_analysis"}:
 \code{make_design("mediation_analysis", N = N, a = a, ...)}.
 }
+\examples{
+mediation_analysis_designer(N = 40, a = 0.5, d = 0.2)
+}
 \seealso{
 \code{\link[=make_design]{make_design()}}
 }

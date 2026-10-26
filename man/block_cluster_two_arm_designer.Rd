@@ -62,6 +62,9 @@ and \code{treatment_mean} are errors that name the argument to use instead.
 Other unused arguments (such as 0.1's \code{verbose}) are ignored with a
 warning, and per-block \code{assignment_probs} are an error.
 }
+\examples{
+block_cluster_two_arm_designer(N_blocks = 4, N_clusters_in_block = 2, N_i_in_cluster = 5)
+}
 \seealso{
 \code{\link[=make_design]{make_design()}}
 }

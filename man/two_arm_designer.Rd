@@ -49,10 +49,8 @@ can be specified by \code{ate} or by \code{treatment_mean} (which overrides \cod
 Argument names match DesignLibrary 0.1's \code{two_arm_designer}.
 }
 \examples{
-\dontrun{
 make_design("two_arm_flexible", N = 40, ate = 0.2)
 two_arm_designer(N = 40, ate = 0.2)
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

@@ -6,6 +6,7 @@ category: rdss
 keywords: [experiment, descriptive]
 description: >
   Trust game design. (chapter 17).
+packages: [tidyr]
 params:
   "deceive": "Whether the trust-game design allows deception"
   "n_pairs": "Number of pairs"

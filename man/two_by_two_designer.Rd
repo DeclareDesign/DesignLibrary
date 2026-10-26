@@ -53,6 +53,9 @@ Cell means are \code{outcome_means} in order AB = 00, 01, 10, 11. Scalar
 \code{mean_A0B0} / \code{mean_A0B1} / \code{mean_A1B0} / \code{mean_A1B1} override those
 entries when supplied.
 }
+\examples{
+two_by_two_designer(N = 40, outcome_means = c(0, 0.5, 0.5, 1))
+}
 \seealso{
 \code{\link[=make_design]{make_design()}}
 }

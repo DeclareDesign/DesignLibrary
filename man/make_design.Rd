@@ -69,9 +69,7 @@ In RStudio, Positron, and other tools that complete from formals, typing
 See \code{\link[=list_designs]{list_designs()}} for the same catalogue in the console.
 }
 \examples{
-\dontrun{
 make_design()
 make_design("two_arm_simple", b = 0.5)
 make_design("2.1", b = 0.5)  # book alias
-}
 }

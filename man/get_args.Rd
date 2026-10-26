@@ -61,7 +61,5 @@ may contain functions and lists; the printed table shows \code{value_str} in its
 place.
 }
 \examples{
-\dontrun{
-get_args("two_arm_trial")
-}
+get_args("two_arm_simple")
 }

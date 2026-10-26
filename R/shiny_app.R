@@ -38,6 +38,10 @@ resolve_shiny_dest <- function(dest = getwd()) {
 #'
 #' @param ... Passed to [shiny::runApp()].
 #' @return The value of `shiny::runApp()` (called for side effects).
+#' @examples
+#' if (interactive()) {
+#'   run_shiny()
+#' }
 #' @export
 run_shiny <- function(...) {
   if (!requireNamespace("shiny", quietly = TRUE)) {

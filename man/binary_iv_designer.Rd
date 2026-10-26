@@ -56,10 +56,8 @@ in every length-4 argument. \code{a_Y}, \code{b_Y}, and \code{d_Y} fill the defa
 \code{make_design("instrumental_variables")}.
 }
 \examples{
-\dontrun{
 binary_iv_designer(N = 200, b_Y = 0.5)
 binary_iv_designer(type_probs = c(0.2, 0.2, 0.5, 0.1), b = c(0, 0, 1, -1))
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

@@ -49,3 +49,6 @@ Printing uses short English prose. The underlying list is unchanged for
 programmatic use (\code{info$id}, \code{info$params}, \code{info$diagnosands}, \code{info$coupled},
 etc.).
 }
+\examples{
+design_info("two_arm_simple")
+}

@@ -9,7 +9,8 @@ install_library_dependencies(
   include_suggests = FALSE,
   ask = FALSE,
   upgrade = "never",
-  verbose = TRUE
+  verbose = TRUE,
+  dry_run = FALSE
 )
 }
 \arguments{
@@ -20,18 +21,23 @@ install_library_dependencies(
 Ignored when \code{include_shiny} already covers the Shiny set unless you
 want test/doc packages too.}
 
-\item{ask}{Passed through to install helpers when supported.}
+\item{ask}{Passed to \code{remotes::install_github()}.}
 
-\item{upgrade}{Passed to \code{remotes::install_github()} / \code{install.packages()}.}
+\item{upgrade}{Passed to \code{remotes::install_github()}.}
 
 \item{verbose}{Print progress messages.}
+
+\item{dry_run}{If \code{TRUE}, install nothing and return the plan: \code{to_install}
+names the packages that would be installed or upgraded.}
 }
 \value{
-Invisibly, a list with \code{installed}, \code{already_ok}, and \code{failed}.
+Invisibly, a list with \code{installed}, \code{already_ok}, \code{failed}, and
+\code{to_install}. If a package that was already loaded is upgraded, restart R
+before using it; a message says so.
 }
 \description{
-Installs package Imports (and, by default, Suggests needed for the Shiny
-browser), plus any extra packages declared in design YAML \verb{packages:} fields.
+Installs package Depends and Imports (and, by default, Suggests needed for
+the Shiny browser), plus any extra packages declared in design YAML \verb{packages:} fields.
 Everything comes from CRAN except \code{interference} (used by
 \code{network_experiment}), which comes from GitHub via
 \code{remotes::install_github()}. An installed \code{DeclareDesign}, \code{fabricatr},

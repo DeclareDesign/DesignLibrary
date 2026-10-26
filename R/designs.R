@@ -267,6 +267,9 @@ filter_library_browser <- function(df, tab = "templates", q = "") {
 #'   sequence and up to 10 designs in each remaining group. If `TRUE`, printing
 #'   lists every design.
 #' @return A data frame with class `design_library_list`.
+#' @examples
+#' list_designs()
+#' list_designs(shiny_only = TRUE)
 #' @export
 list_designs <- function(shiny_only = FALSE, discover_params = FALSE, list_all = FALSE) {
   idx <- make_index()
@@ -413,6 +416,8 @@ print.design_library_list <- function(x, ..., list_all = NULL, n = 10L) {
 #'
 #' @param design Design id or book alias.
 #' @return A named list of metadata with class `design_library_info`.
+#' @examples
+#' design_info("two_arm_simple")
 #' @export
 design_info <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
@@ -432,9 +437,7 @@ design_info <- function(design) {
 #' @return Character vector (possibly empty).
 #' @export
 #' @examples
-#' \dontrun{
 #' preferred_diagnosands("two_arm_simple")
-#' }
 preferred_diagnosands <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
   meta <- resolve_design(design)$meta
@@ -575,11 +578,9 @@ print.design_library_info <- function(x, ...) {
 #'   and `redesign()` expands).
 #' @export
 #' @examples
-#' \dontrun{
 #' make_design()
 #' make_design("two_arm_simple", b = 0.5)
 #' make_design("2.1", b = 0.5)  # book alias
-#' }
 make_design <- function(.design = "two_arm_simple", ...) {
   # When formals are the full library vector (set in .onLoad for IDE completion),
   # a bare make_design() call receives that vector, so use the first id.
@@ -639,9 +640,7 @@ make_design <- function(.design = "two_arm_simple", ...) {
 #'   `value_str`, `tip`, `kind`, and `shiny`.
 #' @export
 #' @examples
-#' \dontrun{
-#' get_args("two_arm_trial")
-#' }
+#' get_args("two_arm_simple")
 get_args <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
   parsed <- resolve_design(design)
@@ -680,10 +679,8 @@ prefix_yaml_libraries <- function(code, packages) {
 #' @return A list with `simple` and `full`, class `design_library_code`.
 #' @export
 #' @examples
-#' \dontrun{
 #' get_code("two_arm_simple")
 #' get_code("two_arm_simple")$simple
-#' }
 get_code <- function(.design, .style = c("both", "simple", "full"), ...) {
   # Dotted, as in make_design(), so that a parameter passed through `...`
   # (`d`, `s`) cannot partially match either one.

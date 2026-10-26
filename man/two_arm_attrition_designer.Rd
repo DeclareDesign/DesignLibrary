@@ -36,6 +36,9 @@ A design object.
 Routes to \code{\link[=make_design]{make_design()}} with id \code{"two_arm_attrition"}:
 \code{make_design("two_arm_attrition", N = N, a_R = a_R, ...)}.
 }
+\examples{
+two_arm_attrition_designer(N = 40, b_R = 0.5)
+}
 \seealso{
 \code{\link[=make_design]{make_design()}}
 }

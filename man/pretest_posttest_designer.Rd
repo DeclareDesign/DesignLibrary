@@ -36,6 +36,9 @@ A design object.
 Routes to \code{\link[=make_design]{make_design()}} with id \code{"pretest_posttest"}:
 \code{make_design("pretest_posttest", N = N, ate = ate, ...)}.
 }
+\examples{
+pretest_posttest_designer(N = 40, attrition_rate = 0.2)
+}
 \seealso{
 \code{\link[=make_design]{make_design()}}
 }

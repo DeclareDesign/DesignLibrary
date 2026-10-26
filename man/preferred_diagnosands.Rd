@@ -20,7 +20,5 @@ Names prefixed with \code{-} (e.g. \code{-bias}) are exclusions and are omitted 
 see \code{\link[=excluded_diagnosands]{excluded_diagnosands()}}.
 }
 \examples{
-\dontrun{
 preferred_diagnosands("two_arm_simple")
-}
 }

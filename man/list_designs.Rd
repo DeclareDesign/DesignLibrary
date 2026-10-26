@@ -32,3 +32,7 @@ keys plus pre-design assignment names); designs are not evaluated. Use
 \code{as.data.frame(list_designs(discover_params = TRUE))} for redesignable
 parameters from a loaded design. Row order matches print order.
 }
+\examples{
+list_designs()
+list_designs(shiny_only = TRUE)
+}

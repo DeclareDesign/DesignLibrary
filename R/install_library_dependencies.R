@@ -51,8 +51,8 @@ design_declared_packages <- function() {
 
 #' Install DesignLibrary system dependencies
 #'
-#' Installs package Imports (and, by default, Suggests needed for the Shiny
-#' browser), plus any extra packages declared in design YAML `packages:` fields.
+#' Installs package Depends and Imports (and, by default, Suggests needed for
+#' the Shiny browser), plus any extra packages declared in design YAML `packages:` fields.
 #' Everything comes from CRAN except `interference` (used by
 #' `network_experiment`), which comes from GitHub via
 #' `remotes::install_github()`. An installed `DeclareDesign`, `fabricatr`,
@@ -70,19 +70,24 @@ design_declared_packages <- function() {
 #' @param include_suggests If `TRUE`, install all DESCRIPTION Suggests.
 #'   Ignored when `include_shiny` already covers the Shiny set unless you
 #'   want test/doc packages too.
-#' @param ask Passed through to install helpers when supported.
-#' @param upgrade Passed to `remotes::install_github()` / `install.packages()`.
+#' @param ask Passed to `remotes::install_github()`.
+#' @param upgrade Passed to `remotes::install_github()`.
 #' @param verbose Print progress messages.
-#' @return Invisibly, a list with `installed`, `already_ok`, and `failed`.
+#' @param dry_run If `TRUE`, install nothing and return the plan: `to_install`
+#'   names the packages that would be installed or upgraded.
+#' @return Invisibly, a list with `installed`, `already_ok`, `failed`, and
+#'   `to_install`. If a package that was already loaded is upgraded, restart R
+#'   before using it; a message says so.
 #' @export
 install_library_dependencies <- function(
   include_shiny = TRUE,
   include_suggests = FALSE,
   ask = FALSE,
   upgrade = "never",
-  verbose = TRUE
+  verbose = TRUE,
+  dry_run = FALSE
 ) {
-  fields <- "Imports"
+  fields <- c("Depends", "Imports")
   if (isTRUE(include_suggests)) fields <- c(fields, "Suggests")
   pkgs <- description_packages(fields = fields)
 
@@ -105,6 +110,8 @@ install_library_dependencies <- function(
   already_ok <- character(0)
   installed <- character(0)
   failed <- character(0)
+  to_install <- character(0)
+  loaded_before <- loadedNamespaces()
 
   say <- function(...) if (isTRUE(verbose)) message(...)
 
@@ -119,6 +126,10 @@ install_library_dependencies <- function(
       already_ok <- c(already_ok, pkg)
       next
     }
+    if (isTRUE(dry_run)) {
+      to_install <- c(to_install, pkg)
+      next
+    }
     if (present) {
       say(pkg, " ", utils::packageVersion(pkg), " is older than 2.0.0; upgrading from CRAN.")
     }
@@ -127,7 +138,10 @@ install_library_dependencies <- function(
     if (pkg %in% names(gh)) {
       if (!requireNamespace("remotes", quietly = TRUE)) {
         say("Installing remotes to fetch ", pkg, " from GitHub...")
-        utils::install.packages("remotes", quiet = !verbose)
+        tryCatch(
+          utils::install.packages("remotes", quiet = !verbose),
+          error = function(e) say("Failed remotes: ", conditionMessage(e))
+        )
       }
       if (!requireNamespace("remotes", quietly = TRUE)) {
         failed <- c(failed, pkg)
@@ -150,11 +164,7 @@ install_library_dependencies <- function(
     } else {
       say("Installing ", pkg, " from CRAN...")
       ok <- tryCatch({
-        utils::install.packages(
-          pkg,
-          quiet = !verbose,
-          ask = ask
-        )
+        utils::install.packages(pkg, quiet = !verbose)
         requireNamespace(pkg, quietly = TRUE)
       }, error = function(e) {
         say("Failed ", pkg, ": ", conditionMessage(e))
@@ -169,7 +179,18 @@ install_library_dependencies <- function(
     }
   }
 
-  if (length(failed)) {
+  reloaded <- intersect(installed, loaded_before)
+  if (length(reloaded)) {
+    message(
+      "Restart R: ", paste(reloaded, collapse = ", "),
+      " was loaded before it was upgraded, and the old version is still in use."
+    )
+  }
+
+  if (isTRUE(dry_run)) {
+    say("Dry run: would install ", length(to_install), " package(s)",
+        if (length(to_install)) paste0(": ", paste(to_install, collapse = ", ")) else ".")
+  } else if (length(failed)) {
     warning(
       "Could not install: ", paste(failed, collapse = ", "),
       call. = FALSE
@@ -182,6 +203,7 @@ install_library_dependencies <- function(
   invisible(list(
     installed = installed,
     already_ok = already_ok,
-    failed = failed
+    failed = failed,
+    to_install = to_install
   ))
 }

@@ -6,6 +6,7 @@ category: rdss
 keywords: [experiment, causal]
 description: >
   Two-arm trial with covariate adjustment. (chapter 18).
+packages: [MASS]
 params:
   "N": "Number of units (sample or population size)"
   "prob": "Probability of assignment to treatment"

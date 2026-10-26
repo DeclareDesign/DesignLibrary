@@ -54,10 +54,8 @@ random and adjustment buys precision; otherwise \code{W} confounds. Argument
 names match DesignLibrary 0.1's \code{two_arm_covariate_designer}.
 }
 \examples{
-\dontrun{
 prognostic <- two_arm_covariate_designer(N = 40, ate = 0.2, rho_WY = 0.9, h = 0.5)
 confounded <- two_arm_covariate_designer(N = 40, ate = 0, rho_WZ = 0.9, rho_WY = 0.9)
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

@@ -43,9 +43,7 @@ names match DesignLibrary 0.1's \code{cluster_sampling_designer}. For the book's
 budget-constrained version, see \code{make_design("cluster_random_sampling")}.
 }
 \examples{
-\dontrun{
 cluster_sampling_designer(N_clusters_in_block = 200, n_clusters_in_block = 20)
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

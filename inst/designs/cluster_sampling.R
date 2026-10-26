@@ -16,6 +16,7 @@ params:
   "n_clusters_in_block": "Number of clusters sampled in each block"
   "n_i_in_cluster": "Number of individuals sampled in each sampled cluster"
   "icc": "Intra-cluster correlation of the latent outcome, in [0, 1]"
+  "dataset": "Data frame: the fixed population built from the parameters above (R-only)"
 include_in_shiny: true
 ---
 

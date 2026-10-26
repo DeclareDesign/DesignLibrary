@@ -6,7 +6,7 @@ category: rdss
 keywords: [experiment, causal]
 description: >
   Experiments over spatial networks design. (chapter 18).
-packages: [rdss, spdep, interference, tidyverse]
+packages: [rdss, spdep, interference, dplyr, sf]
 params:
   "controlled_direct_effect": "Controlled direct effect size"
   "controlled_indirect_effect": "Controlled indirect effect size"

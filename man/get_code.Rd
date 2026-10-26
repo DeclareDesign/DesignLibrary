@@ -61,8 +61,6 @@ one-liner instead. Programmatic access is unchanged: \code{get_code(id)$simple},
 \code{get_code(id)$full}.
 }
 \examples{
-\dontrun{
 get_code("two_arm_simple")
 get_code("two_arm_simple")$simple
-}
 }

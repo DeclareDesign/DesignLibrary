@@ -20,7 +20,7 @@ empty_params_df <- function() {
 #' Discover modifiable parameters from a design object
 #'
 #' Uses DeclareDesign's object finder. When `code` is supplied, only names
-#' that also appear as top-level assignments before `design <-` are kept — so
+#' that also appear as top-level assignments before `design <-` are kept, so
 #' literal step arguments like `se_type = "stata"` are not treated as knobs.
 #' Functions assigned before `design <-` are knobs (`kind = "function"`).
 #' Pre-design assignments the finder missed (or an error in the finder) are
@@ -74,9 +74,9 @@ shiny_vector_max <- function() 20L
 
 #' Classify a redesignable value: scalar, vector, list, data, or function
 #'
-#' `scalar` — length-1 atomic, no dim. Shiny treats comma-separated input as a
+#' `scalar`: length-1 atomic, no dim. Shiny treats comma-separated input as a
 #' sweep (`redesign(N = c(50, 100))`).
-#' `vector` — short atomic vector, no dim. Shiny edits the whole vector as one
+#' `vector`: short atomic vector, no dim. Shiny edits the whole vector as one
 #' value; wrap in `list()` for `redesign()` so it is not expanded as a sweep.
 #' `list`: a bare list (for example a conjoint's `levels_list`). R-only, and
 #' `redesign()` reads a bare list one design per element, so it carries the
@@ -85,7 +85,7 @@ shiny_vector_max <- function() 20L
 #' `data`: data frame, matrix/array, classed object, or a longer atomic
 #' vector. Package parameter (`make_design(..., dataset = ...)`); not a Shiny
 #' control.
-#' `function` — a function (for example an outcome `Y`). R-only; not a Shiny
+#' `function`: a function (for example an outcome `Y`). R-only; not a Shiny
 #' control (`make_design(..., Y = ...)`).
 #'
 #' @param val A parameter value.
@@ -354,7 +354,7 @@ extract_pre_design_objects <- function(code) {
     }
 
     # Prefer structural cues before eval (eval of declare_* needs the DD stack)
-    # Note: do not use \\b after "declare_" — "_" is a word char, so declare_model
+    # Note: do not use \\b after "declare_": "_" is a word char, so declare_model
     # would not match. as_tibble() builds a data frame (a data knob), not a step.
     if (grepl("(declare_|make_model\\(|add_level\\(|fabricate\\()", rhs)) {
       names_out <- c(names_out, nm)
@@ -557,7 +557,7 @@ param_coverage_gaps <- function(design, include_steps = FALSE) {
   gaps <- pre[used & !in_params, , drop = FALSE]
   if (!nrow(gaps)) return(empty)
 
-  # Design steps are not redesignable params — don't treat as coverage gaps.
+  # Design steps are not redesignable params; don't treat as coverage gaps.
   # Functions assigned before design <- are parameters (kind "function").
   if (!isTRUE(include_steps)) {
     gaps <- gaps[is.na(gaps$type) | gaps$type != "design_piece", , drop = FALSE]

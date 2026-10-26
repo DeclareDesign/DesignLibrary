@@ -18,7 +18,7 @@ if (dir.exists("../inst/designs")) {
 
 DesignLibrary 2.0 replaces the designer functions of 0.1 with a library of self-contained design files, read through `make_design()`. It requires DeclareDesign, fabricatr, estimatr, and randomizr 2.0, and DesignLibrary 0.1.10 does not run under them.
 
-All fifteen 0.1 designers keep their names, and all but one keep their arguments. Each now builds a library design, so `two_arm_designer(N = 40)` returns the same design as `make_design("two_arm_flexible", N = 40)`. Most 0.1 scripts that call a designer and diagnose the result run unchanged.
+All fifteen 0.1 designers keep their names and their argument names, with two qualifications: `block_cluster_two_arm_designer()` loses six arguments, and three arguments (`label_E1` and `label_E2` of `process_tracing_designer()`, and `args_to_fix` of every designer) are accepted but ignored with a warning. Each now builds a library design, so `two_arm_designer(N = 40)` returns the same design as `make_design("two_arm_flexible", N = 40)`. Most 0.1 scripts that call a designer and diagnose the result run unchanged.
 
 The breaks fall into two groups. Removed functions and removed arguments stop with an error that names the replacement, so a script that hits one tells you what to change. A handful of changes cannot error: a changed default, renamed inquiries or estimator terms, and different step names. A script that runs under 2.0 can still return a different table from the one it returned under 0.1, and the section [Porting an existing script](#porting-an-existing-script) lists what to search for.
 

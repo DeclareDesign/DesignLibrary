@@ -427,7 +427,7 @@ about_panel <- function() {
     ),
     p(
       class = "rd-muted",
-      "Built around declaration, diagnosis, and redesign — see ",
+      "Built around declaration, diagnosis, and redesign; see ",
       tags$a(href = BOOK_URL, target = "_blank", "Research Design in the Social Sciences"),
       "."
     ),
@@ -455,7 +455,7 @@ contribute_yaml_tips <- function() {
       "packages", "diagnosands", "params", "book_link", "include_in_shiny", "functional", "object"
     ),
     Tip = c(
-      "Substantive snake_case name; should match the filename stem (e.g. two_arm_trial).",
+      "Substantive snake_case name (e.g. two_arm_simple). Defaults to the filename stem.",
       "Optional book reference string (e.g. \"2.1\"). Quoted if it looks numeric.",
       "Short human-readable title shown in the library.",
       "One or two sentences on what the design does. Use YAML > for a folded block.",
@@ -517,7 +517,7 @@ contribute_panel <- function() {
           " under ", tags$code("inst/designs/"),
           ". Name it after the design id (e.g. ", tags$code("my_design.R"),
           "). Declare an object named ", tags$code("design"),
-          " (or set ", tags$code("object:"), " in YAML). Keep the file self-contained—no ",
+          " (or set ", tags$code("object:"), " in YAML). Keep the file self-contained: no ",
           tags$code("source()"), " of other designs."
         ),
         tags$li(
@@ -540,7 +540,7 @@ contribute_panel <- function() {
         tags$li(
           tags$strong("Pull request"),
           " from your fork to ",
-          tags$a(href = GITHUB_URL, target = "_blank", "macartan/DesignLibrary"),
+          tags$a(href = GITHUB_URL, target = "_blank", "DeclareDesign/DesignLibrary"),
           ". Keep the PR focused on the new (or updated) design file and any packages it needs."
         )
       )
@@ -584,7 +584,7 @@ contribute_panel <- function() {
           class = "rd-code",
           paste(
             "---",
-            "id: two_arm_trial",
+            "id: two_arm_simple",
             "label: Simple two-arm trial",
             "category: template",
             "keywords: [experiment, two-arm]",

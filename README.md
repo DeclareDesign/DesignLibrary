@@ -1,6 +1,6 @@
 # DesignLibrary
 
-A prototype for a library of declared designs using DeclareDesign.
+A library of declared research designs for DeclareDesign.
 
 Version 2.0.0 supersedes DesignLibrary 0.1.10 on CRAN; see [Upgrading from 0.1](#upgrading-from-01).
 
@@ -13,7 +13,7 @@ install.packages("DesignLibrary")
 - Each design is a self-contained `.R` file under `inst/designs/`.
 - The **design object** is the source of truth for editable parameters.
 - Optional YAML frontmatter adds labels, categories, keywords, book aliases, `packages:` extras, `diagnosands:` defaults for display, and `params:` tip strings.
-- YAML is optional. With no header: id = filename stem, label = humanized id, `category: Other`, object name `design`, `include_in_shiny: true`. Set `object:` only if the R object is not named `design`.
+- YAML is optional. With no header: id = filename stem (a few book designs set a different `id:`), label = humanized id, `category: Other`, object name `design`, `include_in_shiny: true`. Set `object:` only if the R object is not named `design`.
 
 ## Tiny API
 
@@ -82,11 +82,11 @@ diagnosands: [rmse, bias]
 # or: diagnosands: rmse, bias
 ```
 
-## Classic DeclareDesign vs DeclareDesign
+## DeclareDesign 1.x vs 2.0
 
-**Classic DeclareDesign** (and DesignLibrary 0.1) often paired a *designer function* with a design: parameters lived on the designer, and tools like `expand_design(two_arm_designer, N = c(50, 100))` swept that function. Reproducible code was glued on with special extraction (`{{{ }}}`).
+**DeclareDesign 1.x** (and DesignLibrary 0.1) often paired a *designer function* with a design: parameters lived on the designer, and tools like `expand_design(two_arm_designer, N = c(50, 100))` swept that function. Reproducible code was glued on with special extraction (`{{{ }}}`).
 
-**DeclareDesign** keeps the same declaration verbs (`declare_model`, `+`, `diagnose_design`, …) but treats the **declared design itself** as redesignable. Free symbols in the design (e.g. `b`, `tau`) are found on the object, so:
+**DeclareDesign 2.0** keeps the same declaration verbs (`declare_model`, `+`, `diagnose_design`, …) but treats the **declared design itself** as redesignable. Free symbols in the design (e.g. `b`, `tau`) are found on the object, so:
 
 ```r
 designs <- redesign(design, tau = c(0.1, 0.3, 0.5))

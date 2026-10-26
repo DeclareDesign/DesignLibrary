@@ -108,10 +108,10 @@ The app opens on a searchable library table. Click a row to open the design, exp
 
 A short set of helpers keeps the library honest:
 
-- `contributor_checklist()` — what a design file should satisfy
-- `audit_designs()` — load each design and check that YAML `params:` names match redesignable objects
-- `bake_previews()` — write compact diagnosis previews (`sims = 100` by default) into `inst/previews/`
-- `refresh_library()` — index, audit, and bake in one step
+- `contributor_checklist()`: what a design file should satisfy
+- `audit_designs()`: load each design and check that YAML `params:` names match redesignable objects
+- `bake_previews()`: write compact diagnosis previews (`sims = 100` by default) into `inst/previews/`
+- `refresh_library()`: index, audit, and bake in one step
 
 Run maintainer helpers from the package source tree, or set:
 

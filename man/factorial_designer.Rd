@@ -63,10 +63,8 @@ match DesignLibrary 0.1's \code{factorial_designer}.
 fastest.
 }
 \examples{
-\dontrun{
 factorial_designer(k = 3, assignment_probs = c(1/2, 1/4, 1/8),
                    outcome_means = c(0, 0, 0, 0, 0, 0, 0, 4))
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

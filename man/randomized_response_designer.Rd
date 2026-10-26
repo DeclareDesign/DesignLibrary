@@ -31,6 +31,9 @@ A design object.
 Routes to \code{\link[=make_design]{make_design()}} with id \code{"randomized_response"}:
 \code{make_design("randomized_response", N = N, ...)}.
 }
+\examples{
+randomized_response_designer(N = 40, prevalence_rate = 0.2)
+}
 \seealso{
 \code{\link[=make_design]{make_design()}}
 }

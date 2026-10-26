@@ -51,9 +51,7 @@ names match DesignLibrary 0.1's \code{regression_discontinuity_designer}. For th
 book's local-linear version, see \code{make_design("regression_discontinuity")}.
 }
 \examples{
-\dontrun{
 regression_discontinuity_designer(N = 500, poly_reg_order = 2)
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}

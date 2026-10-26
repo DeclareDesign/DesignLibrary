@@ -39,10 +39,8 @@ call_library_design <- function(id, dots) {
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' make_design("two_arm_flexible", N = 40, ate = 0.2)
 #' two_arm_designer(N = 40, ate = 0.2)
-#' }
 two_arm_designer <- function(
   N = 100,
   assignment_prob = 0.5,
@@ -81,6 +79,8 @@ two_arm_designer <- function(
 #' @param rho Correlation between reporting and outcome shocks (0 to 1).
 #' @return A design object.
 #' @seealso [make_design()]
+#' @examples
+#' two_arm_attrition_designer(N = 40, b_R = 0.5)
 #' @export
 two_arm_attrition_designer <- function(
   N = 100,
@@ -109,6 +109,8 @@ two_arm_attrition_designer <- function(
 #' @param attrition_rate Share of units not observed at the posttest.
 #' @return A design object.
 #' @seealso [make_design()]
+#' @examples
+#' pretest_posttest_designer(N = 40, attrition_rate = 0.2)
 #' @export
 pretest_posttest_designer <- function(
   N = 100,
@@ -138,6 +140,8 @@ pretest_posttest_designer <- function(
 #'   questioning.
 #' @return A design object.
 #' @seealso [make_design()]
+#' @examples
+#' randomized_response_designer(N = 40, prevalence_rate = 0.2)
 #' @export
 randomized_response_designer <- function(
   N = 1000,
@@ -168,6 +172,8 @@ randomized_response_designer <- function(
 #' @param rho Correlation between mediator and outcome shocks (-1 to 1).
 #' @return A design object.
 #' @seealso [make_design()]
+#' @examples
+#' mediation_analysis_designer(N = 40, a = 0.5, d = 0.2)
 #' @export
 mediation_analysis_designer <- function(
   N = 200,
@@ -212,11 +218,9 @@ mediation_analysis_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' make_design("multiarm_trial", N = 90)
 #' multi_arm_designer(m_arms = 4)
 #' multi_arm_designer(m_arms = 4, outcome_means = c(0, 0.5, 1, 2))
-#' }
 multi_arm_designer <- function(
   N = 90,
   m_arms = 3,
@@ -285,6 +289,8 @@ multi_arm_designer <- function(
 #' @param outcome_sds Extra standard deviation in each cell, length 4.
 #' @return A design object.
 #' @seealso [make_design()]
+#' @examples
+#' two_by_two_designer(N = 40, outcome_means = c(0, 0.5, 0.5, 1))
 #' @export
 two_by_two_designer <- function(
   N = 100,
@@ -354,6 +360,8 @@ two_by_two_designer <- function(
 #'   argument is warned and dropped.
 #' @return A design object.
 #' @seealso [make_design()]
+#' @examples
+#' block_cluster_two_arm_designer(N_blocks = 4, N_clusters_in_block = 2, N_i_in_cluster = 5)
 #' @export
 block_cluster_two_arm_designer <- function(
   N = NULL,
@@ -453,10 +461,8 @@ block_cluster_two_arm_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' prognostic <- two_arm_covariate_designer(N = 40, ate = 0.2, rho_WY = 0.9, h = 0.5)
 #' confounded <- two_arm_covariate_designer(N = 40, ate = 0, rho_WZ = 0.9, rho_WY = 0.9)
-#' }
 two_arm_covariate_designer <- function(
   N = 100,
   prob = 0.5,
@@ -511,9 +517,7 @@ two_arm_covariate_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' regression_discontinuity_designer(N = 500, poly_reg_order = 2)
-#' }
 regression_discontinuity_designer <- function(
   N = 1000,
   tau = 0.15,
@@ -564,9 +568,7 @@ regression_discontinuity_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' spillover_designer(N_groups = 40, gamma = 1)
-#' }
 spillover_designer <- function(
   N_groups = 80,
   N_i_group = 3,
@@ -605,9 +607,7 @@ spillover_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' cluster_sampling_designer(N_clusters_in_block = 200, n_clusters_in_block = 20)
-#' }
 cluster_sampling_designer <- function(
   N_blocks = 1,
   N_clusters_in_block = 1000,
@@ -662,10 +662,8 @@ cluster_sampling_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' binary_iv_designer(N = 200, b_Y = 0.5)
 #' binary_iv_designer(type_probs = c(0.2, 0.2, 0.5, 0.1), b = c(0, 0, 1, -1))
-#' }
 binary_iv_designer <- function(
   N = 100,
   type_probs = c(1/3, 1/3, 1/3, 0),
@@ -724,9 +722,7 @@ binary_iv_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' process_tracing_designer(prior_H = 0.3, p_E2_H = 0.5)
-#' }
 process_tracing_designer <- function(
   N = 100,
   prob_X = 0.5,
@@ -816,10 +812,8 @@ process_tracing_designer <- function(
 #' @seealso [make_design()]
 #' @export
 #' @examples
-#' \dontrun{
 #' factorial_designer(k = 3, assignment_probs = c(1/2, 1/4, 1/8),
 #'                    outcome_means = c(0, 0, 0, 0, 0, 0, 0, 4))
-#' }
 factorial_designer <- function(
   N = 256,
   k = 3,

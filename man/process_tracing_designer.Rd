@@ -57,9 +57,7 @@ fixed at "Straw in the Wind" and "Smoking Gun", so \code{label_E1} and
 CausalQueries version, see \code{make_design("process_tracing")}.
 }
 \examples{
-\dontrun{
 process_tracing_designer(prior_H = 0.3, p_E2_H = 0.5)
-}
 }
 \seealso{
 \code{\link[=make_design]{make_design()}}
