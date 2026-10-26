@@ -44,7 +44,9 @@ make_design(
 the first installed design). Tab-completion offers the full library list.
 Dotted so that a design parameter such as \code{d} cannot partially match it.}
 
-\item{...}{Named parameter values passed to \code{redesign()}.}
+\item{...}{Named parameter values passed to \code{redesign()}, and optionally
+\code{.expand}, which \code{redesign()} uses to choose between crossing swept
+parameters (\code{TRUE}, the default) and zipping them (\code{FALSE}).}
 }
 \value{
 A design object (or a list of designs if a parameter is a vector

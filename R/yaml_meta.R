@@ -28,7 +28,7 @@ yaml_is_true <- function(x, default = FALSE) {
     return(isTRUE(default))
   }
   if (is.logical(x)) return(isTRUE(x[[1]]))
-  identical(tolower(trimws(as.character(x)[[1]])), "true")
+  tolower(trimws(as.character(x)[[1]])) %in% c("true", "yes", "on", "y")
 }
 
 #' Split optional YAML frontmatter from an R design file

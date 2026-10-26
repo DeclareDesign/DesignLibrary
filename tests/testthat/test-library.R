@@ -299,3 +299,20 @@ test_that("get_code passes parameters named d or s through to the snippet", {
   code <- get_code("mediation_analysis", d = 0.3, s = 1)
   expect_identical(code$simple, 'make_design("mediation_analysis", d = 0.3, s = 1)')
 })
+
+test_that("get_code prints the one-liner and the source for .style = 'both'", {
+  out <- paste(capture.output(print(get_code("two_arm_simple", .style = "both"))), collapse = "\n")
+  expect_match(out, '^make_design\\("two_arm_simple"\\)\n\n')
+  expect_match(out, "declare_model")
+})
+
+test_that("make_design()'s Rd usage lists the ids .onLoad completes", {
+  # .onLoad rewrites the formals from the library; the Rd is a roxygen
+  # snapshot, so a design added without re-documenting is a codoc WARNING.
+  rd <- test_path("..", "..", "man", "make_design.Rd")
+  skip_if_not(file.exists(rd), "not in a source tree")
+  usage <- paste(readLines(rd), collapse = " ")
+  usage <- sub(".*\\\\usage\\{(.*?)\\}\\s*\\\\arguments.*", "\\1", usage)
+  in_rd <- gsub('"', "", regmatches(usage, gregexpr('"[^"]*"', usage))[[1]])
+  expect_setequal(in_rd, DesignLibrary:::design_completion_choices())
+})

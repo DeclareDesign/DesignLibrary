@@ -10,10 +10,9 @@ get_preview <- function(design) {
   if (length(design) > 1L) design <- design[[1L]]
   key <- normalize_design_key(design)
   parsed <- tryCatch(resolve_design(key), error = function(e) NULL)
-  id <- if (!is.null(parsed)) parsed$meta$id else key
+  if (is.null(parsed)) return(NULL)
 
-  dir <- previews_dir()
-  path <- file.path(dir, paste0(id, ".rds"))
+  path <- file.path(previews_dir(), paste0(parsed$meta$id, ".rds"))
   if (!file.exists(path)) return(NULL)
   tryCatch(readRDS(path), error = function(e) NULL)
 }

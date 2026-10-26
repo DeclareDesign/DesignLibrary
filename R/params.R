@@ -303,6 +303,11 @@ parse_rhs <- function(rhs) {
 #' @return Data frame with `name`, `rhs`, `type`, `atomic`.
 #' @noRd
 extract_pre_design_objects <- function(code) {
+  # Right-hand sides are evaluated to classify them, during listing and
+  # possibly at package load, so a top-level sample() must not move the
+  # caller's RNG.
+  restore_seed <- seed_restorer()
+  on.exit(restore_seed(), add = TRUE)
   empty <- data.frame(
     name = character(0),
     rhs = character(0),
@@ -428,7 +433,9 @@ params_from_pre_assignments <- function(pre, names) {
   names <- names[!is.na(names) & nzchar(names)]
   if (!length(names)) return(empty)
 
-  env <- new.env(parent = globalenv())
+  restore_seed <- seed_restorer()
+  on.exit(restore_seed(), add = TRUE)
+  env <- new.env(parent = parent.env(globalenv()))
   for (i in seq_len(nrow(pre))) {
     if (identical(pre$type[[i]], "design_piece")) next
     nm <- pre$name[[i]]
@@ -673,7 +680,7 @@ param_coverage_report <- function(designs = NULL, atomic_only = FALSE, include_s
     )
   }
   if (isTRUE(atomic_only) && nrow(out) && "atomic" %in% names(out)) {
-    out <- out[isTRUE(out$atomic) | (!is.na(out$type) & out$type %in% c("load_error", "check_error")), , drop = FALSE]
+    out <- out[out$atomic %in% TRUE | (!is.na(out$type) & out$type %in% c("load_error", "check_error")), , drop = FALSE]
   }
   rownames(out) <- NULL
   structure(out, class = c("design_library_param_coverage", "data.frame"), atomic_only = atomic_only, include_steps = include_steps)

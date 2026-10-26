@@ -233,7 +233,7 @@ read_baked_index <- function() {
 
   if (nzchar(paths$csv) && file.exists(paths$csv)) {
     csv_df <- tryCatch(
-      utils::read.csv(paths$csv, stringsAsFactors = FALSE, encoding = "UTF-8"),
+      utils::read.csv(paths$csv, stringsAsFactors = FALSE, encoding = "UTF-8", colClasses = c(id = "character", alias = "character")),
       error = function(e) NULL
     )
     take(csv_df, file.info(paths$csv)$mtime)
@@ -908,7 +908,7 @@ refresh_library <- function(sims = 100, designs = NULL, seed = 343) {
 
   prior_csv <- file.path(paths_info$index, "designs_index.csv")
   prior <- if (!is.null(designs) && file.exists(prior_csv)) {
-    utils::read.csv(prior_csv, stringsAsFactors = FALSE)
+    utils::read.csv(prior_csv, stringsAsFactors = FALSE, colClasses = c(id = "character", alias = "character"))
   }
 
   index <- make_index(use_cache = FALSE)
@@ -1006,7 +1006,8 @@ refresh_library <- function(sims = 100, designs = NULL, seed = 343) {
 
   if (length(audit_failed) || nrow(preview_failures)) {
     warning(
-      "refresh_library() finished with issues. See ", report_path,
+      "refresh_library() finished with issues. ",
+      if (is.null(report_path)) "The summary above lists them." else paste0("See ", report_path, "."),
       call. = FALSE
     )
   }
@@ -1032,6 +1033,8 @@ copy_dir_contents <- function(from, to, tries = 6L, sleep = 1) {
   for (i in seq_len(tries)) {
     ok <- tryCatch({
       old <- list.files(to, full.names = TRUE, all.files = TRUE, no.. = TRUE)
+      # Hand-kept files for GitHub Pages, which the pkgdown build does not write
+      old <- old[!basename(old) %in% c("CNAME", ".nojekyll")]
       if (length(old)) unlink(old, recursive = TRUE, force = TRUE)
       items <- list.files(from, full.names = TRUE, all.files = TRUE, no.. = TRUE)
       if (!length(items)) stop("Build directory is empty: ", from, call. = FALSE)

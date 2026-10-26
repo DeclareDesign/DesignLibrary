@@ -1,8 +1,7 @@
 #' Null-coalesce helper
 #'
 #' Broader than `rlang::`%||%`` / `base::`%||%``: empty and scalar `NA`
-#' also fall through. The rlang import covers R < 4.4 when design files
-#' or rewrite helpers look up `%||%`.
+#' also fall through.
 #' @noRd
 `%||%` <- function(x, y) {
   if (is.null(x) || length(x) == 0L || (length(x) == 1L && is.na(x))) y else x
@@ -25,70 +24,58 @@ seed_restorer <- function() {
   }
 }
 
-#' Package designs directory
+#' Root that designs, previews, and the index are read from
 #'
-#' Prefers the source-tree `inst/designs` (or installed `designs/`) from
-#' `find_package_root()` so maintainer refresh / `list_designs()` see local
-#' edits. Falls back to `system.file()` for a normal installed package.
+#' `options(DesignLibrary.root = ...)` or `DESIGNLIBRARY_ROOT` when set,
+#' otherwise the loaded package (the source tree under `load_all()`, whose
+#' `system.file()` shim points there). The working directory is never
+#' consulted, so a cwd inside an old checkout cannot mix one tree's designs
+#' with another tree's previews and index. Maintainer writers pin the root
+#' they write to for the rest of their call; see `source_write_paths()`.
+#' @noRd
+library_root <- function() {
+  if (nzchar(root_override())) return(find_package_root())
+  path <- system.file(package = "DesignLibrary")
+  if (!nzchar(path)) {
+    stop(
+      "DesignLibrary is not installed. Set options(DesignLibrary.root = ...) ",
+      "to your package source.",
+      call. = FALSE
+    )
+  }
+  normalizePath(path, winslash = "/", mustWork = FALSE)
+}
+
+#' Package designs directory
 #' @noRd
 designs_dir <- function() {
-  root <- tryCatch(find_package_root(), error = function(e) NULL)
-  if (!is.null(root)) {
-    candidate <- package_write_paths(root)$designs
-    if (dir.exists(candidate)) {
-      return(normalizePath(candidate, winslash = "/", mustWork = FALSE))
-    }
+  path <- package_write_paths(library_root())$designs
+  if (!dir.exists(path)) {
+    stop("No designs directory at ", path, ".", call. = FALSE)
   }
-  path <- system.file("designs", package = "DesignLibrary")
-  if (nzchar(path)) {
-    return(normalizePath(path, winslash = "/", mustWork = FALSE))
-  }
-  stop(
-    "No designs directory found. Set options(DesignLibrary.root = ...) ",
-    "to your package source, or reinstall DesignLibrary.",
-    call. = FALSE
-  )
+  normalizePath(path, winslash = "/", mustWork = FALSE)
 }
 
 #' Package previews directory (read)
 #' @noRd
 previews_dir <- function() {
-  root <- tryCatch(find_package_root(), error = function(e) NULL)
-  if (!is.null(root)) {
-    candidate <- package_write_paths(root)$previews
-    if (dir.exists(candidate) || dir.exists(dirname(candidate))) {
-      return(normalizePath(candidate, winslash = "/", mustWork = FALSE))
-    }
-  }
-  path <- system.file("previews", package = "DesignLibrary")
-  if (nzchar(path)) {
-    return(normalizePath(path, winslash = "/", mustWork = FALSE))
-  }
-  # Allow creating under source tree
-  if (!is.null(root)) {
-    return(normalizePath(package_write_paths(root)$previews, winslash = "/", mustWork = FALSE))
-  }
-  stop("No previews directory found.", call. = FALSE)
+  normalizePath(package_write_paths(library_root())$previews, winslash = "/", mustWork = FALSE)
 }
 
 #' Package library-index directory (read)
 #' @noRd
 library_index_dir <- function() {
-  root <- tryCatch(find_package_root(), error = function(e) NULL)
-  if (!is.null(root)) {
-    candidate <- package_write_paths(root)$index
-    if (dir.exists(candidate) || dir.exists(dirname(candidate))) {
-      return(normalizePath(candidate, winslash = "/", mustWork = FALSE))
-    }
+  normalizePath(package_write_paths(library_root())$index, winslash = "/", mustWork = FALSE)
+}
+
+#' Root set by option or environment variable, or `""`
+#' @noRd
+root_override <- function() {
+  opt <- getOption("DesignLibrary.root", NULL)
+  if (is.null(opt) || !nzchar(as.character(opt)[[1]])) {
+    opt <- Sys.getenv("DESIGNLIBRARY_ROOT", unset = Sys.getenv("RESEARCHDESIGNS_ROOT", unset = ""))
   }
-  path <- system.file("library_index", package = "DesignLibrary")
-  if (nzchar(path)) {
-    return(normalizePath(path, winslash = "/", mustWork = FALSE))
-  }
-  if (!is.null(root)) {
-    return(normalizePath(package_write_paths(root)$index, winslash = "/", mustWork = FALSE))
-  }
-  stop("No library index directory found.", call. = FALSE)
+  as.character(opt)[[1]]
 }
 
 #' Is this path a DesignLibrary DESCRIPTION root?
@@ -129,12 +116,9 @@ walk_for_package_root <- function(start) {
 #' @return Normalized path to the package root.
 #' @noRd
 find_package_root <- function(start = getwd()) {
-  opt <- getOption("DesignLibrary.root", NULL)
-  if (is.null(opt) || !nzchar(as.character(opt)[[1]])) {
-    opt <- Sys.getenv("DESIGNLIBRARY_ROOT", unset = Sys.getenv("RESEARCHDESIGNS_ROOT", unset = ""))
-  }
-  if (nzchar(as.character(opt)[[1]])) {
-    opt <- normalizePath(as.character(opt)[[1]], winslash = "/", mustWork = FALSE)
+  opt <- root_override()
+  if (nzchar(opt)) {
+    opt <- normalizePath(opt, winslash = "/", mustWork = FALSE)
     if (is_designlibrary_root(opt)) return(opt)
     stop(
       "DesignLibrary.root / DESIGNLIBRARY_ROOT is set to '", opt,
@@ -199,8 +183,10 @@ package_write_paths <- function(root = find_package_root()) {
 #'
 #' Maintainer tools write previews, the index, and reports. They must never
 #' write into a library under `.libPaths()`, so a root without `inst/` stops.
+#' The root found here is also set as `DesignLibrary.root` until `envir`
+#' exits, so the designs a tool reads come from the tree it writes to.
 #' @noRd
-source_write_paths <- function() {
+source_write_paths <- function(envir = parent.frame()) {
   paths <- package_write_paths()
   if (!isTRUE(paths$source_tree)) {
     stop(
@@ -210,6 +196,8 @@ source_write_paths <- function() {
       call. = FALSE
     )
   }
+  old <- options(DesignLibrary.root = paths$root)
+  do.call(on.exit, list(substitute(options(old), list(old = old)), add = TRUE), envir = envir)
   paths
 }
 

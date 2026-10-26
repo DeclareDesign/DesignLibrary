@@ -26,7 +26,6 @@
 #' @keywords internal
 #' @importFrom yaml yaml.load
 #' @importFrom utils write.csv install.packages packageVersion
-#' @importFrom rlang `%||%`
 # DeclareDesign (in Depends) attaches these three, and the design files call
 # them by name, so nothing here calls them with `::` and `R CMD check`
 # reports the Imports as unused. They stay in Imports for their 2.0 version

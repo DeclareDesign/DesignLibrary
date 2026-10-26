@@ -381,7 +381,10 @@ block_cluster_two_arm_designer <- function(
 ) {
   warn_args_to_fix(args_to_fix)
   extra <- list(...)
-  extra <- extra[nzchar(names(extra) %||% "")]
+  if (!all(nzchar(rlang::names2(extra)))) {
+    warning("Ignoring unnamed arguments.", call. = FALSE)
+  }
+  extra <- extra[nzchar(rlang::names2(extra))]
   # `N` and `sd` are formals so that they cannot partially match `N_blocks`
   # or `sd_block` and fail with "matches multiple formal arguments".
   supplied <- c(
@@ -476,10 +479,10 @@ two_arm_covariate_designer <- function(
   args_to_fix = NULL
 ) {
   warn_args_to_fix(args_to_fix)
-  if (sd < 0) stop("sd must be non-negative.", call. = FALSE)
-  if (prob < 0 || prob > 1) stop("prob must be in [0, 1].", call. = FALSE)
-  if (abs(rho_WY) > 1) stop("rho_WY must be in [-1, 1].", call. = FALSE)
-  if (abs(rho_WZ) > 1) stop("rho_WZ must be in [-1, 1].", call. = FALSE)
+  if (any(sd < 0)) stop("sd must be non-negative.", call. = FALSE)
+  if (any(prob < 0 | prob > 1)) stop("prob must be in [0, 1].", call. = FALSE)
+  if (any(abs(rho_WY) > 1)) stop("rho_WY must be in [-1, 1].", call. = FALSE)
+  if (any(abs(rho_WZ) > 1)) stop("rho_WZ must be in [-1, 1].", call. = FALSE)
   if (!is.null(treatment_mean)) ate <- treatment_mean - control_mean
   call_library_design("two_arm_covariate", list(
     N = N,
@@ -530,13 +533,13 @@ regression_discontinuity_designer <- function(
   args_to_fix = NULL
 ) {
   warn_args_to_fix(args_to_fix)
-  if (cutoff <= 0 || cutoff >= 1) stop("cutoff must be in (0, 1).", call. = FALSE)
+  if (any(cutoff <= 0 | cutoff >= 1)) stop("cutoff must be in (0, 1).", call. = FALSE)
   if (poly_reg_order < 1 || poly_reg_order %% 1 != 0) {
     stop("poly_reg_order must be an integer of at least 1.", call. = FALSE)
   }
   if (length(control_coefs) < 1) stop("control_coefs must have length > 0.", call. = FALSE)
   if (length(treatment_coefs) < 1) stop("treatment_coefs must have length > 0.", call. = FALSE)
-  if (outcome_sd < 0) stop("outcome_sd must be non-negative.", call. = FALSE)
+  if (any(outcome_sd < 0)) stop("outcome_sd must be non-negative.", call. = FALSE)
   call_library_design("regression_discontinuity_polynomial", list(
     N = N,
     tau = tau,
@@ -577,7 +580,7 @@ spillover_designer <- function(
   args_to_fix = NULL
 ) {
   warn_args_to_fix(args_to_fix)
-  if (sd_i < 0) stop("sd_i must be non-negative.", call. = FALSE)
+  if (any(sd_i < 0)) stop("sd_i must be non-negative.", call. = FALSE)
   if (N_i_group < 1 || N_groups < 1) {
     stop("N_i_group and N_groups must be at least 1.", call. = FALSE)
   }
@@ -624,7 +627,7 @@ cluster_sampling_designer <- function(
   if (n_i_in_cluster > min(N_i_in_cluster)) {
     stop("n_i_in_cluster must not exceed N_i_in_cluster.", call. = FALSE)
   }
-  if (icc < 0 || icc > 1) stop("icc must be in [0, 1].", call. = FALSE)
+  if (any(icc < 0 | icc > 1)) stop("icc must be in [0, 1].", call. = FALSE)
   call_library_design("cluster_sampling", list(
     N_blocks = N_blocks,
     N_clusters_in_block = N_clusters_in_block,
@@ -680,7 +683,7 @@ binary_iv_designer <- function(
   warn_args_to_fix(args_to_fix)
   if (min(assignment_probs) < 0) stop("assignment_probs must be non-negative.", call. = FALSE)
   if (max(assignment_probs) > 1) stop("assignment_probs must be at most 1.", call. = FALSE)
-  if (outcome_sd < 0) stop("outcome_sd must be non-negative.", call. = FALSE)
+  if (any(outcome_sd < 0)) stop("outcome_sd must be non-negative.", call. = FALSE)
   if (length(a) != 4) stop("a must have length 4.", call. = FALSE)
   if (length(b) != 4) stop("b must have length 4.", call. = FALSE)
   if (length(d) != 4) stop("d must have length 4.", call. = FALSE)
@@ -739,7 +742,7 @@ process_tracing_designer <- function(
   args_to_fix = NULL
 ) {
   warn_args_to_fix(args_to_fix)
-  if (N < 1 || N %% 1 != 0) stop("N must be a positive integer.", call. = FALSE)
+  if (any(N < 1 | N %% 1 != 0)) stop("N must be a positive integer.", call. = FALSE)
   if (length(process_proportions) != 4) stop("process_proportions must have length 4.", call. = FALSE)
   if (abs(sum(process_proportions) - 1) > 1e-8 || any(process_proportions < 0)) {
     stop("process_proportions must be non-negative and sum to 1.", call. = FALSE)
@@ -748,8 +751,8 @@ process_tracing_designer <- function(
              p_E1_not_H = p_E1_not_H, p_E2_H = p_E2_H, p_E2_not_H = p_E2_not_H)
   bad <- names(probs)[probs < 0 | probs > 1]
   if (length(bad)) stop(bad[[1]], " must be in [0, 1].", call. = FALSE)
-  if (abs(cor_E1E2_H) > 1) stop("cor_E1E2_H must be in [-1, 1].", call. = FALSE)
-  if (abs(cor_E1E2_not_H) > 1) stop("cor_E1E2_not_H must be in [-1, 1].", call. = FALSE)
+  if (any(abs(cor_E1E2_H) > 1)) stop("cor_E1E2_H must be in [-1, 1].", call. = FALSE)
+  if (any(abs(cor_E1E2_not_H) > 1)) stop("cor_E1E2_not_H must be in [-1, 1].", call. = FALSE)
   clue_pair_min <- function(p1, p2, rho) {
     r <- rho * (p1 * p2 * (1 - p1) * (1 - p2))^0.5
     min((1 - p1) * (1 - p2) + r, p2 * (1 - p1) - r, p1 * (1 - p2) - r, p1 * p2 + r)

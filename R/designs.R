@@ -74,8 +74,6 @@ eval_design <- function(parsed) {
 
   # Attached packages are visible, the user's global variables are not.
   env <- new.env(parent = parent.env(globalenv()))
-  # Design files may use `%||%`; R < 4.4 has it only if rlang is attached.
-  env$`%||%` <- `%||%`
   expr <- parse(text = parsed$code, keep.source = TRUE)
   eval(expr, envir = env)
 
@@ -197,11 +195,13 @@ library_search_rows <- function(df, q) {
   if (!n) return(logical(0))
   q <- trimws(as.character(q %||% "")[[1]])
   if (!nzchar(q)) return(rep(TRUE, n))
-  hay <- tolower(paste(
-    df$id, df$alias %||% "", df$label %||% "", df$params %||% "",
-    df$packages %||% "", df$keywords %||% "", df$category %||% "",
-    sep = " "
-  ))
+  cols <- c("id", "alias", "label", "params", "packages", "keywords", "category")
+  fields <- lapply(cols, function(col) {
+    x <- as.character(df[[col]] %||% "")
+    x[is.na(x)] <- ""
+    x
+  })
+  hay <- tolower(do.call(paste, c(fields, sep = " ")))
   grepl(tolower(q), hay, fixed = TRUE)
 }
 
@@ -575,7 +575,9 @@ print.design_library_info <- function(x, ...) {
 #' @param .design Design id or book alias. Defaults to `"two_arm_simple"` (or
 #'   the first installed design). Tab-completion offers the full library list.
 #'   Dotted so that a design parameter such as `d` cannot partially match it.
-#' @param ... Named parameter values passed to `redesign()`.
+#' @param ... Named parameter values passed to `redesign()`, and optionally
+#'   `.expand`, which `redesign()` uses to choose between crossing swept
+#'   parameters (`TRUE`, the default) and zipping them (`FALSE`).
 #' @return A design object (or a list of designs if a parameter is a vector
 #'   and `redesign()` expands).
 #' @export
@@ -594,10 +596,18 @@ make_design <- function(.design = "two_arm_simple", ...) {
   parsed <- resolve_design(design)
   d <- eval_design(parsed)
   dots <- list(...)
+  if (!all(nzchar(rlang::names2(dots)))) {
+    stop(
+      "Parameters must be named, as in make_design(\"", normalize_design_key(design),
+      "\", N = 100).",
+      call. = FALSE
+    )
+  }
+  expand <- if (is.null(dots$.expand)) TRUE else dots$.expand
+  dots$.expand <- NULL
   if (!length(dots)) return(d)
   params <- discover_design_params(d, code = parsed$code)
   unknown <- setdiff(names(dots), params$name)
-  unknown <- unknown[nzchar(unknown %||% "")]
   if (length(unknown)) {
     stop(
       "Unknown parameter(s) for '", normalize_design_key(design), "': ",
@@ -611,7 +621,7 @@ make_design <- function(.design = "two_arm_simple", ...) {
   # `.design` since DeclareDesign 2.0: an undotted `design` partially
   # matched, so a design with a parameter named `d` (mediation_analysis) had
   # its design object replaced by the parameter's value.
-  d <- do.call(DeclareDesign::redesign, c(list(.design = d), dots))
+  d <- do.call(DeclareDesign::redesign, c(list(.design = d), dots, list(.expand = expand)))
   if (inherits(d, "design")) {
     extra <- setdiff(
       coupled_issues(parsed$meta, list(), design = d, code = parsed$code),
@@ -670,11 +680,12 @@ prefix_yaml_libraries <- function(code, packages) {
 #' (the design file source, prefixed with `library()` calls for YAML
 #' `packages:` when any are listed). Printing uses [cat()] on `$full` so the
 #' console output is copy-paste ready. Use `.style = "simple"` to print the
-#' one-liner instead. Programmatic access is unchanged: `get_code(id)$simple`,
+#' one-liner instead, or `.style = "both"` for the one-liner followed by the
+#' source. Programmatic access is unchanged: `get_code(id)$simple`,
 #' `get_code(id)$full`.
 #'
 #' @param .design Design id or book alias.
-#' @param .style `"simple"`, `"full"`, or `"both"`. Controls which snippet
+#' @param .style `"full"`, `"simple"`, or `"both"`. Controls which snippet
 #'   [print()] and [as.character()] show. `$simple` and `$full` are always
 #'   both present.
 #' @param ... Optional parameter values included in the simple snippet.
@@ -683,7 +694,7 @@ prefix_yaml_libraries <- function(code, packages) {
 #' @examples
 #' get_code("two_arm_simple")
 #' get_code("two_arm_simple")$simple
-get_code <- function(.design, .style = c("both", "simple", "full"), ...) {
+get_code <- function(.design, .style = c("full", "simple", "both"), ...) {
   # Dotted, as in make_design(), so that a parameter passed through `...`
   # (`d`, `s`) cannot partially match either one.
   style <- match.arg(.style)
@@ -715,7 +726,11 @@ get_code <- function(.design, .style = c("both", "simple", "full"), ...) {
 #' @noRd
 code_snippet <- function(x, style = NULL) {
   style <- style %||% attr(x, "style") %||% "full"
-  raw <- if (identical(style, "simple")) x$simple else x$full
+  raw <- switch(style,
+    simple = x$simple,
+    both = c(x$simple, "", x$full),
+    x$full
+  )
   paste(raw, collapse = "\n")
 }
 

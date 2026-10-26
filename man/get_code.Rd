@@ -36,14 +36,14 @@ get_code(
     "15.1", "18.11", "18.10", "19.2", "18.6", "15.2", "17.6", "11.3", "18.4", "2.1",
     "13.2", "18.1", 
      "2.2", "10.3a", "10.3b", "11.2", "12.1a"),
-  .style = c("both", "simple", "full"),
+  .style = c("full", "simple", "both"),
   ...
 )
 }
 \arguments{
 \item{.design}{Design id or book alias.}
 
-\item{.style}{\code{"simple"}, \code{"full"}, or \code{"both"}. Controls which snippet
+\item{.style}{\code{"full"}, \code{"simple"}, or \code{"both"}. Controls which snippet
 \code{\link[=print]{print()}} and \code{\link[=as.character]{as.character()}} show. \verb{$simple} and \verb{$full} are always
 both present.}
 
@@ -57,7 +57,8 @@ Returns a list with \verb{$simple} (a one-line \code{make_design()} call) and \v
 (the design file source, prefixed with \code{library()} calls for YAML
 \verb{packages:} when any are listed). Printing uses \code{\link[=cat]{cat()}} on \verb{$full} so the
 console output is copy-paste ready. Use \code{.style = "simple"} to print the
-one-liner instead. Programmatic access is unchanged: \code{get_code(id)$simple},
+one-liner instead, or \code{.style = "both"} for the one-liner followed by the
+source. Programmatic access is unchanged: \code{get_code(id)$simple},
 \code{get_code(id)$full}.
 }
 \examples{
