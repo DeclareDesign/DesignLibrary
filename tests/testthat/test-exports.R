@@ -42,7 +42,7 @@ test_that("audit_designs() and write_audit_report() run one design into a tempdi
   dir <- withr::local_tempdir()
   paths <- suppressMessages(write_audit_report(audit, dir = dir))
   expect_true(all(file.exists(paths)))
-  expect_true(all(startsWith(normalizePath(paths), normalizePath(dir))))
+  expect_true(all(startsWith(normalizePath(paths, winslash = "/"), normalizePath(dir, winslash = "/"))))
 })
 
 test_that("maintainer writers refuse an installed package", {

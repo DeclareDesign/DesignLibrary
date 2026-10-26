@@ -290,7 +290,10 @@ test_that("bake_previews returns the path it wrote", {
   out_dir <- withr::local_tempdir()
   baked <- bake_previews(designs = "two_arm_simple", sims = 2, dir = out_dir)
   expect_equal(length(baked$paths), 1L)
-  expect_equal(dirname(normalizePath(baked$paths[[1]])), normalizePath(out_dir))
+  expect_equal(
+    normalizePath(dirname(baked$paths[[1]]), winslash = "/"),
+    normalizePath(out_dir, winslash = "/")
+  )
   expect_true(file.exists(baked$paths[[1]]))
   expect_equal(nrow(baked$failures), 0L)
 })
