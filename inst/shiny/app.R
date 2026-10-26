@@ -18,6 +18,17 @@ for (cfg in c("deploy-options.R", "local.R")) {
   if (file.exists(path)) source(path, local = FALSE)
 }
 
+# A copied app calls package internals, so it must match the installed package.
+.deployed <- getOption("designlibrary.deploy_pkg_version")
+.installed <- as.character(utils::packageVersion("DesignLibrary"))
+if (!is.null(.deployed) && !identical(.deployed, .installed)) {
+  stop(
+    "This app was copied from DesignLibrary ", .deployed, " but ", .installed,
+    " is installed. Re-run DesignLibrary::copy_library_shiny() in this folder.",
+    call. = FALSE
+  )
+}
+
 PKGDOWN_URL <- "https://declaredesign.org/r/designlibrary/"
 GITHUB_URL <- "https://github.com/DeclareDesign/DesignLibrary"
 DECLAREDESIGN_URL <- "https://declaredesign.org/"
@@ -373,7 +384,7 @@ diagnosis_panel <- function() {
       class = "rd-card",
       p(class = "rd-muted", "Baked preview from the package when available; otherwise run a live diagnosis."),
       uiOutput("preview_status"),
-      numericInput("diag_sims", "Simulations", value = 100, min = 1, step = 10, width = "140px"),
+      numericInput("diag_sims", "Simulations", value = 100, min = 1, max = getOption("designlibrary.max_sims", 1000), step = 10, width = "140px"),
       actionButton("run_diagnosis", "Run diagnosis", class = "btn-primary"),
       br(), br(),
       h4("Diagnosands"),
@@ -636,7 +647,7 @@ ui_body <- if (has_bslib) {
   fluidPage(
     app_head,
     tags$style(HTML(app_css)),
-    titlePanel(brand_title()),
+    titlePanel(brand_title(), windowTitle = "DesignLibrary"),
     tabsetPanel(
       id = "main_nav",
       tabPanel("Library", div(class = "rd-wrap rd-wrap-library", library_panel())),
@@ -662,24 +673,6 @@ server <- function(input, output, session) {
   run_once_txt <- reactiveVal("")
   mod_last_ranges <- reactiveVal(character(0))
 
-  # Comma/space-separated values -> c(...) for eval; leave single values alone
-  normalize_value_expression <- function(str) {
-    str <- trimws(str %||% "")
-    if (!nzchar(str)) return(str)
-    if (grepl("^c\\s*\\(", str) || grepl("^seq\\s*\\(", str)) return(str)
-    parts <- strsplit(str, "[,;\\s]+")[[1]]
-    parts <- trimws(parts)
-    parts <- parts[nzchar(parts)]
-    if (length(parts) < 2L) return(str)
-    parses_ok <- vapply(parts, function(p) {
-      tryCatch({
-        eval(parse(text = p), envir = baseenv())
-        TRUE
-      }, error = function(e) FALSE)
-    }, logical(1L))
-    if (all(parses_ok)) paste0("c(", paste(parts, collapse = ", "), ")") else str
-  }
-
   format_arg_default <- function(args_row) {
     kind <- if ("kind" %in% names(args_row)) args_row$kind[[1]] else "scalar"
     val <- if ("default" %in% names(args_row)) args_row$default[[1]] else NULL
@@ -689,7 +682,7 @@ server <- function(input, output, session) {
   }
 
   html_escape <- function(x) {
-    x <- as.character(x %||% "")
+    x <- as.character(x)
     x[is.na(x)] <- ""
     x <- gsub("&", "&amp;", x, fixed = TRUE)
     x <- gsub("<", "&lt;", x, fixed = TRUE)
@@ -712,16 +705,36 @@ server <- function(input, output, session) {
     HTML(DesignLibrary:::redesign_kind_help(id))
   }
 
+  # One R process serves every session, so cap the work one click can ask for.
+  max_sims <- as.integer(getOption("designlibrary.max_sims", 1000L))
+  max_designs <- as.integer(getOption("designlibrary.max_designs", 50L))
+
+  clamp_sims <- function(x, default) {
+    sims <- suppressWarnings(as.integer(x %||% default))
+    if (is.na(sims) || sims < 1L) sims <- default
+    if (sims > max_sims) {
+      showNotification(sprintf("Simulations capped at %d.", max_sims), type = "warning")
+      sims <- max_sims
+    }
+    sims
+  }
+
+  # get_args() evaluates the design; read it once per design per session.
+  args_cache <- new.env(parent = emptyenv())
+  cached_args <- function(id) {
+    if (is.null(args_cache[[id]])) args_cache[[id]] <- DesignLibrary::get_args(id)
+    args_cache[[id]]
+  }
+
   collect_mod_dots <- function(id) {
-    args <- DesignLibrary::get_args(id)
+    args <- cached_args(id)
     if (!nrow(args)) {
-      return(list(dots = list(), exprs = list(), lengths = integer(0), range_params = character(0)))
+      return(list(dots = list(), lengths = integer(0), range_params = character(0)))
     }
     if ("shiny" %in% names(args)) {
       args <- args[isTRUE(args$shiny) | args$shiny %in% TRUE, , drop = FALSE]
     }
     dots <- list()
-    exprs <- list()
     lengths <- integer(0)
     for (i in seq_len(nrow(args))) {
       nm <- args$name[[i]]
@@ -735,26 +748,10 @@ server <- function(input, output, session) {
         return(list(error = paste0("Could not parse ", nm, ": ", parsed$error)))
       }
       dots[[nm]] <- parsed$value
-      if (isTRUE(parsed$sweep) && identical(kind, "vector")) {
-        exprs[[nm]] <- paste0("list(", paste(vapply(parsed$value, function(v) {
-          paste0("c(", paste(as.character(v), collapse = ", "), ")")
-        }, character(1)), collapse = ", "), ")")
-        lengths[[nm]] <- length(parsed$value)
-      } else if (isTRUE(parsed$sweep)) {
-        exprs[[nm]] <- paste0("c(", paste(as.character(parsed$value), collapse = ", "), ")")
-        lengths[[nm]] <- length(parsed$value)
-      } else {
-        val <- parsed$value
-        exprs[[nm]] <- if (length(val) > 1L) {
-          paste0("c(", paste(as.character(val), collapse = ", "), ")")
-        } else {
-          raw
-        }
-        lengths[[nm]] <- if (identical(kind, "vector")) 1L else length(val)
-      }
+      lengths[[nm]] <- if (identical(kind, "vector") && !isTRUE(parsed$sweep)) 1L else length(parsed$value)
     }
     range_params <- names(lengths)[lengths > 1L]
-    list(dots = dots, exprs = exprs, lengths = lengths, range_params = range_params)
+    list(dots = dots, lengths = lengths, range_params = range_params)
   }
 
   # Tabs: templates first, then RDSS, then any later YAML categories.
@@ -849,11 +846,13 @@ server <- function(input, output, session) {
       )
     }, character(1))
     params_disp <- as.character(df$params)
-    params_disp[is.na(df$params)] <- ""
+    params_disp[is.na(params_disp)] <- ""
+    pkgs_disp <- as.character(df$packages)
+    pkgs_disp[is.na(pkgs_disp)] <- ""
     data.frame(
-      label = if (has_dt) label_html else labels,
-      params = params_disp,
-      packages = as.character(df$packages %||% ""),
+      label = label_html,
+      params = html_escape(params_disp),
+      packages = html_escape(pkgs_disp),
       stringsAsFactors = FALSE,
       .id_key = ids,
       check.names = FALSE
@@ -906,6 +905,8 @@ server <- function(input, output, session) {
     if (isTRUE(update_url)) {
       shiny::updateQueryString(design_query(id), mode = "replace", session = session)
     }
+    # Clear the row selection so clicking the same row again reopens it
+    if (has_dt) DT::selectRows(DT::dataTableProxy("library_table", session = session), NULL)
     if (has_bslib) {
       bslib::nav_select("main_nav", selected = "Design", session = session)
     } else {
@@ -921,7 +922,9 @@ server <- function(input, output, session) {
     if (is.null(key) || !nzchar(as.character(key)[[1]])) return()
     id <- resolve_design_key(key)
     if (is.na(id)) return()
-    cur <- selected_id()
+    # Isolated: the URL is set once on load, and replaceState() is not
+    # re-sent as url_search, so a later switch must not be undone here.
+    cur <- isolate(selected_id())
     if (is.na(cur) || !identical(cur, id)) {
       go_to_design(id, update_url = FALSE)
     }
@@ -965,9 +968,10 @@ server <- function(input, output, session) {
       )
     })
   } else {
+    # Without DT there is no row selection; each label's permalink opens the design.
     output$library_table_basic <- renderTable({
       library_display()[, c("label", "params", "packages"), drop = FALSE]
-    })
+    }, sanitize.text.function = function(x) x)
   }
 
   observeEvent(input$library_table_rows_selected, {
@@ -978,7 +982,7 @@ server <- function(input, output, session) {
     }
   }, ignoreNULL = TRUE)
 
-  selected_header_ui <- function() {
+  selected_header_ui <- function(back_id) {
     id <- selected_id()
     if (is.na(id) || !nzchar(id)) {
       return(div(class = "rd-card", p("Open a design from the Library tab.")))
@@ -1004,15 +1008,15 @@ server <- function(input, output, session) {
           HTML(permalink_svg)
         )
       ),
-      actionButton("back_library", "Back to library", class = "btn-outline-secondary btn-sm")
+      actionButton(back_id, "Back to library", class = "btn-outline-secondary btn-sm")
     )
   }
 
-  output$selected_header <- renderUI(selected_header_ui())
-  output$selected_header_diag <- renderUI(selected_header_ui())
+  output$selected_header <- renderUI(selected_header_ui("back_library"))
+  output$selected_header_diag <- renderUI(selected_header_ui("back_library_diag"))
 
   go_to_library <- function() {
-    shiny::updateQueryString("", mode = "replace", session = session)
+    shiny::updateQueryString(session$clientData$url_pathname %||% "/", mode = "replace", session = session)
     if (has_bslib) {
       bslib::nav_select("main_nav", selected = "Library", session = session)
     } else {
@@ -1021,6 +1025,8 @@ server <- function(input, output, session) {
   }
 
   observeEvent(input$back_library, go_to_library())
+  observeEvent(input$back_library_diag, go_to_library())
+  observeEvent(input$back_library_mod, go_to_library())
   observeEvent(input$goto_library_from_mod, go_to_library())
 
   output$redesign_top <- renderUI({
@@ -1036,7 +1042,7 @@ server <- function(input, output, session) {
       ))
     }
     tagList(
-      selected_header_ui(),
+      selected_header_ui("back_library_mod"),
       div(
         class = "rd-card",
         div(
@@ -1045,7 +1051,7 @@ server <- function(input, output, session) {
         ),
         uiOutput("mod_param_grid"),
         fluidRow(
-          column(3, numericInput("mod_sims", "Simulations", value = 50, min = 1, step = 10, width = "100%")),
+          column(3, numericInput("mod_sims", "Simulations", value = 50, min = 1, max = getOption("designlibrary.max_sims", 1000), step = 10, width = "100%")),
           column(
             9,
             div(
@@ -1085,7 +1091,7 @@ server <- function(input, output, session) {
   output$args_table <- renderTable({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
-    args <- DesignLibrary::get_args(id)
+    args <- cached_args(id)
     show <- data.frame(
       name = args$name,
       default = args$value_str,
@@ -1135,7 +1141,7 @@ server <- function(input, output, session) {
   observeEvent(input$run_diagnosis, {
     id <- selected_id()
     req(!is.na(id))
-    sims <- as.integer(input$diag_sims %||% 100)
+    sims <- clamp_sims(input$diag_sims, 100L)
     withProgress(message = "Diagnosing…", value = 0.3, {
       res <- tryCatch({
         d <- DesignLibrary::make_design(id)
@@ -1403,7 +1409,7 @@ server <- function(input, output, session) {
   output$mod_param_grid <- renderUI({
     id <- selected_id()
     if (is.na(id) || !nzchar(id)) return(NULL)
-    args <- DesignLibrary::get_args(id)
+    args <- cached_args(id)
     data_args <- if ("kind" %in% names(args) && nrow(args)) {
       args[args$kind %in% c("data", "function", "list"), , drop = FALSE]
     } else {
@@ -1446,20 +1452,12 @@ server <- function(input, output, session) {
           placeholder = if (identical(kind, "vector")) {
             "e.g. 0.1, 0.2, 0.3;"
           } else {
-            "e.g. 100 or 0, 10, 20"
+            "e.g. 100, or 0, 10, 20, or seq(0, 1, by = 0.25)"
           }
         )
       )
     })
     tagList(note, div(class = "rd-param-grid", rows))
-  })
-
-  current_mod_state <- reactive({
-    id <- selected_id()
-    req(!is.na(id), nzchar(id))
-    args <- DesignLibrary::get_args(id)
-    lapply(args$name, function(nm) input[[paste0("mod_val_", nm)]])
-    collect_mod_dots(id)
   })
 
   output$mod_error <- renderUI({
@@ -1488,20 +1486,21 @@ server <- function(input, output, session) {
   })
 
   output$mod_plot_controls <- renderUI({
-    st <- tryCatch(current_mod_state(), error = function(e) NULL)
     rp <- mod_last_ranges()
-    if (!length(rp)) rp <- st$range_params %||% character(0)
     if (length(rp) != 2L) return(NULL)
+    keep <- function(x, fallback) if (!is.null(x) && x %in% rp) x else fallback
+    x_sel <- keep(isolate(input$mod_plot_x), rp[[1]])
+    g_sel <- keep(isolate(input$mod_plot_group), setdiff(rp, x_sel)[[1]])
     fluidRow(
-      column(6, selectInput("mod_plot_x", "X-axis", choices = rp, selected = input$mod_plot_x %||% rp[[1]], width = "100%")),
-      column(6, selectInput("mod_plot_group", "Group / color", choices = rp, selected = input$mod_plot_group %||% rp[[2]], width = "100%"))
+      column(6, selectInput("mod_plot_x", "X-axis", choices = rp, selected = x_sel, width = "100%")),
+      column(6, selectInput("mod_plot_group", "Group / color", choices = rp, selected = g_sel, width = "100%"))
     )
   })
 
   observeEvent(input$reset_mods, {
     id <- selected_id()
     req(!is.na(id))
-    args <- DesignLibrary::get_args(id)
+    args <- cached_args(id)
     if ("shiny" %in% names(args)) {
       args <- args[isTRUE(args$shiny) | args$shiny %in% TRUE, , drop = FALSE]
     }
@@ -1520,8 +1519,7 @@ server <- function(input, output, session) {
   observeEvent(input$run_redesign, {
     id <- selected_id()
     req(!is.na(id))
-    sims <- as.integer(input$mod_sims %||% 50)
-    if (is.na(sims) || sims < 1L) sims <- 50L
+    sims <- clamp_sims(input$mod_sims, 50L)
     st <- collect_mod_dots(id)
     if (!is.null(st$error)) {
       mod_status(st$error)
@@ -1534,8 +1532,16 @@ server <- function(input, output, session) {
       ))
       return()
     }
+    n_designs <- prod(st$lengths[st$range_params])
+    if (n_designs > max_designs) {
+      mod_status(paste0(
+        "That sweep makes ", n_designs, " designs; the limit is ", max_designs,
+        ". Use fewer values, for example seq(50, 150, by = 25)."
+      ))
+      return()
+    }
     mod_status("")
-    withProgress(message = "Redesign + diagnosis…", value = 0.2, {
+    withProgress(message = sprintf("Redesign + diagnosis: %d design(s) x %d sims…", n_designs, sims), value = 0.2, {
       res <- tryCatch({
         design <- do.call(DesignLibrary::make_design, c(list(.design = id), st$dots))
         diagnosis <- DeclareDesign::diagnose_design(design, sims = sims)
@@ -1551,8 +1557,8 @@ server <- function(input, output, session) {
           summary = summary,
           diagnosis = diagnosis,
           range_params = st$range_params,
-          plot_x = input$mod_plot_x %||% (st$range_params[1] %||% NA_character_),
-          plot_group = input$mod_plot_group %||% (st$range_params[2] %||% NA_character_)
+          plot_x = if (isTRUE(input$mod_plot_x %in% st$range_params)) input$mod_plot_x else st$range_params[1] %||% NA_character_,
+          plot_group = if (isTRUE(input$mod_plot_group %in% st$range_params)) input$mod_plot_group else st$range_params[2] %||% NA_character_
         )
       }, error = function(e) e)
 
@@ -1627,11 +1633,12 @@ server <- function(input, output, session) {
       if (length(ranges) == 1L) {
         xp <- ranges[[1]]
         df$.x <- df[[xp]]
-        # Color by estimator when several share an x-value
-        est_col <- if ("estimator" %in% names(df)) "estimator" else NULL
-        use_color <- !is.null(est_col) && length(unique(df[[est_col]])) > 1L
+        # Color by inquiry and estimator when several share an x-value
+        series_cols <- intersect(c("inquiry", "estimator"), names(df))
+        series_cols <- series_cols[vapply(series_cols, function(cl) length(unique(df[[cl]])) > 1L, logical(1))]
+        use_color <- length(series_cols) > 0L
         if (use_color) {
-          df$.series <- factor(df[[est_col]])
+          df$.series <- factor(do.call(paste, c(unname(as.list(df[series_cols])), sep = " / ")))
           p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, color = .series, group = .series))
         } else {
           p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, group = 1))
@@ -1655,7 +1662,7 @@ server <- function(input, output, session) {
           ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
           ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
           ggplot2::theme_bw(base_size = 12) +
-          ggplot2::labs(x = xp, y = y_col, color = if (use_color) "estimator" else NULL)
+          ggplot2::labs(x = xp, y = y_col, color = if (use_color) paste(series_cols, collapse = " / ") else NULL)
       } else {
         xp <- input$mod_plot_x %||% obj$plot_x %||% ranges[[1]]
         gp <- input$mod_plot_group %||% obj$plot_group %||% ranges[[2]]

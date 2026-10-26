@@ -97,7 +97,7 @@ design <-
     total_effect = 0.03  # via both direct and indirect
   ) +
   declare_model(
-    data = select(as_tibble(fairfax), -geometry),
+    data = dplyr::select(as_tibble(fairfax), -geometry),
     Y_0_0 = pnorm(scale(SHAPE_LEN), sd = 3),
     Y_1_0 = Y_0_0 + controlled_direct_effect,
     Y_0_1 = Y_0_0 + controlled_indirect_effect,

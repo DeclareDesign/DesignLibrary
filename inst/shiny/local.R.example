@@ -2,4 +2,5 @@
 # copy_library_shiny() never overwrites an existing local.R.
 #
 # Examples:
-# options(designlibrary.default_design = "two_arm_trial")
+# options(designlibrary.max_sims = 500)     # cap on simulations per run (default 1000)
+# options(designlibrary.max_designs = 20)   # cap on designs in one redesign sweep (default 50)

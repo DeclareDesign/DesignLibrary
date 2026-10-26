@@ -7,7 +7,8 @@ resolve_design <- function(design) {
     stop("No designs found in ", designs_dir(), call. = FALSE)
   }
 
-  parsed_all <- lapply(files, parse_design_file)
+  parsed_all <- parse_design_files(files)
+  files <- names(parsed_all)
   ids <- vapply(parsed_all, function(x) x$meta$id, character(1))
   aliases <- vapply(parsed_all, function(x) {
     a <- x$meta$alias
@@ -71,7 +72,8 @@ eval_design <- function(parsed) {
   restore_seed <- seed_restorer()
   on.exit(restore_seed(), add = TRUE)
 
-  env <- new.env(parent = globalenv())
+  # Attached packages are visible, the user's global variables are not.
+  env <- new.env(parent = parent.env(globalenv()))
   # Design files may use `%||%`; R < 4.4 has it only if rlang is attached.
   env$`%||%` <- `%||%`
   expr <- parse(text = parsed$code, keep.source = TRUE)

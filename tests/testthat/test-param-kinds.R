@@ -148,6 +148,41 @@ test_that("Shiny parser treats vector commas as replacement, not a sweep", {
   expect_equal(sc$value, c(50, 100))
 })
 
+test_that("Shiny parser never evaluates code", {
+  payloads <- c(
+    "system('ls')",
+    "Sys.getenv()",
+    "rnorm(1e9)",
+    "match.fun(intToUtf8(c(115,121,115,116,101,109)))(intToUtf8(c(101,99,104,111)))",
+    "1:1e9",
+    "rep(1, 1e9)",
+    "seq(0, 1, by = 1e-9)",
+    "x <- 5"
+  )
+  for (raw in payloads) {
+    p <- DesignLibrary:::parse_shiny_param_raw(raw, "scalar", "100")
+    expect_false(is.null(p$error), info = raw)
+    expect_null(p$value)
+  }
+})
+
+test_that("Shiny parser reads commas, spaces, seq, rep, and ranges", {
+  read <- function(raw) DesignLibrary:::parse_shiny_param_raw(raw, "scalar", "100")$value
+  expect_equal(read("0.1 0.2"), c(0.1, 0.2))
+  expect_equal(read("-1, 2.5"), c(-1, 2.5))
+  expect_equal(read("seq(0, 1, by = 0.5)"), c(0, 0.5, 1))
+  expect_equal(read("rep(0.5, 3)"), c(0.5, 0.5, 0.5))
+  expect_equal(read("1:3, 10"), c(1, 2, 3, 10))
+  expect_equal(read("1/4"), 0.25)
+})
+
+test_that("character parameters display quoted and read bare words as text", {
+  expect_equal(DesignLibrary:::format_shiny_param_default("high", "scalar"), "\"high\"")
+  p <- DesignLibrary:::parse_shiny_param_raw("low", "scalar", "\"high\"")
+  expect_equal(p$value, "low")
+  expect_equal(DesignLibrary:::format_shiny_param_default(NA_real_, "scalar"), "NA")
+})
+
 n_li <- function(html) {
   m <- gregexpr("<li>", html, fixed = TRUE)[[1]]
   if (length(m) == 1L && identical(m[[1]], -1L)) 0L else length(m)

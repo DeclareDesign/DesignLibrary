@@ -36,10 +36,43 @@ yaml_is_true <- function(x, default = FALSE) {
 #' Files may begin with a YAML block delimited by `---` lines. Everything
 #' after the closing `---` is R code. Files with no frontmatter are valid.
 #'
+#' Results are cached by path, modification time, and size, since every
+#' lookup reads the whole library.
+#'
 #' @param path Path to a `.R` design file.
 #' @return List with `meta` (list) and `code` (character scalar).
 #' @noRd
 parse_design_file <- function(path) {
+  info <- file.info(path, extra_cols = FALSE)
+  stamp <- paste(info$mtime, info$size)
+  hit <- design_file_cache[[path]]
+  if (!is.null(hit) && identical(hit$stamp, stamp)) return(hit$parsed)
+  parsed <- read_design_file(path)
+  design_file_cache[[path]] <- list(stamp = stamp, parsed = parsed)
+  parsed
+}
+
+design_file_cache <- new.env(parent = emptyenv())
+
+#' Parse several design files, skipping any that fail
+#'
+#' One malformed file must not break every lookup, so each failure is a
+#' warning naming the file, and the rest are returned.
+#' @return The parsed files, named by path.
+#' @noRd
+parse_design_files <- function(files) {
+  parsed <- lapply(files, function(f) {
+    tryCatch(parse_design_file(f), error = function(e) {
+      warning("Skipping design file ", basename(f), ": ", conditionMessage(e), call. = FALSE)
+      NULL
+    })
+  })
+  names(parsed) <- files
+  Filter(Negate(is.null), parsed)
+}
+
+#' @noRd
+read_design_file <- function(path) {
   if (!file.exists(path)) {
     stop("Design file not found: ", path, call. = FALSE)
   }

@@ -144,7 +144,14 @@ index_row_from_path <- function(path) {
 #' @noRd
 design_index_from_files <- function(files) {
   if (!length(files)) return(empty_design_index())
-  rows <- lapply(files, index_row_from_path)
+  rows <- lapply(files, function(f) {
+    tryCatch(index_row_from_path(f), error = function(e) {
+      warning("Skipping design file ", basename(f), ": ", conditionMessage(e), call. = FALSE)
+      NULL
+    })
+  })
+  rows <- Filter(Negate(is.null), rows)
+  if (!length(rows)) return(empty_design_index())
   normalize_index_df(do.call(rbind, rows))
 }
 

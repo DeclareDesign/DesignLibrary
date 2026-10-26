@@ -24,7 +24,7 @@ f_Y <- function(z, X.1, X.2, X.3, X.4, u)
   z * X.1 + z * X.2 ^ 2 + z * exp(X.3) + z * X.3 * X.4 + u
 
 get_best_predictor <-
-  function(data) select(data, estimate = var_imp) |> 
+  function(data) dplyr::select(data, estimate = var_imp) |> 
   dplyr::slice(1)
 
 design <- 

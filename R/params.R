@@ -727,11 +727,11 @@ format_shiny_param_default <- function(value, kind, value_str = "") {
   if (identical(kind, "vector")) {
     val <- value
     if (is.null(val) && nzchar(vs)) {
-      val <- tryCatch(eval(parse(text = vs), envir = baseenv()), error = function(e) NULL)
+      val <- tryCatch(eval_literal(str2lang(vs)), error = function(e) NULL)
     }
     body <- ""
     if (is.atomic(val) && length(val)) {
-      body <- paste(as.character(val), collapse = ", ")
+      body <- paste(display_atoms(val), collapse = ", ")
     } else if (nzchar(vs)) {
       body <- vs
     }
@@ -743,16 +743,117 @@ format_shiny_param_default <- function(value, kind, value_str = "") {
   # (three significant digits), so a default read back from it would round.
   parsed <- value
   if (is.null(parsed) && nzchar(vs)) {
-    parsed <- tryCatch(eval(parse(text = vs), envir = baseenv()), error = function(e) NULL)
+    parsed <- tryCatch(eval_literal(str2lang(vs)), error = function(e) NULL)
   }
   if (is.null(parsed) && !nzchar(vs)) return("")
-  if (is.numeric(parsed) && length(parsed) >= 1L) {
-    v <- parsed[[1L]]
-    if (abs(v - round(v)) < 1e-6) return(as.character(as.integer(round(v))))
-    return(as.character(round(v, 4)))
-  }
-  if (is.atomic(parsed) && length(parsed) >= 1L) return(as.character(parsed[[1L]]))
+  if (is.atomic(parsed) && length(parsed) >= 1L) return(display_atoms(parsed[[1L]]))
   vs
+}
+
+#' Display atomic values the way the Shiny parser reads them back
+#'
+#' Whole numbers print without decimals, other numbers to four places, and
+#' strings in double quotes.
+#' @noRd
+display_atoms <- function(x) {
+  if (anyNA(x)) return(ifelse(is.na(x), "NA", display_atoms(x[!is.na(x)][1L])))
+  if (is.character(x)) return(encodeString(x, quote = "\""))
+  if (is.numeric(x)) {
+    whole <- !is.na(x) & is.finite(x) & abs(x - round(x)) < 1e-6
+    out <- as.character(round(x, 4))
+    out[whole] <- format(round(x[whole]), scientific = FALSE, trim = TRUE)
+    return(out)
+  }
+  as.character(x)
+}
+
+#' Longest vector a Shiny parameter box may produce
+#' @noRd
+shiny_literal_max <- function() 1000L
+
+#' Evaluate a parameter expression typed into Shiny, allowing literals only
+#'
+#' Visitor text must never run code, so this walks the parsed expression
+#' instead of calling `eval()`. Allowed: numbers, strings, `TRUE`, `FALSE`,
+#' `NA`, `Inf`, parentheses, `+ - * / ^` on those, and `c()`, `seq()`,
+#' `rep()`, and `:`, none of which may produce more than
+#' `shiny_literal_max()` values. With `bare_strings = TRUE` (a character
+#' parameter) an unquoted word is read as a string.
+#' @noRd
+eval_literal <- function(expr, bare_strings = FALSE) {
+  max_n <- shiny_literal_max()
+  check_n <- function(n) {
+    if (!is.finite(n) || n > max_n) {
+      stop("that would make more than ", max_n, " values", call. = FALSE)
+    }
+  }
+  num1 <- function(x, what) {
+    if (!is.numeric(x) || length(x) != 1L || is.na(x)) {
+      stop(what, " must be a single number", call. = FALSE)
+    }
+    x
+  }
+  walk <- function(e) {
+    if (is.numeric(e) || is.character(e) || is.logical(e)) return(e)
+    if (is.symbol(e)) {
+      nm <- as.character(e)
+      if (identical(nm, "Inf")) return(Inf)
+      if (isTRUE(bare_strings)) return(nm)
+      stop("'", nm, "' is not a number; quote text, as in \"", nm, "\"", call. = FALSE)
+    }
+    if (!is.call(e) || !is.symbol(e[[1L]])) {
+      stop("only numbers, quoted text, c(), seq(), rep(), and a:b are allowed", call. = FALSE)
+    }
+    fn <- as.character(e[[1L]])
+    args <- lapply(as.list(e)[-1L], walk)
+    switch(fn,
+      "(" = args[[1L]],
+      "c" = {
+        check_n(sum(lengths(args)))
+        do.call(c, unname(args))
+      },
+      ":" = {
+        from <- num1(args[[1L]], "a in a:b")
+        to <- num1(args[[2L]], "b in a:b")
+        check_n(floor(abs(to - from)) + 1)
+        from:to
+      },
+      "seq" = {
+        n <- if (!is.null(args$length.out)) {
+          num1(args$length.out, "length.out")
+        } else if (!is.null(args$by)) {
+          if (length(args) < 2L) stop("seq() needs from and to with by", call. = FALSE)
+          (num1(args[[2L]], "to") - num1(args[[1L]], "from")) / num1(args$by, "by") + 1
+        } else {
+          abs(num1(args[[length(args)]], "to") - num1(args[[1L]], "from")) + 1
+        }
+        check_n(n)
+        do.call(seq, args)
+      },
+      "rep" = {
+        unnamed <- if (is.null(names(args))) args else args[!nzchar(names(args))]
+        times <- if (!is.null(args$times)) args$times else if (length(unnamed) >= 2L) unnamed[[2L]] else 1
+        each <- if (!is.null(args$each)) num1(args$each, "each") else 1
+        n <- if (!is.null(args$length.out)) {
+          num1(args$length.out, "length.out")
+        } else {
+          if (!is.numeric(times)) stop("times must be numeric", call. = FALSE)
+          length(unnamed[[1L]]) * each * if (length(times) == 1L) times else sum(times) / length(unnamed[[1L]])
+        }
+        check_n(n)
+        do.call(rep, args)
+      },
+      "+" = , "-" = , "*" = , "/" = , "^" = {
+        if (!all(vapply(args, is.numeric, logical(1)))) {
+          stop("arithmetic needs numbers", call. = FALSE)
+        }
+        check_n(max(lengths(args)))
+        do.call(fn, unname(args))
+      },
+      stop(fn, "() is not allowed; use numbers, quoted text, c(), seq(), rep(), or a:b", call. = FALSE)
+    )
+  }
+  walk(expr)
 }
 
 #' Parse a Shiny text box for one parameter
@@ -774,21 +875,23 @@ parse_shiny_param_raw <- function(raw, kind, default_display = "") {
   }
   if (same) return(list(skip = TRUE))
 
+  # A character default displays quoted, so unquoted words are strings.
+  bare_strings <- startsWith(default_display, "\"")
+
+  # Commas separate values; so does whitespace when the text does not
+  # parse with commas alone ("0.1 0.2").
   eval_piece <- function(str) {
     str <- trimws(str)
     if (!nzchar(str)) return(NULL)
-    expr <- str
-    if (!grepl("^c\\s*\\(", str) && !grepl("^seq\\s*\\(", str) &&
-        grepl("[,;\\s]", str)) {
-      parts <- strsplit(str, "[,\\s]+")[[1]]
-      parts <- trimws(parts)
-      parts <- parts[nzchar(parts)]
-      if (length(parts) >= 2L) expr <- paste0("c(", paste(parts, collapse = ", "), ")")
+    expr <- tryCatch(str2lang(paste0("c(", str, ")")), error = function(e) NULL)
+    if (is.null(expr)) {
+      spaced <- paste0("c(", gsub("[,[:space:]]+", ", ", str), ")")
+      expr <- tryCatch(str2lang(spaced), error = function(e) e)
     }
-    tryCatch(
-      eval(parse(text = expr), envir = baseenv()),
-      error = function(e) e
-    )
+    if (inherits(expr, "error")) {
+      return(simpleError(paste0("could not read '", str, "'")))
+    }
+    tryCatch(eval_literal(expr, bare_strings = bare_strings), error = function(e) e)
   }
 
   if (identical(kind, "vector")) {

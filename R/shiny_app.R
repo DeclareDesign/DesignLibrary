@@ -25,10 +25,6 @@ resolve_shiny_dest <- function(dest = getwd()) {
     return(normalizePath(dest_norm, winslash = "/", mustWork = TRUE))
   }
 
-  # If cwd already ends with dest, stay put (server re-deploy pattern)
-  suffix <- sub("^/+", "", sub("/+$", "", dest_norm))
-  if (nzchar(suffix) && endsWith(cwd, suffix)) return(cwd)
-
   out <- file.path(cwd, dest_norm)
   dir.create(out, recursive = TRUE, showWarnings = FALSE)
   normalizePath(out, winslash = "/", mustWork = TRUE)
@@ -94,13 +90,14 @@ copy_library_shiny <- function(
 
   dest <- resolve_shiny_dest(dest)
 
+  failed <- character(0)
   copy_one <- function(from, to) {
-    if (!file.exists(from)) return(invisible(FALSE))
     if (!overwrite && file.exists(to)) return(invisible(FALSE))
     parent <- dirname(to)
     if (!dir.exists(parent)) dir.create(parent, recursive = TRUE, showWarnings = FALSE)
-    file.copy(from, to, overwrite = overwrite)
-    invisible(TRUE)
+    ok <- file.copy(from, to, overwrite = overwrite)
+    if (!ok) failed <<- c(failed, to)
+    invisible(ok)
   }
 
   app_r <- file.path(src, "app.R")
@@ -111,13 +108,8 @@ copy_library_shiny <- function(
 
   www_src <- file.path(src, "www")
   if (dir.exists(www_src)) {
-    www_files <- list.files(www_src, recursive = TRUE, full.names = TRUE)
-    www_root <- normalizePath(www_src, winslash = "/", mustWork = FALSE)
-    for (f in www_files) {
-      if (dir.exists(f)) next
-      rel <- sub(paste0("^", gsub("\\\\", "/", www_root), "/?"), "", gsub("\\\\", "/", f))
-      if (!nzchar(rel)) next
-      copy_one(f, file.path(dest, "www", rel))
+    for (rel in list.files(www_src, recursive = TRUE)) {
+      copy_one(file.path(www_src, rel), file.path(dest, "www", rel))
     }
   }
 
@@ -135,11 +127,24 @@ copy_library_shiny <- function(
     paste0("# Written by DesignLibrary::copy_library_shiny() at ",
            format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z")),
     paste0("options(designlibrary.deploy_pkg_version = ",
-           encodeString(ver, quote = "\""), ")"),
-    paste0("options(designlibrary.deploy_dir = ",
-           encodeString(dest, quote = "\""), ")")
+           encodeString(ver, quote = "\""), ")")
   )
   writeLines(stamp, file.path(dest, "deploy-options.R"), useBytes = TRUE)
+
+  # Designs attach their packages at run time, which a manifest scanner
+  # (Posit Connect) cannot see, so name them where it looks.
+  pkgs <- sort(unique(c(package, "shiny", "bslib", "DT", "ggplot2", design_declared_packages())))
+  writeLines(c(
+    "# Written by DesignLibrary::copy_library_shiny() so that deployment",
+    "# tools list every package a design needs. The app never runs this.",
+    "if (FALSE) {",
+    paste0("  library(", pkgs, ")"),
+    "}"
+  ), file.path(dest, "deps.R"))
+
+  if (length(failed)) {
+    stop("Could not copy: ", paste(failed, collapse = ", "), call. = FALSE)
+  }
 
   message(
     "Shiny app written to ", dest, " (DesignLibrary ", ver, "). ",
