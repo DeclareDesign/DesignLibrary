@@ -98,6 +98,8 @@ make_design("two_arm_simple", b = c(0, .3, .6), N = c(20, 1000)) |>
 
 # Browse in Shiny
 
+DesignLibrary comes bundled with a shiny app to let you inspect designs.
+
 ```{r shiny, eval = FALSE}
 run_shiny()
 ```
@@ -106,9 +108,9 @@ The app opens on a searchable library table. Click a row to open the design, exp
 
 # Maintainer tools
 
-A short set of helpers keeps the library honest:
+A short set of helpers are available to maintain the library:
 
-- `contributor_checklist()`: what a design file should satisfy
+- `contributor_checklist()`: list what a design file should satisfy
 - `audit_designs()`: load each design and check that YAML `params:` names match redesignable objects
 - `bake_previews()`: write compact diagnosis previews (`sims = 100` by default) into `inst/previews/`
 - `refresh_library()`: index, audit, and bake in one step
@@ -120,4 +122,6 @@ options(DesignLibrary.root = "C:/path/to/DesignLibrary")
 refresh_library()
 ```
 
-That is the whole loop: drop in a design file, use it from R or Shiny, and refresh the library when you change the set. Step-by-step contribution guidance is in `vignette("contributing", package = "DesignLibrary")`.
+That is the whole workflow: drop in a new design file, use it from R or Shiny, and refresh the library when you change the set. Step-by-step contribution guidance is in `vignette("contributing", package = "DesignLibrary")`.
+
+

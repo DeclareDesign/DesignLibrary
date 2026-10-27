@@ -16,11 +16,15 @@ if (dir.exists("../inst/designs")) {
 
 # The short version
 
-DesignLibrary 2.0 replaces the designer functions of 0.1 with a library of self-contained design files, read through `make_design()`. It requires DeclareDesign, fabricatr, estimatr, and randomizr 2.0, and DesignLibrary 0.1.10 does not run under them.
+DesignLibrary 2.0 replaces the designer functions of 0.1 with a library of self-contained design files, read through `make_design()`. It requires DeclareDesign, fabricatr, estimatr, and randomizr 2.0.
 
-All fifteen 0.1 designers keep their names and their argument names, with two qualifications: `block_cluster_two_arm_designer()` loses six arguments, and three arguments (`label_E1` and `label_E2` of `process_tracing_designer()`, and `args_to_fix` of every designer) are accepted but ignored with a warning. Each now builds a library design, so `two_arm_designer(N = 40)` returns the same design as `make_design("two_arm_flexible", N = 40)`. Most 0.1 scripts that call a designer and diagnose the result run unchanged.
+All fifteen 0.1 designers keep their names and their argument names, with two exceptions: `block_cluster_two_arm_designer()` loses six arguments, and three arguments (`label_E1` and `label_E2` of `process_tracing_designer()`, and `args_to_fix` of every designer) are accepted but ignored with a warning. Each now builds a library design, so `two_arm_designer(N = 40)` returns the same design as `make_design("two_arm_flexible", N = 40)`. Most 0.1 scripts that call a designer and diagnose the result run unchanged.
 
-The breaks fall into two groups. Removed functions and removed arguments stop with an error that names the replacement, so a script that hits one tells you what to change. A handful of changes cannot error: a changed default, renamed inquiries or estimator terms, and different step names. A script that runs under 2.0 can still return a different table from the one it returned under 0.1, and the section [Porting an existing script](#porting-an-existing-script) lists what to search for.
+There are two types of break: 
+
+* Removed functions and removed arguments stop with an error that names the replacement.
+
+* A handful of changes do not error. These aries if there is a changed default, renamed inquiries, or renamed estimator terms or different step names. See [Porting an existing script](#porting-an-existing-script) for more.
 
 # What does not change
 
@@ -45,7 +49,7 @@ What carries over:
 
 ## Removed functions
 
-Four aliases that 0.1 had already deprecated are gone, along with two helpers. Each one stops and names its replacement.
+Four aliases that 0.1 had already deprecated are gone, along with two helpers. In each case you get an informative message.
 
 ```{r, error = TRUE}
 simple_two_arm_designer(N = 50)
@@ -70,7 +74,7 @@ get_design_code(two_arm_designer())
 get_code("two_arm_flexible")
 ```
 
-The `description`, `definitions`, and `shiny_arguments` attributes went with `code`. `get_args()` and `design_info()` describe a design's parameters instead.
+The `description`, `definitions`, and `shiny_arguments` attributes went with `code`.  Now `get_args()` and `design_info()` describe a design's parameters.
 
 ## `block_cluster_two_arm_designer()` takes new arguments
 
@@ -100,17 +104,16 @@ set.seed(343)
 draw_estimates(design)[, c("estimator", "term", "estimate", "inquiry")]
 ```
 
-The contrast between the two treatment arms, `ate_Y_3_2`, is usually the one with the least power, and a three-arm study is often designed without anyone checking it.
 
 ## Two renamings that change no values
 
-`mediation_analysis_designer()`'s inquiries `Indirect_0` and `Indirect_1` are now `Mediator_Effect_0` and `Mediator_Effect_1`. Each is the effect of the mediator on the outcome with treatment held at 0 or at 1. That quantity is not a natural indirect effect, which the old names implied it was. The values are unchanged.
+`mediation_analysis_designer()`'s inquiries `Indirect_0` and `Indirect_1` are now `Mediator_Effect_0` and `Mediator_Effect_1`. Each is the effect of the mediator on the outcome with treatment held at 0 or at 1. 
 
 ```{r}
 draw_estimands(mediation_analysis_designer())
 ```
 
-`process_tracing_designer()` fixes its estimator labels at `"Straw in the Wind"` and `"Smoking Gun"`, and warns when `label_E1` or `label_E2` asks for others.
+`process_tracing_designer()` fixes its estimator labels at `"Straw in the Wind"` and `"Smoking Gun"`.
 
 ```{r}
 design <- process_tracing_designer(label_E1 = "Hoop")
@@ -124,7 +127,7 @@ design <- process_tracing_designer(label_E1 = "Hoop")
 design <- two_arm_designer(args_to_fix = "N")
 ```
 
-## Designs are DeclareDesign 2.0 designs
+## Designs are now all DeclareDesign 2.0 designs
 
 DeclareDesign 2.0 has no separate potential outcomes or reveal steps: potential outcomes live in `declare_model()` and are revealed in `declare_measurement()`. Some step names differ as a result. `factorial_designer()`'s inquiry step, for example, was `"ATE"` and is now `"inquiry"`.
 
@@ -167,8 +170,11 @@ The rows in bold are the ones to search for deliberately, since nothing will poi
 
 # What is new
 
-Design files are the source of truth in 2.0. The library holds `r nrow(as.data.frame(list_designs()))` designs, including the declarations from *Research Design in the Social Sciences*, and the designers are thin routes into it. `list_designs()` browses the library, `make_design()` builds a design and changes its parameters, `get_args()` lists what can be changed, `get_code()` prints the source, and `run_shiny()` opens the same library in a browser. `vignette("DesignLibrary")` is the tour.
+A library of simple design files sit at the heart of library  2.0. The library holds `r nrow(as.data.frame(list_designs()))` designs, including the declarations from *Research Design in the Social Sciences*. 
 
-```{r}
-get_args("two_arm_flexible")
-```
+* `list_designs()` browses the library
+* `make_design()` builds a design and changes its parameters
+* `get_args()` lists what can be changed
+* `get_code()` prints the source
+* `run_shiny()` opens thelibrary in a browser
+* `vignette("DesignLibrary")` gives you a  tour.

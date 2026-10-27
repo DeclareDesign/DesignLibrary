@@ -51,4 +51,4 @@ URL: https://github.com/DeclareDesign/DesignLibrary, https://declaredesign.org/r
 BugReports: https://github.com/DeclareDesign/DesignLibrary/issues
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
