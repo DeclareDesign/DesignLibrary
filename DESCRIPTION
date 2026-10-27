@@ -11,7 +11,7 @@ Authors@R: c(
     person("Lily", "Medina", , "lilymiru@gmail.com", role = "aut")
   )
 Description: A lightweight library of research designs declared with
-    DeclareDesign. Designs live as self-contained R files; editable
+    'DeclareDesign'. Designs live as self-contained R files; editable
     parameters are read from the design itself. Optional YAML metadata
     adds labels, categories, tips, and book aliases. Includes maintainer
     tools to index, audit, and bake small diagnosis previews, plus a
