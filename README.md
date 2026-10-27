@@ -11,7 +11,6 @@ install.packages("DesignLibrary")
 ## Idea
 
 - Each design is a self-contained `.R` file under `inst/designs/`.
-- The **design object** is the source of truth for editable parameters.
 - Optional YAML frontmatter adds labels, categories, keywords, book aliases, `packages:` extras, `diagnosands:` defaults for display, and `params:` tip strings.
 - YAML is optional. With no header: id = filename stem (a few book designs set a different `id:`), label = humanized id, `category: Other`, object name `design`, `include_in_shiny: true`. Set `object:` only if the R object is not named `design`.
 
@@ -26,7 +25,7 @@ make_design("2.1", b = 0.5)          # book alias
 get_args("two_arm_simple")
 get_code("two_arm_simple")             # simple make_design() + full source
 run_shiny()
-install_library_dependencies()        # Imports + Shiny Suggests + YAML packages: (+ interference from GitHub)
+install_library_dependencies()        # Imports + Shiny Suggests + YAML packages
 copy_library_shiny("path/to/app")     # standalone Shiny folder for the server
 ```
 
@@ -43,14 +42,16 @@ If `pkgdown::build_site()` fails with `write_html` / "Error closing file", use `
 
 The fifteen 0.1 designers (`two_arm_designer()`, `block_cluster_two_arm_designer()`, and so on) keep their names and, with the exceptions below, their arguments. Each now builds a library design, so `two_arm_designer(N = 40)` and `make_design("two_arm_flexible", N = 40)` return the same design.
 
-- `simple_*_designer()`, `get_design_code()`, and `match.call.defaults()` are defunct; each errors naming its replacement. Use `get_code("<id>")` for a design's source.
+- `simple_*_designer()`, `get_design_code()`, and `match.call.defaults()` are defunct; each errors naming its replacement. 
 - `block_cluster_two_arm_designer()` dropped `N`, `sd`, `sd_i_1`, `rho`, `control_mean`, and `treatment_mean` (each an error naming what to set instead) and changed its defaults.
 - `multi_arm_designer()` compares each arm with arm 1 only; `mediation_analysis_designer()` renames `Indirect_0`/`Indirect_1` to `Mediator_Effect_0`/`Mediator_Effect_1`.
-- Sweep with `redesign(two_arm_designer(), N = c(50, 100))`.
+- redesign over a range with `redesign(two_arm_designer(), N = c(50, 100))`.
 
 The vignette *Upgrading from DesignLibrary 0.1* (`vignette("upgrading")`) works through every break with code, and the full list is in `NEWS.md` under "Breaking changes relative to 0.1.10".
 
 ## Server deploy
+
+A set of functions help you if you want to deploy the shiny to a server:
 
 ```r
 install.packages("DesignLibrary")
@@ -58,10 +59,10 @@ DesignLibrary::install_library_dependencies()
 DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 ```
 
-Point Shiny Server at that folder. `local.R` there is never overwritten on re-copy.
+
 ## Minimal design file
 
-YAML is optional. This is enough:
+A design can be declared very concisely:
 
 ```r
 b <- 0
@@ -75,11 +76,20 @@ design <-
 
 Save as `inst/designs/my_design.R`. Parameters are discovered from the design; `redesign()` / `make_design()` use those names.
 
-Optional YAML can set preferred diagnosands for the Shiny Diagnosis and Redesign tabs (falls back to bias and power):
+However, if you want the design to sing in your shiny, add a YAML.  YAML can provide descriptions and definitions and can be used to set preferred diagnosands for the Shiny Diagnosis and Redesign tabs:
 
 ```yaml
-diagnosands: [rmse, bias]
-# or: diagnosands: rmse, bias
+id: two_arm_simple
+label: Simple two-arm trial
+category: template
+keywords: [experiment, two-arm]
+description: >
+  Simple two-arm trial with complete random assignment and a population average treatment effect.
+params:
+  "N": "Number of units (sample or population size)"
+  "b": "Treatment effect (outcome scale)"
+diagnosands: [bias, power]
+include_in_shiny: true
 ```
 
 ## DeclareDesign 1.x vs 2.0
@@ -92,8 +102,6 @@ diagnosands: [rmse, bias]
 designs <- redesign(design, tau = c(0.1, 0.3, 0.5))
 diagnose_design(designs, sims = 100)
 ```
-
-needs no designer and no designer-style gluing. This package is built for that model.
 
 ## Contributor checklist
 
