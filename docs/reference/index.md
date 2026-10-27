@@ -113,14 +113,31 @@ unported names are stubs that point to related library designs.
   : Create a two-by-two factorial design
 - [`block_cluster_two_arm_designer()`](https://declaredesign.org/r/designlibrary/reference/block_cluster_two_arm_designer.md)
   : Create a blocked and clustered two-arm design
+- [`two_arm_covariate_designer()`](https://declaredesign.org/r/designlibrary/reference/two_arm_covariate_designer.md)
+  : Create a two-arm design with a possibly prognostic covariate
+- [`regression_discontinuity_designer()`](https://declaredesign.org/r/designlibrary/reference/regression_discontinuity_designer.md)
+  : Create a regression discontinuity design with a polynomial fit
+- [`spillover_designer()`](https://declaredesign.org/r/designlibrary/reference/spillover_designer.md)
+  : Create a two-arm design with spillovers within groups
+- [`cluster_sampling_designer()`](https://declaredesign.org/r/designlibrary/reference/cluster_sampling_designer.md)
+  : Create a two-stage cluster sampling design
+- [`binary_iv_designer()`](https://declaredesign.org/r/designlibrary/reference/binary_iv_designer.md)
+  : Create a binary instrumental variables design
+- [`process_tracing_designer()`](https://declaredesign.org/r/designlibrary/reference/process_tracing_designer.md)
+  : Create a process tracing design with two clues
+- [`factorial_designer()`](https://declaredesign.org/r/designlibrary/reference/factorial_designer.md)
+  : Create a 2^k factorial design
 
-### Unported stubs
+## Defunct
 
-- [`binary_iv_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  [`cluster_sampling_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  [`factorial_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  [`process_tracing_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  [`regression_discontinuity_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  [`spillover_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  [`two_arm_covariate_designer()`](https://declaredesign.org/r/designlibrary/reference/designers-not-ported.md)
-  : DesignLibrary 0.1 designers not ported as-is
+DesignLibrary 0.1 functions removed in 2.0.0. Each stops with an error
+naming its replacement.
+
+- [`simple_two_arm_designer()`](https://declaredesign.org/r/designlibrary/reference/simple_two_arm_designer.md)
+  [`simple_factorial_designer()`](https://declaredesign.org/r/designlibrary/reference/simple_two_arm_designer.md)
+  [`simple_iv_designer()`](https://declaredesign.org/r/designlibrary/reference/simple_two_arm_designer.md)
+  [`simple_spillover_designer()`](https://declaredesign.org/r/designlibrary/reference/simple_two_arm_designer.md)
+  : Defunct designer aliases from DesignLibrary 0.1
+- [`get_design_code()`](https://declaredesign.org/r/designlibrary/reference/get_design_code.md)
+  [`match.call.defaults()`](https://declaredesign.org/r/designlibrary/reference/get_design_code.md)
+  : Defunct helpers from DesignLibrary 0.1

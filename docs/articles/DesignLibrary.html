@@ -36,6 +36,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="../articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul>
 </li>
       </ul>
@@ -128,7 +129,7 @@ available to <code><a href="../reference/make_design.html">make_design()</a></co
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/list_designs.html">list_designs</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; DesignLibrary library: 68 designs</span></span>
+<span><span class="co">#&gt; DesignLibrary library: 75 designs</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; * Getting started</span></span>
 <span><span class="co">#&gt;   two_arm_simple (Simple two-arm trial)</span></span>
@@ -143,6 +144,15 @@ available to <code><a href="../reference/make_design.html">make_design()</a></co
 <span><span class="co">#&gt;   pretest_posttest (Pretest-posttest design)</span></span>
 <span><span class="co">#&gt;   randomized_response (Randomized response)</span></span>
 <span><span class="co">#&gt;   mediation_analysis (Mediation analysis)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; * Other design templates</span></span>
+<span><span class="co">#&gt;   binary_iv (Binary instrumental variables)</span></span>
+<span><span class="co">#&gt;   cluster_sampling (Two-stage cluster sampling)</span></span>
+<span><span class="co">#&gt;   factorial (Factorial experiment)</span></span>
+<span><span class="co">#&gt;   process_tracing_bayes (Process tracing with two clues)</span></span>
+<span><span class="co">#&gt;   regression_discontinuity_polynomial (Regression discontinuity with a polynomial fit)</span></span>
+<span><span class="co">#&gt;   spillover (Two-arm trial with spillovers within groups)</span></span>
+<span><span class="co">#&gt;   two_arm_covariate (Two-arm trial with a possibly prognostic covariate)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; * Other RDSS designs</span></span>
 <span><span class="co">#&gt;   audit_experiment (audit experiment)</span></span>
@@ -170,17 +180,17 @@ table including redesignable parameters.</p>
 <div class="section level2">
 <h2 id="use-designlibrary-to-make-a-design">Use DesignLibrary to make a design<a class="anchor" aria-label="anchor" href="#use-designlibrary-to-make-a-design"></a>
 </h2>
+<p>With the library you can make a design like this:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span></span>
 <span><span class="va">my_design</span></span>
-<span><span class="co">#&gt; Research design with 6 steps</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Step 1 (parameters): declare_parameters(N = 1000, b = 0.2)</span></span>
-<span><span class="co">#&gt; Step 2 (model): declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1 = Y_Z_0 + b)</span></span>
-<span><span class="co">#&gt; Step 3 (inquiry): declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))</span></span>
-<span><span class="co">#&gt; Step 4 (assignment): declare_assignment(Z = complete_ra(n()))</span></span>
-<span><span class="co">#&gt; Step 5 (measurement): declare_measurement(Y = Z * Y_Z_1 + (1 - Z) * Y_Z_0)</span></span>
-<span><span class="co">#&gt; Step 6 (estimator): declare_estimator(Y ~ Z, .method = difference_in_means, inquiry = "ATE")</span></span>
+<span><span class="co">#&gt; Research design with 6 step(s):</span></span>
+<span><span class="co">#&gt;   [parameters] parameters (parameters)</span></span>
+<span><span class="co">#&gt;   [model] model (dgp)</span></span>
+<span><span class="co">#&gt;   [inquiry] ATE (inquiry)</span></span>
+<span><span class="co">#&gt;   [assignment] assignment (dgp)</span></span>
+<span><span class="co">#&gt;   [measurement] measurement (dgp)</span></span>
+<span><span class="co">#&gt;   [estimator] estimator (estimator)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Parameters and objects the design refers to:</span></span>
 <span><span class="co">#&gt;  name value   kind declared steps</span></span>
@@ -192,24 +202,24 @@ table including redesignable parameters.</p>
 </h2>
 <p>Parameters are taken from the design itself. Pass new values to
 <code><a href="../reference/make_design.html">make_design()</a></code>; under the hood this uses DeclareDesign’s
-<code>redesign()</code>. A core set of designs also keep DesignLibrary
+<code><a href="https://rdrr.io/pkg/DeclareDesign/man/redesign.html" class="external-link">redesign()</a></code>. A core set of designs also keep DesignLibrary
 0.1 names, so <code>two_arm_designer(N = 40, ate = 0.2)</code> is the
 same idea as
 <code>make_design("two_arm_flexible", N = 40, ate = 0.2)</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, b <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">simulate_design</span><span class="op">(</span>sims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/DeclareDesign/man/simulate_design.html" class="external-link">simulate_design</a></span><span class="op">(</span>sims <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 15</span></span></span>
 <span><span class="co">#&gt;   design   sim_ID term  estimate std.error statistic  p.value conf.low conf.high</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> design_1      1 Z        0.405    0.062<span style="text-decoration: underline;">3</span>      6.50 1.26<span style="color: #949494;">e</span><span style="color: #BB0000;">-10</span>   0.283      0.527</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> design_1      2 Z        0.202    0.066<span style="text-decoration: underline;">6</span>      3.03 2.53<span style="color: #949494;">e</span><span style="color: #BB0000;">- 3</span>   0.071<span style="text-decoration: underline;">0</span>     0.332</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> design_1      1 Z        0.313    0.063<span style="text-decoration: underline;">3</span>      4.95  8.93<span style="color: #949494;">e</span><span style="color: #BB0000;">-7</span>    0.189     0.437</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> design_1      2 Z        0.310    0.063<span style="text-decoration: underline;">2</span>      4.90  1.12<span style="color: #949494;">e</span><span style="color: #BB0000;">-6</span>    0.186     0.434</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: df &lt;dbl&gt;, outcome &lt;chr&gt;, estimator &lt;chr&gt;, inquiry &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   estimand &lt;dbl&gt;, b &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>You can now change all parameters in one go.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.3</span>, <span class="fl">.6</span><span class="op">)</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">simulate_design</span><span class="op">(</span>sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/DeclareDesign/man/simulate_design.html" class="external-link">simulate_design</a></span><span class="op">(</span>sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">estimate</span>, <span class="va">p.value</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span>  <span class="op">+</span> <span class="fu">facet_grid</span><span class="op">(</span><span class="va">N</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span></code></pre></div>
 <p><img src="DesignLibrary_files/figure-html/make-and-simulate-grid-1.png" class="r-plt" alt="" width="576"></p>
@@ -217,6 +227,8 @@ same idea as
 <div class="section level2">
 <h2 id="browse-in-shiny">Browse in Shiny<a class="anchor" aria-label="anchor" href="#browse-in-shiny"></a>
 </h2>
+<p>DesignLibrary comes bundled with a shiny app to let you inspect
+designs.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/run_shiny.html">run_shiny</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The app opens on a searchable library table. Click a row to open the
@@ -228,29 +240,29 @@ parameters. For a server deploy: install the package, run
 <div class="section level2">
 <h2 id="maintainer-tools">Maintainer tools<a class="anchor" aria-label="anchor" href="#maintainer-tools"></a>
 </h2>
-<p>A short set of helpers keeps the library honest:</p>
+<p>A short set of helpers are available to maintain the library:</p>
 <ul>
 <li>
-<code><a href="../reference/contributor_checklist.html">contributor_checklist()</a></code> — what a design file should
+<code><a href="../reference/contributor_checklist.html">contributor_checklist()</a></code>: list what a design file should
 satisfy</li>
 <li>
-<code><a href="../reference/audit_designs.html">audit_designs()</a></code> — load each design and check that YAML
+<code><a href="../reference/audit_designs.html">audit_designs()</a></code>: load each design and check that YAML
 <code>params:</code> names match redesignable objects</li>
 <li>
-<code><a href="../reference/bake_previews.html">bake_previews()</a></code> — write compact diagnosis previews
+<code><a href="../reference/bake_previews.html">bake_previews()</a></code>: write compact diagnosis previews
 (<code>sims = 100</code> by default) into
 <code>inst/previews/</code>
 </li>
 <li>
-<code><a href="../reference/refresh_library.html">refresh_library()</a></code> — index, audit, and bake in one
+<code><a href="../reference/refresh_library.html">refresh_library()</a></code>: index, audit, and bake in one
 step</li>
 </ul>
 <p>Run maintainer helpers from the package source tree, or set:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>DesignLibrary.root <span class="op">=</span> <span class="st">"C:/path/to/DesignLibrary"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/refresh_library.html">refresh_library</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>That is the whole loop: drop in a design file, use it from R or
-Shiny, and refresh the library when you change the set. Step-by-step
+<p>That is the whole workflow: drop in a new design file, use it from R
+or Shiny, and refresh the library when you change the set. Step-by-step
 contribution guidance is in
 <code><a href="../articles/contributing.html">vignette("contributing", package = "DesignLibrary")</a></code>.</p>
 </div>
@@ -265,7 +277,7 @@ contribution guidance is in
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

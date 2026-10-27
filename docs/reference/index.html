@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="../articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
@@ -301,10 +302,59 @@
 
         </dt>
         <dd>Create a blocked and clustered two-arm design</dd>
+
+        <dt>
+
+          <code><a href="two_arm_covariate_designer.html">two_arm_covariate_designer()</a></code>
+
+        </dt>
+        <dd>Create a two-arm design with a possibly prognostic covariate</dd>
+
+        <dt>
+
+          <code><a href="regression_discontinuity_designer.html">regression_discontinuity_designer()</a></code>
+
+        </dt>
+        <dd>Create a regression discontinuity design with a polynomial fit</dd>
+
+        <dt>
+
+          <code><a href="spillover_designer.html">spillover_designer()</a></code>
+
+        </dt>
+        <dd>Create a two-arm design with spillovers within groups</dd>
+
+        <dt>
+
+          <code><a href="cluster_sampling_designer.html">cluster_sampling_designer()</a></code>
+
+        </dt>
+        <dd>Create a two-stage cluster sampling design</dd>
+
+        <dt>
+
+          <code><a href="binary_iv_designer.html">binary_iv_designer()</a></code>
+
+        </dt>
+        <dd>Create a binary instrumental variables design</dd>
+
+        <dt>
+
+          <code><a href="process_tracing_designer.html">process_tracing_designer()</a></code>
+
+        </dt>
+        <dd>Create a process tracing design with two clues</dd>
+
+        <dt>
+
+          <code><a href="factorial_designer.html">factorial_designer()</a></code>
+
+        </dt>
+        <dd>Create a 2^k factorial design</dd>
       </dl></div><div class="section level2">
+      <h2 id="defunct">Defunct<a class="anchor" aria-label="anchor" href="#defunct"></a></h2>
 
-      <h3 id="unported-stubs">Unported stubs<a class="anchor" aria-label="anchor" href="#unported-stubs"></a></h3>
-
+      <div class="section-desc"><p>DesignLibrary 0.1 functions removed in 2.0.0. Each stops with an error naming its replacement.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -313,10 +363,17 @@
 
       <dl><dt>
 
-          <code><a href="designers-not-ported.html">binary_iv_designer()</a></code> <code><a href="designers-not-ported.html">cluster_sampling_designer()</a></code> <code><a href="designers-not-ported.html">factorial_designer()</a></code> <code><a href="designers-not-ported.html">process_tracing_designer()</a></code> <code><a href="designers-not-ported.html">regression_discontinuity_designer()</a></code> <code><a href="designers-not-ported.html">spillover_designer()</a></code> <code><a href="designers-not-ported.html">two_arm_covariate_designer()</a></code>
+          <code><a href="simple_two_arm_designer.html">simple_two_arm_designer()</a></code> <code><a href="simple_two_arm_designer.html">simple_factorial_designer()</a></code> <code><a href="simple_two_arm_designer.html">simple_iv_designer()</a></code> <code><a href="simple_two_arm_designer.html">simple_spillover_designer()</a></code>
 
         </dt>
-        <dd>DesignLibrary 0.1 designers not ported as-is</dd>
+        <dd>Defunct designer aliases from DesignLibrary 0.1</dd>
+
+        <dt>
+
+          <code><a href="get_design_code.html">get_design_code()</a></code> <code><a href="get_design_code.html">match.call.defaults()</a></code>
+
+        </dt>
+        <dd>Defunct helpers from DesignLibrary 0.1</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -327,7 +384,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -26,7 +26,6 @@ Character vector (possibly empty).
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 preferred_diagnosands("two_arm_simple")
-} # }
+#> [1] "bias"  "power"
 ```

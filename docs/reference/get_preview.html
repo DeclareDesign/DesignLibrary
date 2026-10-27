@@ -23,6 +23,7 @@ refresh_library()."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="../articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
@@ -49,31 +50,34 @@ refresh_library()."></head><body>
 <span>  design <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, <span class="st">"two_arm_flexible"</span>, <span class="st">"three_arm"</span>, <span class="st">"two_by_two"</span>,</span>
 <span>    <span class="st">"two_arm_block_cluster"</span>, <span class="st">"two_arm_with_blocks"</span>, <span class="st">"two_arm_attrition"</span>,</span>
 <span>    <span class="st">"factorial_2x2x2"</span>, <span class="st">"multiarm_trial"</span>, <span class="st">"pretest_posttest"</span>, <span class="st">"randomized_response"</span>,</span>
-<span>    <span class="st">"mediation_analysis"</span>, <span class="st">"audit_experiment"</span>, <span class="st">"audit_intervention"</span>, <span class="st">"baseline_over_N"</span>,</span>
-<span>    <span class="st">"blocked_and_clustered"</span>, <span class="st">"bootstrapped"</span>, <span class="st">"cluster_random_sampling"</span>,</span>
-<span>    <span class="st">"conditional_expectation"</span>, <span class="st">"conjoint"</span>, <span class="st">"covariate_adjustment"</span>,</span>
-<span>    <span class="st">"declaration_using_declare"</span>, <span class="st">"design_10_2"</span>, <span class="st">"design_10_4"</span>, <span class="st">"diff_in_diff"</span>, </span>
+<span>    <span class="st">"mediation_analysis"</span>, <span class="st">"binary_iv"</span>, <span class="st">"cluster_sampling"</span>, <span class="st">"factorial"</span>,</span>
+<span>    <span class="st">"process_tracing_bayes"</span>, <span class="st">"regression_discontinuity_polynomial"</span>, <span class="st">"spillover"</span>,</span>
+<span>    <span class="st">"two_arm_covariate"</span>, <span class="st">"audit_experiment"</span>, <span class="st">"audit_intervention"</span>, <span class="st">"baseline_over_N"</span>,</span>
+<span>    <span class="st">"blocked_and_clustered"</span>, <span class="st">"bootstrapped"</span>, <span class="st">"cluster_random_sampling"</span>, </span>
 <span>    </span>
+<span>    <span class="st">"conditional_expectation"</span>, <span class="st">"conjoint"</span>, <span class="st">"covariate_adjustment"</span>,</span>
+<span>    <span class="st">"declaration_using_declare"</span>, <span class="st">"design_10_2"</span>, <span class="st">"design_10_4"</span>, <span class="st">"diff_in_diff"</span>,</span>
 <span>    <span class="st">"encouragement"</span>, <span class="st">"example_declaration"</span>, <span class="st">"factorial_2x2"</span>, <span class="st">"instrumental_variables"</span>,</span>
 <span>    <span class="st">"italian_village"</span>, <span class="st">"italian_village_bayes"</span>, <span class="st">"italian_village_continued"</span>,</span>
 <span>    <span class="st">"latent_variables"</span>, <span class="st">"lin_estimator"</span>, <span class="st">"linear_regression"</span>, <span class="st">"list_experiment"</span>,</span>
 <span>    <span class="st">"list_or_direct_questions"</span>, <span class="st">"logit_probit_ols"</span>, <span class="st">"matching"</span>, <span class="st">"multi_site_studies"</span>,</span>
-<span>    <span class="st">"multilevel"</span>, <span class="st">"multilevel_answer_strategies"</span>, <span class="st">"network_experiment"</span>,</span>
+<span>    <span class="st">"multilevel"</span>, <span class="st">"multilevel_answer_strategies"</span>, </span>
+<span>     <span class="st">"network_experiment"</span>,</span>
 <span>    <span class="st">"pate_with_sampling"</span>, <span class="st">"population_estimands"</span>, <span class="st">"process_tracing"</span>, <span class="st">"random_forests"</span>,</span>
-<span>    <span class="st">"randomization_inference"</span>, <span class="st">"randomized_saturation"</span>, </span>
-<span>     <span class="st">"regression_discontinuity"</span>,</span>
+<span>    <span class="st">"randomization_inference"</span>, <span class="st">"randomized_saturation"</span>, <span class="st">"regression_discontinuity"</span>,</span>
 <span>    <span class="st">"regression_discontinuity_fuzzy"</span>, <span class="st">"simple_random_sampling"</span>, <span class="st">"single_period_two_arm"</span>,</span>
 <span>    <span class="st">"stepped_wedge"</span>, <span class="st">"structural_estimation"</span>, <span class="st">"subgroup_effects"</span>, <span class="st">"survey_nonresponse"</span>,</span>
 <span>    <span class="st">"trust_game"</span>, <span class="st">"two_arm_bare_bones"</span>, <span class="st">"two_arm_block_rdss"</span>, <span class="st">"two_arm_rdss_1"</span>,</span>
-<span>    <span class="st">"two_arm_rdss_2"</span>, <span class="st">"two_arm_trial_rdss"</span>, <span class="st">"two_arm_with_blocks_rdss"</span>,</span>
+<span>    <span class="st">"two_arm_rdss_2"</span>, <span class="st">"two_arm_trial_rdss"</span>, <span class="st">"two_arm_with_blocks_rdss"</span>, </span>
+<span>    </span>
 <span>    <span class="st">"two_outcome_model_a"</span>, <span class="st">"two_outcome_model_b"</span>, <span class="st">"uncertainty_over_effect_size"</span>,</span>
-<span>    <span class="st">"village_campaign"</span>, <span class="st">"17.1"</span>, <span class="st">"17.2"</span>, <span class="st">"11.1"</span>, <span class="st">"18.5"</span>, <span class="st">"9.5"</span>, <span class="st">"15.3"</span>, <span class="st">"11.4"</span>, <span class="st">"17.5"</span>, </span>
-<span> </span>
-<span>       <span class="st">"18.2"</span>, <span class="st">"10.1"</span>, <span class="st">"10.2"</span>, <span class="st">"10.4"</span>, <span class="st">"16.3"</span>, <span class="st">"18.8"</span>, <span class="st">"5.1"</span>, <span class="st">"18.7"</span>, <span class="st">"16.4"</span>, <span class="st">"9.1"</span>,</span>
-<span>    <span class="st">"9.3"</span>, <span class="st">"9.2"</span>, <span class="st">"15.6"</span>, <span class="st">"18.3"</span>, <span class="st">"13.1"</span>, <span class="st">"17.3"</span>, <span class="st">"17.4"</span>, <span class="st">"11.5"</span>, <span class="st">"16.2"</span>, <span class="st">"19.4"</span>, <span class="st">"15.4"</span>,</span>
+<span>    <span class="st">"village_campaign"</span>, <span class="st">"17.1"</span>, <span class="st">"17.2"</span>, <span class="st">"11.1"</span>, <span class="st">"18.5"</span>, <span class="st">"9.5"</span>, <span class="st">"15.3"</span>, <span class="st">"11.4"</span>, <span class="st">"17.5"</span>,</span>
+<span>    <span class="st">"18.2"</span>, <span class="st">"10.1"</span>, <span class="st">"10.2"</span>, <span class="st">"10.4"</span>, <span class="st">"16.3"</span>, <span class="st">"18.8"</span>, <span class="st">"5.1"</span>, <span class="st">"18.7"</span>, <span class="st">"16.4"</span>, <span class="st">"9.1"</span>, <span class="st">"9.3"</span>,</span>
+<span>    <span class="st">"9.2"</span>, <span class="st">"15.6"</span>, <span class="st">"18.3"</span>, <span class="st">"13.1"</span>, <span class="st">"17.3"</span>, <span class="st">"17.4"</span>, <span class="st">"11.5"</span>, <span class="st">"16.2"</span>, <span class="st">"19.4"</span>, <span class="st">"15.4"</span>,</span>
 <span>    <span class="st">"15.5"</span>, <span class="st">"18.13"</span>, <span class="st">"4.1"</span>, <span class="st">"7.1"</span>, <span class="st">"16.1b"</span>, <span class="st">"19.1"</span>, <span class="st">"9.7"</span>, <span class="st">"18.12"</span>, <span class="st">"16.5"</span>, <span class="st">"16.6"</span>,</span>
 <span>    <span class="st">"15.1"</span>, <span class="st">"18.11"</span>, <span class="st">"18.10"</span>, <span class="st">"19.2"</span>, <span class="st">"18.6"</span>, <span class="st">"15.2"</span>, <span class="st">"17.6"</span>, <span class="st">"11.3"</span>, <span class="st">"18.4"</span>, <span class="st">"2.1"</span>,</span>
-<span>    <span class="st">"13.2"</span>, <span class="st">"18.1"</span>, <span class="st">"2.2"</span>, <span class="st">"10.3a"</span>, <span class="st">"10.3b"</span>, <span class="st">"11.2"</span>, <span class="st">"12.1a"</span><span class="op">)</span></span>
+<span>    <span class="st">"13.2"</span>, <span class="st">"18.1"</span>, </span>
+<span>     <span class="st">"2.2"</span>, <span class="st">"10.3a"</span>, <span class="st">"10.3b"</span>, <span class="st">"11.2"</span>, <span class="st">"12.1a"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,7 +103,7 @@ refresh_library()."></head><body>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

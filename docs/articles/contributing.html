@@ -36,6 +36,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="../articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul>
 </li>
       </ul>
@@ -144,8 +145,8 @@ diagnosis / redesign behave as you expect. Use
 <h2 id="pull-request">5. Pull request<a class="anchor" aria-label="anchor" href="#pull-request"></a>
 </h2>
 <p>Open a pull request from your fork to
-<code>macartan/DesignLibrary</code>. Keep the PR focused on the new or
-updated design file and any packages it needs. Mention extra
+<code>DeclareDesign/DesignLibrary</code>. Keep the PR focused on the new
+or updated design file and any packages it needs. Mention extra
 dependencies in YAML <code>packages:</code> and in the PR description
 when relevant.</p>
 </div>
@@ -166,8 +167,9 @@ of the file.</p>
 <tbody>
 <tr class="odd">
 <td><code>id</code></td>
-<td>Substantive snake_case name; should match the filename stem
-(e.g. <code>two_arm_trial</code>).</td>
+<td>Substantive snake_case name (e.g. <code>two_arm_simple</code>).
+Defaults to the filename stem; a few book designs use a different
+id.</td>
 </tr>
 <tr class="even">
 <td><code>alias</code></td>
@@ -229,6 +231,14 @@ redesign help box always show the note.</td>
 <code>false</code> for incomplete or heavy designs.</td>
 </tr>
 <tr class="odd">
+<td><code>functional</code></td>
+<td>
+<code>true</code> (default) or <code>false</code>. Set
+<code>false</code> to park a design whose dependencies are unavailable;
+it is skipped by the audit, the smoke tests, and dependency
+installation, and is never shown in Shiny.</td>
+</tr>
+<tr class="even">
 <td><code>object</code></td>
 <td>Name of the design object in the file. Omit if the object is named
 <code>design</code>.</td>
@@ -237,7 +247,7 @@ redesign help box always show the note.</td>
 </table>
 <p>Example header:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> two_arm_trial</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> two_arm_simple</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">label</span><span class="kw">:</span><span class="at"> Simple two-arm trial</span></span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">category</span><span class="kw">:</span><span class="at"> template</span></span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">keywords</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">experiment</span><span class="kw">,</span><span class="at"> two-arm</span><span class="kw">]</span></span>
@@ -255,6 +265,10 @@ redesign help box always show the note.</td>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DeclareDesign/DesignLibrary" class="external-link">DesignLibrary</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: DeclareDesign</span></span>
+<span><span class="co">#&gt; Loading required package: randomizr</span></span>
+<span><span class="co">#&gt; Loading required package: fabricatr</span></span>
+<span><span class="co">#&gt; Loading required package: estimatr</span></span>
 <span><span class="fu"><a href="../reference/contributor_checklist.html">contributor_checklist</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "File lives in inst/designs/ and is self-contained (no source() of other designs)."                                                                                                                                                                                                                                                                                                              </span></span>
 <span><span class="co">#&gt;  [2] "Filename matches the substantive id (e.g. two_arm_simple.R)."                                                                                                                                                                                                                                                                                                                                   </span></span>
@@ -268,16 +282,6 @@ redesign help box always show the note.</td>
 <span><span class="co">#&gt; [10] "Extra packages listed under packages: and available to install."                                                                                                                                                                                                                                                                                                                                </span></span>
 <span><span class="co">#&gt; [11] "Design evaluates under DeclareDesign; redesign() works for documented parameters. A design that loads but does not run fails the audit."                                                                                                                                                                                                                                                        </span></span>
 <span><span class="co">#&gt; [12] "Run refresh_library() from the package source tree after adding or editing designs (or set options(DesignLibrary.root = \"...\"))."</span></span></code></pre></div>
-<p>In R the same helpers are <code><a href="../reference/contributor_checklist.html">contributor_checklist()</a></code>,
-<code><a href="../reference/audit_designs.html">audit_designs()</a></code>, and <code><a href="../reference/refresh_library.html">refresh_library()</a></code>.</p>
-<p>Eight designs also have DesignLibrary 0.1 names:
-<code><a href="../reference/two_arm_designer.html">two_arm_designer()</a></code>,
-<code><a href="../reference/two_arm_attrition_designer.html">two_arm_attrition_designer()</a></code>,
-<code><a href="../reference/pretest_posttest_designer.html">pretest_posttest_designer()</a></code>,
-<code><a href="../reference/randomized_response_designer.html">randomized_response_designer()</a></code>,
-<code><a href="../reference/mediation_analysis_designer.html">mediation_analysis_designer()</a></code>,
-<code><a href="../reference/multi_arm_designer.html">multi_arm_designer()</a></code>, <code><a href="../reference/two_by_two_designer.html">two_by_two_designer()</a></code>,
-and <code><a href="../reference/block_cluster_two_arm_designer.html">block_cluster_two_arm_designer()</a></code>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -290,7 +294,7 @@ and <code><a href="../reference/block_cluster_two_arm_designer.html">block_clust
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

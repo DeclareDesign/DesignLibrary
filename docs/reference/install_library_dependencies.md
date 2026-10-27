@@ -1,11 +1,12 @@
 # Install DesignLibrary system dependencies
 
-Installs package Imports (and, by default, Suggests needed for the Shiny
-browser), plus any extra packages declared in design YAML `packages:`
-fields. GitHub-only stack packages (`DeclareDesign`, `fabricatr`,
-`estimatr`) come from the rewrite branches via
+Installs package Depends and Imports (and, by default, Suggests needed
+for the Shiny browser), plus any extra packages declared in design YAML
+`packages:` fields. Everything comes from CRAN except `interference`
+(used by `network_experiment`), which comes from GitHub via
 [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html).
-They are never installed from CRAN.
+An installed `DeclareDesign`, `fabricatr`, `estimatr`, or `randomizr`
+older than 2.0.0 is upgraded from CRAN.
 
 ## Usage
 
@@ -15,7 +16,8 @@ install_library_dependencies(
   include_suggests = FALSE,
   ask = FALSE,
   upgrade = "never",
-  verbose = TRUE
+  verbose = TRUE,
+  dry_run = FALSE
 )
 ```
 
@@ -34,27 +36,33 @@ install_library_dependencies(
 
 - ask:
 
-  Passed through to install helpers when supported.
+  Passed to
+  [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html).
 
 - upgrade:
 
   Passed to
-  [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html)
-  /
-  [`install.packages()`](https://rdrr.io/r/utils/install.packages.html).
+  [`remotes::install_github()`](https://remotes.r-lib.org/reference/install_github.html).
 
 - verbose:
 
   Print progress messages.
 
+- dry_run:
+
+  If `TRUE`, install nothing and return the plan: `to_install` names the
+  packages that would be installed or upgraded.
+
 ## Value
 
-Invisibly, a list with `installed`, `already_ok`, and `failed`.
+Invisibly, a list with `installed`, `already_ok`, `failed`, and
+`to_install`. If a package that was already loaded is upgraded, restart
+R before using it; a message says so.
 
 ## Details
 
 Typical server workflow:
 
-    remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+    install.packages("DesignLibrary")
     DesignLibrary::install_library_dependencies()
     DesignLibrary::copy_library_shiny("/path/to/shiny-app")

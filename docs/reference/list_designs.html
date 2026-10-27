@@ -37,6 +37,7 @@ parameters from a loaded design. Row order matches print order."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="../articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
@@ -95,6 +96,96 @@ lists every design.</p></dd>
     <p>A data frame with class <code>design_library_list</code>.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">list_designs</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DesignLibrary library: 75 designs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Getting started</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_simple (Simple two-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_flexible (Flexible two-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   three_arm (Three-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_by_two (2x2 factorial (library))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_block_cluster (Two arm trial with blocks and clusters)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_with_blocks (Two-arm trial with blocks)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_attrition (Two-arm trial with attrition)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   factorial_2x2x2 (2x2x2 factorial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   multiarm_trial (Multi-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pretest_posttest (Pretest-posttest design)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   randomized_response (Randomized response)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   mediation_analysis (Mediation analysis)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Other design templates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   binary_iv (Binary instrumental variables)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cluster_sampling (Two-stage cluster sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   factorial (Factorial experiment)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   process_tracing_bayes (Process tracing with two clues)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   regression_discontinuity_polynomial (Regression discontinuity with a polynomial fit)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   spillover (Two-arm trial with spillovers within groups)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_covariate (Two-arm trial with a possibly prognostic covariate)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Other RDSS designs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   audit_experiment (audit experiment)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   audit_intervention (audit intervention)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   baseline_over_N (A baseline declaration intended to be reed over $N$.)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   blocked_and_clustered (blocked and clustered)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   bootstrapped (bootstrapped)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cluster_random_sampling (cluster random sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   conditional_expectation (Conditional expectation function)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   conjoint (conjoint)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   covariate_adjustment (covariate adjustment)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   declaration_using_declare (Example of declaration using Declare)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ... and 46 more</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> print(list_designs(), list_all = TRUE) lists every design.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> See design_info("id") or get_args("id") for details;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> as.data.frame(list_designs(discover_params = TRUE)) for parameters.</span>
+<span class="r-in"><span><span class="fu">list_designs</span><span class="op">(</span>shiny_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DesignLibrary library: 55 designs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Getting started</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_simple (Simple two-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_flexible (Flexible two-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   three_arm (Three-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_by_two (2x2 factorial (library))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_block_cluster (Two arm trial with blocks and clusters)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_with_blocks (Two-arm trial with blocks)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_attrition (Two-arm trial with attrition)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   factorial_2x2x2 (2x2x2 factorial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   multiarm_trial (Multi-arm trial)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   pretest_posttest (Pretest-posttest design)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   randomized_response (Randomized response)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   mediation_analysis (Mediation analysis)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Other design templates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   binary_iv (Binary instrumental variables)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cluster_sampling (Two-stage cluster sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   factorial (Factorial experiment)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   process_tracing_bayes (Process tracing with two clues)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   regression_discontinuity_polynomial (Regression discontinuity with a polynomial fit)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   spillover (Two-arm trial with spillovers within groups)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   two_arm_covariate (Two-arm trial with a possibly prognostic covariate)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> * Other RDSS designs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   audit_experiment (audit experiment)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   audit_intervention (audit intervention)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   blocked_and_clustered (blocked and clustered)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   bootstrapped (bootstrapped)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cluster_random_sampling (cluster random sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   conjoint (conjoint)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   covariate_adjustment (covariate adjustment)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   diff_in_diff (diff-in-diff)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   encouragement (encouragement)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   factorial_2x2 (factorial 2x2)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ... and 26 more</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> print(list_designs(), list_all = TRUE) lists every design.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> See design_info("id") or get_args("id") for details;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> as.data.frame(list_designs(discover_params = TRUE)) for parameters.</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
@@ -104,7 +195,7 @@ lists every design.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

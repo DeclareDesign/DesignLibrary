@@ -56,3 +56,27 @@ A design object.
 ## See also
 
 [`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
+
+## Examples
+
+``` r
+pretest_posttest_designer(N = 40, attrition_rate = 0.2)
+#> Research design with 8 step(s):
+#>   [parameters] parameters (parameters)
+#>   [model] model (dgp)
+#>   [inquiry] ATE (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] Change score (estimator)
+#>   [estimator] Condition on pretest (estimator)
+#>   [estimator] Posttest only (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>            name value   kind declared steps
+#>             ate  0.25 scalar     TRUE  1, 2
+#>  attrition_rate   0.2 scalar     TRUE  1, 5
+#>               N    40 scalar     TRUE  1, 2
+#>             rho   0.5 scalar     TRUE  1, 2
+#>            sd_1     1 scalar     TRUE  1, 2
+#>            sd_2     1 scalar     TRUE  1, 2
+```

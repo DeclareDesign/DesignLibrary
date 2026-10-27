@@ -80,3 +80,28 @@ entries when supplied.
 ## See also
 
 [`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
+
+## Examples
+
+``` r
+two_by_two_designer(N = 40, outcome_means = c(0, 0.5, 0.5, 1))
+#> Research design with 7 step(s):
+#>   [parameters] parameters (parameters)
+#>   [model] model (dgp)
+#>   [inquiry] inquiry (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] No_Interaction (estimator)
+#>   [estimator] Interaction (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>           name             value   kind declared steps
+#>              N                40 scalar     TRUE  1, 2
+#>  outcome_means c(0, 0.5, 0.5, 1) vector     TRUE  1, 2
+#>    outcome_sds     c(0, 0, 0, 0) vector     TRUE  1, 2
+#>         prob_A               0.5 scalar     TRUE  1, 4
+#>         prob_B               0.5 scalar     TRUE  1, 4
+#>           sd_i                 1 scalar     TRUE  1, 2
+#>       weight_A               0.5 scalar     TRUE  1, 3
+#>       weight_B               0.5 scalar     TRUE  1, 3
+```

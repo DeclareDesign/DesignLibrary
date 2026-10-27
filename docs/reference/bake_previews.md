@@ -6,7 +6,7 @@ they do not abort the rest of the bake.
 ## Usage
 
 ``` r
-bake_previews(designs = NULL, sims = 100, seed = 343)
+bake_previews(designs = NULL, sims = 100, seed = 343, dir = NULL)
 ```
 
 ## Arguments
@@ -25,6 +25,11 @@ bake_previews(designs = NULL, sims = 100, seed = 343)
   not depend on which other designs were baked with it. The caller's
   random number stream is restored on exit. `NULL` leaves the stream
   alone.
+
+- dir:
+
+  Directory to write previews into. `NULL` (default) means
+  `inst/previews` in the source tree; an installed package is refused.
 
 ## Value
 

@@ -21,6 +21,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="../articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="../articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><a class="external-link nav-link" href="https://github.com/DeclareDesign/DesignLibrary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
@@ -35,7 +36,40 @@
       <small>Source: <a href="https://github.com/DeclareDesign/DesignLibrary/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
-  </main></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="designlibrary-200">DesignLibrary 2.0.0<a class="anchor" aria-label="anchor" href="#designlibrary-200"></a></h2>
+<p><strong>DesignLibrary 2.0 is the package developed as ResearchDesigns, and it supersedes DesignLibrary 0.1.</strong> Designs are self-contained declaration files read through <code><a href="../reference/make_design.html">make_design()</a></code>, <code><a href="../reference/list_designs.html">list_designs()</a></code>, and <code><a href="../reference/get_args.html">get_args()</a></code>, and parameters are read from the design itself rather than from a designer function’s formals. It requires DeclareDesign 2.0.</p>
+<p><strong>Provenance.</strong> The design declarations in <code>inst/designs/</code> are vouched for by the package authors. The library machinery around them (calling, listing, and displaying designs, including the Shiny app) was written with AI coding models, Claude and models used through Cursor among them.</p>
+<p><strong>Code written for DesignLibrary 0.1 mostly keeps running.</strong> Fifteen designers keep their 0.1 names and argument names (<code><a href="../reference/two_arm_designer.html">two_arm_designer()</a></code>, <code><a href="../reference/two_arm_attrition_designer.html">two_arm_attrition_designer()</a></code>, <code><a href="../reference/pretest_posttest_designer.html">pretest_posttest_designer()</a></code>, <code><a href="../reference/randomized_response_designer.html">randomized_response_designer()</a></code>, <code><a href="../reference/mediation_analysis_designer.html">mediation_analysis_designer()</a></code>, <code><a href="../reference/multi_arm_designer.html">multi_arm_designer()</a></code>, <code><a href="../reference/two_by_two_designer.html">two_by_two_designer()</a></code>, <code><a href="../reference/block_cluster_two_arm_designer.html">block_cluster_two_arm_designer()</a></code>, <code><a href="../reference/two_arm_covariate_designer.html">two_arm_covariate_designer()</a></code>, <code><a href="../reference/regression_discontinuity_designer.html">regression_discontinuity_designer()</a></code>, <code><a href="../reference/spillover_designer.html">spillover_designer()</a></code>, <code><a href="../reference/cluster_sampling_designer.html">cluster_sampling_designer()</a></code>, <code><a href="../reference/binary_iv_designer.html">binary_iv_designer()</a></code>, <code><a href="../reference/process_tracing_designer.html">process_tracing_designer()</a></code>, and <code><a href="../reference/factorial_designer.html">factorial_designer()</a></code>), each routed to a library design, so every 0.1 designer has a 2.0 counterpart. The last seven are new library templates flattened from 0.1 (<code>two_arm_covariate</code>, <code>regression_discontinuity_polynomial</code>, <code>spillover</code>, <code>cluster_sampling</code>, <code>binary_iv</code>, <code>process_tracing_bayes</code>, and <code>factorial</code>); at the same arguments and seed, each draws what its 0.1 designer drew. The exception is <code>cluster_sampling</code> away from its defaults: <code><a href="../reference/make_design.html">make_design()</a></code> builds the fixed population at the defaults before redesigning, so the population has the same distribution but comes from a later point in the random stream. <code><a href="../reference/process_tracing_designer.html">process_tracing_designer()</a></code> fixes its estimator labels at “Straw in the Wind” and “Smoking Gun” and warns when <code>label_E1</code> or <code>label_E2</code> asks for others. <code>factorial</code> builds its <code>2^k</code> potential outcomes, factor indicators, and inquiries inside single steps as functions of <code>k</code>, so <code>redesign(design, k = 4)</code> gives a 2^4 design; <code>outcome_means</code>, <code>outcome_sds</code>, <code>assignment_probs</code>, and <code>treatment_names</code> default to the lengths <code>k</code> implies.</p>
+<div class="section level3">
+<h3 id="breaking-changes-relative-to-2-0-0">Breaking changes relative to 0.1.10<a class="anchor" aria-label="anchor" href="#breaking-changes-relative-to-2-0-0"></a></h3>
+<p><code><a href="../articles/upgrading.html">vignette("upgrading")</a></code> works through each of these with code, and lists the ones that change results without an error.</p>
+<p>Each removed function and argument below stops with an error that names its replacement.</p>
+<ul><li>
+<code><a href="../reference/simple_two_arm_designer.html">simple_two_arm_designer()</a></code>, <code><a href="../reference/simple_two_arm_designer.html">simple_factorial_designer()</a></code>, <code><a href="../reference/simple_two_arm_designer.html">simple_iv_designer()</a></code>, and <code><a href="../reference/simple_two_arm_designer.html">simple_spillover_designer()</a></code> (deprecated in 0.1) are defunct. Use <code><a href="../reference/two_arm_designer.html">two_arm_designer()</a></code>, <code><a href="../reference/two_by_two_designer.html">two_by_two_designer()</a></code>, <code><a href="../reference/binary_iv_designer.html">binary_iv_designer()</a></code>, and <code><a href="../reference/spillover_designer.html">spillover_designer()</a></code>, which take the same arguments.</li>
+<li>
+<code><a href="../reference/get_design_code.html">get_design_code()</a></code> is defunct, and designs no longer carry the <code>code</code>, <code>description</code>, <code>definitions</code>, or <code>shiny_arguments</code> attributes. Use <code>get_code("&lt;id&gt;")</code> for a design’s source (each designer’s help page names its id), and <code><a href="../reference/get_args.html">get_args()</a></code> or <code><a href="../reference/design_info.html">design_info()</a></code> for its parameters.</li>
+<li>
+<code><a href="../reference/get_design_code.html">match.call.defaults()</a></code> is defunct. Use <code><a href="https://rdrr.io/r/base/match.call.html" class="external-link">match.call()</a></code> and <code><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals()</a></code>.</li>
+<li>
+<code><a href="../reference/block_cluster_two_arm_designer.html">block_cluster_two_arm_designer()</a></code> no longer takes <code>N</code>, <code>sd</code>, <code>sd_i_1</code>, <code>rho</code>, <code>control_mean</code>, or <code>treatment_mean</code>. Set the sample size through <code>N_blocks</code>, <code>N_clusters_in_block</code>, and <code>N_i_in_cluster</code>, the shocks through <code>sd_block</code>, <code>sd_cluster</code>, and <code>sd_i</code>, and the effect through <code>ate</code>. Its defaults are now 20 blocks of 4 clusters of 10 units, each shock with standard deviation 0.577, and <code>ate = 0.2</code> (0.1: one block of 100 single-unit clusters and <code>ate = 0</code>). <code>assignment_probs</code> takes one probability, not one per block. <code>verbose</code> is ignored with a warning.</li>
+<li>
+<code><a href="../reference/multi_arm_designer.html">multi_arm_designer()</a></code> defaults to <code>N = 90</code> (0.1: 30). As in 0.1, it declares an inquiry for every pair of arms (<code>ate_Y_2_1</code>, <code>ate_Y_3_1</code>, <code>ate_Y_3_2</code>, and so on) and estimates each by a difference in means between its two arms under labels like <code>"DIM (Z_2 - Z_1)"</code>. The contrasts between two treatment arms are kept on purpose: they are the ones a multi-arm study is most often underpowered for.</li>
+<li>
+<code><a href="../reference/mediation_analysis_designer.html">mediation_analysis_designer()</a></code>’s inquiries <code>Indirect_0</code> and <code>Indirect_1</code> are now <code>Mediator_Effect_0</code> and <code>Mediator_Effect_1</code>, with the same values.</li>
+<li>
+<code><a href="../reference/process_tracing_designer.html">process_tracing_designer()</a></code> keeps its estimator labels at <code>"Straw in the Wind"</code> and <code>"Smoking Gun"</code> and warns when <code>label_E1</code> or <code>label_E2</code> asks for others.</li>
+<li>
+<code>args_to_fix</code> is ignored with a warning when non-empty: every parameter stays redesignable on the returned design.</li>
+<li>Designs are DeclareDesign 2.0 designs. They have no separate potential outcomes or reveal steps, and some step names differ (the inquiry step of <code><a href="../reference/factorial_designer.html">factorial_designer()</a></code> is <code>"inquiry"</code>, not <code>"ATE"</code>). Inquiry and estimator labels are otherwise those of 0.1. Code that picks steps by name or position needs checking.</li>
+<li>To sweep a parameter, use <code>redesign(two_arm_designer(), N = c(50, 100))</code>. <code>expand_design(two_arm_designer, N = c(50, 100))</code> still works but is deprecated in DeclareDesign 2.0.</li>
+<li>Requires R 4.1 and DeclareDesign, fabricatr, estimatr, and randomizr 2.0.</li>
+</ul><p><strong><code><a href="../reference/make_design.html">make_design()</a></code>’s first argument is <code>.design</code>, and <code><a href="../reference/get_code.html">get_code()</a></code>’s are <code>.design</code> and <code>.style</code>.</strong> As <code>design</code>, it was partially matched by a parameter named <code>d</code>, so <code>make_design("mediation_analysis", d = 0.3)</code> read 0.3 as the design id and failed. A positional id is unaffected; <code>make_design(design = "x")</code> must become <code>make_design(.design = "x")</code> or <code>make_design("x")</code>. <code>get_code(id, style = "simple")</code> becomes <code>get_code(id, .style = "simple")</code>.</p>
+<p><strong>Renamed from ResearchDesigns.</strong> The S3 classes <code>research_designs_*</code> are now <code>design_library_*</code>, and the options <code>researchdesigns.*</code> are now <code>designlibrary.*</code>.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
@@ -43,7 +77,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

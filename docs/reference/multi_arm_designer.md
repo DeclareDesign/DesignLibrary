@@ -10,9 +10,11 @@ before calling
 [`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md).
 `make_design("multiarm_trial", m_arms = 4)` does the same inside the
 design: constant vectors are repeated and conditions `1..k` become
-`1..m_arms`. Any other wrong-length vector errors. Inquiries are
-`mean(Y(k) - Y(1))`; estimation is one `lm_robust`. Library-file knobs
-match these formals.
+`1..m_arms`. Any other wrong-length vector errors. Inquiries are the
+differences in arm means for every pair of arms, `ate_Y_j_k`, and each
+is estimated by a difference in means between its two arms (estimator
+`"DIM (Z_j - Z_k)"`). The contrasts between two treatment arms are
+usually the least powered. Library-file knobs match these formals.
 
 ## Usage
 
@@ -76,9 +78,91 @@ A design object.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 make_design("multiarm_trial", N = 90)
+#> Research design with 5 step(s):
+#>   [model] model (dgp)
+#>   [inquiry] inquiry (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] estimator (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>           name                                    value     kind declared
+#>     conditions                                      1:3   vector    FALSE
+#>         m_arms                                        3   scalar    FALSE
+#>              N                                       90   scalar    FALSE
+#>  outcome_means                               c(0, 0, 0)   vector    FALSE
+#>    outcome_sds                               c(0, 0, 0)   vector    FALSE
+#>        per_arm function (x, m_arms) { k <- length(x)... function    FALSE
+#>           sd_i                                        1   scalar    FALSE
+#>              Y function (Z, u, outcome_sds, outcome_... function    FALSE
+#>              ~ function (...) { .External2(ffi_tilde... function    FALSE
+#>       steps
+#>        3, 5
+#>  2, 3, 4, 5
+#>           1
+#>        2, 4
+#>           4
+#>  2, 3, 4, 5
+#>           1
+#>        4, 5
+#>           5
 multi_arm_designer(m_arms = 4)
+#> Research design with 5 step(s):
+#>   [model] model (dgp)
+#>   [inquiry] inquiry (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] estimator (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>           name                                    value     kind declared
+#>     conditions                                      1:4   vector    FALSE
+#>         m_arms                                       4L   scalar    FALSE
+#>              N                                       90   scalar    FALSE
+#>  outcome_means                            c(0, 0, 0, 0)   vector    FALSE
+#>    outcome_sds                            c(0, 0, 0, 0)   vector    FALSE
+#>        per_arm function (x, m_arms) { k <- length(x)... function    FALSE
+#>           sd_i                                        1   scalar    FALSE
+#>              Y function (Z, u, outcome_sds, outcome_... function    FALSE
+#>              ~ function (...) { .External2(ffi_tilde... function    FALSE
+#>       steps
+#>        3, 5
+#>  2, 3, 4, 5
+#>           1
+#>        2, 4
+#>           4
+#>  2, 3, 4, 5
+#>           1
+#>        4, 5
+#>           5
 multi_arm_designer(m_arms = 4, outcome_means = c(0, 0.5, 1, 2))
-} # }
+#> Research design with 5 step(s):
+#>   [model] model (dgp)
+#>   [inquiry] inquiry (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] estimator (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>           name                                    value     kind declared
+#>     conditions                                      1:4   vector    FALSE
+#>         m_arms                                       4L   scalar    FALSE
+#>              N                                       90   scalar    FALSE
+#>  outcome_means                          c(0, 0.5, 1, 2)   vector    FALSE
+#>    outcome_sds                            c(0, 0, 0, 0)   vector    FALSE
+#>        per_arm function (x, m_arms) { k <- length(x)... function    FALSE
+#>           sd_i                                        1   scalar    FALSE
+#>              Y function (Z, u, outcome_sds, outcome_... function    FALSE
+#>              ~ function (...) { .External2(ffi_tilde... function    FALSE
+#>       steps
+#>        3, 5
+#>  2, 3, 4, 5
+#>           1
+#>        2, 4
+#>           4
+#>  2, 3, 4, 5
+#>           1
+#>        4, 5
+#>           5
 ```

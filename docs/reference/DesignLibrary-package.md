@@ -17,7 +17,7 @@ labels, categories, book aliases, `diagnosands:` display defaults, and
 
 ## Shiny deploy
 
-    remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+    install.packages("DesignLibrary")
     install_library_dependencies()
     copy_library_shiny("/path/to/shiny-app")
 
@@ -33,17 +33,17 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Macartan Humphreys <macartan.humphreys@wzb.eu>
+**Maintainer**: Alexander Coppock <acoppock@gmail.com>
 
 Authors:
+
+- Alexander Coppock <acoppock@gmail.com>
 
 - Macartan Humphreys <macartan.humphreys@wzb.eu>
 
 - Graeme Blair <graeme.blair@ucla.edu>
 
 - Jasper Cooper <jjc2247@columbia.edu>
-
-- Alexander Coppock <alex.coppock@northwestern.edu>
 
 - Clara Bicalho <clarabmcorreia@gmail.com>
 

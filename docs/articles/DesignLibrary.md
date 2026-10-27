@@ -70,7 +70,7 @@ the maintainer audits, and
 ``` r
 
 list_designs()
-#> DesignLibrary library: 68 designs
+#> DesignLibrary library: 75 designs
 #> 
 #> * Getting started
 #>   two_arm_simple (Simple two-arm trial)
@@ -85,6 +85,15 @@ list_designs()
 #>   pretest_posttest (Pretest-posttest design)
 #>   randomized_response (Randomized response)
 #>   mediation_analysis (Mediation analysis)
+#> 
+#> * Other design templates
+#>   binary_iv (Binary instrumental variables)
+#>   cluster_sampling (Two-stage cluster sampling)
+#>   factorial (Factorial experiment)
+#>   process_tracing_bayes (Process tracing with two clues)
+#>   regression_discontinuity_polynomial (Regression discontinuity with a polynomial fit)
+#>   spillover (Two-arm trial with spillovers within groups)
+#>   two_arm_covariate (Two-arm trial with a possibly prognostic covariate)
 #> 
 #> * Other RDSS designs
 #>   audit_experiment (audit experiment)
@@ -114,18 +123,19 @@ including redesignable parameters.
 
 ## Use DesignLibrary to make a design
 
+With the library you can make a design like this:
+
 ``` r
 
 my_design <- make_design("two_arm_simple")
 my_design
-#> Research design with 6 steps
-#> 
-#> Step 1 (parameters): declare_parameters(N = 1000, b = 0.2)
-#> Step 2 (model): declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1 = Y_Z_0 + b)
-#> Step 3 (inquiry): declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0))
-#> Step 4 (assignment): declare_assignment(Z = complete_ra(n()))
-#> Step 5 (measurement): declare_measurement(Y = Z * Y_Z_1 + (1 - Z) * Y_Z_0)
-#> Step 6 (estimator): declare_estimator(Y ~ Z, .method = difference_in_means, inquiry = "ATE")
+#> Research design with 6 step(s):
+#>   [parameters] parameters (parameters)
+#>   [model] model (dgp)
+#>   [inquiry] ATE (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] estimator (estimator)
 #> 
 #> Parameters and objects the design refers to:
 #>  name value   kind declared steps
@@ -137,8 +147,9 @@ my_design
 
 Parameters are taken from the design itself. Pass new values to
 [`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md);
-under the hood this uses DeclareDesign’s `redesign()`. A core set of
-designs also keep DesignLibrary 0.1 names, so
+under the hood this uses DeclareDesign’s
+[`redesign()`](https://rdrr.io/pkg/DeclareDesign/man/redesign.html). A
+core set of designs also keep DesignLibrary 0.1 names, so
 `two_arm_designer(N = 40, ate = 0.2)` is the same idea as
 `make_design("two_arm_flexible", N = 40, ate = 0.2)`.
 
@@ -149,8 +160,8 @@ make_design("two_arm_simple", b = 0.3) |>
 #> # A tibble: 2 × 15
 #>   design   sim_ID term  estimate std.error statistic  p.value conf.low conf.high
 #>   <chr>     <int> <chr>    <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>
-#> 1 design_1      1 Z        0.405    0.0623      6.50 1.26e-10   0.283      0.527
-#> 2 design_1      2 Z        0.202    0.0666      3.03 2.53e- 3   0.0710     0.332
+#> 1 design_1      1 Z        0.313    0.0633      4.95  8.93e-7    0.189     0.437
+#> 2 design_1      2 Z        0.310    0.0632      4.90  1.12e-6    0.186     0.434
 #> # ℹ 6 more variables: df <dbl>, outcome <chr>, estimator <chr>, inquiry <chr>,
 #> #   estimand <dbl>, b <dbl>
 ```
@@ -169,6 +180,8 @@ make_design("two_arm_simple", b = c(0, .3, .6), N = c(20, 1000)) |>
 
 ## Browse in Shiny
 
+DesignLibrary comes bundled with a shiny app to let you inspect designs.
+
 ``` r
 
 run_shiny()
@@ -182,18 +195,18 @@ then `copy_library_shiny(dest)`.
 
 ## Maintainer tools
 
-A short set of helpers keeps the library honest:
+A short set of helpers are available to maintain the library:
 
-- [`contributor_checklist()`](https://declaredesign.org/r/designlibrary/reference/contributor_checklist.md)
-  — what a design file should satisfy
-- [`audit_designs()`](https://declaredesign.org/r/designlibrary/reference/audit_designs.md)
-  — load each design and check that YAML `params:` names match
+- [`contributor_checklist()`](https://declaredesign.org/r/designlibrary/reference/contributor_checklist.md):
+  list what a design file should satisfy
+- [`audit_designs()`](https://declaredesign.org/r/designlibrary/reference/audit_designs.md):
+  load each design and check that YAML `params:` names match
   redesignable objects
-- [`bake_previews()`](https://declaredesign.org/r/designlibrary/reference/bake_previews.md)
-  — write compact diagnosis previews (`sims = 100` by default) into
+- [`bake_previews()`](https://declaredesign.org/r/designlibrary/reference/bake_previews.md):
+  write compact diagnosis previews (`sims = 100` by default) into
   `inst/previews/`
-- [`refresh_library()`](https://declaredesign.org/r/designlibrary/reference/refresh_library.md)
-  — index, audit, and bake in one step
+- [`refresh_library()`](https://declaredesign.org/r/designlibrary/reference/refresh_library.md):
+  index, audit, and bake in one step
 
 Run maintainer helpers from the package source tree, or set:
 
@@ -203,7 +216,7 @@ options(DesignLibrary.root = "C:/path/to/DesignLibrary")
 refresh_library()
 ```
 
-That is the whole loop: drop in a design file, use it from R or Shiny,
-and refresh the library when you change the set. Step-by-step
+That is the whole workflow: drop in a new design file, use it from R or
+Shiny, and refresh the library when you change the set. Step-by-step
 contribution guidance is in
 [`vignette("contributing", package = "DesignLibrary")`](https://declaredesign.org/r/designlibrary/articles/contributing.md).

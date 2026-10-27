@@ -78,8 +78,40 @@ overrides `ate`). Argument names match DesignLibrary 0.1's
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 make_design("two_arm_flexible", N = 40, ate = 0.2)
+#> Research design with 6 step(s):
+#>   [parameters] parameters (parameters)
+#>   [model] model (dgp)
+#>   [inquiry] ATE (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] estimator (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>             name value   kind declared steps
+#>  assignment_prob   0.5 scalar     TRUE  1, 4
+#>              ate   0.2 scalar     TRUE  1, 2
+#>     control_mean     0 scalar     TRUE  1, 2
+#>       control_sd     1 scalar     TRUE  1, 2
+#>                N    40 scalar     TRUE  1, 2
+#>              rho     1 scalar     TRUE  1, 2
+#>     treatment_sd     1 scalar     TRUE  1, 2
 two_arm_designer(N = 40, ate = 0.2)
-} # }
+#> Research design with 6 step(s):
+#>   [parameters] parameters (parameters)
+#>   [model] model (dgp)
+#>   [inquiry] ATE (inquiry)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [estimator] estimator (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>             name value   kind declared steps
+#>  assignment_prob   0.5 scalar     TRUE  1, 4
+#>              ate   0.2 scalar     TRUE  1, 2
+#>     control_mean     0 scalar     TRUE  1, 2
+#>       control_sd     1 scalar     TRUE  1, 2
+#>                N    40 scalar     TRUE  1, 2
+#>              rho     1 scalar     TRUE  1, 2
+#>     treatment_sd     1 scalar     TRUE  1, 2
 ```

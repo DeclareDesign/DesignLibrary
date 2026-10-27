@@ -2,13 +2,13 @@
 
 ## Authors
 
-- **Macartan Humphreys**. Author, maintainer.
+- **Macartan Humphreys**. Author.
 
 - **Graeme Blair**. Author.
 
 - **Jasper Cooper**. Author.
 
-- **Alexander Coppock**. Author.
+- **Alexander Coppock**. Author, maintainer.
 
 - **Clara Bicalho**. Author.
 

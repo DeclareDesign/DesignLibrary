@@ -6,56 +6,60 @@ call) and `$full` (the design file source, prefixed with
 [`library()`](https://rdrr.io/r/base/library.html) calls for YAML
 `packages:` when any are listed). Printing uses
 [`cat()`](https://rdrr.io/r/base/cat.html) on `$full` so the console
-output is copy-paste ready. Use `style = "simple"` to print the
-one-liner instead. Programmatic access is unchanged:
-`get_code(id)$simple`, `get_code(id)$full`.
+output is copy-paste ready. Use `.style = "simple"` to print the
+one-liner instead, or `.style = "both"` for the one-liner followed by
+the source. Programmatic access is unchanged: `get_code(id)$simple`,
+`get_code(id)$full`.
 
 ## Usage
 
 ``` r
 get_code(
-  design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
+  .design = c("two_arm_simple", "two_arm_flexible", "three_arm", "two_by_two",
     "two_arm_block_cluster", "two_arm_with_blocks", "two_arm_attrition",
     "factorial_2x2x2", "multiarm_trial", "pretest_posttest", "randomized_response",
-    "mediation_analysis", "audit_experiment", "audit_intervention", "baseline_over_N",
-    "blocked_and_clustered", "bootstrapped", "cluster_random_sampling",
-    "conditional_expectation", "conjoint", "covariate_adjustment",
-    "declaration_using_declare", "design_10_2", "design_10_4", "diff_in_diff", 
+    "mediation_analysis", "binary_iv", "cluster_sampling", "factorial",
+    "process_tracing_bayes", "regression_discontinuity_polynomial", "spillover",
+    "two_arm_covariate", "audit_experiment", "audit_intervention", "baseline_over_N",
+    "blocked_and_clustered", "bootstrapped", "cluster_random_sampling", 
     
+    "conditional_expectation", "conjoint", "covariate_adjustment",
+    "declaration_using_declare", "design_10_2", "design_10_4", "diff_in_diff",
     "encouragement", "example_declaration", "factorial_2x2", "instrumental_variables",
     "italian_village", "italian_village_bayes", "italian_village_continued",
     "latent_variables", "lin_estimator", "linear_regression", "list_experiment",
     "list_or_direct_questions", "logit_probit_ols", "matching", "multi_site_studies",
-    "multilevel", "multilevel_answer_strategies", "network_experiment",
+    "multilevel", "multilevel_answer_strategies", 
+     "network_experiment",
     "pate_with_sampling", "population_estimands", "process_tracing", "random_forests",
-    "randomization_inference", "randomized_saturation", 
-     "regression_discontinuity",
+    "randomization_inference", "randomized_saturation", "regression_discontinuity",
     "regression_discontinuity_fuzzy", "simple_random_sampling", "single_period_two_arm",
     "stepped_wedge", "structural_estimation", "subgroup_effects", "survey_nonresponse",
     "trust_game", "two_arm_bare_bones", "two_arm_block_rdss", "two_arm_rdss_1",
-    "two_arm_rdss_2", "two_arm_trial_rdss", "two_arm_with_blocks_rdss",
+    "two_arm_rdss_2", "two_arm_trial_rdss", "two_arm_with_blocks_rdss", 
+    
     "two_outcome_model_a", "two_outcome_model_b", "uncertainty_over_effect_size",
-    "village_campaign", "17.1", "17.2", "11.1", "18.5", "9.5", "15.3", "11.4", "17.5", 
- 
-       "18.2", "10.1", "10.2", "10.4", "16.3", "18.8", "5.1", "18.7", "16.4", "9.1",
-    "9.3", "9.2", "15.6", "18.3", "13.1", "17.3", "17.4", "11.5", "16.2", "19.4", "15.4",
+    "village_campaign", "17.1", "17.2", "11.1", "18.5", "9.5", "15.3", "11.4", "17.5",
+    "18.2", "10.1", "10.2", "10.4", "16.3", "18.8", "5.1", "18.7", "16.4", "9.1", "9.3",
+    "9.2", "15.6", "18.3", "13.1", "17.3", "17.4", "11.5", "16.2", "19.4", "15.4",
     "15.5", "18.13", "4.1", "7.1", "16.1b", "19.1", "9.7", "18.12", "16.5", "16.6",
     "15.1", "18.11", "18.10", "19.2", "18.6", "15.2", "17.6", "11.3", "18.4", "2.1",
-    "13.2", "18.1", "2.2", "10.3a", "10.3b", "11.2", "12.1a"),
-  style = c("both", "simple", "full"),
+    "13.2", "18.1", 
+     "2.2", "10.3a", "10.3b", "11.2", "12.1a"),
+  .style = c("full", "simple", "both"),
   ...
 )
 ```
 
 ## Arguments
 
-- design:
+- .design:
 
   Design id or book alias.
 
-- style:
+- .style:
 
-  `"simple"`, `"full"`, or `"both"`. Controls which snippet
+  `"full"`, `"simple"`, or `"both"`. Controls which snippet
   [`print()`](https://rdrr.io/r/base/print.html) and
   [`as.character()`](https://rdrr.io/r/base/character.html) show.
   `$simple` and `$full` are always both present.
@@ -71,8 +75,27 @@ A list with `simple` and `full`, class `design_library_code`.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 get_code("two_arm_simple")
+#> design <-
+#>   
+#>   declare_parameters(
+#>     N = 1000,  # Number of units
+#>     b = 0.2    # ATE
+#>   ) +
+#>   
+#>   # M: model
+#>   declare_model(N = N, Y_Z_0 = rnorm(n()), Y_Z_1  = Y_Z_0 + b) +
+#>   
+#>   # I: Inquiry
+#>   declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0)) +
+#> 
+#>   # D: Data strategy  
+#>   declare_assignment(Z = complete_ra(n())) +
+#> 
+#>   declare_measurement(Y = Z*Y_Z_1 + (1-Z)*Y_Z_0) +
+#>   
+#>   # A: Answer strategy
+#>   declare_estimator(Y ~ Z, .method = difference_in_means, inquiry = "ATE")
 get_code("two_arm_simple")$simple
-} # }
+#> [1] "make_design(\"two_arm_simple\")"
 ```

@@ -9,7 +9,12 @@ the redesignable parameter list (see
 ## Usage
 
 ``` r
-audit_designs(designs = NULL, sims = 2, write_report = TRUE, report_dir = NULL)
+audit_designs(
+  designs = NULL,
+  sims = 2,
+  write_report = FALSE,
+  report_dir = NULL
+)
 ```
 
 ## Arguments
@@ -25,7 +30,8 @@ audit_designs(designs = NULL, sims = 2, write_report = TRUE, report_dir = NULL)
 
 - write_report:
 
-  If `TRUE` (default), write CSV + markdown under `tools/`.
+  If `TRUE`, write CSV + markdown under `tools/` in the source tree
+  (default `FALSE`).
 
 - report_dir:
 

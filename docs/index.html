@@ -38,6 +38,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/DesignLibrary.html">DesignLibrary overview</a></li>
     <li><a class="dropdown-item" href="articles/contributing.html">Contributing a design</a></li>
+    <li><a class="dropdown-item" href="articles/upgrading.html">Upgrading from DesignLibrary 0.1</a></li>
   </ul>
 </li>
       </ul>
@@ -53,22 +54,23 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="designlibrary">DesignLibrary<a class="anchor" aria-label="anchor" href="#designlibrary"></a>
 </h1></div>
-<p>A prototype for a library of declared designs using DeclareDesign.</p>
-<p><strong>Versioning:</strong> start at 0.1.0 and bump slowly. Current: 0.1.1.</p>
+<p>A library of declared research designs for DeclareDesign.</p>
+<p>Version 2.0.0 supersedes DesignLibrary 0.1.10 on CRAN; see <a href="#upgrading-from-01">Upgrading from 0.1</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DesignLibrary"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="idea">Idea<a class="anchor" aria-label="anchor" href="#idea"></a>
 </h2>
 <ul>
 <li>Each design is a self-contained <code>.R</code> file under <code>inst/designs/</code>.</li>
-<li>The <strong>design object</strong> is the source of truth for editable parameters.</li>
 <li>Optional YAML frontmatter adds labels, categories, keywords, book aliases, <code>packages:</code> extras, <code>diagnosands:</code> defaults for display, and <code>params:</code> tip strings.</li>
-<li>YAML is optional. With no header: id = filename stem, label = humanized id, <code>category: Other</code>, object name <code>design</code>, <code>include_in_shiny: true</code>. Set <code>object:</code> only if the R object is not named <code>design</code>.</li>
+<li>YAML is optional. With no header: id = filename stem (a few book designs set a different <code>id:</code>), label = humanized id, <code>category: Other</code>, object name <code>design</code>, <code>include_in_shiny: true</code>. Set <code>object:</code> only if the R object is not named <code>design</code>.</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="tiny-api">Tiny API<a class="anchor" aria-label="anchor" href="#tiny-api"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/list_designs.html">list_designs</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/make_design.html">make_design</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span>, b <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
@@ -77,24 +79,43 @@
 <span><span class="fu"><a href="reference/get_args.html">get_args</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/get_code.html">get_code</a></span><span class="op">(</span><span class="st">"two_arm_simple"</span><span class="op">)</span>             <span class="co"># simple make_design() + full source</span></span>
 <span><span class="fu"><a href="reference/run_shiny.html">run_shiny</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># Imports + Shiny Suggests + YAML packages: (+ the rewrite branches from GitHub)</span></span>
+<span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># Imports + Shiny Suggests + YAML packages</span></span>
 <span><span class="fu"><a href="reference/copy_library_shiny.html">copy_library_shiny</a></span><span class="op">(</span><span class="st">"path/to/app"</span><span class="op">)</span>     <span class="co"># standalone Shiny folder for the server</span></span></code></pre></div>
 <p>Maintainer one-stop:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/refresh_library.html">refresh_library</a></span><span class="op">(</span><span class="op">)</span>   <span class="co"># index + audit + bake previews (sims = 100)</span></span>
 <span><span class="fu"><a href="reference/build_docs.html">build_docs</a></span><span class="op">(</span><span class="op">)</span>        <span class="co"># pkgdown site -&gt; docs/ (safe on Dropbox / Windows)</span></span></code></pre></div>
 <p>If <code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code> fails with <code>write_html</code> / “Error closing file”, use <code><a href="reference/build_docs.html">build_docs()</a></code> instead: it builds in a local temp folder, then copies into <code>docs/</code>.</p>
 </div>
 <div class="section level2">
+<h2 id="upgrading-from-01">Upgrading from 0.1<a class="anchor" aria-label="anchor" href="#upgrading-from-01"></a>
+</h2>
+<p>The fifteen 0.1 designers (<code><a href="reference/two_arm_designer.html">two_arm_designer()</a></code>, <code><a href="reference/block_cluster_two_arm_designer.html">block_cluster_two_arm_designer()</a></code>, and so on) keep their names and, with the exceptions below, their arguments. Each now builds a library design, so <code>two_arm_designer(N = 40)</code> and <code>make_design("two_arm_flexible", N = 40)</code> return the same design.</p>
+<ul>
+<li>
+<code>simple_*_designer()</code>, <code><a href="reference/get_design_code.html">get_design_code()</a></code>, and <code><a href="reference/get_design_code.html">match.call.defaults()</a></code> are defunct; each errors naming its replacement.</li>
+<li>
+<code><a href="reference/block_cluster_two_arm_designer.html">block_cluster_two_arm_designer()</a></code> dropped <code>N</code>, <code>sd</code>, <code>sd_i_1</code>, <code>rho</code>, <code>control_mean</code>, and <code>treatment_mean</code> (each an error naming what to set instead) and changed its defaults.</li>
+<li>
+<code><a href="reference/multi_arm_designer.html">multi_arm_designer()</a></code> compares each arm with arm 1 only; <code><a href="reference/mediation_analysis_designer.html">mediation_analysis_designer()</a></code> renames <code>Indirect_0</code>/<code>Indirect_1</code> to <code>Mediator_Effect_0</code>/<code>Mediator_Effect_1</code>.</li>
+<li>redesign over a range with <code>redesign(two_arm_designer(), N = c(50, 100))</code>.</li>
+</ul>
+<p>The vignette <em>Upgrading from DesignLibrary 0.1</em> (<code><a href="articles/upgrading.html">vignette("upgrading")</a></code>) works through every break with code, and the full list is in <code>NEWS.md</code> under “Breaking changes relative to 0.1.10”.</p>
+</div>
+<div class="section level2">
 <h2 id="server-deploy">Server deploy<a class="anchor" aria-label="anchor" href="#server-deploy"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DeclareDesign/DesignLibrary@RDrewrite"</span><span class="op">)</span></span>
+<p>A set of functions help you if you want to deploy the shiny to a server:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"DesignLibrary"</span><span class="op">)</span></span>
 <span><span class="fu">DesignLibrary</span><span class="fu">::</span><span class="fu"><a href="reference/install_library_dependencies.html">install_library_dependencies</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">DesignLibrary</span><span class="fu">::</span><span class="fu"><a href="reference/copy_library_shiny.html">copy_library_shiny</a></span><span class="op">(</span><span class="st">"/srv/shiny-server/designlibrary"</span><span class="op">)</span></span></code></pre></div>
-<p>Point Shiny Server at that folder. <code>local.R</code> there is never overwritten on re-copy. ## Minimal design file</p>
-<p>YAML is optional. This is enough:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</div>
+<div class="section level2">
+<h2 id="minimal-design-file">Minimal design file<a class="anchor" aria-label="anchor" href="#minimal-design-file"></a>
+</h2>
+<p>A design can be declared very concisely:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="va">design</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">declare_model</span><span class="op">(</span>N <span class="op">=</span> <span class="fl">100</span>, U <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>, Y_Z_0 <span class="op">=</span> <span class="va">U</span>, Y_Z_1 <span class="op">=</span> <span class="va">U</span> <span class="op">+</span> <span class="va">b</span><span class="op">)</span> <span class="op">+</span></span>
@@ -103,19 +124,27 @@
 <span>  <span class="fu">declare_measurement</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">Y_Z_1</span> <span class="op">*</span> <span class="va">Z</span> <span class="op">+</span> <span class="va">Y_Z_0</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">Z</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">declare_estimator</span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">Z</span>, inquiry <span class="op">=</span> <span class="st">"ATE"</span><span class="op">)</span></span></code></pre></div>
 <p>Save as <code>inst/designs/my_design.R</code>. Parameters are discovered from the design; <code>redesign()</code> / <code><a href="reference/make_design.html">make_design()</a></code> use those names.</p>
-<p>Optional YAML can set preferred diagnosands for the Shiny Diagnosis and Redesign tabs (falls back to bias and power):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">diagnosands</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">rmse</span><span class="kw">,</span><span class="at"> bias</span><span class="kw">]</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co"># or: diagnosands: rmse, bias</span></span></code></pre></div>
+<p>However, if you want the design to sing in your shiny, add a YAML. YAML can provide descriptions and definitions and can be used to set preferred diagnosands for the Shiny Diagnosis and Redesign tabs:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> two_arm_simple</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">label</span><span class="kw">:</span><span class="at"> Simple two-arm trial</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">category</span><span class="kw">:</span><span class="at"> template</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">keywords</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">experiment</span><span class="kw">,</span><span class="at"> two-arm</span><span class="kw">]</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">description</span><span class="kw">: </span><span class="ch">&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  Simple two-arm trial with complete random assignment and a population average treatment effect.</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="at">  </span><span class="fu">"N"</span><span class="kw">:</span><span class="at"> </span><span class="st">"Number of units (sample or population size)"</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="at">  </span><span class="fu">"b"</span><span class="kw">:</span><span class="at"> </span><span class="st">"Treatment effect (outcome scale)"</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="fu">diagnosands</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">bias</span><span class="kw">,</span><span class="at"> power</span><span class="kw">]</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="fu">include_in_shiny</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="classic-declaredesign-vs-declaredesign">Classic DeclareDesign vs DeclareDesign<a class="anchor" aria-label="anchor" href="#classic-declaredesign-vs-declaredesign"></a>
+<h2 id="declaredesign-1x-vs-20">DeclareDesign 1.x vs 2.0<a class="anchor" aria-label="anchor" href="#declaredesign-1x-vs-20"></a>
 </h2>
-<p><strong>Classic DeclareDesign</strong> (and DesignLibrary 0.1) often paired a <em>designer function</em> with a design: parameters lived on the designer, and tools like <code>expand_design(two_arm_designer, N = c(50, 100))</code> swept that function. Reproducible code was glued on with special extraction (<code>{{{ }}}</code>).</p>
-<p><strong>DeclareDesign</strong> keeps the same declaration verbs (<code>declare_model</code>, <code>+</code>, <code>diagnose_design</code>, …) but treats the <strong>declared design itself</strong> as redesignable. Free symbols in the design (e.g. <code>b</code>, <code>tau</code>) are found on the object, so:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p><strong>DeclareDesign 1.x</strong> (and DesignLibrary 0.1) often paired a <em>designer function</em> with a design: parameters lived on the designer, and tools like <code>expand_design(two_arm_designer, N = c(50, 100))</code> swept that function. Reproducible code was glued on with special extraction (<code>{{{ }}}</code>).</p>
+<p><strong>DeclareDesign 2.0</strong> keeps the same declaration verbs (<code>declare_model</code>, <code>+</code>, <code>diagnose_design</code>, …) but treats the <strong>declared design itself</strong> as redesignable. Free symbols in the design (e.g. <code>b</code>, <code>tau</code>) are found on the object, so:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">designs</span> <span class="op">&lt;-</span> <span class="fu">redesign</span><span class="op">(</span><span class="va">design</span>, tau <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">diagnose_design</span><span class="op">(</span><span class="va">designs</span>, sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<p>needs no designer and no designer-style gluing. This package is built for that model.</p>
 </div>
 <div class="section level2">
 <h2 id="contributor-checklist">Contributor checklist<a class="anchor" aria-label="anchor" href="#contributor-checklist"></a>
@@ -151,10 +180,10 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Macartan Humphreys <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Macartan Humphreys <br><small class="roles"> Author </small>   </li>
 <li>Graeme Blair <br><small class="roles"> Author </small>   </li>
 <li>Jasper Cooper <br><small class="roles"> Author </small>   </li>
-<li>Alexander Coppock <br><small class="roles"> Author </small>   </li>
+<li>Alexander Coppock <br><small class="roles"> Author, maintainer </small>   </li>
 <li>Clara Bicalho <br><small class="roles"> Author </small>   </li>
 <li>Neal Fultz <br><small class="roles"> Author </small>   </li>
 <li>Lily Medina <br><small class="roles"> Author </small>   </li>
@@ -172,7 +201,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

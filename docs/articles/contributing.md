@@ -87,10 +87,10 @@ Confirm the design appears in the Library, opens cleanly, and diagnosis
 
 ## 5. Pull request
 
-Open a pull request from your fork to `macartan/DesignLibrary`. Keep the
-PR focused on the new or updated design file and any packages it needs.
-Mention extra dependencies in YAML `packages:` and in the PR description
-when relevant.
+Open a pull request from your fork to `DeclareDesign/DesignLibrary`.
+Keep the PR focused on the new or updated design file and any packages
+it needs. Mention extra dependencies in YAML `packages:` and in the PR
+description when relevant.
 
 ## YAML fields
 
@@ -98,7 +98,7 @@ Optional frontmatter sits between `---` lines at the top of the file.
 
 | Field | Tip |
 |----|----|
-| `id` | Substantive snake_case name; should match the filename stem (e.g. `two_arm_trial`). |
+| `id` | Substantive snake_case name (e.g. `two_arm_simple`). Defaults to the filename stem; a few book designs use a different id. |
 | `alias` | Optional book reference string (e.g. `"2.1"`). Quote it if it looks numeric. |
 | `label` | Short human-readable title shown in the library. |
 | `description` | One or two sentences on what the design does. Use YAML `>` for a folded block. |
@@ -110,13 +110,14 @@ Optional frontmatter sits between `---` lines at the top of the file.
 | `coupled` | Optional map from a driver to dependents that must match its length, e.g. `m_arms: [outcome_means, outcome_sds, conditions]`. [`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md) [`message()`](https://rdrr.io/r/base/message.html)s and the Shiny redesign help box always show the note. |
 | `book_link` | URL to a book section or external docs. |
 | `include_in_shiny` | `true` (default) or `false`. Set `false` for incomplete or heavy designs. |
+| `functional` | `true` (default) or `false`. Set `false` to park a design whose dependencies are unavailable; it is skipped by the audit, the smoke tests, and dependency installation, and is never shown in Shiny. |
 | `object` | Name of the design object in the file. Omit if the object is named `design`. |
 
 Example header:
 
 ``` yaml
 ---
-id: two_arm_trial
+id: two_arm_simple
 label: Simple two-arm trial
 category: template
 keywords: [experiment, two-arm]
@@ -135,6 +136,10 @@ include_in_shiny: true
 ``` r
 
 library(DesignLibrary)
+#> Loading required package: DeclareDesign
+#> Loading required package: randomizr
+#> Loading required package: fabricatr
+#> Loading required package: estimatr
 contributor_checklist()
 #>  [1] "File lives in inst/designs/ and is self-contained (no source() of other designs)."                                                                                                                                                                                                                                                                                                              
 #>  [2] "Filename matches the substantive id (e.g. two_arm_simple.R)."                                                                                                                                                                                                                                                                                                                                   
@@ -149,20 +154,3 @@ contributor_checklist()
 #> [11] "Design evaluates under DeclareDesign; redesign() works for documented parameters. A design that loads but does not run fails the audit."                                                                                                                                                                                                                                                        
 #> [12] "Run refresh_library() from the package source tree after adding or editing designs (or set options(DesignLibrary.root = \"...\"))."
 ```
-
-In R the same helpers are
-[`contributor_checklist()`](https://declaredesign.org/r/designlibrary/reference/contributor_checklist.md),
-[`audit_designs()`](https://declaredesign.org/r/designlibrary/reference/audit_designs.md),
-and
-[`refresh_library()`](https://declaredesign.org/r/designlibrary/reference/refresh_library.md).
-
-Eight designs also have DesignLibrary 0.1 names:
-[`two_arm_designer()`](https://declaredesign.org/r/designlibrary/reference/two_arm_designer.md),
-[`two_arm_attrition_designer()`](https://declaredesign.org/r/designlibrary/reference/two_arm_attrition_designer.md),
-[`pretest_posttest_designer()`](https://declaredesign.org/r/designlibrary/reference/pretest_posttest_designer.md),
-[`randomized_response_designer()`](https://declaredesign.org/r/designlibrary/reference/randomized_response_designer.md),
-[`mediation_analysis_designer()`](https://declaredesign.org/r/designlibrary/reference/mediation_analysis_designer.md),
-[`multi_arm_designer()`](https://declaredesign.org/r/designlibrary/reference/multi_arm_designer.md),
-[`two_by_two_designer()`](https://declaredesign.org/r/designlibrary/reference/two_by_two_designer.md),
-and
-[`block_cluster_two_arm_designer()`](https://declaredesign.org/r/designlibrary/reference/block_cluster_two_arm_designer.md).

@@ -32,7 +32,7 @@ Invisibly, the normalized destination path.
 
 Typical server workflow:
 
-    remotes::install_github("DeclareDesign/DesignLibrary@RDrewrite")
+    install.packages("DesignLibrary")
     DesignLibrary::install_library_dependencies()
     DesignLibrary::copy_library_shiny("/srv/shiny-server/designlibrary")
 

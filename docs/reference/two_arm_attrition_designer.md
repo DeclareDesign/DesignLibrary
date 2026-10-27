@@ -56,3 +56,27 @@ A design object.
 ## See also
 
 [`make_design()`](https://declaredesign.org/r/designlibrary/reference/make_design.md)
+
+## Examples
+
+``` r
+two_arm_attrition_designer(N = 40, b_R = 0.5)
+#> Research design with 8 step(s):
+#>   [parameters] parameters (parameters)
+#>   [model] model (dgp)
+#>   [assignment] assignment (dgp)
+#>   [measurement] measurement (dgp)
+#>   [inquiry] inquiry (inquiry)
+#>   [estimator] DIM on R (estimator)
+#>   [estimator] DIM on Y_obs (estimator)
+#>   [estimator] DIM on Y (estimator)
+#> 
+#> Parameters and objects the design refers to:
+#>  name value   kind declared steps
+#>   a_R     0 scalar     TRUE  1, 2
+#>   a_Y     0 scalar     TRUE  1, 2
+#>   b_R   0.5 scalar     TRUE  1, 2
+#>   b_Y     1 scalar     TRUE  1, 2
+#>     N    40 scalar     TRUE  1, 2
+#>   rho     0 scalar     TRUE  1, 2
+```
