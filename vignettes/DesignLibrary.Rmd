@@ -72,6 +72,8 @@ Call `list_designs()` to see ids and labels. Use `design_info("two_arm_simple")`
 
 # Use DesignLibrary to make a design
 
+With the library you can make a design like this:
+
 ```{r make-default}
 my_design <- make_design("two_arm_simple")
 my_design
