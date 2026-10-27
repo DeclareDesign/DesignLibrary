@@ -200,7 +200,10 @@ mediation_analysis_designer <- function(
 #' m_arms = 4)` does the same inside the design: constant vectors are repeated
 #' and conditions `1..k` become `1..m_arms`. Any other wrong-length vector
 #' errors.
-#' Inquiries are `mean(Y(k) - Y(1))`; estimation is one `lm_robust`.
+#' Inquiries are the differences in arm means for every pair of arms,
+#' `ate_Y_j_k`, and each is estimated by a difference in means between its two
+#' arms (estimator `"DIM (Z_j - Z_k)"`). The contrasts between two treatment
+#' arms are usually the least powered.
 #' Library-file knobs match these formals.
 #'
 #' @inheritParams two_arm_designer

@@ -69,11 +69,12 @@ test_that("multiarm_trial extends its default vectors to m_arms", {
   d <- make_design("multiarm_trial", m_arms = 5)
   expect_equal(sort(unique(as.integer(DeclareDesign::draw_data(d)$Z))), 1:5)
   est <- DeclareDesign::draw_estimates(d)
-  expect_equal(est$inquiry, paste0("ate_Y_", 2:5, "_1"))
-  expect_equal(est$term, paste0("factor(Z)", 2:5))
+  pairs <- combn(5, 2)
+  expect_equal(est$inquiry, paste0("ate_Y_", pairs[2, ], "_", pairs[1, ]))
+  expect_equal(est$estimator, paste0("DIM (Z_", pairs[2, ], " - Z_", pairs[1, ], ")"))
 
   d4 <- make_design("multiarm_trial", m_arms = 4, outcome_means = c(0, 0.5, 1, 2))
-  expect_equal(DeclareDesign::draw_estimands(d4)$estimand, c(0.5, 1, 2))
+  expect_equal(DeclareDesign::draw_estimands(d4)$estimand, c(0.5, 1, 2, 0.5, 1.5, 1))
 
   bad <- make_design("multiarm_trial", m_arms = 4, outcome_means = c(0, 1, 2))
   expect_error(DeclareDesign::draw_data(bad), "outcome_means has length 3 but m_arms is 4")

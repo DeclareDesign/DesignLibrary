@@ -9,8 +9,10 @@ description: >
   optional per-arm noise. The per-arm noise is drawn when the outcome is
   measured, so a unit has no fixed potential outcome under an arm it was not
   assigned to, and the inquiries are population contrasts of arm means,
-  outcome_means[k] - outcome_means[1], rather than sample average effects.
-  Estimation is one lm_robust of Y on factor(Z).
+  outcome_means[j] - outcome_means[k] for every pair of arms, rather than
+  sample average effects. Each contrast is estimated by a difference in means
+  between its two arms. The contrasts between two treatment arms are the ones
+  a three-arm study is most often underpowered for.
   The number of arms is m_arms (default 3). outcome_means, outcome_sds,
   and conditions are length-m_arms vectors. When m_arms changes and they
   are not supplied, their defaults extend to the new number of arms: a
@@ -63,10 +65,10 @@ design <-
   ) +
   declare_inquiry(
     handler = function(data, m_arms, outcome_means) {
-      ks <- seq_len(m_arms)[-1]
+      pairs <- combn(m_arms, 2)
       data.frame(
-        inquiry = paste0("ate_Y_", ks, "_1"),
-        estimand = as.numeric(outcome_means[ks] - outcome_means[[1]])
+        inquiry = paste0("ate_Y_", pairs[2, ], "_", pairs[1, ]),
+        estimand = as.numeric(outcome_means[pairs[2, ]] - outcome_means[pairs[1, ]])
       )
     },
     m_arms = m_arms,
@@ -79,8 +81,25 @@ design <-
     Y = Y(Z, u, per_arm(outcome_sds, m_arms), per_arm(outcome_means, m_arms))
   ) +
   declare_estimator(
-    Y ~ factor(Z),
-    .method = lm_robust,
-    term = paste0("factor(Z)", seq_len(m_arms)[-1]),
-    inquiry = paste0("ate_Y_", seq_len(m_arms)[-1], "_1")
+    handler = function(data, m_arms, conditions) {
+      pairs <- combn(m_arms, 2)
+      estimates <- lapply(seq_len(ncol(pairs)), function(i) {
+        k <- pairs[1, i]
+        j <- pairs[2, i]
+        fit <- difference_in_means(
+          Y ~ Z,
+          data = data,
+          condition1 = conditions[k],
+          condition2 = conditions[j]
+        )
+        cbind(
+          estimator = paste0("DIM (Z_", j, " - Z_", k, ")"),
+          tidy(fit),
+          inquiry = paste0("ate_Y_", j, "_", k)
+        )
+      })
+      do.call(rbind, estimates)
+    },
+    m_arms = m_arms,
+    conditions = per_arm(conditions, m_arms)
   )

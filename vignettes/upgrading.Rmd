@@ -90,9 +90,9 @@ design <- block_cluster_two_arm_designer(
 
 `assignment_probs` takes one probability rather than one per block, and `verbose` is ignored with a warning. **Because the defaults changed, `block_cluster_two_arm_designer()` with no arguments is a different design in 2.0, and nothing warns about it.**
 
-## `multi_arm_designer()` compares each arm with arm 1
+## `multi_arm_designer()` has a larger default sample
 
-In 0.1 the designer estimated every pairwise difference in means, under labels like `"DIM (Z_2 - Z_1)"`, and declared an inquiry for every pair. In 2.0 it fits one `lm_robust()` of `Y` on `factor(Z)`, which estimates each arm against arm 1, and declares only those inquiries. The default `N` went from 30 to 90, so that each of the three arms has 30 units rather than 10.
+As in 0.1, the designer declares an inquiry for every pair of arms and estimates each by a difference in means between its two arms, under labels like `"DIM (Z_2 - Z_1)"`. The default `N` went from 30 to 90, so that each of the three arms has 30 units rather than 10.
 
 ```{r}
 design <- multi_arm_designer(m_arms = 3)
@@ -100,7 +100,7 @@ set.seed(343)
 draw_estimates(design)[, c("estimator", "term", "estimate", "inquiry")]
 ```
 
-The estimator is `"estimator"` and the terms are `factor(Z)2`, `factor(Z)3`, and so on. The inquiries `ate_Y_2_1` and `ate_Y_3_1` keep their names; contrasts between two non-baseline arms, such as `ate_Y_3_2`, are gone. Code that filters a diagnosis by the old estimator labels returns no rows rather than an error.
+The contrast between the two treatment arms, `ate_Y_3_2`, is usually the one with the least power, and a three-arm study is often designed without anyone checking it.
 
 ## Two renamings that change no values
 
@@ -157,8 +157,6 @@ Search the script for each pattern in the left column.
 | `block_cluster_two_arm_designer(` with `N`, `sd`, `sd_i_1`, `rho`, `control_mean`, or `treatment_mean` | `N_blocks`, `N_clusters_in_block`, `N_i_in_cluster`, `sd_block`, `sd_cluster`, `sd_i`, `ate` | error naming the replacement |
 | `block_cluster_two_arm_designer()` relying on defaults | state the 0.1 sizes and `ate = 0` explicitly | **silently a different design** |
 | `multi_arm_designer(` without `N` | `N = 30` for the 0.1 default | **silently a larger sample** |
-| `"DIM (Z_` | `term == "factor(Z)2"` and so on | **filter returns no rows** |
-| `ate_Y_3_2` and other non-baseline contrasts | a custom estimator and inquiry | **filter returns no rows** |
 | `Indirect_0`, `Indirect_1` | `Mediator_Effect_0`, `Mediator_Effect_1` | **filter returns no rows** |
 | `design[[` with a number, or step names such as `"ATE"` | `names(design)` to find the step | **wrong step, or error** |
 | `args_to_fix` | drop it | warning |

@@ -47,7 +47,10 @@ evaluated after \code{m_arms}, so \code{multi_arm_designer(m_arms = 4)} expands
 those vectors before calling \code{make_design()}. \code{make_design("multiarm_trial", m_arms = 4)} does the same inside the design: constant vectors are repeated
 and conditions \verb{1..k} become \verb{1..m_arms}. Any other wrong-length vector
 errors.
-Inquiries are \code{mean(Y(k) - Y(1))}; estimation is one \code{lm_robust}.
+Inquiries are the differences in arm means for every pair of arms,
+\code{ate_Y_j_k}, and each is estimated by a difference in means between its two
+arms (estimator \code{"DIM (Z_j - Z_k)"}). The contrasts between two treatment
+arms are usually the least powered.
 Library-file knobs match these formals.
 }
 \examples{

@@ -24,14 +24,17 @@ test_that("multi_arm_designer accepts m_arms = 4", {
   d3 <- multi_arm_designer(N = 30)
   expect_s3_class(d3, "design")
   est3 <- DeclareDesign::draw_estimands(d3)
-  expect_equal(sort(as.character(est3$inquiry)), c("ate_Y_2_1", "ate_Y_3_1"))
+  expect_equal(sort(as.character(est3$inquiry)), c("ate_Y_2_1", "ate_Y_3_1", "ate_Y_3_2"))
+  est3_hat <- DeclareDesign::draw_estimates(d3)
+  expect_equal(est3_hat$estimator, c("DIM (Z_2 - Z_1)", "DIM (Z_3 - Z_1)", "DIM (Z_3 - Z_2)"))
+  expect_equal(est3_hat$inquiry, c("ate_Y_2_1", "ate_Y_3_1", "ate_Y_3_2"))
 
   d4 <- multi_arm_designer(m_arms = 4)
   expect_s3_class(d4, "design")
   est4 <- DeclareDesign::draw_estimands(d4)
   expect_equal(
     sort(as.character(est4$inquiry)),
-    c("ate_Y_2_1", "ate_Y_3_1", "ate_Y_4_1")
+    c("ate_Y_2_1", "ate_Y_3_1", "ate_Y_3_2", "ate_Y_4_1", "ate_Y_4_2", "ate_Y_4_3")
   )
 
   d4b <- multi_arm_designer(
@@ -45,6 +48,7 @@ test_that("multi_arm_designer accepts m_arms = 4", {
   est <- DeclareDesign::draw_estimands(d4b)
   expect_equal(as.numeric(est$estimand[est$inquiry == "ate_Y_2_1"]), 0.5, tolerance = 1e-8)
   expect_equal(as.numeric(est$estimand[est$inquiry == "ate_Y_4_1"]), 2, tolerance = 1e-8)
+  expect_equal(as.numeric(est$estimand[est$inquiry == "ate_Y_4_2"]), 1.5, tolerance = 1e-8)
 
   expect_error(
     multi_arm_designer(m_arms = 4, outcome_means = c(0, 0.5, 2)),
