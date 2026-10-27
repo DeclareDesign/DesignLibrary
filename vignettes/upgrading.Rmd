@@ -170,7 +170,11 @@ The rows in bold are the ones to search for deliberately, since nothing will poi
 
 # What is new
 
-A library of simple design files sit at the heart of library  2.0. The library holds `r nrow(as.data.frame(list_designs()))` designs, including the declarations from *Research Design in the Social Sciences*. 
+The big change is that the key files contained in the library are simple design scripts rather than "designer functions."
+This makes it much easier to inspect a design and to contribute a design. In addition the designs make use of the the new `declare_parameters` functionality from DeclareDesign 2.0 which makes it easier to contribute modifiable designs. 
+
+
+The library holds `r nrow(as.data.frame(list_designs()))` designs, including the declarations from *Research Design in the Social Sciences*. 
 
 * `list_designs()` browses the library
 * `make_design()` builds a design and changes its parameters
