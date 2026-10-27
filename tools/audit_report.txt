@@ -1,14 +1,24 @@
-DesignLibrary audit: 66/68 ok, 2 failed
+DesignLibrary audit: 75/75 ok
 (Order: FAIL, SKIP/parked, OK-with-notes, OK)
 
- - italian_village_bayes: FAIL [missing_packages] - Design 'italian_village_bayes' needs packages not installed: rstanarm
- - process_tracing: FAIL [missing_packages] - Design 'process_tracing' needs packages not installed: CausalQueries
+ - factorial: OK
+     no YAML tip (ok): factorial_grid, factorial_po_names, factorial_population, factorial_assignment, factorial_reveal, factorial_inquiries, factorial_estimator
+ - multiarm_trial: OK
+     no YAML tip (ok): per_arm
+ - process_tracing_bayes: OK
+     no YAML tip (ok): joint_prob, bayes_rule, prior_only, clue_posterior, E1_only, E2_only, both_clues
+ - regression_discontinuity_polynomial: OK
+     no YAML tip (ok): po_function
+ - spillover: OK
+     no YAML tip (ok): dgp
  - audit_experiment: OK
  - audit_intervention: OK
  - baseline_over_N: OK
+ - binary_iv: OK
  - blocked_and_clustered: OK
  - bootstrapped: OK
  - cluster_random_sampling: OK
+ - cluster_sampling: OK
  - conditional_expectation: OK
  - conjoint: OK
  - covariate_adjustment: OK
@@ -22,6 +32,7 @@ DesignLibrary audit: 66/68 ok, 2 failed
  - factorial_2x2x2: OK
  - instrumental_variables: OK
  - italian_village: OK
+ - italian_village_bayes: OK
  - italian_village_continued: OK
  - latent_variables: OK
  - lin_estimator: OK
@@ -32,13 +43,13 @@ DesignLibrary audit: 66/68 ok, 2 failed
  - matching: OK
  - mediation_analysis: OK
  - multi_site_studies: OK
- - multiarm_trial: OK
  - multilevel: OK
  - multilevel_answer_strategies: OK
  - network_experiment: OK
  - pate_with_sampling: OK
  - population_estimands: OK
  - pretest_posttest: OK
+ - process_tracing: OK
  - random_forests: OK
  - randomization_inference: OK
  - randomized_response: OK
@@ -57,6 +68,7 @@ DesignLibrary audit: 66/68 ok, 2 failed
  - two_arm_bare_bones: OK
  - two_arm_block_cluster: OK
  - two_arm_block_rdss: OK
+ - two_arm_covariate: OK
  - two_arm_flexible: OK
  - two_arm_rdss_1: OK
  - two_arm_rdss_2: OK

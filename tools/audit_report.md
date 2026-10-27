@@ -1,6 +1,6 @@
 # DesignLibrary audit report
 
-Summary: **66/68** designs OK, **2** failed.
+Summary: **75/75** designs OK.
 
 Issue types: `missing_packages`, `yaml_extra_params`, `param_discovery`, `load_error`, `missing_object`, `diagnose_failed`, `disabled`, `other`.
 
@@ -13,13 +13,15 @@ Plain-text listing (`audit_report.txt`) puts FAIL/SKIP first, then OK.
 
 ## Failures
 
-### missing_packages
+_None._
 
-- **italian_village_bayes** (`9.3`)
-  - Design 'italian_village_bayes' needs packages not installed: rstanarm
+## Soft notes (OK designs)
 
-- **process_tracing** (`16.1b`)
-  - Design 'process_tracing' needs packages not installed: CausalQueries
+- **factorial**: no YAML tip: factorial_grid, factorial_po_names, factorial_population, factorial_assignment, factorial_reveal, factorial_inquiries, factorial_estimator
+- **multiarm_trial**: no YAML tip: per_arm
+- **process_tracing_bayes**: no YAML tip: joint_prob, bayes_rule, prior_only, clue_posterior, E1_only, E2_only, both_clues
+- **regression_discontinuity_polynomial**: no YAML tip: po_function
+- **spillover**: no YAML tip: dgp
 
 ## Full table
 
