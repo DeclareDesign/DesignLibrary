@@ -258,6 +258,17 @@ a:hover { color: var(--dd-magenta); }
 app_css <- paste0(
   app_css,
   "
+/* bslib emits a Bootstrap 3 toggle whose icon bars Bootstrap 5 leaves
+   unstyled, so the phone menu button would be invisible without this */
+.navbar .navbar-toggle {
+  border: 1px solid var(--dd-border) !important; border-radius: 6px;
+  padding: 0.45rem 0.6rem; background: transparent;
+}
+.navbar .navbar-toggle .icon-bar {
+  display: block; width: 22px; height: 2px; border-radius: 1px;
+  background-color: var(--dd-navy);
+}
+.navbar .navbar-toggle .icon-bar + .icon-bar { margin-top: 4px; }
 .rd-lib-tabs { margin: 0.15rem 0 0.45rem; }
 .rd-lib-tabs .tab-content { display: none; }
 .rd-lib-tabs .nav-tabs { border-bottom-color: var(--dd-border); }
@@ -285,7 +296,13 @@ app_head <- tags$head(
   tags$link(rel = "icon", type = "image/svg+xml", href = "dd-logo.svg"),
   tags$link(rel = "apple-touch-icon", href = "dd-icon.png"),
   tags$meta(name = "theme-color", content = DD_MAGENTA),
-  tags$title("DesignLibrary")
+  tags$title("DesignLibrary"),
+  # On a phone the tabs sit in a collapsed menu; close it once a tab is chosen
+  tags$script(HTML(
+    "$(document).on('click', '.navbar-collapse.show .nav-link', function() {
+      $(this).closest('.navbar-collapse').collapse('hide');
+    });"
+  ))
 )
 
 theme_obj <- if (has_bslib) {
