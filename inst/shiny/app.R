@@ -144,6 +144,9 @@ details.rd-details[open] > summary { margin-bottom: 0.65rem; }
   justify-content: space-between; margin-bottom: 1rem;
 }
 .rd-selected-banner h3 { color: var(--dd-navy); }
+.rd-banner-actions { display: flex; gap: 0.5rem; align-items: center; }
+.rd-banner-actions .form-group { margin-bottom: 0; }
+.rd-default-note { flex-basis: 100%%; margin: 0; }
 .rd-param-grid {
   display: grid;
   grid-template-columns: minmax(6rem, 14%%) minmax(1.25rem, 1.75rem) 1fr;
@@ -666,7 +669,11 @@ server <- function(input, output, session) {
   idx_all <- DesignLibrary::list_designs(shiny_only = TRUE)
   if (!nrow(idx_all)) idx_all <- DesignLibrary::list_designs()
 
-  selected_id <- reactiveVal(NA_character_)
+  # Open on a simple design so every tab has content before anything is picked;
+  # the banner says it is a default and offers a picker to switch.
+  default_id <- if ("two_arm_simple" %in% idx_all$id) "two_arm_simple" else as.character(idx_all$id[[1]])
+  selected_id <- reactiveVal(default_id)
+  user_picked <- reactiveVal(FALSE)
   live_diag <- reactiveVal(NULL)
   mod_diag <- reactiveVal(NULL)
   mod_status <- reactiveVal("")
@@ -890,11 +897,12 @@ server <- function(input, output, session) {
     paste0(proto, "//", host, port_bit, path, design_query(id))
   }
 
-  go_to_design <- function(id, update_url = TRUE) {
+  go_to_design <- function(id, update_url = TRUE, open_tab = TRUE) {
     if (is.null(id) || is.na(id) || !nzchar(id)) return()
     id <- resolve_design_key(id)
     if (is.na(id) || !nzchar(id)) return()
     selected_id(id)
+    user_picked(TRUE)
     live_diag(NULL)
     mod_diag(NULL)
     mod_last_ranges(character(0))
@@ -907,6 +915,7 @@ server <- function(input, output, session) {
     }
     # Clear the row selection so clicking the same row again reopens it
     if (has_dt) DT::selectRows(DT::dataTableProxy("library_table", session = session), NULL)
+    if (!isTRUE(open_tab)) return()
     if (has_bslib) {
       bslib::nav_select("main_nav", selected = "Design", session = session)
     } else {
@@ -925,7 +934,7 @@ server <- function(input, output, session) {
     # Isolated: the URL is set once on load, and replaceState() is not
     # re-sent as url_search, so a later switch must not be undone here.
     cur <- isolate(selected_id())
-    if (is.na(cur) || !identical(cur, id)) {
+    if (is.na(cur) || !identical(cur, id) || !isolate(user_picked())) {
       go_to_design(id, update_url = FALSE)
     }
   })
@@ -982,11 +991,17 @@ server <- function(input, output, session) {
     }
   }, ignoreNULL = TRUE)
 
+  design_choices <- stats::setNames(
+    as.character(idx_all$id),
+    ifelse(is.na(idx_all$label) | !nzchar(idx_all$label), idx_all$id, idx_all$label)
+  )
+
   selected_header_ui <- function(back_id) {
     id <- selected_id()
     if (is.na(id) || !nzchar(id)) {
       return(div(class = "rd-card", p("Open a design from the Library tab.")))
     }
+    pick_id <- paste0("pick_", back_id)
     info <- DesignLibrary::design_info(id)
     share <- tryCatch(design_share_url(id), error = function(e) design_query(id))
     div(
@@ -1008,8 +1023,34 @@ server <- function(input, output, session) {
           HTML(permalink_svg)
         )
       ),
-      actionButton(back_id, "Back to library", class = "btn-outline-secondary btn-sm")
+      div(
+        class = "rd-banner-actions",
+        selectizeInput(
+          pick_id, NULL, choices = design_choices, selected = id, width = "18rem",
+          options = list(placeholder = "Switch design")
+        ),
+        actionButton(back_id, "Back to library", class = "btn-outline-secondary btn-sm")
+      ),
+      if (!user_picked()) {
+        p(
+          class = "rd-muted rd-default-note",
+          "Showing the simple two-arm design by default. Pick another above or browse the Library."
+        )
+      }
     )
+  }
+
+  # Switching from the banner keeps the user on the tab they are on
+  for (pick_id in paste0("pick_", c("back_library", "back_library_diag", "back_library_mod"))) {
+    local({
+      input_id <- pick_id
+      observeEvent(input[[input_id]], {
+        id <- input[[input_id]]
+        if (nzchar(id) && !identical(id, selected_id())) {
+          go_to_design(id, open_tab = FALSE)
+        }
+      }, ignoreInit = TRUE)
+    })
   }
 
   output$selected_header <- renderUI(selected_header_ui("back_library"))
