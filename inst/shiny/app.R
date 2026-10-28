@@ -144,7 +144,8 @@ details.rd-details[open] > summary { margin-bottom: 0.65rem; }
   justify-content: space-between; margin-bottom: 1rem;
 }
 .rd-selected-banner h3 { color: var(--dd-navy); }
-.rd-banner-actions { display: flex; gap: 0.5rem; align-items: center; }
+.rd-banner-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; max-width: 100%%; }
+.rd-banner-actions .selectize-control, .rd-banner-actions .form-group { max-width: 100%%; }
 .rd-banner-actions .form-group { margin-bottom: 0; }
 .rd-default-note { flex-basis: 100%%; margin: 0; }
 .rd-param-grid {
@@ -1329,7 +1330,6 @@ server <- function(input, output, session) {
     }
     term_col <- if ("term" %in% names(df)) "term" else NULL
     n_est <- if (!is.null(est_col)) length(unique(df[[est_col]])) else 0L
-    n_term <- if (!is.null(term_col)) length(unique(df[[term_col]])) else 0L
     # A term is only worth printing when one estimator reports several of them;
     # a multi-arm design's pairwise DIMs each report one term (`Z3` for the
     # 3-vs-2 contrast), so the estimator label alone is the right name.
@@ -1340,7 +1340,7 @@ server <- function(input, output, session) {
       df$.y <- "estimate"
     } else if (n_est > 1L && terms_within_est) {
       df$.y <- paste(df[[est_col]], "-", df[[term_col]])
-    } else if (n_term > 1L && !is.null(term_col)) {
+    } else if (terms_within_est) {
       df$.y <- as.character(df[[term_col]])
     } else {
       df$.y <- as.character(df[[est_col]])
