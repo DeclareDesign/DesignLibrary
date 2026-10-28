@@ -13,7 +13,7 @@
 #' two_arm_designer(N = 40, ate = 0.2)
 #' get_args("two_arm_simple")
 #' get_code("two_arm_simple")
-#' run_shiny()
+#' designs_shiny_app()
 #' ```
 #'
 #' @section Shiny deploy:

@@ -17,14 +17,14 @@ knitr::opts_chunk$set(
 
 # The short version
 
-To add a design you only have to contribute **a single self-contained R file** under `inst/designs/`. That file declares a design and, preferably, a short YAML header. Once it is there, `make_design()`, the maintainer audits, and `run_shiny()` can all use it.
+To add a design you only have to contribute **a single self-contained R file** under `inst/designs/`. That file declares a design and, preferably, a short YAML header. Once it is there, `make_design()`, the maintainer audits, and `designs_shiny_app()` can all use it.
 
 The contribution workflow is:
 
 1. **Fork** the repository and clone your fork.
 2. **Add your file** in `inst/designs/`.
 3. **Refresh** so library artifacts are built for the new design.
-4. **Check** with `audit_designs()` and `run_shiny()` to see it all working.
+4. **Check** with `audit_designs()` and `designs_shiny_app()` to see it all working.
 5. Open a **pull request**.
 
 In more detail:
@@ -72,7 +72,7 @@ At minimum:
 list_designs()
 make_design("my_design")
 audit_designs()
-run_shiny()
+designs_shiny_app()
 ```
 
 Confirm the design appears in the Library, opens cleanly, and diagnosis / redesign behave as you expect. Use `design_info("my_design")` and `get_args("my_design")` for a quick profile.

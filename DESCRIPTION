@@ -15,7 +15,7 @@ Description: A lightweight library of research designs declared with
     parameters are read from the design itself. Optional YAML metadata
     adds labels, categories, tips, and book aliases. Includes maintainer
     tools to index, audit, and bake small diagnosis previews, plus a
-    bundled Shiny browser (`run_shiny()`).
+    bundled Shiny browser (`designs_shiny_app()`).
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:

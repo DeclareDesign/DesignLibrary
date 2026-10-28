@@ -43,7 +43,7 @@ reference:
 - title: Shiny
   desc: Browse designs interactively and deploy a standalone app folder.
   contents:
-  - run_shiny
+  - designs_shiny_app
   - copy_library_shiny
   - install_library_dependencies
   - get_preview

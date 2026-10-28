@@ -60,7 +60,7 @@ cat("```r\n", code, "\n```\n", sep = "")
 
 The header is optional. At minimum you need a design object (by default named `design`). Parameter tips are plain strings under `params:`; quote keys such as `"N"` and `"b"`.
 
-As soon as that file sits in `inst/designs/`, it is available to `make_design()`, `get_args()`, `get_code()`, the maintainer audits, and `run_shiny()`.
+As soon as that file sits in `inst/designs/`, it is available to `make_design()`, `get_args()`, `get_code()`, the maintainer audits, and `designs_shiny_app()`.
 
 # What designs are included?
 
@@ -103,7 +103,7 @@ make_design("two_arm_simple", b = c(0, .3, .6), N = c(20, 1000)) |>
 DesignLibrary comes bundled with a shiny app to let you inspect designs.
 
 ```{r shiny, eval = FALSE}
-run_shiny()
+designs_shiny_app()
 ```
 
 The app opens on a searchable library table. Click a row to open the design, expand its profile, run it once, diagnose it, or redesign parameters. For a server deploy: install the package, run `install_library_dependencies()`, then `copy_library_shiny(dest)`.

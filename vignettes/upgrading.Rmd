@@ -180,5 +180,5 @@ The library holds `r nrow(as.data.frame(list_designs()))` designs, including the
 * `make_design()` builds a design and changes its parameters
 * `get_args()` lists what can be changed
 * `get_code()` prints the source
-* `run_shiny()` opens thelibrary in a browser
+* `designs_shiny_app()` opens the library in a browser
 * `vignette("DesignLibrary")` gives you a  tour.

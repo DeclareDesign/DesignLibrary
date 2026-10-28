@@ -36,13 +36,13 @@ resolve_shiny_dest <- function(dest = getwd()) {
 #' @return The value of `shiny::runApp()` (called for side effects).
 #' @examples
 #' if (interactive()) {
-#'   run_shiny()
+#'   designs_shiny_app()
 #' }
 #' @export
-run_shiny <- function(...) {
+designs_shiny_app <- function(...) {
   if (!requireNamespace("shiny", quietly = TRUE)) {
     stop(
-      "Package 'shiny' is required for run_shiny(). ",
+      "Package 'shiny' is required for designs_shiny_app(). ",
       "Run install_library_dependencies() first.",
       call. = FALSE
     )

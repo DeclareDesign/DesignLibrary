@@ -544,7 +544,7 @@ contribute_panel <- function() {
           " locally. At minimum:",
           tags$pre(
             class = "rd-code",
-            "list_designs()\nmake_design(\"my_design\")\naudit_designs()\nrun_shiny()"
+            "list_designs()\nmake_design(\"my_design\")\naudit_designs()\ndesigns_shiny_app()"
           ),
           "Confirm your design appears in the Library, opens cleanly, and diagnosis/redesign behave as you expect."
         ),
@@ -1289,10 +1289,15 @@ server <- function(input, output, session) {
     term_col <- if ("term" %in% names(df)) "term" else NULL
     n_est <- if (!is.null(est_col)) length(unique(df[[est_col]])) else 0L
     n_term <- if (!is.null(term_col)) length(unique(df[[term_col]])) else 0L
+    # A term is only worth printing when one estimator reports several of them;
+    # a multi-arm design's pairwise DIMs each report one term (`Z3` for the
+    # 3-vs-2 contrast), so the estimator label alone is the right name.
+    terms_within_est <- !is.null(est_col) && !is.null(term_col) &&
+      any(tapply(df[[term_col]], df[[est_col]], function(x) length(unique(x))) > 1L)
 
     if (is.null(est_col)) {
       df$.y <- "estimate"
-    } else if (n_est > 1L && n_term > 1L && !is.null(term_col)) {
+    } else if (n_est > 1L && terms_within_est) {
       df$.y <- paste(df[[est_col]], "-", df[[term_col]])
     } else if (n_term > 1L && !is.null(term_col)) {
       df$.y <- as.character(df[[term_col]])

@@ -24,7 +24,7 @@ two_arm_designer(N = 40, ate = 0.2)  # DesignLibrary 0.1 name
 make_design("2.1", b = 0.5)          # book alias
 get_args("two_arm_simple")
 get_code("two_arm_simple")             # simple make_design() + full source
-run_shiny()
+designs_shiny_app()
 install_library_dependencies()        # Imports + Shiny Suggests + YAML packages
 copy_library_shiny("path/to/app")     # standalone Shiny folder for the server
 ```
