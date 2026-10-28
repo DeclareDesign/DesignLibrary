@@ -7,14 +7,14 @@ DesignLibrary 2.0.0 is a rewrite that supersedes 0.1.10, which fails its tests o
 ## Test environments
 
 * local macOS (Tahoe 26.6), R 4.6.1, against a library holding only CRAN releases, on commit c9b01ee: `R CMD check --as-cran`, 0 errors, 0 warnings, 1 note; tests `FAIL 0 | WARN 0 | SKIP 49 | PASS 682`.
-* GitHub Actions (R-CMD-check, run 40414536514 on commit 6c34f90): macOS latest R 4.6.1; Windows latest R 4.6.1 (ucrt); Ubuntu 24.04 R 4.6.1, R 4.5.3 (oldrel-1), and R-devel (2026-10-25 r90763). All Status: OK, tests `FAIL 0 | WARN 0 | SKIP 22 | PASS 1465`.
-* win-builder R-devel (2026-10-26 r90766 ucrt), Windows Server 2022, on commit 0208f78: 0 errors, 0 warnings, 1 note (the maintainer change, and 'DeclareDesign' as a possibly misspelled word). Resubmitted on c9b01ee on 2026-10-27; result pending.
+* GitHub Actions (R-CMD-check, run 40618317865 on commit c9b01ee): macOS latest R 4.6.1; Windows latest R 4.6.1 (ucrt); Ubuntu 24.04 R 4.6.1, R 4.5.3 (oldrel-1), and R-devel. All Status: OK, tests `FAIL 0 | WARN 0 | SKIP 22 | PASS 1475`.
+* win-builder R-devel (2026-10-26 r90766 ucrt), Windows Server 2022, on commit c9b01ee: 0 errors, 0 warnings, 1 note (the maintainer change).
 
 ## R CMD check results
 
 0 errors | 0 warnings | 1 note
 
-* The note is the maintainer change above. On win-builder it also lists 'DeclareDesign' in the Description as possibly misspelled; it is the name of a CRAN package and is quoted.
+* The note is the maintainer change above. An earlier win-builder run also listed 'DeclareDesign' in the Description as possibly misspelled; it is the name of a CRAN package and is quoted.
 
 ## Reverse dependencies
 
