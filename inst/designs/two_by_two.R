@@ -2,7 +2,7 @@
 id: two_by_two
 label: 2x2 factorial (library)
 category: template
-keywords: [experiment, causal, factorial]
+keywords: [experiment, causal, factorial, interaction]
 description: >
   Two-by-two factorial with independent assignment of A then B within
   blocks of A. Cell means are the vector outcome_means in order AB =

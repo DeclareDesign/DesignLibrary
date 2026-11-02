@@ -3,7 +3,7 @@ id: stepped_wedge
 alias: "18.10"
 label: stepped-wedge
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, panel, stepped wedge]
 description: >
   Stepped-wedge design. (chapter 18).
 packages: [dplyr]

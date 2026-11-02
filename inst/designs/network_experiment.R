@@ -3,7 +3,7 @@ id: network_experiment
 alias: "18.13"
 label: network experiment
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, spillovers, interference]
 description: >
   Experiments over spatial networks design. (chapter 18).
 packages: [rdss, spdep, interference, dplyr, sf]

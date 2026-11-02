@@ -3,7 +3,7 @@ id: encouragement
 alias: "18.8"
 label: encouragement
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, two-arm, noncompliance, instrumental variables]
 description: >
   Encouragement design. (chapter 18).
 packages: [dplyr]

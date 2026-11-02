@@ -3,7 +3,7 @@ id: lin_estimator
 alias: "18.3"
 label: lin estimator
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, two-arm, covariates]
 description: >
   Lin estimator design. (chapter 18).
 params:

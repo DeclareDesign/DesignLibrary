@@ -3,7 +3,7 @@ id: structural_estimation
 alias: "19.2"
 label: structural estimation
 category: rdss
-keywords: [complex]
+keywords: [experiment, causal, complex, structural estimation]
 description: >
   Structural estimation declaration. (chapter 19). The design shows how
   to use maximum likelihood techniques to estimate parameters of a formal

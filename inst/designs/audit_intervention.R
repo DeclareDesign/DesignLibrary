@@ -3,7 +3,7 @@ id: audit_intervention
 alias: "17.2"
 label: audit intervention
 category: rdss
-keywords: [experiment, descriptive]
+keywords: [experiment, descriptive, factorial, audit]
 description: >
   Audit experiment intervention study design. (chapter 17).
 packages: [dplyr]

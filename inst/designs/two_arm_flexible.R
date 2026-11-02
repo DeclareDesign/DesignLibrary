@@ -2,7 +2,7 @@
 id: two_arm_flexible
 label: Flexible two-arm trial
 category: template
-keywords: [experiment, two-arm]
+keywords: [experiment, causal, two-arm]
 description: >
   One-level two-arm trial with complete random assignment. Potential
   outcomes are jointly normal, with correlation rho between the control

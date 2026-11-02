@@ -3,6 +3,7 @@ id: bootstrapped
 alias: "9.5"
 label: bootstrapped
 category: rdss
+keywords: [observational, causal, inference]
 description: >
   Bootstrapped standard errors. (chapter 9).
 packages: [rdss]

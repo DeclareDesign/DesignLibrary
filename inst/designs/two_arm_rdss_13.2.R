@@ -3,6 +3,7 @@ id: two_arm_rdss_2
 alias: "13.2"
 label: Declaration of two-arm randomized experiment
 category: rdss
+keywords: [experiment, causal, two-arm]
 description: >
   Declaration of two-arm randomized experiment (chapter 13).
 params:

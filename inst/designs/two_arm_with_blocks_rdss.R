@@ -3,7 +3,7 @@ id: two_arm_with_blocks_rdss
 alias: "2.2"
 label: Two-arm trial with blocks from RDSS
 category: rdss
-keywords: [experiment, two-arm, blocking, introduction]
+keywords: [experiment, causal, two-arm, blocking, introduction]
 description: >
   Chapter 2 design that uses background information (history) for blocked
   assignment and a blocked difference-in-means estimator.

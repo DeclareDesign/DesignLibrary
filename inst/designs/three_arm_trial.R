@@ -2,7 +2,7 @@
 id: three_arm
 label: Three-arm trial
 category: template
-keywords: [experiment, causal, three-arm]
+keywords: [experiment, causal, multi-arm]
 description: >
   Three-arm experiment with modifiable assignment probabilities. 
 params:

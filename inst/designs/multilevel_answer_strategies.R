@@ -3,7 +3,7 @@ id: multilevel_answer_strategies
 alias: "15.5"
 label: Redesign over answer strategies.
 category: rdss
-keywords: [observational, descriptive]
+keywords: [observational, descriptive, sampling, survey]
 description: >
   Redesign over answer strategies. (chapter 15).
 packages: [rdss, lme4, dplyr, tibble]

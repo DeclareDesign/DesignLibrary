@@ -3,7 +3,7 @@ id: multilevel
 alias: "15.4"
 label: multilevel
 category: rdss
-keywords: [observational, descriptive]
+keywords: [observational, descriptive, sampling, survey]
 description: >
   Multilevel regression and poststratification design. (chapter 15).
 packages: [rdss, lme4, dplyr, tibble]

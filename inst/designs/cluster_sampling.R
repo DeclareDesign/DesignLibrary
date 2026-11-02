@@ -2,7 +2,7 @@
 id: cluster_sampling
 label: Two-stage cluster sampling
 category: template
-keywords: [descriptive, sampling, clusters]
+keywords: [observational, descriptive, sampling, clustering]
 description: >
   A fixed population of blocks, clusters, and individuals with an ordinal
   outcome whose intra-cluster correlation is icc. Clusters are sampled within

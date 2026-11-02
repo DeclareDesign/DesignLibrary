@@ -3,7 +3,7 @@ id: diff_in_diff
 alias: "16.3"
 label: diff-in-diff
 category: rdss
-keywords: [observational, causal]
+keywords: [observational, causal, difference-in-differences, panel]
 description: >
   Difference-in-differences design (chapter 16).
 packages: [rdss, DIDmultiplegt, dplyr]

@@ -3,7 +3,7 @@ id: latent_variables
 alias: "15.6"
 label: latent variables
 category: rdss
-keywords: [observational, descriptive]
+keywords: [observational, descriptive, measurement]
 description: >
   Latent variable design (chapter 15).
 params:

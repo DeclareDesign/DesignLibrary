@@ -2,7 +2,7 @@
 id: multiarm_trial
 label: Multi-arm trial
 category: template
-keywords: [experiment, causal, multiarm]
+keywords: [experiment, causal, multi-arm]
 description: >
   Multi-arm experiment with equal assignment probabilities. The outcome
   is a function of the assigned arm: the arm mean plus a shared shock and

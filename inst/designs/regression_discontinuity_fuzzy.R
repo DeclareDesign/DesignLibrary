@@ -3,7 +3,7 @@ id: regression_discontinuity_fuzzy
 alias: "16.6"
 label: regression discontinuity fuzzy
 category: rdss
-keywords: [observational, causal]
+keywords: [observational, causal, regression discontinuity]
 description: >
   Regression discontinuity designs with varying bandwidths (chapter 16).
 packages: [rdss, rdrobust]

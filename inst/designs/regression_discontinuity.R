@@ -3,7 +3,7 @@ id: regression_discontinuity
 alias: "16.5"
 label: regression discontinuity
 category: rdss
-keywords: [observational, causal]
+keywords: [observational, causal, regression discontinuity]
 description: >
   Regression discontinuity design (chapter 16).
 packages: [rdss, rdrobust]

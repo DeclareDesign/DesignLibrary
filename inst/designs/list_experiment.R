@@ -3,7 +3,7 @@ id: list_experiment
 alias: "17.3"
 label: list experiment
 category: rdss
-keywords: [experiment, descriptive]
+keywords: [experiment, descriptive, sensitive questions, survey]
 description: >
   List experiment design. (chapter 17).
 params:

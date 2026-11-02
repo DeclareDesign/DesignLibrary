@@ -2,7 +2,7 @@
 id: spillover
 label: Two-arm trial with spillovers within groups
 category: template
-keywords: [experiment, causal, spillovers, interference]
+keywords: [experiment, causal, two-arm, spillovers, interference]
 description: >
   Units sit in groups, and a unit's outcome depends on the share of its group
   that is treated, raised to the power gamma. The inquiry is the average effect

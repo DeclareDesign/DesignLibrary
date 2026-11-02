@@ -3,7 +3,7 @@ id: logit_probit_ols
 alias: "11.5"
 label: Logit, probit, or OLS?
 category: rdss
-keywords: [experiment, binary, logit, probit, margins]
+keywords: [experiment, causal, two-arm, binary outcome, logit, probit, margins]
 description: >
   Compare OLS, logit, and probit estimates of an ATE on a binary outcome.
   Marginal effects for GLM estimators use the margins package.

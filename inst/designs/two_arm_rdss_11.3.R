@@ -3,6 +3,7 @@ id: two_arm_bare_bones
 alias: "11.3"
 label: Bare-bones two-arm trial
 category: rdss
+keywords: [experiment, causal, two-arm]
 description: >
   Bare-bones two-arm trial (chapter 11).
 params:

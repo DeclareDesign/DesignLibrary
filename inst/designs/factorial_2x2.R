@@ -3,7 +3,7 @@ id: factorial_2x2
 alias: "18.7"
 label: factorial 2x2
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, factorial, interaction]
 description: >
   Two-by-two factorial design. (chapter 18).
 params:

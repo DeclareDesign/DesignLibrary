@@ -2,7 +2,7 @@
 id: mediation_analysis
 label: Mediation analysis
 category: template
-keywords: [experiment, causal, mediation]
+keywords: [experiment, causal, two-arm, mediation]
 description: >
   Two-arm trial with a binary mediator, declaring the first stage, the
   controlled direct effects, the natural direct effects, and the effect of

@@ -3,7 +3,7 @@ id: two_arm_rdss_1
 alias: "2.1"
 label: Two-arm trial from RDSS with sampling
 category: rdss
-keywords: [experiment, two-arm, introduction]
+keywords: [experiment, causal, two-arm, sampling, introduction]
 description: >
   Two-arm trial design from RDSS chapter 2. Illustrates MIDA with a simple
   sampling and complete random assignment step.

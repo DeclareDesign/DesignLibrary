@@ -3,7 +3,7 @@ id: survey_nonresponse
 alias: "15.2"
 label: survey nonresponse
 category: rdss
-keywords: [observational, descriptive, sampling]
+keywords: [observational, descriptive, sampling, survey, nonresponse]
 description: >
   Survey nonresponse design. (chapter 15).
 packages: [dplyr]

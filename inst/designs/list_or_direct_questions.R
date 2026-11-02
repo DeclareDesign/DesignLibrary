@@ -3,6 +3,7 @@ id: list_or_direct_questions
 alias: "17.4"
 label: list or direct questions?
 category: rdss
+keywords: [experiment, descriptive, sensitive questions, survey]
 description: >
   Comparing list experiments with direct questions. (chapter 17).
 packages: [dplyr]

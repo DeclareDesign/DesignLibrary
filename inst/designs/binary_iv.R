@@ -2,7 +2,7 @@
 id: binary_iv
 label: Binary instrumental variables
 category: template
-keywords: [experiment, causal, instrumental variables, noncompliance]
+keywords: [experiment, causal, two-arm, noncompliance, instrumental variables]
 description: >
   Units are always-takers, never-takers, compliers, or defiers. The instrument
   Z can depend on type, the treatment X follows from type and Z, and the

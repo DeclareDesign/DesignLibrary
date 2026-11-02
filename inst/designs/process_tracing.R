@@ -3,7 +3,7 @@ id: process_tracing
 alias: "16.1b"
 label: process tracing
 category: rdss
-keywords: [observational, causal]
+keywords: [observational, causal, qualitative]
 description: >
   Process tracing design declaration (chapter 16).
 packages: [rdss, CausalQueries]

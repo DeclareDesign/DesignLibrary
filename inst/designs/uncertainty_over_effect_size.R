@@ -3,6 +3,7 @@ id: uncertainty_over_effect_size
 alias: "11.2"
 label: uncertainty over effect size
 category: rdss
+keywords: [experiment, causal, two-arm]
 description: >
   Uncertainty over effect size design. (chapter 11).
 params:

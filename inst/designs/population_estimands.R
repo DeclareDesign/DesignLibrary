@@ -3,6 +3,7 @@ id: population_estimands
 alias: "7.1"
 label: population estimands
 category: rdss
+keywords: [observational, descriptive, sampling]
 description: >
   Super-population, population, and finite sample design (chapter 7).
 params:

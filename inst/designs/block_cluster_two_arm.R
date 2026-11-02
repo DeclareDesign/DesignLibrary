@@ -2,7 +2,7 @@
 id: two_arm_block_cluster
 label: Two arm trial with blocks and clusters
 category: template
-keywords: [experiment, causal, blocking, cluster]
+keywords: [experiment, causal, two-arm, blocking, clustering]
 description: >
   Two-arm trial in which units are nested in clusters and clusters in
   blocks, assignment is at the cluster level and blocked, and the outcome

@@ -2,7 +2,7 @@
 id: randomized_response
 label: Randomized response
 category: template
-keywords: [experiment, descriptive, sensitive]
+keywords: [experiment, descriptive, sensitive questions, survey]
 description: >
   Forced randomized response for a sensitive trait. A coin decides whether a
   respondent answers truthfully or is forced to say yes, so the prevalence

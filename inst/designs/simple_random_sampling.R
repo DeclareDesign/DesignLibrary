@@ -3,7 +3,7 @@ id: simple_random_sampling
 alias: "15.1"
 label: simple random sampling
 category: rdss
-keywords: [observational, descriptive]
+keywords: [observational, descriptive, sampling]
 description: >
   Simple random sampling design (chapter 15).
 params:

@@ -205,14 +205,106 @@ library_search_rows <- function(df, q) {
   grepl(tolower(q), hay, fixed = TRUE)
 }
 
+#' Split the index's comma-separated `keywords` column into one vector per row
+#' @noRd
+split_keywords <- function(x) {
+  x <- as.character(x %||% character(0))
+  x[is.na(x)] <- ""
+  lapply(strsplit(x, ",", fixed = TRUE), function(k) {
+    k <- trimws(k)
+    k[nzchar(k)]
+  })
+}
+
+#' Rows carrying every selected keyword (case-insensitive)
+#' @noRd
+library_keyword_rows <- function(df, keywords = character(0)) {
+  n <- if (is.null(df)) 0L else nrow(df)
+  keywords <- tolower(trimws(as.character(keywords %||% character(0))))
+  keywords <- keywords[nzchar(keywords)]
+  if (!length(keywords)) return(rep(TRUE, n))
+  vapply(split_keywords(df$keywords), function(k) {
+    all(keywords %in% tolower(k))
+  }, logical(1))
+}
+
+#' Keyword choices for the library filter, most common first
+#'
+#' Names carry the count, as in "two-arm (18)"; values are the keywords.
+#' @noRd
+library_keyword_choices <- function(df) {
+  kw <- unlist(split_keywords(df$keywords), use.names = FALSE)
+  if (!length(kw)) return(character(0))
+  counts <- table(kw)
+  counts <- counts[order(-counts, names(counts))]
+  stats::setNames(names(counts), sprintf("%s (%d)", names(counts), as.integer(counts)))
+}
+
+#' First sentence of a description, for the library table
+#' @noRd
+description_teaser <- function(x, max_chars = 180L) {
+  x <- trimws(gsub("\\s+", " ", as.character(x %||% "")))
+  x[is.na(x)] <- ""
+  vapply(x, function(s) {
+    if (!nzchar(s)) return("")
+    first <- sub("^(.*?[.!?])\\s.*$", "\\1", s, perl = TRUE)
+    if (nchar(first) <= max_chars) return(first)
+    cut <- substr(first, 1L, max_chars)
+    paste0(sub("\\s+\\S*$", "", cut), "…")
+  }, character(1), USE.NAMES = FALSE)
+}
+
+#' Standalone R script that declares, optionally redesigns, and diagnoses a design
+#'
+#' The script needs only DeclareDesign and the design's own packages, not
+#' DesignLibrary. `dots` are parameter values as passed to [make_design()];
+#' they go through the same wrapping (vector parameters replaced whole), so
+#' the script's `redesign()` call builds the designs the app diagnosed.
+#' @noRd
+diagnosis_script <- function(design, dots = list(), sims = NULL) {
+  parsed <- resolve_design(design)
+  id <- parsed$meta$id
+  obj <- parsed$meta$object %||% "design"
+  full <- trim_code_snippet(prefix_yaml_libraries(parsed$code, parsed$meta$packages))
+  has_dd <- grepl("library\\(DeclareDesign\\)", full)
+  out <- c(
+    sprintf("# %s, from DesignLibrary (https://declaredesign.org/r/designlibrary/)", id),
+    if (!has_dd) "library(DeclareDesign)",
+    "",
+    full
+  )
+  target <- obj
+  if (length(dots)) {
+    params <- discover_design_params(eval_design(parsed), code = parsed$code)
+    dots <- prepare_redesign_dots(params, dots)
+    args <- vapply(names(dots), function(nm) {
+      paste0(nm, " = ", deparse1(dots[[nm]]))
+    }, character(1))
+    out <- c(
+      out, "",
+      "# Parameters changed in the Redesign tab",
+      sprintf("designs <- redesign(%s,\n  %s\n)", obj, paste(args, collapse = ",\n  "))
+    )
+    target <- "designs"
+  }
+  if (!is.null(sims)) {
+    out <- c(
+      out, "",
+      sprintf("diagnosis <- diagnose_design(%s, sims = %d)", target, as.integer(sims)),
+      "diagnosis"
+    )
+  }
+  paste(out, collapse = "\n")
+}
+
 #' Filter the Shiny library table: search is global, then the selected tab.
 #' If the query matches only other tabs, `tab` is switched to the first match.
 #' Row order is preserved (starter sequence, then other groups).
 #' @return list(rows, tab, match_tabs, n_match)
 #' @noRd
-filter_library_browser <- function(df, tab = "templates", q = "") {
+filter_library_browser <- function(df, tab = "templates", q = "", keywords = character(0)) {
   df <- as.data.frame(df)
-  hit <- library_search_rows(df, q)
+  hit <- library_search_rows(df, q) & library_keyword_rows(df, keywords)
   matched <- df[hit, , drop = FALSE]
   keys_all <- library_tab_keys(df$category)
   if (!length(keys_all)) keys_all <- "templates"
@@ -222,7 +314,8 @@ filter_library_browser <- function(df, tab = "templates", q = "") {
     character(0)
   }
   q <- trimws(as.character(q %||% "")[[1]])
-  if (nzchar(q) && length(match_tabs) && !tab %in% match_tabs) {
+  filtering <- nzchar(q) || length(keywords) > 0L
+  if (filtering && length(match_tabs) && !tab %in% match_tabs) {
     tab <- match_tabs[[1]]
   }
   if (!tab %in% keys_all) tab <- keys_all[[1]]

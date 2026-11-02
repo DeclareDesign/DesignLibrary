@@ -280,7 +280,31 @@ app_css <- paste0(
   border-bottom-color: var(--dd-magenta);
 }
 .rd-lib-search { margin-bottom: 0.35rem; }
+.rd-lib-filters {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.5rem; margin-bottom: 0.35rem;
+}
+.rd-lib-filters .form-group { margin-bottom: 0; }
+@media (max-width: 700px) { .rd-lib-filters { grid-template-columns: minmax(0, 1fr); } }
 .rd-lib-hint { margin: 0 0 0.55rem; }
+.rd-lib-desc {
+  color: var(--dd-muted); font-size: 0.84rem; margin-top: 0.15rem;
+  white-space: normal; line-height: 1.35;
+}
+.rd-chip-sm { font-size: 0.72rem; padding: 0.08rem 0.45rem; font-weight: 600; }
+#library_table td { white-space: normal; vertical-align: top; }
+.rd-code-wrap { position: relative; }
+.rd-code-actions {
+  position: absolute; top: 0.4rem; right: 0.4rem; z-index: 2;
+  display: flex; gap: 0.3rem;
+}
+.rd-code-actions .btn { padding: 0.1rem 0.5rem; font-size: 0.76rem; background: #fff; }
+.rd-code-wrap > pre.rd-code { padding-right: 9.5rem; }
+.rd-copy-btn.rd-copied { color: #3fb618 !important; border-color: #3fb618 !important; }
+.rd-summary-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 0.5rem; }
+.rd-export-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.6rem 0; }
+.rd-export-row .btn { font-size: 0.82rem; }
+.rd-tip:focus { outline: 2px solid var(--dd-magenta); outline-offset: 1px; }
 "
 )
 
@@ -302,8 +326,63 @@ app_head <- tags$head(
     "$(document).on('click', '.navbar-collapse.show .nav-link', function() {
       $(this).closest('.navbar-collapse').collapse('hide');
     });"
+  )),
+  # navigator.clipboard needs a secure context (https or localhost); a server
+  # on plain http falls back to a hidden textarea and execCommand('copy')
+  tags$script(HTML(
+    "$(document).on('click', '.rd-copy-btn', function() {
+      var btn = this;
+      var pre = $(btn).closest('.rd-code-wrap').find('pre').get(0);
+      var text = pre ? pre.textContent : '';
+      var label = btn.getAttribute('data-label') || btn.textContent;
+      btn.setAttribute('data-label', label);
+      var done = function() {
+        btn.textContent = 'Copied';
+        btn.classList.add('rd-copied');
+        setTimeout(function() {
+          btn.textContent = label;
+          btn.classList.remove('rd-copied');
+        }, 1500);
+      };
+      var fallback = function() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { if (document.execCommand('copy')) done(); } catch (e) {}
+        document.body.removeChild(ta);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else {
+        fallback();
+      }
+    });"
   ))
 )
+
+# A code block with a copy button and, optionally, a download button
+code_block <- function(code, oneline = FALSE, download_id = NULL) {
+  div(
+    class = "rd-code-wrap",
+    div(
+      class = "rd-code-actions",
+      tags$button(
+        type = "button",
+        class = "btn btn-sm btn-outline-secondary rd-copy-btn",
+        title = "Copy to clipboard",
+        "Copy"
+      ),
+      if (!is.null(download_id)) {
+        downloadButton(download_id, ".R", class = "btn-sm btn-outline-secondary", title = "Download as an R script")
+      }
+    ),
+    tags$pre(class = paste("rd-code", if (oneline) "rd-code-oneline" else ""), code)
+  )
+}
 
 theme_obj <- if (has_bslib) {
   bslib::bs_theme(
@@ -348,15 +427,31 @@ library_panel <- function() {
     if (!nrow(out)) DesignLibrary::list_designs() else out
   }, error = function(e) NULL)
   cats <- if (!is.null(idx) && nrow(idx)) as.character(idx$category) else character(0)
+  kw_choices <- if (!is.null(idx) && nrow(idx)) {
+    DesignLibrary:::library_keyword_choices(idx)
+  } else {
+    character(0)
+  }
   div(
     class = "rd-card",
     div(
-      class = "rd-lib-search",
+      class = "rd-lib-filters",
       textInput(
         "lib_search",
         NULL,
         placeholder = "Search all categories: id, alias, label, params, keywords…",
         width = "100%"
+      ),
+      selectizeInput(
+        "lib_keywords",
+        NULL,
+        choices = kw_choices,
+        multiple = TRUE,
+        width = "100%",
+        options = list(
+          placeholder = "Filter by keywords (a design must have all of them)",
+          plugins = list("remove_button")
+        )
       )
     ),
     library_category_tabs(cats),
@@ -375,25 +470,37 @@ library_panel <- function() {
 design_panel <- function() {
   tagList(
     uiOutput("selected_header"),
-    div(
-      class = "rd-card",
-      tags$details(
-        class = "rd-details",
-        tags$summary("Design profile"),
-        verbatimTextOutput("design_profile_text")
-      )
-    ),
+    uiOutput("design_summary"),
     div(
       class = "rd-card",
       h4("One-line"),
       uiOutput("simple_code_ui"),
       h4("Full declaration"),
-      uiOutput("full_code_ui"),
-      h4("Editable parameters"),
+      uiOutput("full_code_ui")
+    ),
+    div(
+      class = "rd-card",
+      h4("Parameters you can change"),
+      p(
+        class = "rd-muted",
+        "Change these in the Redesign tab, or pass them to make_design() in R. ",
+        "A range (0, 10, 20) or seq() there diagnoses one design per value."
+      ),
       tableOutput("args_table"),
-      br(),
+      uiOutput("r_only_params")
+    ),
+    div(
+      class = "rd-card",
       actionButton("run_once", "Run this design once", class = "btn-secondary btn-sm"),
       verbatimTextOutput("run_once_out")
+    ),
+    div(
+      class = "rd-card",
+      tags$details(
+        class = "rd-details",
+        tags$summary("Full design profile, as printed by design_info()"),
+        verbatimTextOutput("design_profile_text")
+      )
     )
   )
 }
@@ -411,7 +518,21 @@ diagnosis_panel <- function() {
       h4("Diagnosands"),
       uiOutput("diag_diagnosand_ui"),
       tableOutput("diagnosis_table"),
-      if (has_ggplot2) plotOutput("diagnosis_plot", height = "320px") else NULL
+      if (has_ggplot2) plotOutput("diagnosis_plot", height = "320px") else NULL,
+      div(
+        class = "rd-export-row",
+        downloadButton("dl_diag_csv", "All diagnosands (.csv)", class = "btn-outline-secondary btn-sm"),
+        if (has_ggplot2) downloadButton("dl_diag_png", "Plot (.png)", class = "btn-outline-secondary btn-sm")
+      )
+    ),
+    div(
+      class = "rd-card",
+      h4("Code for this diagnosis"),
+      p(
+        class = "rd-muted",
+        "A standalone script: the declaration, then diagnose_design(). It needs DeclareDesign, not DesignLibrary."
+      ),
+      uiOutput("diag_code_ui")
     )
   )
 }
@@ -435,7 +556,21 @@ redesign_panel <- function() {
           style = "margin-top: 0.75rem;",
           tags$summary("Diagnosand table"),
           tableOutput("mod_table")
+        ),
+        div(
+          class = "rd-export-row",
+          downloadButton("dl_mod_csv", "All diagnosands (.csv)", class = "btn-outline-secondary btn-sm"),
+          if (has_ggplot2) downloadButton("dl_mod_png", "Plot (.png)", class = "btn-outline-secondary btn-sm")
         )
+      ),
+      div(
+        class = "rd-card",
+        h4("Code for this redesign"),
+        p(
+          class = "rd-muted",
+          "A standalone script: the declaration, redesign() with the values you changed, then diagnose_design()."
+        ),
+        uiOutput("mod_code_ui")
       )
     )
   )
@@ -716,14 +851,31 @@ server <- function(input, output, session) {
     x
   }
 
-  tip_title <- function(tip, kind = "scalar") {
+  # A native title= tooltip only shows after a hover delay and never on touch
+  # or click, which read as a dead icon; a Bootstrap tooltip opens on hover,
+  # focus, and tap.
+  tip_icon <- function(tip, kind = "scalar") {
     tip <- trimws(tip %||% "")
+    if (is.na(tip)) tip <- ""
     ex <- if (identical(kind, "vector")) {
       "Vector: 0.1, 0.2, 0.3. Sweep: 0,0,0,1; 0,0.5,0.5,1"
     } else {
       "Range example: 0, 10, 20"
     }
-    if (nzchar(tip) && !is.na(tip)) paste0(tip, "\n", ex) else ex
+    icon <- tags$span(
+      class = "rd-tip", tabindex = "0", role = "button",
+      `aria-label` = if (nzchar(tip)) tip else ex,
+      "i"
+    )
+    if (!has_bslib) {
+      return(tagAppendAttributes(icon, title = if (nzchar(tip)) paste0(tip, "\n", ex) else ex))
+    }
+    bslib::tooltip(
+      icon,
+      if (nzchar(tip)) tags$div(tip),
+      tags$div(style = "opacity: 0.8; margin-top: 0.2rem;", ex),
+      placement = "right"
+    )
   }
 
   redesign_kind_help <- function(id) {
@@ -761,6 +913,7 @@ server <- function(input, output, session) {
     }
     dots <- list()
     lengths <- integer(0)
+    changed <- character(0)
     for (i in seq_len(nrow(args))) {
       nm <- args$name[[i]]
       kind <- if ("kind" %in% names(args)) args$kind[[i]] else "scalar"
@@ -774,9 +927,10 @@ server <- function(input, output, session) {
       }
       dots[[nm]] <- parsed$value
       lengths[[nm]] <- if (identical(kind, "vector") && !isTRUE(parsed$sweep)) 1L else length(parsed$value)
+      if (!identical(raw, trimws(def))) changed <- c(changed, nm)
     }
     range_params <- names(lengths)[lengths > 1L]
-    list(dots = dots, lengths = lengths, range_params = range_params)
+    list(dots = dots, lengths = lengths, range_params = range_params, changed = changed)
   }
 
   # Tabs: templates first, then RDSS, then any later YAML categories.
@@ -786,11 +940,12 @@ server <- function(input, output, session) {
     DesignLibrary:::filter_library_browser(
       as.data.frame(idx_all),
       tab = input$lib_category %||% "templates",
-      q = input$lib_search %||% ""
+      q = input$lib_search %||% "",
+      keywords = input$lib_keywords %||% character(0)
     )
   })
 
-  observeEvent(input$lib_search, {
+  observeEvent(list(input$lib_search, input$lib_keywords), {
     res <- library_browser_state()
     cur <- trimws(as.character(input$lib_category %||% ""))
     if (nzchar(res$tab) && !identical(cur, res$tab)) {
@@ -800,7 +955,7 @@ server <- function(input, output, session) {
 
   output$lib_search_hint <- renderUI({
     q <- trimws(input$lib_search %||% "")
-    if (!nzchar(q)) return(NULL)
+    if (!nzchar(q) && !length(input$lib_keywords)) return(NULL)
     res <- library_browser_state()
     if (!res$n_match) {
       return(div(class = "rd-muted rd-lib-hint", "No matching designs."))
@@ -849,12 +1004,23 @@ server <- function(input, output, session) {
     "</svg>"
   )
 
+  # list_designs() leaves descriptions out; the index carries them
+  descriptions <- local({
+    full <- tryCatch(DesignLibrary:::make_index(), error = function(e) NULL)
+    if (is.null(full) || !"description" %in% names(full)) {
+      character(0)
+    } else {
+      stats::setNames(as.character(full$description), as.character(full$id))
+    }
+  })
+
   library_display <- reactive({
     df <- filtered_idx()
     ids <- as.character(df$id)
     labels <- as.character(df$label)
     bad_lab <- is.na(labels) | !nzchar(labels)
     labels[bad_lab] <- ids[bad_lab]
+    teasers <- DesignLibrary:::description_teaser(unname(descriptions[ids]))
     label_html <- vapply(seq_along(ids), function(i) {
       id <- ids[[i]]
       href <- paste0("?design=", utils::URLencode(id, reserved = TRUE))
@@ -862,13 +1028,18 @@ server <- function(input, output, session) {
         paste0(
           '<span class="rd-label-cell">%s',
           '<a class="rd-permalink" href="%s" title="Link to this design" ',
-          'aria-label="Link to design %s">%s</a></span>'
+          'aria-label="Link to design %s">%s</a></span>',
+          '<div class="rd-lib-desc">%s</div>'
         ),
         html_escape(labels[[i]]),
         href,
         html_escape(id),
-        permalink_svg
+        permalink_svg,
+        html_escape(teasers[[i]])
       )
+    }, character(1))
+    keywords_html <- vapply(DesignLibrary:::split_keywords(df$keywords), function(k) {
+      paste(sprintf('<span class="rd-chip rd-chip-sm">%s</span>', html_escape(k)), collapse = " ")
     }, character(1))
     params_disp <- as.character(df$params)
     params_disp[is.na(params_disp)] <- ""
@@ -876,6 +1047,7 @@ server <- function(input, output, session) {
     pkgs_disp[is.na(pkgs_disp)] <- ""
     data.frame(
       label = label_html,
+      keywords = keywords_html,
       params = html_escape(params_disp),
       packages = html_escape(pkgs_disp),
       stringsAsFactors = FALSE,
@@ -960,13 +1132,14 @@ server <- function(input, output, session) {
   if (has_dt) {
     output$library_table <- DT::renderDT({
       disp <- library_display()
-      show <- disp[, c("label", "params", "packages"), drop = FALSE]
+      show <- disp[, c("label", "keywords", "params", "packages"), drop = FALSE]
       DT::datatable(
         show,
         selection = "single",
         rownames = FALSE,
         escape = FALSE,
-        class = "display nowrap",
+        colnames = c("Design", "Keywords", "Parameters", "Packages"),
+        class = "display",
         options = list(
           pageLength = 100,
           lengthChange = FALSE,
@@ -976,11 +1149,12 @@ server <- function(input, output, session) {
           searching = FALSE,
           order = list(),  # keep list_designs() row order from filtered_idx()
           ordering = TRUE,
-          # Must match the 3 columns in `show` (id and alias columns are hidden)
+          # Must match the 4 columns in `show` (id and alias columns are hidden)
           columnDefs = list(
-            list(width = "46%", targets = 0),  # label (+ permalink)
-            list(width = "32%", targets = 1),  # params
-            list(width = "22%", targets = 2)   # packages
+            list(width = "46%", targets = 0),  # label (+ permalink, description)
+            list(width = "24%", targets = 1),  # keywords
+            list(width = "18%", targets = 2),  # params
+            list(width = "12%", targets = 3)   # packages
           ),
           # Hide Previous/Next when everything fits on one page
           drawCallback = DT::JS(
@@ -997,7 +1171,7 @@ server <- function(input, output, session) {
   } else {
     # Without DT there is no row selection; each label's permalink opens the design.
     output$library_table_basic <- renderTable({
-      library_display()[, c("label", "params", "packages"), drop = FALSE]
+      library_display()[, c("label", "keywords", "params", "packages"), drop = FALSE]
     }, sanitize.text.function = function(x) x)
   }
 
@@ -1133,32 +1307,98 @@ server <- function(input, output, session) {
     DesignLibrary::design_profile(id)
   })
 
+  output$design_summary <- renderUI({
+    id <- selected_id()
+    req(!is.na(id), nzchar(id))
+    info <- DesignLibrary::design_info(id)
+    desc <- trimws(as.character(info$description %||% "")[[1]])
+    kw <- as.character(info$keywords %||% character(0))
+    kw <- kw[nzchar(kw)]
+    pkgs <- as.character(info$packages %||% character(0))
+    pkgs <- pkgs[nzchar(pkgs)]
+    link <- as.character(info$book_link %||% "")[[1]]
+    div(
+      class = "rd-card",
+      if (nzchar(desc)) p(class = "rd-summary-desc", desc),
+      if (length(kw)) div(lapply(kw, function(k) tags$span(class = "rd-chip", k))),
+      if (length(pkgs)) {
+        p(class = "rd-muted", style = "margin: 0.5rem 0 0;", "Extra packages: ", paste(pkgs, collapse = ", "))
+      },
+      if (!is.na(link) && nzchar(link)) {
+        p(class = "rd-muted", style = "margin: 0.35rem 0 0;", tags$a(href = link, target = "_blank", "Book section"))
+      }
+    )
+  })
+
   output$simple_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
     code <- DesignLibrary::get_code(id, .style = "simple")
-    tags$pre(class = "rd-code rd-code-oneline", code$simple)
+    code_block(code$simple, oneline = TRUE)
   })
 
   output$full_code_ui <- renderUI({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
     code <- DesignLibrary::get_code(id, .style = "full")
-    tags$pre(class = "rd-code", code$full)
+    code_block(code$full, download_id = "dl_full_code")
   })
 
-  output$args_table <- renderTable({
+  output$dl_full_code <- downloadHandler(
+    filename = function() paste0(selected_id(), ".R"),
+    content = function(file) {
+      writeLines(DesignLibrary::get_code(selected_id(), .style = "full")$full, file)
+    }
+  )
+
+  # Parameters split by whether the browser can edit them: functions, data,
+  # and lists stay changeable in R only, so they get their own short note.
+  args_split <- reactive({
     id <- selected_id()
     req(!is.na(id), nzchar(id))
     args <- cached_args(id)
-    show <- data.frame(
-      name = args$name,
-      default = args$value_str,
-      kind = if ("kind" %in% names(args)) args$kind else "",
-      tip = args$tip,
+    editable <- if ("shiny" %in% names(args)) args$shiny %in% TRUE else rep(TRUE, nrow(args))
+    list(id = id, editable = args[editable, , drop = FALSE], r_only = args[!editable, , drop = FALSE])
+  })
+
+  output$args_table <- renderTable({
+    args <- args_split()$editable
+    if (!nrow(args)) return(data.frame(Parameter = "(none)"))
+    data.frame(
+      Parameter = args$name,
+      Default = vapply(seq_len(nrow(args)), function(i) {
+        DesignLibrary:::strip_trailing_semicolons(format_arg_default(args[i, , drop = FALSE]))
+      }, character(1)),
+      Type = if ("kind" %in% names(args)) args$kind else "scalar",
+      Description = ifelse(is.na(args$tip), "", args$tip),
       stringsAsFactors = FALSE
     )
-    show
+  })
+
+  output$r_only_params <- renderUI({
+    split <- args_split()
+    r_only <- split$r_only
+    if (!nrow(r_only)) return(NULL)
+    kinds <- if ("kind" %in% names(r_only)) r_only$kind else rep("parameter", nrow(r_only))
+    counts <- table(kinds)
+    plural <- ifelse(counts > 1L & names(counts) != "data", "s", "")
+    tags$details(
+      class = "rd-details",
+      style = "margin-top: 0.5rem;",
+      tags$summary(paste0(
+        "Also changeable in R only: ",
+        paste(paste0(as.integer(counts), " ", names(counts), plural), collapse = ", ")
+      )),
+      p(
+        class = "rd-muted",
+        "These are functions, data, or lists that the browser cannot edit as text. Pass a replacement in R:"
+      ),
+      code_block(
+        sprintf("make_design(\"%s\", %s = ...)", split$id, r_only$name[[1]]),
+        oneline = TRUE
+      ),
+      p(class = "rd-muted", style = "margin: 0;", paste(r_only$name, collapse = ", "))
+    )
   })
 
   observeEvent(input$run_once, {
@@ -1444,29 +1684,66 @@ server <- function(input, output, session) {
     filter_diagnosands(df, sel)
   })
 
-  if (has_ggplot2) {
-    output$diagnosis_plot <- renderPlot({
-      df <- diagnosand_df(current_diagnosis())
-      if (!is.null(df) && nrow(df) && "diagnosand" %in% names(df)) {
-        all_d <- available_diagnosands(unique(as.character(df$diagnosand)), selected_id())
-        sel <- input$diag_diagnosands
-        if (is.null(sel) || !length(sel)) sel <- default_diagnosands(all_d, selected_id())
-        df <- filter_diagnosands(df, sel)
-      }
-      if (is.null(df) || !nrow(df)) {
-        plot.new()
-        text(0.5, 0.5, "No diagnosis to plot yet.")
-        return(invisible())
-      }
-      p <- plot_diagnosand_forest(df)
-      if (is.null(p)) {
-        plot.new()
-        text(0.5, 0.5, "Diagnosis loaded; see table for values.")
-        return(invisible())
-      }
-      p
-    })
+  # A plot builder returns a ggplot, or a message to draw in its place
+  draw_plot_or_message <- function(p) {
+    if (inherits(p, "ggplot")) return(p)
+    plot.new()
+    text(0.5, 0.5, p)
+    invisible()
   }
+
+  save_plot_png <- function(p, file) {
+    if (!inherits(p, "ggplot")) {
+      showNotification("Nothing to download yet: run a diagnosis first.", type = "warning")
+      req(FALSE)
+    }
+    ggplot2::ggsave(file, p, width = 9, height = 5, dpi = 150, bg = "white")
+  }
+
+  diag_plot <- reactive({
+    df <- diagnosand_df(current_diagnosis())
+    if (!is.null(df) && nrow(df) && "diagnosand" %in% names(df)) {
+      all_d <- available_diagnosands(unique(as.character(df$diagnosand)), selected_id())
+      sel <- input$diag_diagnosands
+      if (is.null(sel) || !length(sel)) sel <- default_diagnosands(all_d, selected_id())
+      df <- filter_diagnosands(df, sel)
+    }
+    if (is.null(df) || !nrow(df)) return("No diagnosis to plot yet.")
+    p <- plot_diagnosand_forest(df)
+    if (is.null(p)) "Diagnosis loaded; see table for values." else p
+  })
+
+  if (has_ggplot2) {
+    output$diagnosis_plot <- renderPlot(draw_plot_or_message(diag_plot()))
+    output$dl_diag_png <- downloadHandler(
+      filename = function() paste0(selected_id(), "_diagnosis.png"),
+      content = function(file) save_plot_png(diag_plot(), file)
+    )
+  }
+
+  output$dl_diag_csv <- downloadHandler(
+    filename = function() paste0(selected_id(), "_diagnosands.csv"),
+    content = function(file) {
+      df <- diagnosand_df(current_diagnosis())
+      if (is.null(df)) df <- data.frame()
+      utils::write.csv(df, file, row.names = FALSE)
+    }
+  )
+
+  diag_code <- reactive({
+    id <- selected_id()
+    req(!is.na(id), nzchar(id))
+    live <- live_diag()
+    sims <- if (!is.null(live)) live$sims else clamp_sims(input$diag_sims, 100L)
+    DesignLibrary:::diagnosis_script(id, sims = sims)
+  })
+
+  output$diag_code_ui <- renderUI(code_block(diag_code(), download_id = "dl_diag_code"))
+
+  output$dl_diag_code <- downloadHandler(
+    filename = function() paste0(selected_id(), "_diagnosis.R"),
+    content = function(file) writeLines(diag_code(), file)
+  )
 
   # ---- Redesign ----
   output$mod_param_grid <- renderUI({
@@ -1503,10 +1780,9 @@ server <- function(input, output, session) {
     rows <- lapply(seq_len(nrow(shiny_args)), function(i) {
       nm <- shiny_args$name[[i]]
       kind <- if ("kind" %in% names(shiny_args)) shiny_args$kind[[i]] else "scalar"
-      tip <- tip_title(shiny_args$tip[[i]], kind)
       tagList(
         tags$div(class = "rd-param-name", nm),
-        tags$span(class = "rd-tip", title = tip, "i"),
+        tip_icon(shiny_args$tip[[i]], kind),
         textInput(
           inputId = paste0("mod_val_", nm),
           label = NULL,
@@ -1619,6 +1895,7 @@ server <- function(input, output, session) {
           tidy = tidy,
           summary = summary,
           diagnosis = diagnosis,
+          changed_dots = st$dots[st$changed],
           range_params = st$range_params,
           plot_x = if (isTRUE(input$mod_plot_x %in% st$range_params)) input$mod_plot_x else st$range_params[1] %||% NA_character_,
           plot_group = if (isTRUE(input$mod_plot_group %in% st$range_params)) input$mod_plot_group else st$range_params[2] %||% NA_character_
@@ -1652,108 +1929,128 @@ server <- function(input, output, session) {
     filtered_mod_df()
   })
 
-  if (has_ggplot2) {
-    output$mod_plot <- renderPlot({
-      obj <- mod_diag()
-      df <- filtered_mod_df()
-      if (is.null(df) || !nrow(df)) {
-        plot.new()
-        text(0.5, 0.5, "Run redesign and diagnosis to plot.")
-        return(invisible())
-      }
-      if (!"diagnosand" %in% names(df)) {
-        plot.new()
-        text(0.5, 0.5, "Diagnosis loaded; open the table below.")
-        return(invisible())
-      }
+  mod_plot <- reactive({
+    obj <- mod_diag()
+    df <- filtered_mod_df()
+    if (is.null(df) || !nrow(df)) {
+      return("Run redesign and diagnosis to plot.")
+    }
+    if (!"diagnosand" %in% names(df)) {
+      return("Diagnosis loaded; open the table below.")
+    }
 
-      ranges <- obj$range_params %||% mod_last_ranges()
-      ranges <- ranges[ranges %in% names(df)]
+    ranges <- obj$range_params %||% mod_last_ranges()
+    ranges <- ranges[ranges %in% names(df)]
 
-      # No ranges: forest / CI panels like the original diagnosis plot
-      if (length(ranges) == 0L) {
-        p <- plot_diagnosand_forest(df)
-        if (is.null(p)) {
-          plot.new()
-          text(0.5, 0.5, "Diagnosis loaded; open the table below.")
-          return(invisible())
-        }
-        return(p)
+    # No ranges: forest / CI panels like the original diagnosis plot
+    if (length(ranges) == 0L) {
+      p <- plot_diagnosand_forest(df)
+      if (is.null(p)) {
+        return("Diagnosis loaded; open the table below.")
       }
+      return(p)
+    }
 
-      y_col <- y_value_col(df)
-      if (is.null(y_col)) {
-        plot.new()
-        text(0.5, 0.5, "Diagnosis loaded; open the table below.")
-        return(invisible())
-      }
-      df <- add_diagnosand_ci(df)
-      df$.y <- df[[y_col]]
-      df$diagnosand <- factor(df$diagnosand)
-      has_ci <- all(c("conf.low", "conf.high") %in% names(df)) &&
-        any(is.finite(df$conf.low) & is.finite(df$conf.high))
+    y_col <- y_value_col(df)
+    if (is.null(y_col)) {
+      return("Diagnosis loaded; open the table below.")
+    }
+    df <- add_diagnosand_ci(df)
+    df$.y <- df[[y_col]]
+    df$diagnosand <- factor(df$diagnosand)
+    has_ci <- all(c("conf.low", "conf.high") %in% names(df)) &&
+      any(is.finite(df$conf.low) & is.finite(df$conf.high))
 
-      if (length(ranges) == 1L) {
-        xp <- ranges[[1]]
-        df$.x <- df[[xp]]
-        # Color by inquiry and estimator when several share an x-value
-        series_cols <- intersect(c("inquiry", "estimator"), names(df))
-        series_cols <- series_cols[vapply(series_cols, function(cl) length(unique(df[[cl]])) > 1L, logical(1))]
-        use_color <- length(series_cols) > 0L
-        if (use_color) {
-          df$.series <- factor(do.call(paste, c(unname(as.list(df[series_cols])), sep = " / ")))
-          p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, color = .series, group = .series))
-        } else {
-          p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, group = 1))
-        }
-        pd <- if (use_color) {
-          ggplot2::position_dodge(width = dodge_width_for_x(df$.x))
-        } else {
-          "identity"
-        }
-        if (has_ci) {
-          p <- p + ggplot2::geom_errorbar(
-            ggplot2::aes(ymin = conf.low, ymax = conf.high),
-            width = 0,
-            linewidth = 0.5,
-            position = pd,
-            na.rm = TRUE
-          )
-        }
-        p +
-          ggplot2::geom_line(linewidth = 0.8, position = pd) +
-          ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
-          ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
-          ggplot2::theme_bw(base_size = 12) +
-          ggplot2::labs(x = xp, y = y_col, color = if (use_color) paste(series_cols, collapse = " / ") else NULL)
+    if (length(ranges) == 1L) {
+      xp <- ranges[[1]]
+      df$.x <- df[[xp]]
+      # Color by inquiry and estimator when several share an x-value
+      series_cols <- intersect(c("inquiry", "estimator"), names(df))
+      series_cols <- series_cols[vapply(series_cols, function(cl) length(unique(df[[cl]])) > 1L, logical(1))]
+      use_color <- length(series_cols) > 0L
+      if (use_color) {
+        df$.series <- factor(do.call(paste, c(unname(as.list(df[series_cols])), sep = " / ")))
+        p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, color = .series, group = .series))
       } else {
-        xp <- input$mod_plot_x %||% obj$plot_x %||% ranges[[1]]
-        gp <- input$mod_plot_group %||% obj$plot_group %||% ranges[[2]]
-        if (!xp %in% names(df)) xp <- ranges[[1]]
-        if (!gp %in% names(df)) gp <- setdiff(ranges, xp)[1]
-        if (identical(xp, gp)) gp <- setdiff(ranges, xp)[1]
-        df$.x <- df[[xp]]
-        df$.g <- factor(df[[gp]])
-        pd <- ggplot2::position_dodge(width = dodge_width_for_x(df$.x))
-        p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, color = .g, group = .g))
-        if (has_ci) {
-          p <- p + ggplot2::geom_errorbar(
-            ggplot2::aes(ymin = conf.low, ymax = conf.high),
-            width = 0,
-            linewidth = 0.5,
-            position = pd,
-            na.rm = TRUE
-          )
-        }
-        p +
-          ggplot2::geom_line(linewidth = 0.8, position = pd) +
-          ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
-          ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
-          ggplot2::theme_bw(base_size = 12) +
-          ggplot2::labs(x = xp, y = y_col, color = gp)
+        p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, group = 1))
       }
-    })
+      pd <- if (use_color) {
+        ggplot2::position_dodge(width = dodge_width_for_x(df$.x))
+      } else {
+        "identity"
+      }
+      if (has_ci) {
+        p <- p + ggplot2::geom_errorbar(
+          ggplot2::aes(ymin = conf.low, ymax = conf.high),
+          width = 0,
+          linewidth = 0.5,
+          position = pd,
+          na.rm = TRUE
+        )
+      }
+      p +
+        ggplot2::geom_line(linewidth = 0.8, position = pd) +
+        ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
+        ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
+        ggplot2::theme_bw(base_size = 12) +
+        ggplot2::labs(x = xp, y = y_col, color = if (use_color) paste(series_cols, collapse = " / ") else NULL)
+    } else {
+      xp <- input$mod_plot_x %||% obj$plot_x %||% ranges[[1]]
+      gp <- input$mod_plot_group %||% obj$plot_group %||% ranges[[2]]
+      if (!xp %in% names(df)) xp <- ranges[[1]]
+      if (!gp %in% names(df)) gp <- setdiff(ranges, xp)[1]
+      if (identical(xp, gp)) gp <- setdiff(ranges, xp)[1]
+      df$.x <- df[[xp]]
+      df$.g <- factor(df[[gp]])
+      pd <- ggplot2::position_dodge(width = dodge_width_for_x(df$.x))
+      p <- ggplot2::ggplot(df, ggplot2::aes(x = .x, y = .y, color = .g, group = .g))
+      if (has_ci) {
+        p <- p + ggplot2::geom_errorbar(
+          ggplot2::aes(ymin = conf.low, ymax = conf.high),
+          width = 0,
+          linewidth = 0.5,
+          position = pd,
+          na.rm = TRUE
+        )
+      }
+      p +
+        ggplot2::geom_line(linewidth = 0.8, position = pd) +
+        ggplot2::geom_point(size = 2.2, position = pd, na.rm = TRUE) +
+        ggplot2::facet_wrap(~diagnosand, scales = "free_y") +
+        ggplot2::theme_bw(base_size = 12) +
+        ggplot2::labs(x = xp, y = y_col, color = gp)
+    }
+  })
+
+  if (has_ggplot2) {
+    output$mod_plot <- renderPlot(draw_plot_or_message(mod_plot()))
+    output$dl_mod_png <- downloadHandler(
+      filename = function() paste0(selected_id(), "_redesign.png"),
+      content = function(file) save_plot_png(mod_plot(), file)
+    )
   }
+
+  output$dl_mod_csv <- downloadHandler(
+    filename = function() paste0(selected_id(), "_redesign_diagnosands.csv"),
+    content = function(file) {
+      df <- diagnosand_df(mod_diag())
+      if (is.null(df)) df <- data.frame()
+      utils::write.csv(df, file, row.names = FALSE)
+    }
+  )
+
+  mod_code <- reactive({
+    obj <- mod_diag()
+    req(!is.null(obj))
+    DesignLibrary:::diagnosis_script(obj$id, dots = obj$changed_dots %||% list(), sims = obj$sims)
+  })
+
+  output$mod_code_ui <- renderUI(code_block(mod_code(), download_id = "dl_mod_code"))
+
+  output$dl_mod_code <- downloadHandler(
+    filename = function() paste0(selected_id(), "_redesign.R"),
+    content = function(file) writeLines(mod_code(), file)
+  )
 }
 
 shinyApp(ui, server)

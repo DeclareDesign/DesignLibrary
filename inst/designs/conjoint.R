@@ -3,7 +3,7 @@ id: conjoint
 alias: "17.5"
 label: conjoint
 category: rdss
-keywords: [experiment, descriptive]
+keywords: [experiment, descriptive, conjoint, survey]
 description: >
   Conjoint experiment design. (chapter 17).
 packages: [rdss, cjoint, dplyr, purrr]

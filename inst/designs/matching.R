@@ -3,7 +3,7 @@ id: matching
 alias: "16.2"
 label: matching
 category: rdss
-keywords: [observational, causal]
+keywords: [observational, causal, matching, covariates]
 description: >
   Matching design declaration. (chapter 16).
 packages: [MatchIt]

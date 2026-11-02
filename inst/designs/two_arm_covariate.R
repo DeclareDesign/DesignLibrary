@@ -2,7 +2,7 @@
 id: two_arm_covariate
 label: Two-arm trial with a possibly prognostic covariate
 category: template
-keywords: [experiment, causal, covariates, confounding]
+keywords: [experiment, causal, two-arm, covariates, confounding]
 description: >
   Two-arm trial with a covariate W. W can predict the outcome (rho_WY), can
   moderate the effect (h), and can predict assignment (rho_WZ), so the same

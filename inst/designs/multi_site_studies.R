@@ -3,7 +3,7 @@ id: multi_site_studies
 alias: "19.4"
 label: multi-site studies
 category: rdss
-keywords: [complex]
+keywords: [experiment, causal, complex, multi-site, blocking]
 description: >
   Multi-site studies with and without coordination. (chapter 19).
 packages: [metafor, rdss, dplyr, tidyr, broom]

@@ -3,7 +3,7 @@ id: subgroup_effects
 alias: "18.6"
 label: subgroup effects
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, heterogeneous effects, blocking]
 description: >
   Subgroup design declaration. (chapter 18).
 params:

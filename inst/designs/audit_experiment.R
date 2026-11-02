@@ -3,7 +3,7 @@ id: audit_experiment
 alias: "17.1"
 label: audit experiment
 category: rdss
-keywords: [experiment, descriptive]
+keywords: [experiment, descriptive, two-arm, audit]
 description: >
   Audit experiment design. (chapter 17).
 packages: [dplyr]

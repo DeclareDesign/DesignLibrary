@@ -3,7 +3,7 @@ id: randomized_saturation
 alias: "18.12"
 label: randomized saturation
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, spillovers, clustering]
 description: >
   Randomized saturation design. (chapter 18).
 packages: [dplyr]

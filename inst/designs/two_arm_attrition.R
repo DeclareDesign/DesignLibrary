@@ -2,7 +2,7 @@
 id: two_arm_attrition
 label: Two-arm trial with attrition
 category: template
-keywords: [experiment, causal, attrition]
+keywords: [experiment, causal, two-arm, attrition]
 description: >
   Two-arm trial in which the outcome is observed only for units that report.
   Treatment can move reporting as well as the outcome, so the design contrasts

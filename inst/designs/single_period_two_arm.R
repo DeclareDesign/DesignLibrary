@@ -3,7 +3,7 @@ id: single_period_two_arm
 alias: "18.11"
 label: Comparison single-period two arm trial
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, two-arm]
 description: >
   Comparison single-period two arm trial design. (chapter 18).
 params:

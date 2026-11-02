@@ -2,7 +2,7 @@
 id: two_arm_with_blocks
 label: Two-arm trial with blocks
 category: template
-keywords: [experiment, two-arm, blocking]
+keywords: [experiment, causal, two-arm, blocking]
 description: >
   Simple two arm design with block randomization
 params:

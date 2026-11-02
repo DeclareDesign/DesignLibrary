@@ -2,7 +2,7 @@
 id: two_arm_simple
 label: Simple two-arm trial
 category: template
-keywords: [experiment, two-arm]
+keywords: [experiment, causal, two-arm]
 description: >
   Simple two-arm trial with complete random assignment and a population average treatment effect.
 params:

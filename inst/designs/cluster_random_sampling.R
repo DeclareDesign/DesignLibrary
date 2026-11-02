@@ -3,7 +3,7 @@ id: cluster_random_sampling
 alias: "15.3"
 label: cluster random sampling
 category: rdss
-keywords: [observational, descriptive, cluster]
+keywords: [observational, descriptive, sampling, clustering]
 description: >
   Cluster random sampling design. (chapter 15).
 params:

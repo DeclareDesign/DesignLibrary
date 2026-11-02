@@ -3,7 +3,7 @@ id: instrumental_variables
 alias: "16.4"
 label: instrumental variables
 category: rdss
-keywords: [observational, causal]
+keywords: [observational, causal, instrumental variables]
 description: >
   Instrumental variables design. (chapter 16).
 packages: [dplyr]

@@ -3,7 +3,7 @@ id: trust_game
 alias: "17.6"
 label: trust game
 category: rdss
-keywords: [experiment, descriptive]
+keywords: [experiment, descriptive, behavioral game]
 description: >
   Trust game design. (chapter 17).
 packages: [tidyr]

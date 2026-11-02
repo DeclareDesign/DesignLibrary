@@ -3,7 +3,7 @@ id: random_forests
 alias: "19.1"
 label: random forests
 category: rdss
-keywords: [complex]
+keywords: [experiment, causal, complex, heterogeneous effects, machine learning]
 description: >
   Random forests design (chapter 19) uses machine learning to study
   effect heterogeneity. The design targets individual level causal

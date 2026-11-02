@@ -3,7 +3,7 @@ id: two_arm_block_rdss
 alias: "18.4"
 label: block randomized trial
 category: rdss
-keywords: [experiment, causal, blocking]
+keywords: [experiment, causal, two-arm, blocking]
 description: >
   Block randomized two-arm trial design. (chapter 18).
 params:

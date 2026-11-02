@@ -2,7 +2,7 @@
 id: pretest_posttest
 label: Pretest-posttest design
 category: template
-keywords: [experiment, causal, panel]
+keywords: [experiment, causal, two-arm, panel, attrition]
 description: >
   Two-arm trial measuring the outcome before and after treatment, with
   attrition at the second measurement. Three answer strategies are compared:

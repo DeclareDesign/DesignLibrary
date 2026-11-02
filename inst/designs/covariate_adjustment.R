@@ -3,7 +3,7 @@ id: covariate_adjustment
 alias: "18.2"
 label: covariate adjustment
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, two-arm, covariates]
 description: >
   Two-arm trial with covariate adjustment. (chapter 18).
 packages: [MASS]

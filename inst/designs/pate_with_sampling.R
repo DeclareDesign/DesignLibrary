@@ -3,7 +3,7 @@ id: pate_with_sampling
 alias: "4.1"
 label: PATE with sampling
 category: rdss
-keywords: [sampling, experiment, PATE]
+keywords: [experiment, causal, two-arm, sampling, PATE]
 description: >
   Sample from a population, then randomly assign treatment. Inquiry is the
   population average treatment effect (PATE).

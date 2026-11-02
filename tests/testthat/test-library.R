@@ -24,7 +24,7 @@ test_that("Shiny library table still displays a params column", {
     app <- file.path("inst", "shiny", "app.R")
   }
   lines <- readLines(app, warn = FALSE, encoding = "UTF-8")
-  expect_true(any(grepl('c\\("label", "params", "packages"\\)', lines)))
+  expect_true(any(grepl('c\\("label", "keywords", "params", "packages"\\)', lines)))
   expect_false(any(grepl('c\\("label", "category", "params", "packages"\\)', lines)))
   expect_true(any(grepl("list_designs\\(shiny_only = TRUE\\)", lines)))
   expect_false(any(grepl("discover_params\\s*=\\s*TRUE", lines)))
@@ -318,4 +318,42 @@ test_that("make_design()'s Rd usage lists the ids .onLoad completes", {
   usage <- sub(".*\\\\usage\\{(.*?)\\}\\s*\\\\arguments.*", "\\1", usage)
   in_rd <- gsub('"', "", regmatches(usage, gregexpr('"[^"]*"', usage))[[1]])
   expect_setequal(in_rd, DesignLibrary:::design_completion_choices())
+})
+
+test_that("the keyword filter keeps designs carrying every selected keyword", {
+  idx <- as.data.frame(list_designs(shiny_only = TRUE))
+  choices <- DesignLibrary:::library_keyword_choices(idx)
+  expect_true(all(c("two-arm", "blocking") %in% choices))
+  hit <- DesignLibrary:::library_keyword_rows(idx, c("two-arm", "blocking"))
+  kw <- DesignLibrary:::split_keywords(idx$keywords[hit])
+  expect_true(all(vapply(kw, function(k) all(c("two-arm", "blocking") %in% k), logical(1))))
+  expect_true(all(DesignLibrary:::library_keyword_rows(idx, character(0))))
+
+  browse <- DesignLibrary:::filter_library_browser(idx, tab = "templates", keywords = "regression discontinuity")
+  expect_gt(browse$n_match, 0L)
+  expect_true(all(grepl("regression discontinuity", browse$rows$keywords)))
+})
+
+test_that("the description teaser keeps the first sentence", {
+  expect_equal(
+    DesignLibrary:::description_teaser(c("One sentence. Two sentences.", NA, "")),
+    c("One sentence.", "", "")
+  )
+  long <- paste(rep("word", 100), collapse = " ")
+  expect_lte(nchar(DesignLibrary:::description_teaser(long, max_chars = 50L)), 51L)
+})
+
+test_that("the diagnosis script redesigns with the values changed and runs alone", {
+  script <- DesignLibrary:::diagnosis_script("two_arm_simple", dots = list(N = c(50, 100)), sims = 3)
+  expect_match(script, "library(DeclareDesign)", fixed = TRUE)
+  expect_match(script, "redesign(design,\n  N = c(50, 100)", fixed = TRUE)
+  expect_match(script, "diagnose_design(designs, sims = 3)", fixed = TRUE)
+  env <- new.env()
+  diagnosis <- suppressMessages(eval(parse(text = script), envir = env))
+  expect_s3_class(diagnosis, "diagnosis")
+  expect_equal(sort(unique(diagnosis$diagnosands_df$N)), c(50, 100))
+
+  plain <- DesignLibrary:::diagnosis_script("two_arm_simple", sims = 3)
+  expect_no_match(plain, "redesign(", fixed = TRUE)
+  expect_match(plain, "diagnose_design(design, sims = 3)", fixed = TRUE)
 })

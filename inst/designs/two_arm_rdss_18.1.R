@@ -3,7 +3,7 @@ id: two_arm_trial_rdss
 alias: "18.1"
 label: two-arm trial
 category: rdss
-keywords: [experiment, causal]
+keywords: [experiment, causal, two-arm]
 description: >
   Canonical two-arm trial design. (chapter 18).
 params:

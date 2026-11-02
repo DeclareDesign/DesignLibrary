@@ -3,7 +3,7 @@ id: blocked_and_clustered
 alias: "18.5"
 label: blocked and clustered
 category: rdss
-keywords: [experiment, causal, blocking, cluster]
+keywords: [experiment, causal, two-arm, blocking, clustering]
 description: >
   Blocked and clustered randomized trial. (chapter 18). In this design we
   have to assign in clusters but we improve performance by making blocks

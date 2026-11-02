@@ -28,6 +28,8 @@ Each removed function and argument below stops with an error that names its repl
 
 **Renamed from ResearchDesigns.** The S3 classes `research_designs_*` are now `design_library_*`, and the options `researchdesigns.*` are now `designlibrary.*`.
 
+**The Shiny app (`designs_shiny_app()`) is easier to browse and to leave.** The Library table shows each design's first sentence of description and its keywords, and a keyword filter narrows the table to designs carrying every keyword chosen; the design YAML headers now share a keyword vocabulary (`two-arm`, `multi-arm`, `factorial`, `blocking`, `clustering`, `sampling`, and so on). The Design tab opens with the full description, lists only the parameters the browser can edit (functions, data, and lists sit in a collapsed note on changing them in R), and gives every code block a copy button. The Diagnosis and Redesign tabs download the diagnosands as CSV and the plot as PNG, and show a standalone script (declaration, `redesign()` with the values changed, and `diagnose_design()`) to copy or download. Parameter tips in the Redesign tab open on click and tap as well as hover.
+
 # ResearchDesigns 0.1.x
 
 Developed as ResearchDesigns 0.1.x before the rename; that history is in the git log of the GitHub repository.
