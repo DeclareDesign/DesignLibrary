@@ -250,7 +250,7 @@ description_teaser <- function(x, max_chars = 180L) {
     first <- sub("^(.*?[.!?])\\s.*$", "\\1", s, perl = TRUE)
     if (nchar(first) <= max_chars) return(first)
     cut <- substr(first, 1L, max_chars)
-    paste0(sub("\\s+\\S*$", "", cut), "…")
+    paste0(sub("\\s+\\S*$", "", cut), "\u2026")
   }, character(1), USE.NAMES = FALSE)
 }
 
