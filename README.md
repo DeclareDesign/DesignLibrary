@@ -13,6 +13,7 @@ install.packages("DesignLibrary")
 - Each design is a self-contained `.R` file under `inst/designs/`.
 - Optional YAML frontmatter adds labels, categories, keywords, book aliases, `packages:` extras, `diagnosands:` defaults for display, and `params:` tip strings.
 - YAML is optional. With no header: id = filename stem (a few book designs set a different `id:`), label = humanized id, `category: Other`, object name `design`, `include_in_shiny: true`. Set `object:` only if the R object is not named `design`.
+- Designs can then be called using `make_design` or inspected via a shiny app included in the package. The shiny app is also hosted at [DesignLibrary](https://shiny2.wzb.eu/ipi/DesignLibrary/)
 
 ## Tiny API
 
