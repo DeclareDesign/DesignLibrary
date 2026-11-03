@@ -94,6 +94,8 @@ include_in_shiny: true
 
 ## DeclareDesign 1.x vs 2.0
 
+**DesignLibrary 2.0 supersedes DesignLibrary 0.1.** Designs are now self-contained declaration files read through `make_design()`, `list_designs()`, and `get_args()`, and parameters are read from the design itself rather than from a designer function's formals. 
+
 **DeclareDesign 1.x** (and DesignLibrary 0.1) often paired a *designer function* with a design: parameters lived on the designer, and tools like `expand_design(two_arm_designer, N = c(50, 100))` swept that function. Reproducible code was glued on with special extraction (`{{{ }}}`).
 
 **DeclareDesign 2.0** keeps the same declaration verbs (`declare_model`, `+`, `diagnose_design`, …) but treats the **declared design itself** as redesignable. Free symbols in the design (e.g. `b`, `tau`) are found on the object, so:
@@ -102,6 +104,10 @@ include_in_shiny: true
 designs <- redesign(design, tau = c(0.1, 0.3, 0.5))
 diagnose_design(designs, sims = 100)
 ```
+
+## AI use in package development
+
+The design declarations sit in `inst/designs/` are the substantive core of the package and are vouched for by the package authors. However, the DesignLibrary 2.0 library machinery  (for calling, listing, and displaying designs, including the Shiny app) was written with and largely by AI coding models, Claude and models used through Cursor among them.
 
 ## Contributor checklist
 
