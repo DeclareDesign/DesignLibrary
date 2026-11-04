@@ -108,7 +108,7 @@ diagnose_design(designs, sims = 100)
 
 ## AI use in package development
 
-The design declarations sit in `inst/designs/` are the substantive core of the package and are vouched for by the package authors. However, the DesignLibrary 2.0 library machinery  (for calling, listing, and displaying designs, including the Shiny app) was written with and largely by AI coding models, Claude and models used through Cursor among them.
+The design declarations that sit in `inst/designs/` are the substantive core of the package and are vouched for by the package authors. However, the DesignLibrary 2.0 library machinery  (for calling, listing, and displaying designs, including the Shiny app) was written with and largely by AI coding models, Claude and models used through Cursor among them.
 
 ## Contributor checklist
 
