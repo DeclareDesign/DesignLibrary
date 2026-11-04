@@ -7,8 +7,8 @@ DesignLibrary 2.0.0 is a rewrite that supersedes 0.1.10, which fails its tests o
 ## Test environments
 
 * local macOS (Tahoe 26.6), R 4.6.1, against a library holding only CRAN releases, on commit c9b01ee: `R CMD check --as-cran`, 0 errors, 0 warnings, 1 note; tests `FAIL 0 | WARN 0 | SKIP 49 | PASS 682`.
-* GitHub Actions (R-CMD-check, run 40618317865 on commit c9b01ee): macOS latest R 4.6.1; Windows latest R 4.6.1 (ucrt); Ubuntu 24.04 R 4.6.1, R 4.5.3 (oldrel-1), and R-devel. All Status: OK, tests `FAIL 0 | WARN 0 | SKIP 22 | PASS 1475`.
-* win-builder R-devel (2026-10-26 r90766 ucrt), Windows Server 2022, on commit c9b01ee: 0 errors, 0 warnings, 1 note (the maintainer change).
+* GitHub Actions (R-CMD-check, run 41872332433 on commit cf573ae): macOS latest R 4.6.2; Windows latest R 4.6.2 (ucrt); Ubuntu 24.04 R 4.6.2, R 4.5.3 (oldrel-1), and R-devel. All Status: OK, tests `FAIL 0 | WARN 0 | SKIP 22 | PASS 1489`.
+* win-builder R-devel (2026-11-03 r90835 ucrt), Windows Server 2022, on commit cf573ae: 0 errors, 0 warnings, 1 note (the maintainer change).
 
 ## R CMD check results
 
