@@ -1,14 +1,36 @@
 url: https://declaredesign.org/r/designlibrary/
 template:
   bootstrap: 5
+  bslib:
+    primary: "#0054AD"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
 home:
   title: DesignLibrary
   description: A library of declared designs (DeclareDesign), with a small API and bundled Shiny browser.
 navbar:
   structure:
     left: [intro, reference, articles]
-    right: [github]
+    right: [software, ddorg]
   components:
+    software:
+      text: "Software"
+      menu:
+      - text: DeclareDesign
+        href: https://declaredesign.org/r/declaredesign/
+      - text: randomizr
+        href: https://declaredesign.org/r/randomizr/
+      - text: fabricatr
+        href: https://declaredesign.org/r/fabricatr/
+      - text: estimatr
+        href: https://declaredesign.org/r/estimatr/
+      - text: rdss
+        href: https://declaredesign.org/r/rdss/
+      - text: DesignLibrary
+        href: https://declaredesign.org/r/designlibrary/
+    ddorg:
+      text: declaredesign.org
+      href: https://declaredesign.org
     articles:
       text: Articles
       menu:
